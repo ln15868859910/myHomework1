@@ -12,22 +12,26 @@
     }
 
     &-ink-bar {
-        height: 2px;
+        height: 4px;
         box-sizing: border-box;
-        background-color: @primary-color;
+        background-color: #5295e7;
         position: absolute;
         left: 0;
         bottom: 1px;
         z-index: 1;
+        border-radius: 2px;
+        border: 1px solid #5295e7;
         transition: transform .3s @ease-in-out;
         transform-origin: 0 0;
     }
 
     &-bar {
-        border-bottom: 1px solid @border-color-base;
+        border-bottom: 1px solid #d4dfe5;
         margin-bottom: 16px;
     }
-
+    &&-card > &-bar{
+        border-bottom-color: #b9bec5;
+    }
     &-nav-container {
         margin-bottom: -1px;
         line-height: @line-height-base;
@@ -86,7 +90,7 @@
         .@{tabs-prefix-cls}-tab {
             display: inline-block;
             height: 100%;
-            padding: 8px 16px;
+            padding: 14px 32px;
             margin-right: 16px;
             box-sizing: border-box;
             cursor: pointer;
@@ -99,12 +103,12 @@
             }
 
             &:active {
-                color: @link-active-color;
+                color: #5295e7;
             }
             .@{css-prefix-iconfont} {
                 width: 14px;
                 height: 14px;
-                margin-right: 8px;
+                margin-right: 5px;
             }
         }
 
@@ -152,21 +156,21 @@
     }
     &&-card > &-bar &-tab {
         margin: 0;
-        margin-right: 4px;
+        margin-right: 10px;
         height: 31px;
         padding: 5px 16px 4px;
-        border: 1px solid @border-color-base;
+        border: 1px solid #b9bec5;
         border-bottom: 0;
         border-radius: @btn-border-radius @btn-border-radius 0 0;
         transition: all 0.3s @ease-in-out;
-        background: @table-thead-bg;
+        background: #f3f3f3;
     }
     &&-card > &-bar &-tab-active {
         height: 32px;
         padding-bottom: 5px;
         background: #fff;
         transform: translateZ(0);
-        border-color: @border-color-base;
+        border-color: #b9bec5;
         color: @primary-color;
     }
     &&-card > &-bar &-nav-wrap {
