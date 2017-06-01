@@ -30,7 +30,7 @@
     &:hover
     //&:focus
     {
-        .button-color(tint(@color, 20%); tint(@background, 20%); tint(@border, 20%));
+        .button-color(shade(@color, 10%); shade(@background, 10%); shade(@border, 10%));
     }
     &:active,
     &.active {
@@ -169,7 +169,7 @@
     }
 
     &-small {
-        .button-size(@btn-padding-small; @btn-font-size; @btn-border-radius-small);
+        .button-size(@btn-padding-small; @btn-font-size-small; @btn-border-radius-small);
     }
 }
 
