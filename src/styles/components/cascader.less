@@ -29,7 +29,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         cursor: pointer;
-        font-size: @font-size-small;
+        font-size: @font-size-base;
         position: absolute;
         left: 0;
         top: 0;
@@ -72,7 +72,7 @@
 
     .select-item(@cascader-prefix-cls, @cascader-item-prefix-cls);
     .ivu-select-item span{
-        color: @error-color;
+        color: @primary-color;
     }
 
     &-dropdown{
@@ -124,7 +124,7 @@
             transition: all @transition-time @ease-in-out;
 
             i{
-                font-size: @font-size-small;
+                font-size: @font-size-base;
                 position: absolute;
                 right: 15px;
                 top: 50%;

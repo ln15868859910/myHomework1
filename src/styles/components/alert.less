@@ -6,7 +6,7 @@
     padding: 8px 48px 8px 16px;
     border-radius: @border-radius-base;
     color: @text-color;
-    font-size: @font-size-small;
+    font-size: @font-size-base;
     line-height: 16px;
     margin-bottom: 10px;
 
@@ -22,7 +22,7 @@
     }
 
     &-desc {
-        font-size: @font-size-small;
+        font-size: @font-size-base;
         color: @text-color;
         line-height: 21px;
         display: none;
@@ -30,8 +30,8 @@
     }
 
     &-success {
-        border: 1px solid tint(@success-color, 80%);
-        background-color: tint(@success-color, 90%);
+        border: 1px solid tint(@success-color, 50%);
+        background-color: tint(@success-color, 80%);
         .@{alert-prefix-cls}-icon {
             color: @success-color;
         }
@@ -46,16 +46,16 @@
     }
 
     &-warning {
-        border: 1px solid tint(@warning-color, 80%);
-        background-color: tint(@warning-color, 90%);
+        border: 1px solid tint(@warning-color, 0%);
+        background-color: tint(@warning-color, 80%);
         .@{alert-prefix-cls}-icon {
             color: @warning-color;
         }
     }
 
     &-error {
-        border: 1px solid tint(@error-color, 80%);
-        background-color: tint(@error-color, 90%);
+        border: 1px solid tint(@error-color, 50%);
+        background-color: tint(@error-color, 80%);
         .@{alert-prefix-cls}-icon {
             color: @error-color;
         }
@@ -83,7 +83,7 @@
     }
 
     &-with-desc &-message {
-        font-size: 14px;
+        font-size: 16px;
         color: @title-color;
         display: block;
     }
