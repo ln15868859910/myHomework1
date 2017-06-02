@@ -1,5 +1,23 @@
 <template>
-    <div style="width: 300px;">
+    <div style="width: 800px;">
+    <div>
+    <span>基本状态</span>
+    <Input v-model="value" placeholder="请输入..." style="width: 200px;"></Input>
+    <Input v-model="value" disabled placeholder="请输入..." style="width: 200px;"></Input>
+    </div>
+    <br>
+    <div>
+    <span>带Icon</span>
+    <Input v-model="value" icon="ios-clock-outline" placeholder="请输入..." style="width: 200px;"></Input>
+    <Input v-model="value" disabled icon="ios-clock-outline" placeholder="请输入..." style="width: 200px;"></Input>
+    </div>
+    <br>
+    <div>
+    <span>文本域</span>
+    <Input v-model="value" type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
+    <Input v-model="value" disabled type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
+    </div>
+    <br><br><br>
         <i-input v-model="value11" icon="ios-clock-outline" :autofocus="autofocus">
             <span slot="prepend">.com</span>
         </i-input>
@@ -12,6 +30,7 @@
     export default {
         data () {
             return {
+                value:'',
                 value11: '',
                 value12: '',
                 value13: '',
