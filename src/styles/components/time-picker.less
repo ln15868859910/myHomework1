@@ -57,11 +57,11 @@
                 background: @background-color-select-hover;
             }
             &-disabled {
-                color: @btn-disable-color;
+                color: @picker-disable-color;
                 cursor: @cursor-disabled;
 
                 &:hover {
-                    color: @btn-disable-color;
+                    color: @picker-disable-color;
                     background-color: #fff;
                     cursor: @cursor-disabled;
                 }
@@ -166,3 +166,9 @@
         }
     }
 }
+.ivu-time-picker-cells-list{overflow-y: auto;}
+.ivu-time-picker-cells-list::-webkit-scrollbar{width: 6px;height: 6px;}
+.ivu-time-picker-cells-list::-webkit-scrollbar-thumb{-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;background-color: rgba(0,0,0,0.2);}
+.ivu-time-picker-cells-list::-webkit-scrollbar-thumb:hover, .ivu-time-picker-cells-list::-webkit-scrollbar-thumb:active{background-color: rgba(0,0,0,0.5);}
+.ivu-time-picker-cells-list::-webkit-scrollbar-button{width: 0;height: 0;display: none;}
+.ivu-time-picker-cells-list::-webkit-scrollbar-corner{background-color: transparent;}
