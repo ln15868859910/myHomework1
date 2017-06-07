@@ -7,13 +7,13 @@
         <Step title="待进行" content="这里是该步骤的描述信息"></Step>
     </Steps>
     <br>
-    <Steps :current="2">
+    <Steps :current="2" class="mine-steps-vertical">
         <Step title="已完成"></Step>
         <Step title="进行中"></Step>
         <Step title="待进行"></Step>
         <Step title="待进行"></Step>
     </Steps>
-    <br>
+    <br><br><br>
     <Steps :current="1" size="small">
         <Step title="已完成"></Step>
         <Step title="进行中"></Step>
