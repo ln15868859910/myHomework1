@@ -34,13 +34,14 @@
                             <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
                         </div>
                     </div>
-                    <div :class="[prefixCls + '-error-arrow']"></div>
-                </div>
-                    <div :class="[prefixCls + '-error-inner']" v-if="mistake">
+                
+                     <div :class="[prefixCls + '-error-inner']" v-if="mistake">
                         <div :class="[prefixCls + '-body-error']">
                             <div :class="[prefixCls + '-body-error-content']"><slot name="content"><div :class="[prefixCls + '-body-error-content-inner']">{{ content }}</div></slot></div>
                         </div>
                     </div>
+                </div>
+                   
              </div>
         </transition>
     </div>
