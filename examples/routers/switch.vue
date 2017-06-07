@@ -1,18 +1,48 @@
 <template>
     <div>
+        <h2>switch</h2>
+        <br/>
+        <h3>基本状态</h3>
         <i-switch v-model="m1">
+            <span slot="open"></span>
+            <span slot="close"></span>
+        </i-switch>
+        <h4>不可用状态</h4>
+         <i-switch disabled="disabled">
+            <span slot="open"></span>
+            <span slot="close"></span>
+        </i-switch>
+        <br/><br/>
+        <h3>文字状态</h3>
+        <i-switch v-model="m2">
             <span slot="open">开</span>
             <span slot="close">关</span>
         </i-switch>
-        {{ m1 }}
-        <div @click="m1 = !m1">toggle</div>
+        <h4>不可用状态</h4>
+         <i-switch disabled="disabled">
+            <span slot="open">开</span>
+            <span slot="close">关</span>
+        </i-switch>
+        <br/><br/>
+         <h3>带图标状态</h3>
+        <i-switch v-model="m3">
+            <Icon type="android-done" slot="open"></Icon>
+            <Icon type="android-close" slot="close"></Icon>
+        </i-switch>
+        <h4>不可用状态</h4>
+         <i-switch disabled="disabled">
+             <Icon type="android-done" slot="open"></Icon>
+            <Icon type="android-close" slot="close"></Icon>
+        </i-switch>
     </div>
 </template>
 <script>
     export default {
         data () {
             return {
-                m1: false
+                m1: false,
+                m2: false,
+                m3: false
             }
         },
         methods: {

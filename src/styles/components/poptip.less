@@ -44,6 +44,20 @@
             overflow: auto;
 
             &-inner{
+                text-align: center;
+                color: @text-color;
+            }
+        }
+    }
+
+     &-body-error{
+        padding: 8px 16px;
+        background-color: @error-color;    
+        &-error-content{
+            overflow: auto;
+
+            &-inner{
+                text-align: center;
                 color: @text-color;
             }
         }
@@ -59,12 +73,17 @@
         white-space: nowrap;
     }
 
+    // &-inner-error{
+    //     background-color: 
+    // }
+
     &-popper{
         min-width: 150px;
         font-size: @font-size-small;
         .popper(@poptip-arrow, @poptip-arrow-width, @poptip-distance, @poptip-arrow-color);
 
         &[x-placement^="top"] .@{poptip-arrow}:after {
+            text-align: center;
             content: " ";
             bottom: 1px;
             margin-left: -@poptip-arrow-width;

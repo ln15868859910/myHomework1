@@ -17,31 +17,20 @@
     cursor: pointer;
     //transition: all @transition-time @ease-in-out;
 
-    &-dot{
+    &-bigBorder{
         height: 32px;
         line-height: 32px;
         border: 1px solid @border-color-split !important;
         color: @text-color !important;
         background: #fff !important;
         padding: 0 12px;
-
-        &-inner{
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-right: 8px;
-            border-radius: 50%;
-            background: @border-color-split;
-            position: relative;
-            top: 1px;
-        }
         .@{tag-close-prefix-cls} {
             color: #666 !important;
             margin-left: 12px !important;
         }
     }
 
-    &-border{
+    &-smallBorder{
         height: 24px;
         line-height: 24px;
         border: 1px solid @border-color-split !important;
