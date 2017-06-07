@@ -4,22 +4,22 @@
         <br/><br/>
         <h4>基本状态</h4>
         <br/><br/><br/>
-        <Poptip title="提示标题" content="提示内容" placement="left">
+        <Poptip normal title="提示标题" content="提示内容" placement="left">
             <Button>左边</Button>
         </Poptip>
-        <Poptip title="提示标题" content="提示内容" placement="top">
+        <Poptip normal title="提示标题" content="提示内容" placement="top">
             <Button>上边</Button>
         </Poptip>
-         <Poptip title="提示标题" content="提示内容" placement="bottom">
+         <Poptip normal title="提示标题" content="提示内容" placement="bottom">
             <Button>下边</Button>
         </Poptip>
-         <Poptip title="提示标题" content="提示内容" placement="right">
+         <Poptip normal title="提示标题" content="提示内容" placement="right">
             <Button>右边</Button>
         </Poptip>
         <br/><br/><br/>
         <h4>错误信息</h4>
         <br/><br/><br/>
-        <Poptip title="提示标题" error="error" content="提示内容" placement="right" confirm-error>
+        <Poptip mistake title="提示标题" content="错误信息" placement="right">
             <Button>报错气泡</Button>
         </Poptip>
     <div style="margin: 100px;">

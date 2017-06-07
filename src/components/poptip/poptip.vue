@@ -13,10 +13,11 @@
             <slot></slot>
         </div>
         <transition name="fade">
+       
             <div :class="[prefixCls + '-popper']" :style="styles" ref="popper" v-show="visible">
                 <div :class="[prefixCls + '-content']">
-                    <div :class="[prefixCls + '-arrow']"></div>
                     <div :class="[prefixCls + '-inner']" v-if="confirm">
+                        <div :class="[prefixCls + '-arrow']"></div>
                         <div :class="[prefixCls + '-body']">
                             <i class="ivu-icon ivu-icon-help-circled"></i>
                             <div :class="[prefixCls + '-body-message']"><slot name="title">{{ title }}</slot></div>
@@ -26,14 +27,21 @@
                             <i-button type="primary" size="small" @click.native="ok">{{ localeOkText }}</i-button>
                         </div>
                     </div>
-                    <div :class="[prefixCls + '-inner']" v-if="!confirm">
+                    <div :class="[prefixCls + '-inner']" v-if="normal">
+                         <div :class="[prefixCls + '-arrow']"></div>
                         <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
                         <div :class="[prefixCls + '-body']">
                             <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
                         </div>
                     </div>
+                    <div :class="[prefixCls + '-error-arrow']"></div>
                 </div>
-            </div>
+                    <div :class="[prefixCls + '-error-inner']" v-if="mistake">
+                        <div :class="[prefixCls + '-body-error']">
+                            <div :class="[prefixCls + '-body-error-content']"><slot name="content"><div :class="[prefixCls + '-body-error-content-inner']">{{ content }}</div></slot></div>
+                        </div>
+                    </div>
+             </div>
         </transition>
     </div>
 </template>
@@ -78,6 +86,14 @@
                 type: Boolean,
                 default: false
             },
+            mistake: {
+                type: Boolean,
+                default: false
+            },
+            normal: {
+                type: Boolean,
+                default: false
+            },
             okText: {
                 type: String
             },
@@ -98,6 +114,14 @@
                     `${prefixCls}`,
                     {
                         [`${prefixCls}-confirm`]: this.confirm
+                    },
+                    `${prefixCls}`,
+                    {
+                        [`${prefixCls}-mistake`]: this.mistake
+                    },
+                    `${prefixCls}`,
+                    {
+                        [`${prefixCls}-normal`]: this.normal
                     }
                 ];
             },
@@ -195,7 +219,7 @@
             if (!this.confirm) {
 //                this.showTitle = this.$refs.title.innerHTML != `<div class="${prefixCls}-title-inner"></div>`;
                 this.showTitle = this.$slots.title !== undefined;
-            }
+            } 
             // if trigger and children is input or textarea,listen focus & blur event
             if (this.trigger === 'focus') {
                 const $children = this.getInputChildren();

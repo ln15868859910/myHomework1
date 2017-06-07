@@ -1,12 +1,13 @@
 @poptip-prefix-cls: ~"@{css-prefix}poptip";
 @poptip-arrow: ~"@{poptip-prefix-cls}-arrow";
+@poptip-error-arrow: ~"@{poptip-prefix-cls}-error-arrow";
 @poptip-max-width: 250px;
 @poptip-arrow-width: 5px;
 @poptip-arrow-outer-width: (@poptip-arrow-width + 1);
 @poptip-distance: @poptip-arrow-width - 1 + 4;
 //@poptip-arrow-color: fadein(@border-color-base, 5%);
 @poptip-arrow-color: hsla(0,0%,85%,.5);
-
+@error-color            : #fb6363;
 .@{poptip-prefix-cls} {
     display: inline-block;
 
@@ -47,19 +48,7 @@
                 text-align: center;
                 color: @text-color;
             }
-        }
-    }
 
-     &-body-error{
-        padding: 8px 16px;
-        background-color: @error-color;    
-        &-error-content{
-            overflow: auto;
-
-            &-inner{
-                text-align: center;
-                color: @text-color;
-            }
         }
     }
 
@@ -73,6 +62,30 @@
         white-space: nowrap;
     }
 
+    &-error-inner{
+        width: 100%;
+        background-color: @error-color;
+        background-clip: padding-box;
+        border-radius: @border-radius-small;
+        box-shadow: @shadow-base;
+        white-space: nowrap;
+   }
+
+    &-body-error{
+        padding: 8px 16px;
+        background-color: @error-color; 
+        border-radius: @border-radius-small;   
+        &-content{
+            overflow: auto;
+            &-inner{
+                text-align: center;
+                color: @tooltip-color;
+            }
+        }
+    }
+
+
+  
     // &-inner-error{
     //     background-color: 
     // }
@@ -99,6 +112,8 @@
             border-right-color: #fff;
         }
 
+        
+
         &[x-placement^="bottom"] .@{poptip-arrow}:after {
             content: " ";
             top: 1px;
@@ -114,9 +129,45 @@
             border-left-color: #fff;
             bottom: -@poptip-arrow-width;
         }
+
+       
+         &[x-placement^="top"] .@{poptip-error-arrow}:after {
+            content: " ";
+            left: 1px;
+            bottom: -@poptip-arrow-width;
+            border-left-width: 0;
+            border-right-color: @error-color;
+        }
+
+        &[x-placement^="right"] .@{poptip-error-arrow}:after {
+            content: " ";
+            left: 1px;
+            bottom: -@poptip-arrow-width;
+            border-left-width: 0;
+            border-right-color: @error-color;
+        }
+
+        &[x-placement^="bottom"] .@{poptip-error-arrow}:after {
+            content: " ";
+            left: 1px;
+            bottom: -@poptip-arrow-width;
+            border-left-width: 0;
+            border-right-color: @error-color;
+        }
+
+        &[x-placement^="left"] .@{poptip-error-arrow}:after {
+            content: " ";
+            left: 1px;
+            bottom: -@poptip-arrow-width;
+            border-left-width: 0;
+            border-right-color: @error-color;
+        }
+  
     }
 
-    &-arrow{
+    
+
+     &-arrow{
         &, &:after{
             display: block;
             width: 0;
@@ -130,6 +181,12 @@
         border-width: @poptip-arrow-outer-width;
     }
     &-arrow:after{
+        content: "";
+        border-width: @poptip-arrow-width;
+    }
+
+    &-error-arrow:after{
+        border-color: red;
         content: "";
         border-width: @poptip-arrow-width;
     }
