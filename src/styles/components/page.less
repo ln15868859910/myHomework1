@@ -15,7 +15,7 @@
         min-width: @btn-circle-size;
         height: @btn-circle-size;
         line-height: @btn-circle-size - 2px;
-        margin-right: 4px;
+        margin-right: -1px;
         text-align: center;
         list-style: none;
         background-color: #fff;
@@ -23,7 +23,7 @@
         cursor: pointer;
         font-family: Arial;
         border: 1px solid @border-color-base;
-        border-radius: @btn-border-radius;
+        // border-radius: @btn-border-radius;
         transition: all @transition-time @ease-in-out;
 
         a {
@@ -35,8 +35,9 @@
 
         &:hover {
             border-color: @primary-color;
+            background: @primary-color;
             a {
-                color: @primary-color;
+                color: #fff;
             }
         }
 
@@ -86,16 +87,19 @@
     }
 
     &-prev{
-        margin-right: 8px;
+        margin-right: -1px;
+        border-radius: 4px 0 0 4px;
     }
 
     &-item-jump-prev,
     &-item-jump-next{
-        margin-right: 4px;
+        margin-right: -1px;
+        border:none !important;
     }
 
     &-next{
-        margin-left: 4px;
+        margin-left: -1px;
+        border-radius: 0 4px 4px 0;
     }
 
     &-prev,
@@ -113,7 +117,7 @@
         color: #666;
         font-family: Arial;
         border: 1px solid @border-color-base;
-        border-radius: @btn-border-radius;
+        // border-radius: @btn-border-radius;
         transition: all @transition-time @ease-in-out;
     }
 
@@ -201,7 +205,7 @@
             background-color: #fff;
             outline: none;
             border: 1px solid @border-color-base;
-            border-radius: @btn-border-radius;
+            // border-radius: @btn-border-radius;
             transition: border-color @transition-time @ease-in-out;
 
             &:hover {
@@ -227,7 +231,7 @@
         min-width: @btn-circle-size-small;
         height: @btn-circle-size-small;
         line-height: @btn-circle-size-small;
-        border-radius: @btn-border-radius-small;
+        // border-radius: @btn-border-radius-small;
     }
 
     &.mini &-prev,
