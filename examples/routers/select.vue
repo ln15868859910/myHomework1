@@ -104,63 +104,117 @@
     <!--}-->
 <!--</script>-->
 
+<style>
+.xjw {
+    width: 200px;
+}
 
+.xjw .ivu-select-dropdown {
+    width: 400px !important;
+    left: 40px !important
+}
+</style>
 <template>
     <div>
-        <Row style="width: 400px;">
-            <i-col span="12" style="padding-right:10px">
-                <Select v-model="model11" filterable>
-                    <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
-                </Select>
-            </i-col>
-            <i-col span="12">
-                <Select v-model="model12" filterable multiple>
-                    <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
-                </Select>
-            </i-col>
-        </Row>
-        <Button @click="handleSet">set</Button>
+        <div>基本状态：</div>
+        <Select v-model="model1" filterable class="xjw">
+            <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
+        </Select>
+        <div>分组选择</div>
+        <Select v-model="model2" style="width:200px">
+            <Option-group label="热门城市">
+                <Option v-for="item in cityList1" :value="item.value" :key="item">{{ item.label }}</Option>
+            </Option-group>
+            <Option-group label="其它城市">
+                <Option v-for="item in cityList2" :value="item.value" :key="item">{{ item.label }}</Option>
+            </Option-group>
+        </Select>
+    
+        <div>多选</div>
+        <Select v-model="model3" filterable multiple style="width:200px">
+            <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
+        </Select>
+        <div>搜索选择</div>
+        <Select v-model="model4" filterable style="width:200px">
+            <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
+        </Select>
+    
     </div>
 </template>
+
 <script>
-    export default {
-        data () {
-            return {
-                cityList: [
-                    {
-                        value: 'beijing',
-                        label: '北京市'
-                    },
-                    {
-                        value: 'shanghai',
-                        label: '上海市'
-                    },
-                    {
-                        value: 'shenzhen',
-                        label: '深圳市'
-                    },
-                    {
-                        value: 'hangzhou',
-                        label: '杭州市'
-                    },
-                    {
-                        value: 'nanjing',
-                        label: '南京市'
-                    },
-                    {
-                        value: 'chongqing',
-                        label: '重庆市'
-                    }
-                ],
-                model11: '',
-                model12: []
-            }
-        },
-        methods: {
-            handleSet () {
-                this.model11 = 'shanghai';
-//                this.model12 = ['beijing'];
-            }
+export default {
+    data() {
+        return {
+            cityList: [
+                {
+                    value: 'beijing',
+                    label: '北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市'
+                },
+                {
+                    value: 'shanghai',
+                    label: '上海市'
+                },
+                {
+                    value: 'shenzhen',
+                    label: '深圳市'
+                },
+                {
+                    value: 'hangzhou',
+                    label: '杭州市'
+                },
+                {
+                    value: 'nanjing',
+                    label: '南京市'
+                },
+                {
+                    value: 'chongqing',
+                    label: '重庆市'
+                }
+            ],
+            cityList1: [
+                {
+                    value: 'beijing',
+                    label: '北京市'
+                },
+                {
+                    value: 'shanghai',
+                    label: '上海市'
+                },
+                {
+                    value: 'shenzhen',
+                    label: '深圳市'
+                }
+            ],
+            cityList2: [
+                {
+                    value: 'hangzhou',
+                    label: '杭州市'
+                },
+                {
+                    value: 'nanjing',
+                    label: '南京市'
+                },
+                {
+                    value: 'chongqing',
+                    label: '重庆市'
+                }
+            ],
+            model1: '',
+            model2: "",
+            model3: [],
+            model4: "",
+            model5: "",
+            model6: "",
+            model7: ""
+        }
+    },
+    methods: {
+        handleSet() {
+            this.model11 = 'shanghai';
+            //                this.model12 = ['beijing'];
         }
     }
+}
 </script>
+
