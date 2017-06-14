@@ -1,10 +1,15 @@
 <template>
     <div style="margin: 100px;">
-        <Page :total="100" show-sizer placement="top"></Page>
+        <div>
+            <Page :total="1001" show-sizer placement="top"></Page>
+        </div>
+        <div style="margin-top: 100px;">
+            <Page :total="1002" show-sizer placement="top" show-elevator></Page>
+        </div>
     </div>
 </template>
 <script>
-    export default {
+export default {
 
-    }
+}
 </script>
