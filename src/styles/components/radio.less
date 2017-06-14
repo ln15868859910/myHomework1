@@ -26,6 +26,7 @@
     cursor: pointer;
     &-disabled{
         cursor: @cursor-disabled;
+        color:#ccc;
     }
 }
 
@@ -179,6 +180,7 @@ span.@{radio-prefix-cls} + * {
         &:first-child {
             border-radius: @btn-border-radius 0 0 @btn-border-radius;
             border-left: 1px solid @border-color-base;
+            box-shadow: none!important;
             &:before {
                 display: none;
             }
@@ -195,6 +197,8 @@ span.@{radio-prefix-cls} + * {
         &:hover {
             position: relative;
             color: @primary-color;
+            border-color: @primary-color;
+            box-shadow: -1px 0 0 0 @primary-color;
         }
 
         .@{radio-prefix-cls}-inner,
@@ -216,15 +220,15 @@ span.@{radio-prefix-cls} + * {
             }
 
             &:hover {
-                border-color: tint(@primary-color, 20%);
-                box-shadow: -1px 0 0 0 tint(@primary-color, 20%);
-                color: tint(@primary-color, 20%);
+                border-color: @primary-color;
+                color: @primary-color;
+                box-shadow: -1px 0 0 0 @primary-color;
             }
 
             &:active {
-                border-color: shade(@primary-color, 5%);
-                box-shadow: -1px 0 0 0 shade(@primary-color, 5%);
-                color: shade(@primary-color, 5%);
+                border-color: @primary-color;
+                color: @primary-color;
+                box-shadow: -1px 0 0 0 @primary-color;
             }
         }
 
@@ -239,6 +243,7 @@ span.@{radio-prefix-cls} + * {
                 border-color: @btn-disable-border;
                 background-color: @background-color-base;
                 color: #ccc;
+                box-shadow: none!important;
             }
             &:first-child {
                 border-left-color: @btn-disable-border;
