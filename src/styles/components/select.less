@@ -87,7 +87,7 @@
             display: block;
             height: @input-height-base - 2px;
             line-height: @input-height-base - 2px;
-            font-size: @font-size-small;
+            font-size: @font-size-base;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -171,6 +171,7 @@
     }
 
     &-not-found{
+        padding: 7px 0;
         text-align: center;
         color: @btn-disable-color;
         li:not([class^=ivu-]){
