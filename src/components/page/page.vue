@@ -85,12 +85,12 @@
             },
             pageSize: {
                 type: Number,
-                default: 10
+                default: 50
             },
             pageSizeOpts: {
                 type: Array,
                 default () {
-                    return [10, 20, 30, 40];
+                    return [50, 100, 200];
                 }
             },
             placement: {
