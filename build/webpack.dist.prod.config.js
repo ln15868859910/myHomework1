@@ -12,8 +12,8 @@ module.exports = merge(webpackBaseConfig, {
     output: {
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/',
-        filename: 'iview.min.js',
-        library: 'iview',
+        filename: 'spui.min.js',
+        library: 'spui',
         libraryTarget: 'umd',
         umdNamedDefine: true
     },
