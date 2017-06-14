@@ -146,8 +146,21 @@
 </style>
 <template>
 <div style="marging-left:200px;width:200px;height:200px;" >
+    
     <Spin>
         <div class="mine-spin-loading"></div>
+    </Spin>
+     <br/>
+      <br/>
+    <br/>
+    <Spin>
+        <div class="mine-spin-loading mine-spin-loading-m"></div>
+    </Spin>
+     <br/>
+      <br/>
+       <br/>
+    <Spin>
+        <div class="mine-spin-loading mine-spin-loading-s"></div>
     </Spin>
 </div>
 </template>
