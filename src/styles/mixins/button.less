@@ -26,11 +26,11 @@
 
 .button-variant(@color; @background; @border) {
     .button-color(@color; @background; @border);
-
     &:hover
     //&:focus
     {
-        .button-color(saturate(shade(@color, 16%),7%); saturate(shade(@background, 16%),7%); saturate(shade(@border, 16%),7%););
+        .button-color(@color; hsv(hsvhue(@background), hsvsaturation(@background)+5%, hsvvalue(@background)-10%);hsv(hsvhue(@border), hsvsaturation(@border)+5%, hsvvalue(@border)-10%););
+        
     }
     &:active,
     &.active {
