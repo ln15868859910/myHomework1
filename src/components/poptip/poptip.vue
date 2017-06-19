@@ -16,6 +16,8 @@
        
             <div :class="[prefixCls + '-popper']" :style="styles" ref="popper" v-show="visible">
                 <div :class="[prefixCls + '-content']">
+
+                    <!--带有对话框的气泡-->
                     <div :class="[prefixCls + '-inner']" v-if="confirm">
                         <div :class="[prefixCls + '-arrow']"></div>
                         <div :class="[prefixCls + '-body']">
@@ -27,6 +29,8 @@
                             <i-button type="primary" size="small" @click.native="ok">{{ localeOkText }}</i-button>
                         </div>
                     </div>
+
+                    <!--普通气泡-->
                     <div :class="[prefixCls + '-inner']" v-if="normal">
                          <div :class="[prefixCls + '-arrow']"></div>
                         <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
@@ -34,7 +38,8 @@
                             <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
                         </div>
                     </div>
-                
+                    
+                    <!--错误气泡-->
                      <div :class="[prefixCls + '-error-inner']" v-if="mistake">
                         <div :class="[prefixCls + '-arrowError']"></div>
                          <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
