@@ -36,6 +36,8 @@
                     </div>
                 
                      <div :class="[prefixCls + '-error-inner']" v-if="mistake">
+                        <div :class="[prefixCls + '-arrowError']"></div>
+                         <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
                         <div :class="[prefixCls + '-body-error']">
                             <div :class="[prefixCls + '-body-error-content']"><slot name="content"><div :class="[prefixCls + '-body-error-content-inner']">{{ content }}</div></slot></div>
                         </div>
