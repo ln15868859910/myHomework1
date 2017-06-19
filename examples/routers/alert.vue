@@ -1,5 +1,6 @@
 <template>
     <div style="width:500px;">
+        
         <div>基本状态</div>
         <Alert type="success">成功提示文案</Alert>
         <Alert type="warning">警告提示文案</Alert>
@@ -33,6 +34,10 @@
             自定义关闭内容
             <span slot="close">不再提示</span>
         </Alert>
+        <div>表单提示</div>
+        <Alert show-icon class="ivu-alert-fromalert">成功提示文案</Alert>
+        <Alert show-icon class="ivu-alert-fromalert ivu-alert-fromalert-tip">警告提示文案</Alert>
+        <Alert show-icon class="ivu-alert-fromalert ivu-alert-fromalert-error">错误提示文案</Alert>
     </div>
 </template>
 <script>

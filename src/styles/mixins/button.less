@@ -26,11 +26,11 @@
 
 .button-variant(@color; @background; @border) {
     .button-color(@color; @background; @border);
-
     &:hover
     //&:focus
     {
-        .button-color(shade(@color, 10%); shade(@background, 10%); shade(@border, 10%));
+        .button-color(@color; hsv(hsvhue(@background), hsvsaturation(@background)+5%, hsvvalue(@background)-10%);hsv(hsvhue(@border), hsvsaturation(@border)+5%, hsvvalue(@border)-10%););
+        
     }
     &:active,
     &.active {
@@ -207,7 +207,7 @@
     &:hover
     //&:focus
     {
-        .button-color(tint(@primary-color, 20%); @btn-ghost-bg; tint(@primary-color, 20%));
+        .button-color(@primary-color; @btn-ghost-bg; @primary-color);
     }
     &:active,
     &.active {
@@ -233,7 +233,7 @@
 
 // Text
 .btn-text() {
-    .button-variant(@btn-ghost-color, @btn-ghost-bg, transparent);
+    .button-variant(@primary-color, @btn-ghost-bg, transparent);
 
     // for disabled
     &.disabled,
@@ -251,7 +251,7 @@
     &:hover
         //&:focus
     {
-        .button-color(tint(@primary-color, 20%); @btn-ghost-bg; transparent);
+        .button-color(#3d7dcc; @btn-ghost-bg; transparent);
     }
     &:active,
     &.active {
