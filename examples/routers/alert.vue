@@ -41,7 +41,7 @@
     </div>
 </template>
 <script>
-import { Alert, Icon } from 'iview';
+import { Alert, Icon } from 'spui';
 export default {
     components: { Alert, Icon }
 }

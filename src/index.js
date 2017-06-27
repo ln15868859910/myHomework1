@@ -46,7 +46,7 @@ import { Row, Col } from './components/grid';
 import { Select, Option, OptionGroup } from './components/select';
 import locale from './locale';
 
-const iview = {
+const spui = {
     Affix,
     Alert,
     BackTop,
@@ -124,8 +124,8 @@ const install = function (Vue, opts = {}) {
     locale.use(opts.locale);
     locale.i18n(opts.i18n);
 
-    Object.keys(iview).forEach((key) => {
-        Vue.component(key, iview[key]);
+    Object.keys(spui).forEach((key) => {
+        Vue.component(key, spui[key]);
     });
 
     Vue.prototype.$Loading = LoadingBar;
@@ -139,4 +139,4 @@ if (typeof window !== 'undefined' && window.Vue) {
     install(window.Vue);
 }
 
-module.exports = Object.assign(iview, {install});   // eslint-disable-line no-undef
+module.exports = Object.assign(spui, {install});   // eslint-disable-line no-undef

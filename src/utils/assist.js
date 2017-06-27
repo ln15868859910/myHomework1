@@ -87,7 +87,7 @@ export {firstUpperCase};
 export function warnProp(component, prop, correctType, wrongType) {
     correctType = firstUpperCase(correctType);
     wrongType = firstUpperCase(wrongType);
-    console.error(`[iView warn]: Invalid prop: type check failed for prop ${prop}. Expected ${correctType}, got ${wrongType}. (found in component: ${component})`);    // eslint-disable-line
+    console.error(`[Spui warn]: Invalid prop: type check failed for prop ${prop}. Expected ${correctType}, got ${wrongType}. (found in component: ${component})`);    // eslint-disable-line
 }
 
 function typeOf(obj) {
