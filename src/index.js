@@ -5,7 +5,7 @@ import Affix from './components/affix';
 import Alert from './components/alert';
 import BackTop from './components/back-top';
 import Badge from './components/badge';
-import Breadcrumb from './components/breadcrumb';
+// import Breadcrumb from './components/breadcrumb';
 import Button from './components/button';
 import Card from './components/card';
 import Carousel from './components/carousel';
@@ -21,7 +21,7 @@ import Input from './components/input';
 import InputNumber from './components/input-number';
 import LoadingBar from './components/loading-bar';
 import Menu from './components/menu';
-import Message from './components/message';
+// import Message from './components/message';
 import Modal from './components/modal';
 import Notice from './components/notice';
 import Page from './components/page';
@@ -39,7 +39,7 @@ import Tag from './components/tag';
 import Timeline from './components/timeline';
 import TimePicker from './components/time-picker';
 import Tooltip from './components/tooltip';
-import Transfer from './components/transfer';
+// import Transfer from './components/transfer';
 import Tree from './components/tree';
 import Upload from './components/upload';
 import { Row, Col } from './components/grid';
@@ -51,8 +51,8 @@ const iview = {
     Alert,
     BackTop,
     Badge,
-    Breadcrumb,
-    BreadcrumbItem: Breadcrumb.Item,
+    // Breadcrumb,
+    // BreadcrumbItem: Breadcrumb.Item,
     iButton: Button,
     Button,
     ButtonGroup: Button.Group,
@@ -83,7 +83,7 @@ const iview = {
     MenuGroup: Menu.Group,
     MenuItem: Menu.Item,
     Submenu: Menu.Sub,
-    Message,
+    // Message,
     Modal,
     Notice,
     Option: Option,
@@ -115,7 +115,7 @@ const iview = {
     TimelineItem: Timeline.Item,
     TimePicker,
     Tooltip,
-    Transfer,
+    // Transfer,
     Tree,
     Upload
 };
@@ -129,7 +129,7 @@ const install = function (Vue, opts = {}) {
     });
 
     Vue.prototype.$Loading = LoadingBar;
-    Vue.prototype.$Message = Message;
+    // Vue.prototype.$Message = Message;
     Vue.prototype.$Modal = Modal;
     Vue.prototype.$Notice = Notice;
 };
