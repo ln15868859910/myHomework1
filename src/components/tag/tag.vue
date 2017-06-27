@@ -24,11 +24,6 @@
                     return oneOf(value, ['blue', 'green', 'red', 'yellow']);
                 }
             },
-            type: {
-                validator (value) {
-                    return oneOf(value, ['border', 'dot']);
-                }
-            },
             name: {
                 type: [String, Number]
             }
