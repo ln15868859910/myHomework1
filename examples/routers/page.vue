@@ -6,6 +6,9 @@
         <div style="margin-top: 100px;">
             <Page :total="1002" show-sizer placement="top" show-elevator></Page>
         </div>
+        <div style="margin-top: 100px;">
+            <Page :total="1001" show-sizer placement="top" simple></Page>
+        </div>
     </div>
 </template>
 <script>
