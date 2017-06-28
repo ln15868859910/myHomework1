@@ -7,8 +7,8 @@
             <p slot="header" style="text-align:center">
                 <span style="color: #fff;">提示</span>
             </p>
-            <div style="text-align:center;height:30px;font-size: 14px;line-height: 30px;">
-                解除绑定？
+            <div style="text-align:center;">
+                解除绑定q？
             </div>
             <div slot="footer">
                 <Button type="ghost" @click="cancel">取消</Button>

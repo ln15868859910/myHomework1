@@ -44,26 +44,45 @@
     &-header {
         .content-header;
         background-color: #5295e7;
-        border-radius: 10px 10px 0 0;    
+        border-radius: 10px 10px 0 0;
+        padding: 0;
+        height: 40px;
+        line-height: 40px;    
     }
-
+    &-header p{
+        height: 40px;
+        line-height: 40px; 
+    }
     &-close {
         .content-close(1px, 31px);
     }
 
     &-body {
         line-height: 1.5;
-        padding:30px 0 0 0;
+        display: table;
         font-size: 14px;
+        min-height: 30px;
+        width: 100%;
+        padding: 30px;
     }
-
+    &-body>div{
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+    }
     &-footer {
         text-align: center;
-        padding: 20px 30px 30px 30px;
-        button + button {
-            margin-left: 160px;
-            margin-bottom: 0;
+        padding: 0 30px;
+        height: 60px;
+        button{
+            width: 80px;
         }
+        button:first-child{
+            float: left;
+        }
+        button:last-child{
+            float: right;
+         }
     }
 }
 
