@@ -106,7 +106,7 @@
 
 <style>
 .xjw {
-    width: 200px;
+    width: 180px;
 }
 
 .xjw .ivu-select-dropdown {
@@ -121,7 +121,7 @@
             <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
         </Select>
         <div>分组选择</div>
-        <Select v-model="model2" style="width:200px">
+        <Select v-model="model2">
             <Option-group label="热门城市">
                 <Option v-for="item in cityList1" :value="item.value" :key="item">{{ item.label }}</Option>
             </Option-group>
@@ -131,11 +131,11 @@
         </Select>
     
         <div>多选</div>
-        <Select v-model="model3" filterable multiple style="width:200px">
+        <Select v-model="model3" filterable multiple>
             <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
         </Select>
         <div>搜索选择</div>
-        <Select v-model="model4" filterable style="width:200px">
+        <Select v-model="model4" filterable>
             <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
         </Select>
     
