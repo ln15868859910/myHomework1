@@ -5,7 +5,7 @@
 
 .@{radio-group-prefix-cls} {
     display: inline-block;
-    font-size: @font-size-small;
+    font-size: @font-size-base;
     &-vertical{
         .@{radio-prefix-cls}-wrapper {
             display: block;
@@ -17,7 +17,7 @@
 
 // 普通状态
 .@{radio-prefix-cls}-wrapper {
-    font-size: @font-size-small;
+    font-size: @font-size-base;
     vertical-align: middle;
     display: inline-block;
     position: relative;
@@ -32,7 +32,7 @@
 
 .@{radio-prefix-cls} {
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 10px;
     white-space: nowrap;
     outline: none;
     position: relative;
@@ -154,7 +154,7 @@ span.@{radio-prefix-cls} + * {
         line-height: @btn-circle-size - 2px;
         margin: 0;
         padding: 0 16px;
-        font-size: @font-size-small;
+        font-size: @font-size-base;
         color: @btn-default-color;
         transition: all @transition-time ease-in-out;
         cursor: pointer;
