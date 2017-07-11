@@ -23,6 +23,11 @@ body {
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     margin: 0;
     padding: 0;
+    &::-webkit-scrollbar{width: 6px;height: 6px;}
+    &::-webkit-scrollbar-thumb{-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;background-color: rgba(0,0,0,0.2);}
+    &::-webkit-scrollbar-thumb:hover, .copyScroll::-webkit-scrollbar-thumb:active{background-color: rgba(0,0,0,0.5);}
+    &::-webkit-scrollbar-button{width: 0;height: 0;display: none;}
+    &::-webkit-scrollbar-corner{background-color: transparent;}
 }
 
 button, input, select, textarea {
