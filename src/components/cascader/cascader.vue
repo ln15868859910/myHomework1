@@ -14,8 +14,8 @@
                     :class="[prefixCls + '-label']"
                     v-show="filterable && query === ''"
                     @click="handleFocus">{{ displayRender }}</div>
-                <Icon type="ios-close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSelect"></Icon>
-                <Icon type="arrow-down-b" :class="[prefixCls + '-arrow']"></Icon>
+                <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSelect"></Icon>
+                <Icon type="arrow-down" :class="[prefixCls + '-arrow']"></Icon>
             </slot>
         </div>
         <transition name="slide-up">

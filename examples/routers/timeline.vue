@@ -45,7 +45,7 @@
     </Timeline>
     <Timeline>
         <Timeline-item color="green">
-            <Icon type="trophy" slot="dot"></Icon>
+            <Icon type="star-filled" slot="dot"></Icon>
             <span>发布里程碑版本</span>
         </Timeline-item>
         <Timeline-item>发布1.0版本</Timeline-item>

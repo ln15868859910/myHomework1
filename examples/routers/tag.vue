@@ -20,7 +20,7 @@
         <br/>
         <h3>动态添加 / closable</h3>
         <Tag v-for="item in count" :key="item" :name="item" @on-close="close" closable dot>杭州</Tag>
-        <Button icon="ios-plus-empty" type="dashed" size="small" @click="count += 1">添加</Button>
+        <Button icon="plus" type="dashed" size="small" @click="count += 1">添加</Button>
     </div>
 </template>
 <script>

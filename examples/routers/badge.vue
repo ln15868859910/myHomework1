@@ -21,7 +21,7 @@
             <a href="#" class="demo-badge"></a>
         </Badge>
         <Badge dotImg>
-            <Icon type="ios-bell-outline" size="26"></Icon>
+            <Icon type="bell" size="18"></Icon>
         </Badge>
         <Badge dotFont>
             <a href="#">可以是一个链接</a>

@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div :class="classes">
-            <span :class="dotClasses" v-if="showDot"></span><span :class="textClasses"><slot></slot></span><Icon v-if="closable" type="ios-close-empty" @click.native.stop="close"></Icon>
+            <span :class="dotClasses" v-if="showDot"></span><span :class="textClasses"><slot></slot></span><Icon v-if="closable" type="close" @click.native.stop="close"></Icon>
         </div>
     </transition>
 </template>

@@ -7,7 +7,7 @@
         <template v-if="renderType === 'normal'"><span v-html="row[column.key]"></span></template>
         <template v-if="renderType === 'expand'">
             <div :class="expandCls" @click="toggleExpand">
-                <Icon type="ios-arrow-right"></Icon>
+                <Icon type="arrow-right"></Icon>
             </div>
         </template>
     </div>

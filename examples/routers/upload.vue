@@ -4,8 +4,8 @@
             <template v-if="item.status === 'finished'">
                 <img :src="item.url">
                 <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                    <Icon type="eye" @click.native="handleView(item.name)"></Icon>
+                    <Icon type="trash" @click.native="handleRemove(item)"></Icon>
                 </div>
             </template>
             <template v-else>

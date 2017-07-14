@@ -3,7 +3,7 @@
         <ul :class="classes" v-show="visible">
             <li>
                 <span :class="arrowClasses" @click="handleExpand">
-                    <Icon type="arrow-right-b"></Icon>
+                    <Icon type="arrow-right"></Icon>
                 </span>
                 <Checkbox
                     v-if="showCheckbox"

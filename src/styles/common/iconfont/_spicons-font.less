@@ -1,0 +1,31 @@
+// spicons Font Path
+// --------------------------
+
+@font-face {
+  font-family: @spicons-font-family;
+  src:  url('@{spicons-font-path}/spicons.eot?@{spicons-version}');
+  src:  url('@{spicons-font-path}/spicons.eot?@{spicons-version}#iefix') format('embedded-opentype'),
+    url('@{spicons-font-path}/spicons.ttf?@{spicons-version}') format('truetype'),
+    url('@{spicons-font-path}/spicons.woff?@{spicons-version}') format('woff'),
+    url('@{spicons-font-path}/spicons.svg?@{spicons-version}#spicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ivu-icon() {
+    display: inline-block;
+    font-family: @spicons-font-family;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ivu-icon {
+    .ivu-icon();
+}

@@ -3,7 +3,7 @@
         <div :class="classes" :style="styles">
             <div :class="[baseClass + '-content']" ref="content" v-html="content"></div>
             <a :class="[baseClass + '-close']" @click="close" v-if="closable">
-                <i class="ivu-icon ivu-icon-ios-close-empty"></i>
+                <i class="ivu-icon ivu-icon-close"></i>
             </a>
         </div>
     </transition>

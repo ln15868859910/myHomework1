@@ -58,10 +58,10 @@
                 let type = '';
                 switch (this.currentStatus) {
                     case 'wrong':
-                        type = 'ios-close';
+                        type = 'close';
                         break;
                     case 'success':
-                        type = 'ios-checkmark';
+                        type = 'checkmark';
                         break;
                 }
 

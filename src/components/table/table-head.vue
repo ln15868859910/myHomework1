@@ -12,8 +12,8 @@
                         <template v-else>
                             <span v-html="renderHeader(column, index)"></span>
                             <span :class="[prefixCls + '-sort']" v-if="column.sortable">
-                                <i class="ivu-icon ivu-icon-arrow-up-b" :class="{on: column._sortType === 'asc'}" @click="handleSort(index, 'asc')"></i>
-                                <i class="ivu-icon ivu-icon-arrow-down-b" :class="{on: column._sortType === 'desc'}" @click="handleSort(index, 'desc')"></i>
+                                <i class="ivu-icon ivu-icon-arrow-up" :class="{on: column._sortType === 'asc'}" @click="handleSort(index, 'asc')"></i>
+                                <i class="ivu-icon ivu-icon-arrow-down" :class="{on: column._sortType === 'desc'}" @click="handleSort(index, 'desc')"></i>
                             </span>
                             <Poptip
                                 v-if="isPopperShow(column)"

@@ -26,13 +26,13 @@
         <br/><br/>
          <h3>带图标状态</h3>
         <i-switch v-model="m3">
-            <Icon type="android-done" slot="open"></Icon>
-            <Icon type="android-close" slot="close"></Icon>
+            <Icon type="checkmark" slot="open"></Icon>
+            <Icon type="close" slot="close"></Icon>
         </i-switch>
         <h4>不可用状态</h4>
          <i-switch disabled="disabled">
-             <Icon type="android-done" slot="open"></Icon>
-            <Icon type="android-close" slot="close"></Icon>
+             <Icon type="checkmark" slot="open"></Icon>
+            <Icon type="close" slot="close"></Icon>
         </i-switch>
     </div>
 </template>
