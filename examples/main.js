@@ -180,6 +180,10 @@ const router = new VueRouter({
         {
             path: '/notice',
             component: require('./routers/notice.vue')
+        },
+        {
+            path: '/consultFilter',
+            component: require('./routers/consultFilter.vue')
         }
     ]
 });
