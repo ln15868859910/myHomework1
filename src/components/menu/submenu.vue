@@ -2,7 +2,7 @@
     <li :class="classes" @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
         <div :class="[prefixCls + '-submenu-title']" ref="reference" @click="handleClick">
             <slot name="title"></slot>
-            <Icon type="ios-arrow-down" :class="[prefixCls + '-submenu-title-icon']"></Icon>
+            <Icon type="chevron-down" :class="[prefixCls + '-submenu-title-icon']"></Icon>
         </div>
         <ul :class="[prefixCls]" v-if="mode === 'vertical'" v-show="opened"><slot></slot></ul>
         <transition name="slide-up" v-else>

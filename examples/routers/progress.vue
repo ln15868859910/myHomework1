@@ -2,8 +2,8 @@
     <div>
         <i-progress :percent="percent" :stroke-width="6"></i-progress>
         <Button-group>
-            <Button icon="ios-plus-empty" @click.native="add"></Button>
-            <Button icon="ios-minus-empty" @click.native="minus"></Button>
+            <Button icon="plus" @click.native="add"></Button>
+            <Button icon="minus" @click.native="minus"></Button>
         </Button-group>
         <br>
         <Progress :percent="70" status="wrong" :stroke-width="6"></Progress>

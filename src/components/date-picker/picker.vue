@@ -206,9 +206,9 @@
                 return this.open === null ? this.visible : this.open;
             },
             iconType () {
-                let icon = 'ios-calendar-outline';
-                if (this.type === 'time' || this.type === 'timerange') icon = 'ios-clock-outline';
-                if (this.showClose) icon = 'ios-close';
+                let icon = 'calendar';
+                if (this.type === 'time' || this.type === 'timerange') icon = 'clock';
+                if (this.showClose) icon = 'close';
                 return icon;
             },
             transition () {

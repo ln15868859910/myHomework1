@@ -1,5 +1,5 @@
 <template>
-    <Rate v-model="value">
+    <Rate v-model="value" allow-half>
     </Rate>
 </template>
 <script>

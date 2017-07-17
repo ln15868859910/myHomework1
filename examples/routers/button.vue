@@ -26,8 +26,8 @@
     <br><br>
     <div>
     <span>带图标</span>
-    <Button type="ghost" icon="ios-search">搜索</Button>
-    <Button type="ghost" icon="ios-search" disabled>搜索</Button>
+    <Button type="ghost" icon="search">搜索</Button>
+    <Button type="ghost" icon="search" disabled>搜索</Button>
     </div>
     <br><br>
     <div>
@@ -74,14 +74,8 @@
             </Button>
         </Button-group>
         <Button-group>
-            <Button type="primary" icon="ios-skipbackward"></Button>
-            <Button type="primary" icon="ios-skipforward"></Button>
-        </Button-group>
-        <Button-group>
-            <Button type="ghost" icon="ios-color-wand-outline"></Button>
-            <Button type="ghost" icon="ios-sunny-outline"></Button>
-            <Button type="ghost" icon="ios-crop"></Button>
-            <Button type="ghost" icon="ios-color-filter-outline"></Button>
+            <Button type="primary" icon="skip-back"></Button>
+            <Button type="primary" icon="skip-forward"></Button>
         </Button-group>
         <br><br>
         <h4>圆角</h4>
@@ -97,14 +91,8 @@
             </Button>
         </Button-group>
         <Button-group shape="circle">
-            <Button type="primary" icon="ios-skipbackward"></Button>
-            <Button type="primary" icon="ios-skipforward"></Button>
-        </Button-group>
-        <Button-group shape="circle">
-            <Button type="ghost" icon="ios-color-wand-outline"></Button>
-            <Button type="ghost" icon="ios-sunny-outline"></Button>
-            <Button type="ghost" icon="ios-crop"></Button>
-            <Button type="ghost" icon="ios-color-filter-outline"></Button>
+            <Button type="primary" icon="skip-back"></Button>
+            <Button type="primary" icon="skip-forward"></Button>
         </Button-group>
         <br><br>
         <h4>尺寸</h4>

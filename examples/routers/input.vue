@@ -8,8 +8,8 @@
     <br>
     <div>
     <span>带Icon</span>
-    <Input v-model="value" icon="ios-clock-outline" placeholder="请输入..." style="width: 200px;"></Input>
-    <Input v-model="value" disabled icon="ios-clock-outline" placeholder="请输入..." style="width: 200px;"></Input>
+    <Input v-model="value" icon="clock" placeholder="请输入..." style="width: 200px;"></Input>
+    <Input v-model="value" disabled icon="clock" placeholder="请输入..." style="width: 200px;"></Input>
     </div>
     <br>
     <div>
@@ -18,10 +18,10 @@
     <Input v-model="value" disabled type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
     </div>
     <br><br><br>
-        <i-input v-model="value11" icon="ios-clock-outline" :autofocus="autofocus">
+        <i-input v-model="value11" icon="clock" :autofocus="autofocus">
             <span slot="prepend">.com</span>
         </i-input>
-        <i-input v-model="value11" icon="ios-clock-outline">
+        <i-input v-model="value11" icon="clock">
             <span slot="append">.com</span>
         </i-input>
     </div>

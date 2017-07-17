@@ -6,7 +6,7 @@
             @click="toggleMenu">
             <div class="ivu-tag" v-for="(item, index) in selectedMultiple">
                 <span class="ivu-tag-text">{{ item.label }}</span>
-                <Icon type="ios-close-empty" @click.native.stop="removeTag(index)"></Icon>
+                <Icon type="close" @click.native.stop="removeTag(index)"></Icon>
             </div>
             <span :class="[prefixCls + '-placeholder']" v-show="showPlaceholder && !filterable">{{ localePlaceholder }}</span>
             <span :class="[prefixCls + '-selected-value']" v-show="!showPlaceholder && !multiple && !filterable">{{ selectedSingle }}</span>
@@ -21,8 +21,8 @@
                 @keydown="resetInputState"
                 @keydown.delete="handleInputDelete"
                 ref="input">
-            <Icon type="ios-close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSingleSelect"></Icon>
-            <Icon type="arrow-down-b" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
+            <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSingleSelect"></Icon>
+            <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
         </div>
         <transition :name="transitionName">
             <Drop v-show="dropVisible" :placement="placement" ref="dropdown">

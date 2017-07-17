@@ -10,11 +10,11 @@
             <div :class="[datePrefixCls + '-header']" v-show="currentView !== 'time'">
                 <span
                     :class="iconBtnCls('prev', '-double')"
-                    @click="prevYear"><Icon type="ios-arrow-left"></Icon></span>
+                    @click="prevYear"><Icon type="fast-backward"></Icon></span>
                 <span
                     :class="iconBtnCls('prev')"
                     @click="prevMonth"
-                    v-show="currentView === 'date'"><Icon type="ios-arrow-left"></Icon></span>
+                    v-show="currentView === 'date'"><Icon type="chevron-left"></Icon></span>
                 <span
                     :class="[datePrefixCls + '-header-label']"
                     @click="showYearPicker">{{ yearLabel }}</span>
@@ -24,11 +24,11 @@
                     v-show="currentView === 'date'">{{ monthLabel }}</span>
                 <span
                     :class="iconBtnCls('next', '-double')"
-                    @click="nextYear"><Icon type="ios-arrow-right"></Icon></span>
+                    @click="nextYear"><Icon type="fast-forward"></Icon></span>
                 <span
                     :class="iconBtnCls('next')"
                     @click="nextMonth"
-                    v-show="currentView === 'date'"><Icon type="ios-arrow-right"></Icon></span>
+                    v-show="currentView === 'date'"><Icon type="chevron-right"></Icon></span>
             </div>
             <div :class="[prefixCls + '-content']">
                 <date-table

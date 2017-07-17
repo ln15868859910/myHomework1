@@ -8,7 +8,7 @@
                 <Icon :type="format(file)"></Icon> {{ file.name }}
             </span>
             <Icon
-                type="ios-close-empty"
+                type="close"
                 :class="[prefixCls + '-list-remove']"
                 v-show="file.status === 'finished'"
                 @click.native="handleRemove(file)"></Icon>

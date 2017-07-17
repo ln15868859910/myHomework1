@@ -9,7 +9,7 @@
                             <div :class="tabCls(item)" v-for="(item, index) in navList" @click="handleChange(index)">
                                 <Icon v-if="item.icon !== ''" :type="item.icon"></Icon>
                                 {{ item.label }}
-                                <Icon v-if="showClose(item)" type="ios-close-empty" @click.native.stop="handleRemove(index)"></Icon>
+                                <Icon v-if="showClose(item)" type="close" @click.native.stop="handleRemove(index)"></Icon>
                             </div>
                         </div>
                         <div :class="[prefixCls + '-nav-right']" v-if="showSlot"><slot name="extra"></slot></div>

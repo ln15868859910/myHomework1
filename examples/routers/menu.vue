@@ -4,16 +4,16 @@
             <Row type="flex" justify="center" align="middle">
                 <i-col span="12">
                     <Menu-item name="1">
-                        <Icon type="ios-paper"></Icon>
+                        <Icon type="document"></Icon>
                         内容管理
                     </Menu-item>
                     <Menu-item name="2">
-                        <Icon type="ios-people"></Icon>
+                        <Icon type="user"></Icon>
                         用户管理
                     </Menu-item>
                     <Submenu name="3">
                         <template slot="title">
-                            <Icon type="stats-bars"></Icon>
+                            <Icon type="sad"></Icon>
                             统计分析
                         </template>
                         <Menu-group title="使用">

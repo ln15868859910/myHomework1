@@ -23,7 +23,7 @@
                             return h('div', [
                                 h('Icon', {
                                     props: {
-                                        type: 'person'
+                                        type: 'user'
                                     }
                                 }),
                                 h('strong', params.row.name)

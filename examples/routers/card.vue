@@ -1,11 +1,11 @@
 <template>
     <Card style="width:350px">
         <p slot="title">
-            <Icon type="ios-film-outline"></Icon>
+            <Icon type="happy"></Icon>
             经典电影
         </p>
         <a href="#" slot="extra" @click.prevent="changeLimit">
-            <Icon type="ios-loop-strong"></Icon>
+            <Icon type="refresh"></Icon>
             换一换
         </a>
         <ul>

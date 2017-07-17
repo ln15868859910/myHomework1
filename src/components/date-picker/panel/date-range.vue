@@ -11,11 +11,11 @@
                 <div :class="[datePrefixCls + '-header']" v-show="leftCurrentView !== 'time'">
                     <span
                         :class="iconBtnCls('prev', '-double')"
-                        @click="prevYear('left')"><Icon type="ios-arrow-left"></Icon></span>
+                        @click="prevYear('left')"><Icon type="fast-backward"></Icon></span>
                     <span
                         :class="iconBtnCls('prev')"
                         @click="prevMonth"
-                        v-show="leftCurrentView === 'date'"><Icon type="ios-arrow-left"></Icon></span>
+                        v-show="leftCurrentView === 'date'"><Icon type="chevron-left"></Icon></span>
                     <span
                         :class="[datePrefixCls + '-header-label']"
                         @click="showYearPicker('left')">{{ leftYearLabel }}</span>
@@ -26,7 +26,7 @@
                     <span
                         :class="iconBtnCls('next', '-double')"
                         @click="nextYear('left')"
-                        v-show="leftCurrentView === 'year' || leftCurrentView === 'month'"><Icon type="ios-arrow-right"></Icon></span>
+                        v-show="leftCurrentView === 'year' || leftCurrentView === 'month'"><Icon type="chevron-right"></Icon></span>
                 </div>
                 <date-table
                     v-show="leftCurrentView === 'date'"
@@ -65,7 +65,7 @@
                      <span
                          :class="iconBtnCls('prev', '-double')"
                          @click="prevYear('right')"
-                         v-show="rightCurrentView === 'year' || rightCurrentView === 'month'"><Icon type="ios-arrow-left"></Icon></span>
+                         v-show="rightCurrentView === 'year' || rightCurrentView === 'month'"><Icon type="chevron-left"></Icon></span>
                     <span
                         :class="[datePrefixCls + '-header-label']"
                         @click="showYearPicker('right')">{{ rightYearLabel }}</span>
@@ -75,11 +75,11 @@
                         v-show="rightCurrentView === 'date'">{{ rightMonthLabel }}</span>
                     <span
                         :class="iconBtnCls('next', '-double')"
-                        @click="nextYear('right')"><Icon type="ios-arrow-right"></Icon></span>
+                        @click="nextYear('right')"><Icon type="fast-forward"></Icon></span>
                     <span
                         :class="iconBtnCls('next')"
                         @click="nextMonth"
-                        v-show="rightCurrentView === 'date'"><Icon type="ios-arrow-right"></Icon></span>
+                        v-show="rightCurrentView === 'date'"><Icon type="chevron-right"></Icon></span>
                 </div>
                 <date-table
                     v-show="rightCurrentView === 'date'"
