@@ -73,9 +73,9 @@ const spui = {
     iForm: Form,
     FormItem: Form.Item,
  
-    iFilter: Filter,
-    iFilterGeneral:Filter.general,
-    iFilterUnion:Filter.union,
+    consultFilter: Filter,
+    consultFilterGeneral:Filter.general,
+    consultFilterUnion:Filter.union,
     Col,
     iCol: Col,
     Collapse,

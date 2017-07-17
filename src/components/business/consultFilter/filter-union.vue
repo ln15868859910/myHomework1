@@ -4,7 +4,7 @@
 <script>
 
     export default {
-        name: 'FilterUnion',
+        name: 'consultFilterUnion',
         props: {},
         data () {
             return {
