@@ -24,11 +24,11 @@
                     v-show="currentView === 'date'">{{ monthLabel }}</span>
                 <span
                     :class="iconBtnCls('next', '-double')"
-                    @click="nextYear"><Icon type="chevron-right"></Icon></span>
+                    @click="nextYear"><Icon type="fast-forward"></Icon></span>
                 <span
                     :class="iconBtnCls('next')"
                     @click="nextMonth"
-                    v-show="currentView === 'date'"><Icon type="fast-forward"></Icon></span>
+                    v-show="currentView === 'date'"><Icon type="chevron-right"></Icon></span>
             </div>
             <div :class="[prefixCls + '-content']">
                 <date-table
