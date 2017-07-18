@@ -4,13 +4,13 @@
 .@{consultFilter-prefix-cls} {
 
     width: 1186px;
-    height: 130px;
     position: relative;
     background:#fff;
     border:1px solid #D4DFE5;
 
     
     &>ul{
+        position: relative;
         height: 70px;
         border-bottom:1px solid #D4DFE5;
 
@@ -20,13 +20,48 @@
         }
     }
 
- 
+    &-custom{
+        position: absolute;
+        left:2.2%;
+        margin-top:1.7%;
+    }
+
+    &-customLeft,
+    &-customCenter,
+    &-customRight
+    {
+        display:inline-block;
+        width:100px;
+        height:30px;
+        font-family: MicrosoftYaHeiUI;
+        font-size: 14px;
+        text-align: center;
+        border-radius: 4px;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    &-customLeft{
+        color: #FFFFFF;
+        background: #5295E7;
+        line-height: 30px;
+        &:hover{
+            background:#4ac8bb;
+        }
+    }
+
+    &-customCenter,
+    &-customRight{
+        margin-left:10px;
+        line-height: 28px;
+        color:#3c4b59;
+        border:1px solid #b9bec5;
+    }
 
     &-search{
-        float:left;
-        margin-top:1.7%;
-        margin-left:48.8%;
-
+        position:absolute;
+        left:666px;
+        top:20px;
         .ivu-select{
             display:inline-block;
         }
@@ -55,8 +90,24 @@
 
     &-fitlerResult{
         width:1186px;
-        height:60px;
+        min-height:60px;
         border-top:none;
+
+        & > ul{
+            height:100%;
+        }
+        & > ul > li{
+            display: inline-block;
+        }
+        &-sortName{
+            font-family: MicrosoftYaHeiUI;
+            font-size: 12px;
+            color: #30404F;
+        }
+        &-sortLabel{
+            max-width: 270px;
+            overflow: ellips
+        }
     }
 
     &-container{
