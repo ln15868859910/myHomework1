@@ -4,11 +4,11 @@
 <script>
 
     export default {
-        name: 'consultFilterGeneral',
+        name: 'consultFilterMulti',
         props: {},
         data () {
             return {
-                value:"筛选子组件-单选/多选"
+                value:"筛选子组件-多选"
             };
         },
         computed: {

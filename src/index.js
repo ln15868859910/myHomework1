@@ -46,7 +46,7 @@ import { Row, Col } from './components/grid';
 import { Select, Option, OptionGroup } from './components/select';
 import locale from './locale';
 //业务组件
-import Filter from './components/business/consultFilter';
+import consultFilter from './components/business/consultFilter';
 
 const spui = {
     Affix,
@@ -72,10 +72,13 @@ const spui = {
     Form,
     iForm: Form,
     FormItem: Form.Item,
- 
-    consultFilter: Filter,
-    consultFilterGeneral:Filter.general,
-    consultFilterUnion:Filter.union,
+    //新筛选组件
+    consultFilter: consultFilter,
+    consultFilterSingle:consultFilter.single,
+    consultFilterMulti:consultFilter.multi,
+    consultFilterUnion:consultFilter.union,
+    consultFilterSlot:consultFilter.slot,
+
     Col,
     iCol: Col,
     Collapse,

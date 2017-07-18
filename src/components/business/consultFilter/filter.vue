@@ -41,11 +41,11 @@
         <!-- 下拉组件区域 -->
         <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
             <!-- 单选组件 -->
-            <consult-filter-general></consult-filter-general>
+            <consult-filter-single></consult-filter-single>
             <!-- 联动组件 -->
             <consult-filter-union></consult-filter-union>
             <!-- 多选组件 -->
-            <consult-filter-general></consult-filter-general>
+            <consult-filter-multi></consult-filter-multi>
         </div>
     </div>
 </template>
@@ -55,13 +55,14 @@ const prefixCls = "spui-b-consultFilter";
 
 import iSelect from '../../select';
 import iInput from '../../input'
-import FilterGeneral from './filter-general.vue';
-import FilterUnion from './filter-union.vue';
+import filterSingle from './filter-single.vue';
+import filterUnion from './filter-union.vue';
+import filterMulti from './filter-multi.vue';
 
 
 export default {
     name: 'consultFilter',
-    components: { iSelect, iInput, FilterGeneral, FilterUnion },
+    components: { iSelect, iInput, filterSingle, filterUnion,filterMulti },
     props: {
         filterData: {
             type: Object,
