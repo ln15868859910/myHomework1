@@ -117,7 +117,7 @@
 <template>
     <div>
         <div>基本状态：</div>
-        <Select v-model="model1" filterable class="xjw">
+        <Select v-model="model1" v-filterable="false" class="xjw">
             <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
         </Select>
         <div>分组选择</div>
