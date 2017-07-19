@@ -1,3 +1,12 @@
+/*
+ * @Author: li.lv 
+ * @Date: 2017-07-19 10:42:59 
+ * @Last Modified by: li.lv
+ * @Last Modified time: 2017-07-19 15:46:17
+ */
+
+
+// df
 <template>
     <div>
         <component :model="model" :is="currentView">
@@ -6,6 +15,7 @@
     </div>
 </template>
 <script>
+import Emiter from './emiter.vue';
 import { Select, Option, OptionGroup } from '../../select';
 const FilterSlotComponent = {
     props: {
@@ -18,6 +28,8 @@ const FilterSlotComponent = {
         }
     },
     render(h) {
+        var _this= this;
+        //select组件
         if (this.model.type == 1) {
             return h(
                 Select,
@@ -28,15 +40,19 @@ const FilterSlotComponent = {
                         disabled: this.model.disabled,
                         filterable: this.model.filterable,
                         placeholder: this.model.placeholder,
-                        clearable:true
+                        clearable: true
                     },
+                    on: {
+                        "on-change": function (value, label) {
+                            Emiter.$emit("union-change", { value: value, label: label });
+                        },
+                        "on-query-change": function () {
+                        }
+                    }
                 },
                 [
                     this.model.optionList.map(function (item) {
                         return h(Option, {
-                            attrs: {
-                                id: 'foo'
-                            },
                             props: {
                                 label: item.label,
                                 value: item.value
@@ -45,38 +61,7 @@ const FilterSlotComponent = {
                     })
 
                 ]
-            )
-            // return h(Select, {
-            //     value: "s",
-            //     disabled: true,
-            //     cityList: [
-            //         {
-            //             value: 'beijing',
-            //             label: '北京市'
-            //         },
-            //         {
-            //             value: 'shanghai',
-            //             label: '上海市'
-            //         },
-            //         {
-            //             value: 'shenzhen',
-            //             label: '深圳市'
-            //         },
-            //         {
-            //             value: 'hangzhou',
-            //             label: '杭州市'
-            //         },
-            //         {
-            //             value: 'nanjing',
-            //             label: '南京市'
-            //         },
-            //         {
-            //             value: 'chongqing',
-            //             label: '重庆市'
-            //         }
-            //     ]
-
-            // });
+                , this.$slots.default)
         }
         if (this.model.type == 3) {
             var me = this;
@@ -118,10 +103,10 @@ const FilterSlotComponent = {
         if (this.model.componentType == 1) {
             return createElement(Select);
         }
-        else if (this.model.componentType == 2) {
+        else if (this.model.type == 3) {
             return createElement(Select);
         }
-        else {
+        else if (this.model.type == 4) {
             return createElement(Select);
         }
     }
@@ -138,6 +123,9 @@ export default {
         return {
             currentView: FilterSlotComponent
         };
+    },
+    components: { 
+        Emiter
     },
     computed: {
 

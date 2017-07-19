@@ -47,7 +47,7 @@
             <!-- 单选组件 -->
             <consult-filter-single :model-list="singleModelList"></consult-filter-single>
             <!-- 联动组件 -->
-            <consult-filter-union :model-list="unionModelList"></consult-filter-union>
+            <consult-filter-union :model="unionModel"></consult-filter-union>
             <!-- 多选组件 -->
             <consult-filter-multi></consult-filter-multi>
         </div>
@@ -168,9 +168,19 @@ export default {
                     }],
                 }
             ],
-            unionModelList: [
+            unionModel: [
                 {
                     type: 1,
+                    value: "false",
+                    multiple: false,
+                    disabled: false,
+                    filterable: true,
+                    placeholder: "111",
+                    clearable: true,
+                    callback: {
+                        "on-change":function(){},
+                        "on-query-change":function(){}
+                    },
                     optionList: [
                         {
                             value: "beijing",
@@ -183,7 +193,7 @@ export default {
                     ]
                 },
                 {
-                    type: 1,
+                    type: 2,
                     optionList: [
                         {
                             value: "beijing",
@@ -242,7 +252,6 @@ export default {
     methods: {
 
         /****************************自定义区域相关*********************************/
-
         setCustomStyleName() {
 
             var

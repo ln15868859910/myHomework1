@@ -1,10 +1,11 @@
 <template>
     <div>
-        <common-slot v-for="(model,index) in modelList"  key="index" :model="model"></common-slot>
+        <common-slot v-for="(model,index) in model"  key="index" :model="model"></common-slot>
     </div>
 </template>
 <script>
 import CommonSlot from './filter-slot.vue';
+import Emiter from './emiter.vue';
 // const ConsultFilterUnionComponent = {
 //     //template: '<h3 v-for="item in items">{{ item.c}}</h3>',
 //     props: {
@@ -31,7 +32,7 @@ import CommonSlot from './filter-slot.vue';
 export default {
     name: 'consultFilterUnion',
     props: {
-        modelList: {
+        model: {
             require: true
         }
     },
@@ -47,9 +48,16 @@ export default {
 
     },
     mounted() {
-
+         this.init();
+         Emiter.$on("union-change",this.onChange);
     },
     methods: {
+        init(){
+
+        },
+        onChange(obj){
+           
+        }
 
     }
 };
