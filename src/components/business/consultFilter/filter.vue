@@ -21,21 +21,23 @@
     
             <!-- 筛选组件按钮区域 -->
             <li :class="filterBtn" @click="showContainer">
-                <div class="ivu-select-selection">
-                    <input type="text" value="筛选" class="ivu-select-input" disabled>
-                    <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
-                </div>
+                <Badge :count="filterResultAmount">
+                    <div class="ivu-select-selection">
+                        <input type="text" value="筛选" class="ivu-select-input" disabled>
+                        <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
+                    </div>
+                </Badge>
             </li>
         </ul>
     
         <!-- 筛选内容展示区域 -->
-        <div :class="fitlerResult" :style="{display:queryResult.length > 0 ? 'block': 'none'}">
+        <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
             <ul>
-                <li v-for="data in queryResult" :key="data">
+                <li v-for="data in filterResult" :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
-                     <Tooltip v-for="(label, index) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
-                         <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data.sortValue,index)">{{label.text}}</Tag>
-                     </Tooltip>
+                    <Tooltip v-for="(label, index) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
+                        <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data.sortValue,index)">{{label.text}}</Tag>
+                    </Tooltip>
                 </li>
             </ul>
         </div>
@@ -58,6 +60,7 @@ const prefixCls = "spui-b-consultFilter";
 import iSelect from '../../select';
 import iInput from '../../input';
 import Tag from '../../tag';
+import Badge from '../../badge';
 import Tooltip from '../../tooltip';
 import filterSingle from './filter-single.vue';
 import filterUnion from './filter-union.vue';
@@ -65,7 +68,7 @@ import filterMulti from './filter-multi.vue';
 
 export default {
     name: 'consultFilter',
-    components: { iSelect, iInput, Tag, Tooltip, filterSingle, filterUnion, filterMulti},
+    components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti },
     props: {
         filterData: {
             type: Object,
@@ -93,7 +96,7 @@ export default {
                 isCustomRightShow: true
             },
 
-            queryResult: [{//mock数据
+            filterResult: [{//mock数据
                 sortName: "跟进状态",
                 sortValue: "1",
                 label: [{
@@ -105,7 +108,7 @@ export default {
                     "value": "13",
                     "isAvoidToolTip": true
                 }],
-            },{//mock数据
+            }, {//mock数据
                 sortName: "跟进",
                 sortValue: "2",
                 label: [{
@@ -116,55 +119,55 @@ export default {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
-                },{
+                }, {
                     "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
@@ -178,45 +181,45 @@ export default {
             },
             customArea: {
                 buttonLeft: {
-                    styleName:`${prefixCls}-customLeft`,
-                    template:"新增咨询",
-                    clickEvent:function(){}
+                    styleName: `${prefixCls}-customLeft`,
+                    template: "新增咨询",
+                    clickEvent: function () { }
                 },
                 buttonCenter: {
-                    styleName:`${prefixCls}-customCenter`,
-                    template:"导入",
-                    clickEvent:function(){}
+                    styleName: `${prefixCls}-customCenter`,
+                    template: "导入",
+                    clickEvent: function () { }
                 },
                 buttonRight: {
-                    styleName:`${prefixCls}-customRight`,
-                    template:"导出",
-                    clickEvent:function(){}
+                    styleName: `${prefixCls}-customRight`,
+                    template: "导出",
+                    clickEvent: function () { }
                 }
             },
-            unionModelList:[
+            unionModelList: [
                 {
-                    type:1,
-                    optionList:[
+                    type: 1,
+                    optionList: [
                         {
-                            value:"beijing",
-                            label:"北京"
+                            value: "beijing",
+                            label: "北京"
                         },
                         {
-                            value:"hangzhou",
-                            label:"杭州"
+                            value: "hangzhou",
+                            label: "杭州"
                         }
                     ]
                 },
                 {
-                    type:1,
-                    optionList:[
+                    type: 1,
+                    optionList: [
                         {
-                            value:"beijing",
-                            label:"北京"
+                            value: "beijing",
+                            label: "北京"
                         },
                         {
-                            value:"hangzhou",
-                            label:"杭州"
+                            value: "hangzhou",
+                            label: "杭州"
                         }
                     ]
                 }
@@ -228,10 +231,10 @@ export default {
         classes() {
             return `${prefixCls}`;
         },
-        sortName(){
+        sortName() {
             return `${prefixCls}-sortName`
         },
-        sortLabel(){
+        sortLabel() {
             return `${prefixCls}-label`
         },
         custom() {
@@ -248,18 +251,29 @@ export default {
         },
         filterContainer() {
             return `${prefixCls}-container`
+        },
+        filterResultAmount(){
+
+            var count = 0;
+
+            for(let i=0, len = this.filterResult.length; i<len; i++){
+
+                count += this.filterResult[i].label.length
+            }
+
+            return count;
         }
     },
     mounted() {
         this.init();
     },
     methods: {
-       
+
         /****************************自定义区域相关*********************************/
 
         setCustomStyleName() {
 
-            var 
+            var
                 leftStyleName = this.customData.buttonLeft.styleName,
                 centerStyleName = this.customData.buttonCenter.styleName,
                 rightStyleName = this.customData.buttonRight.styleName;
@@ -274,8 +288,8 @@ export default {
 
             var
                 tplLeft = this.customData.buttonLeft.template,
-                tplCenter =this.customData.buttonCenter.template,
-                tplRight =this.customData.buttonRight.template,
+                tplCenter = this.customData.buttonCenter.template,
+                tplRight = this.customData.buttonRight.template,
 
                 tplLeftDefult = this.customArea.buttonLeft.template,
                 tplCenterDefult = this.customArea.buttonCenter.template,
@@ -290,23 +304,23 @@ export default {
             this.$el.querySelector("#customRight").innerHTML = tplRightDefult;
         },
 
-        setCustomCallBack(){
+        setCustomCallBack() {
             var
                 leftCallBack = this.customData.buttonLeft.clickEvent,
                 centerCallBack = this.customData.buttonCenter.clickEvent,
                 rightCallBack = this.customData.buttonRight.clickEvent;
-            
-            if(leftCallBack && !(typeof leftCallBack === "function")){
+
+            if (leftCallBack && !(typeof leftCallBack === "function")) {
                 throw new Error("请给buttonLeft点击事件传入正确的函数")
             }
             leftCallBack ? this.customArea.buttonLeft.clickEvent = leftCallBack : false;
 
-            if(centerCallBack && !(typeof centerCallBack === "function")){
+            if (centerCallBack && !(typeof centerCallBack === "function")) {
                 throw new Error("请给buttonCenter点击事件传入正确的函数")
             }
             centerCallBack ? this.customArea.buttonCenter.clickEvent = centerCallBack : false;
 
-            if(rightCallBack && !(typeof rightCallBack === "function")){
+            if (rightCallBack && !(typeof rightCallBack === "function")) {
                 throw new Error("请给buttonRight点击事件传入正确的函数")
             }
             rightCallBack ? this.customArea.buttonRight.clickEvent = rightCallBack : false;
@@ -341,10 +355,10 @@ export default {
 
         },
         setLabelMaxWidth() {
-            
+
         },
         //计算溢出需要显示tooltip的文字
-        setToolTipVisible(){
+        setToolTipVisible() {
 
             var labelInstances = this.$refs.sortLabel,
                 sameSortStartI = -1,//记录同一类型起始位置的索引
@@ -352,62 +366,62 @@ export default {
                 arr = [];//保存匹配到的筛选分类的分类名和索引
 
             //找到内容溢出的tag
-            for(let i=0, len = labelInstances.length; i<len; i++){
+            for (let i = 0, len = labelInstances.length; i < len; i++) {
                 var labelSortNew = /sortLabel-([^]*)/.exec(labelInstances[i].$el.querySelector(`.${prefixCls}-label`).className)[1];
                 var labelWidth = labelInstances[i].$el.querySelector('.ivu-tag-text').clientWidth;
 
                 //初始化时给labelSortOld赋新值,并记录当前的起始索引位置,切换分类后旧值和新值不同，重新记录起始位置
-                if(labelSortOld == "undefined" || labelSortOld != labelSortNew){
+                if (labelSortOld == "undefined" || labelSortOld != labelSortNew) {
                     sameSortStartI = i;
                 }
                 //给旧值赋值
                 labelSortOld = labelSortNew
                 //内容溢出记录当前分类和相对位置（实际位置）索引
-                if(labelWidth >= 250){
-                    arr.push({sortValue:`${labelSortNew}`,index:i-sameSortStartI});
+                if (labelWidth >= 250) {
+                    arr.push({ sortValue: `${labelSortNew}`, index: i - sameSortStartI });
                 }
             }
 
 
             //给内容溢出的tag设置状态
-            var queryData = this.queryResult;
-            for(let i= 0, len = queryData.length; i<len; i++){
-                
-                for(let j=0 , len = arr.length; j<len; j++){
-                    
+            var queryData = this.filterResult;
+            for (let i = 0, len = queryData.length; i < len; i++) {
+
+                for (let j = 0, len = arr.length; j < len; j++) {
+
                     var matchedSortValue = arr[j].sortValue;
                     var matchedIndex = arr[j].index;
 
-                    if(arr[j].sortValue == queryData[i].sortValue){
+                    if (arr[j].sortValue == queryData[i].sortValue) {
                         queryData[i].label[matchedIndex].isAvoidToolTip = false;
                     }
                 }
-               
+
             }
-            
+
         },
 
-        closeTag(sortValue,index){
+        closeTag(sortValue, index) {
 
             //每次循环判断当前分类下选中项是否为空
             var CurrentSortEmptyIndex = -1;
 
-            for(let i= 0, len = this.queryResult.length; i<len; i++){
+            for (let i = 0, len = this.filterResult.length; i < len; i++) {
                 //找到对应的当前分类
-                if(this.queryResult[i].sortValue == sortValue){
-                    this.queryResult[i].label.splice(index,1);
-                    if(this.queryResult[i].label.length == 0){
+                if (this.filterResult[i].sortValue == sortValue) {
+                    this.filterResult[i].label.splice(index, 1);
+                    if (this.filterResult[i].label.length == 0) {
                         CurrentSortEmptyIndex = i;
                     }
                 }
             }
 
             //循环结束删除选项为空的分类
-            if(CurrentSortEmptyIndex != -1){
-                 this.queryResult.splice(CurrentSortEmptyIndex,1);
+            if (CurrentSortEmptyIndex != -1) {
+                this.filterResult.splice(CurrentSortEmptyIndex, 1);
                 CurrentSortEmptyIndex = -1;
             }
-           
+
         },
 
         init() {
@@ -425,7 +439,7 @@ export default {
                 this.status.isCustomRightShow = this.customData.buttonRight.isShow === false ? false : true;
 
                 //传入customData时
-                if(!this.customData.buttonLeft || !this.customData.buttonCenter || !this.customData.buttonRight){
+                if (!this.customData.buttonLeft || !this.customData.buttonCenter || !this.customData.buttonRight) {
                     throw new Error("请传入正确格式的customData配置项");
                 }
                 this.setCustomTemplate();
@@ -435,7 +449,7 @@ export default {
             this.setToolTipVisible();
         }
 
-        
+
 
     }
 };
