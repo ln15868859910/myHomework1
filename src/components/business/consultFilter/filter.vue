@@ -29,11 +29,13 @@
         </ul>
     
         <!-- 筛选内容展示区域 -->
-        <div :class="fitlerResult">
+        <div :class="fitlerResult" :style="{display:queryResult.length > 0 ? 'block': 'none'}">
             <ul>
-                <li v-for="data in queryResult">
-                    <span :class="sortName">{{data.sortname}}：</span>
-                    <span :class="sortLabel" v-for="label in data.label">{{label.text}}&nbsp;</span>
+                <li v-for="data in queryResult" :key="data">
+                    <span :class="sortName">{{data.sortName}}：</span>
+                     <Tooltip v-for="(label, index) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
+                         <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data.sortValue,index)">{{label.text}}</Tag>
+                     </Tooltip>
                 </li>
             </ul>
         </div>
@@ -54,15 +56,16 @@
 const prefixCls = "spui-b-consultFilter";
 
 import iSelect from '../../select';
-import iInput from '../../input'
+import iInput from '../../input';
+import Tag from '../../tag';
+import Tooltip from '../../tooltip';
 import filterSingle from './filter-single.vue';
 import filterUnion from './filter-union.vue';
 import filterMulti from './filter-multi.vue';
 
-
 export default {
     name: 'consultFilter',
-    components: { iSelect, iInput, filterSingle, filterUnion,filterMulti },
+    components: { iSelect, iInput, Tag, Tooltip, filterSingle, filterUnion, filterMulti},
     props: {
         filterData: {
             type: Object,
@@ -91,24 +94,80 @@ export default {
             },
 
             queryResult: [{//mock数据
-                sortname: "跟进状态",
-                sortvalue: "111",
+                sortName: "跟进状态",
+                sortValue: "1",
                 label: [{
                     "text": "跟进中",
-                    "value": "123",
+                    "value": "11",
+                    "isAvoidToolTip": true
                 }, {
                     "text": "待跟进",
                     "value": "13",
+                    "isAvoidToolTip": true
                 }],
             },{//mock数据
-                sortname: "跟进状态",
-                sortvalue: "111",
+                sortName: "跟进",
+                sortValue: "2",
                 label: [{
                     "text": "跟进中",
-                    "value": "123",
+                    "value": "11",
+                    "isAvoidToolTip": true
                 }, {
                     "text": "待跟进",
-                    "value": "13",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                },{
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
                 }],
             }],
             searchArea: {
@@ -176,13 +235,11 @@ export default {
             return `${prefixCls}-container`
         }
     },
-
     mounted() {
         this.init();
-        
     },
     methods: {
-
+       
         /****************************自定义区域相关*********************************/
 
         setCustomStyleName() {
@@ -268,9 +325,75 @@ export default {
         setFilterResult() {
 
         },
+        setLabelMaxWidth() {
+            
+        },
+        //计算溢出需要显示tooltip的文字
+        setToolTipVisible(){
+
+            var labelInstances = this.$refs.sortLabel,
+                sameSortStartI = -1,//记录同一类型起始位置的索引
+                labelSortOld = "",
+                arr = [];//保存匹配到的筛选分类的分类名和索引
+
+            //找到内容溢出的tag
+            for(let i=0, len = labelInstances.length; i<len; i++){
+                var labelSortNew = /sortLabel-([^]*)/.exec(labelInstances[i].$el.querySelector(`.${prefixCls}-label`).className)[1];
+                var labelWidth = labelInstances[i].$el.querySelector('.ivu-tag-text').clientWidth;
+
+                //初始化时给labelSortOld赋新值,并记录当前的起始索引位置,切换分类后旧值和新值不同，重新记录起始位置
+                if(labelSortOld == "undefined" || labelSortOld != labelSortNew){
+                    sameSortStartI = i;
+                }
+                //给旧值赋值
+                labelSortOld = labelSortNew
+                //内容溢出记录当前分类和相对位置（实际位置）索引
+                if(labelWidth >= 250){
+                    arr.push({sortValue:`${labelSortNew}`,index:i-sameSortStartI});
+                }
+            }
 
 
+            //给内容溢出的tag设置状态
+            var queryData = this.queryResult;
+            for(let i= 0, len = queryData.length; i<len; i++){
+                
+                for(let j=0 , len = arr.length; j<len; j++){
+                    
+                    var matchedSortValue = arr[j].sortValue;
+                    var matchedIndex = arr[j].index;
 
+                    if(arr[j].sortValue == queryData[i].sortValue){
+                        queryData[i].label[matchedIndex].isAvoidToolTip = false;
+                    }
+                }
+               
+            }
+            
+        },
+
+        closeTag(sortValue,index){
+
+            //每次循环判断当前分类下选中项是否为空
+            var CurrentSortEmptyIndex = -1;
+
+            for(let i= 0, len = this.queryResult.length; i<len; i++){
+                //找到对应的当前分类
+                if(this.queryResult[i].sortValue == sortValue){
+                    this.queryResult[i].label.splice(index,1);
+                    if(this.queryResult[i].label.length == 0){
+                        CurrentSortEmptyIndex = i;
+                    }
+                }
+            }
+
+            //循环结束删除选项为空的分类
+            if(CurrentSortEmptyIndex != -1){
+                 this.queryResult.splice(CurrentSortEmptyIndex,1);
+                CurrentSortEmptyIndex = -1;
+            }
+           
+        },
 
         init() {
             //设置初始化搜索值
@@ -294,7 +417,7 @@ export default {
                 this.setCustomStyleName();
                 this.setCustomCallBack();
             }
-
+            this.setToolTipVisible();
         }
 
         
