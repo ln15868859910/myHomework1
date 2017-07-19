@@ -78,6 +78,43 @@ const FilterSlotComponent = {
 
             // });
         }
+        if (this.model.type == 3) {
+            var me = this;
+            return h(
+                Select,
+                {
+                    props: {
+                        value: this.model.defaultSelectValue,
+                        multiple: this.model.multiple,
+                        disabled: this.model.disabled,
+                        filterable: this.model.filterable,
+                        placeholder: this.model.placeholder,
+                        clearable:true
+                    },
+                    on:{
+                        "on-change": function(a){
+                            // me.model.callback(a)
+                            console.log(me)
+                            me.$emit("aa","aa")
+                        }
+                    }
+                },
+                [
+                    this.model.lables.map(function (item) {
+                        return h(Option, {
+                            attrs: {
+                                id: 'foo'
+                            },
+                            props: {
+                                label: item.text,
+                                value: item.value
+                            }
+                        })
+                    })
+
+                ]
+            )
+        }
         if (this.model.componentType == 1) {
             return createElement(Select);
         }

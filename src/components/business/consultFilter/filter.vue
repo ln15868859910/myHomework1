@@ -45,7 +45,7 @@
         <!-- 下拉组件区域 -->
         <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
             <!-- 单选组件 -->
-            <consult-filter-single></consult-filter-single>
+            <consult-filter-single :model-list="singleModelList"></consult-filter-single>
             <!-- 联动组件 -->
             <consult-filter-union :model-list="unionModelList"></consult-filter-union>
             <!-- 多选组件 -->
@@ -103,10 +103,6 @@ export default {
                     "text": "跟进中",
                     "value": "11",
                     "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "13",
-                    "isAvoidToolTip": true
                 }],
             }, {//mock数据
                 sortName: "跟进",
@@ -120,55 +116,11 @@ export default {
                     "value": "12",
                     "isAvoidToolTip": true
                 }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
                     "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
                     "value": "12",
                     "isAvoidToolTip": true
                 }, {
                     "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
                     "value": "12",
                     "isAvoidToolTip": true
                 }],
@@ -196,6 +148,26 @@ export default {
                     clickEvent: function () { }
                 }
             },
+            singleModelList: [
+                {
+                    "sortname": "咨询人数", //筛选项类名
+                    "sortvalue": "consultPeople", // 筛选项值，
+                    "type": 3,
+                    "isFilterable": true,
+                    "defaultSelectValue": 122,
+                    "callback": function (val) { console.log("我选择了"+val) },
+                    "lables": [{
+                        "text": "小A", //筛选项目的类名
+                        "value": 122, //筛选项目的值
+                    },{
+                        "text": "小B", //筛选项目的类名
+                        "value": 121, //筛选项目的值
+                    },{
+                        "text": "小C", //筛选项目的类名
+                        "value": 123, //筛选项目的值
+                    }],
+                }
+            ],
             unionModelList: [
                 {
                     type: 1,
@@ -252,11 +224,11 @@ export default {
         filterContainer() {
             return `${prefixCls}-container`
         },
-        filterResultAmount(){
+        filterResultAmount() {
 
             var count = 0;
 
-            for(let i=0, len = this.filterResult.length; i<len; i++){
+            for (let i = 0, len = this.filterResult.length; i < len; i++) {
 
                 count += this.filterResult[i].label.length
             }
@@ -354,9 +326,7 @@ export default {
         setFilterResult() {
 
         },
-        setLabelMaxWidth() {
 
-        },
         //计算溢出需要显示tooltip的文字
         setToolTipVisible() {
 
