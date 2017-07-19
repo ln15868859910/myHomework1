@@ -45,7 +45,7 @@
             <!-- 单选组件 -->
             <consult-filter-single></consult-filter-single>
             <!-- 联动组件 -->
-            <consult-filter-union :model="unionModel"></consult-filter-union>
+            <consult-filter-union :model-list="unionModelList"></consult-filter-union>
             <!-- 多选组件 -->
             <consult-filter-multi></consult-filter-multi>
         </div>
@@ -193,19 +193,34 @@ export default {
                     clickEvent:function(){}
                 }
             },
-            unionModel:{
-                componentType:1,
-                optionList:[
-                    {
-                        value:"beijing",
-                        label:"北京"
-                    },
-                     {
-                        value:"hangzhou",
-                        label:"杭州"
-                    }
-                ]
-            }
+            unionModelList:[
+                {
+                    type:1,
+                    optionList:[
+                        {
+                            value:"beijing",
+                            label:"北京"
+                        },
+                        {
+                            value:"hangzhou",
+                            label:"杭州"
+                        }
+                    ]
+                },
+                {
+                    type:1,
+                    optionList:[
+                        {
+                            value:"beijing",
+                            label:"北京"
+                        },
+                        {
+                            value:"hangzhou",
+                            label:"杭州"
+                        }
+                    ]
+                }
+            ]
 
         };
     },

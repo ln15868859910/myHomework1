@@ -1,6 +1,6 @@
 <template>
     <div>
-        <common-slot :model="model"></common-slot>
+        <common-slot v-for="(model,index) in modelList"  key="index" :model="model"></common-slot>
     </div>
 </template>
 <script>
@@ -31,7 +31,7 @@ import CommonSlot from './filter-slot.vue';
 export default {
     name: 'consultFilterUnion',
     props: {
-        model: {
+        modelList: {
             require: true
         }
     },

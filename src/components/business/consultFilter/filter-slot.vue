@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component v-bind:model="model" v-bind:is="currentView">
+        <component :model="model" :is="currentView">
     
         </component>
     </div>
@@ -18,12 +18,17 @@ const FilterSlotComponent = {
         }
     },
     render(h) {
-        if (this.model.componentType == 1) {
+        if (this.model.type == 1) {
             return h(
                 Select,
                 {
                     props: {
-                        value: 'hangzhou',
+                        value: this.model.value,
+                        multiple: this.model.multiple,
+                        disabled: this.model.disabled,
+                        filterable: this.model.filterable,
+                        placeholder: this.model.placeholder,
+                        clearable:true
                     },
                 },
                 [
