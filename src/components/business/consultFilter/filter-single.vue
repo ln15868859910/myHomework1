@@ -1,17 +1,19 @@
 <template>
     <div>
-        <common-slot v-for="(model,index) in modelList" :key="index" :model="model"></common-slot>
+        <common-slot v-for="(model,index) in model" :key="index" :model="model" ></common-slot>
     </div>
 </template>
 
 <script>
 
 import CommonSlot from './filter-slot.vue';
+import Emiter from './emiter.vue';
+
 export default {
     name: 'consultFilterSingle',
     props: {
 
-        modelList: {
+        model: {
             require: true
         }
 
@@ -28,7 +30,7 @@ export default {
 
     },
     mounted() {
-        this.$on("aa",this.fn);
+        Emiter.$on("single-change",this.fn);
     },
     methods: {
         fn(aa) {

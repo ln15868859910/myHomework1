@@ -45,7 +45,7 @@
         <!-- 下拉组件区域 -->
         <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
             <!-- 单选组件 -->
-            <consult-filter-single :model-list="singleModelList"></consult-filter-single>
+            <consult-filter-single :model="singleModelList"></consult-filter-single>
             <!-- 联动组件 -->
             <consult-filter-union :model="unionModel"></consult-filter-union>
             <!-- 多选组件 -->
@@ -152,7 +152,7 @@ export default {
                 {
                     "sortname": "咨询人数", //筛选项类名
                     "sortvalue": "consultPeople", // 筛选项值，
-                    "type": 3,
+                    "type": "daterange",
                     "isFilterable": true,
                     "defaultSelectValue": 122,
                     "callback": function (val) { console.log("我选择了"+val) },

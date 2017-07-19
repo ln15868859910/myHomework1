@@ -17,6 +17,10 @@
 <script>
 import Emiter from './emiter.vue';
 import { Select, Option, OptionGroup } from '../../select';
+import DatePicker from '../../date-picker';
+
+var config = {};
+
 const FilterSlotComponent = {
     props: {
         model: {
@@ -63,55 +67,82 @@ const FilterSlotComponent = {
                 ]
                 , this.$slots.default)
         }
-        if (this.model.type == 3) {
+        //时间区间选择类型
+        if (this.model.type == "daterange") {
             var me = this;
             return h(
-                Select,
+                DatePicker,
                 {
                     props: {
-                        value: this.model.defaultSelectValue,
-                        multiple: this.model.multiple,
-                        disabled: this.model.disabled,
-                        filterable: this.model.filterable,
-                        placeholder: this.model.placeholder,
-                        clearable:true
+                        type:"daterange",
+                        placeholder: this.model.placeholder ? this.model.placeholder : "请选择日期",
+                        options: config.datePicker
                     },
                     on:{
-                        "on-change": function(a){
-                            // me.model.callback(a)
-                            console.log(me)
-                            me.$emit("aa","aa")
+                        "on-change": function(obj){
+                            Emiter.$emit("single-change",{ value: obj.value, label: obj.label })
+                            me.model.callback(obj);
                         }
                     }
-                },
-                [
-                    this.model.lables.map(function (item) {
-                        return h(Option, {
-                            attrs: {
-                                id: 'foo'
-                            },
-                            props: {
-                                label: item.text,
-                                value: item.value
-                            }
-                        })
-                    })
-
-                ]
+                }
             )
         }
-        if (this.model.componentType == 1) {
-            return createElement(Select);
-        }
-        else if (this.model.type == 3) {
-            return createElement(Select);
-        }
-        else if (this.model.type == 4) {
-            return createElement(Select);
-        }
+        
     }
 
 };
+
+//组件配置项
+config.datePicker = {
+    shortcuts: [
+        {
+            text: '一周内',
+            value() {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                return [start, end];
+            }
+        },
+        {
+            text: '一个月内',
+            value() {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                return [start, end];
+            }
+        },
+        {
+            text: '三个月内',
+            value() {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                return [start, end];
+            }
+        },
+        {
+            text: '半年内',
+            value() {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+                return [start, end];
+            }
+        },
+        {
+            text: '一年内',
+            value() {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+                return [start, end];
+            }
+        },
+    ]
+}
+
 export default {
     name: 'filterSlot',
     props: {
@@ -121,11 +152,10 @@ export default {
     },
     data() {
         return {
-            currentView: FilterSlotComponent
+            currentView: FilterSlotComponent,
         };
     },
     components: { 
-        Emiter
     },
     computed: {
 
