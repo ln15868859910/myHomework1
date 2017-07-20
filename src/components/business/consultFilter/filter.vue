@@ -156,10 +156,9 @@ export default {
                         "sortValue": "time", // 筛选项类目值，
                         "componentType": "daterange",
                         "componentConfig": {
-                            value: [],
-                            filterable: true,
+                            value: ["2017/07/13", "2017/07/20"],
                             placeholder: "录入时间",
-                            clearable: true
+                            format: ""
                         },
                         "callback": function (val) { },
                     },
@@ -167,18 +166,18 @@ export default {
                         "sortValue": "trend", // 筛选项类目值，
                         "componentType": "select",
                         "componentConfig": {
-                            value: [],
+                            value: ["high"],
                             filterable: true,
                             placeholder: "意向度",
                             clearable: true,
                             optionList: [{
-                                "text": "高",
+                                "label": "高",
                                 "value": "high"
                             }, {
-                                "text": "中",
+                                "label": "中",
                                 "value": "middle"
                             }, {
-                                "text": "低",
+                                "label": "低",
                                 "value": "low"
                             }]
                         },
@@ -200,7 +199,7 @@ export default {
                             multiple: false,
                             disabled: false,
                             filterable: true,
-                            placeholder: "111",
+                            placeholder: "录入时间",
                             clearable: true,
                             optionList: [
                                 {
