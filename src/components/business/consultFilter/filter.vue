@@ -196,8 +196,8 @@ export default {
                         sonSortValue: "b",
                         componentType: "select",
                         componentConfig: {
-                            value: [],
-                            multiple: true,
+                            value: "",
+                            multiple: false,
                             disabled: false,
                             filterable: true,
                             placeholder: "111",
@@ -217,12 +217,12 @@ export default {
                             "on-change": function (selectModel, modifyModel) {
                                 modifyModel.componentConfig.optionList = [
                                     {
-                                        label: 1,
-                                        value: 2
+                                        label: "杭州1",
+                                        value: "11"
                                     },
                                     {
-                                        label: 4,
-                                        value: 3
+                                        label: "杭州122",
+                                        value: "12"
                                     }
                                 ]
                             }

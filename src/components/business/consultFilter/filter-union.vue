@@ -16,12 +16,12 @@ function getComponentConfig(type,model) {
     switch (type) {
         case "select":
             data = {
-                value: model.componentConfig.value,
-                multiple: model.componentConfig.multiple,
-                disabled: model.componentConfig.disabled,
-                filterable: model.componentConfig.filterable,
-                placeholder: model.componentConfig.placeholder,
-                clearable: model.componentConfig.clearable,
+                value: model.value,
+                multiple: model.multiple,
+                disabled: model.disabled,
+                filterable: model.filterable,
+                placeholder: model.placeholder,
+                clearable: model.clearable,
                 "label-in-value": true
             }
             break;
@@ -47,7 +47,8 @@ const UnionFilterSlotComponent = {
                 filterable: false,
                 placeholder: false,
                 clearable: false,
-                "label-in-value": false
+                "label-in-value":true,
+                remote:false
             }
         }
     },
@@ -58,7 +59,7 @@ const UnionFilterSlotComponent = {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model.componentConfig),
+                    props: getComponentConfig(this.model.componentType,this.model.componentConfig),
                         // value: this.model.componentConfig.value,
                         // multiple: this.model.componentConfig.multiple,
                         // disabled: this.model.componentConfig.disabled,
