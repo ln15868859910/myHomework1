@@ -2,7 +2,7 @@
  * @Author: li.lv 
  * @Date: 2017-07-19 10:42:59 
  * @Last Modified by: li.lv
- * @Last Modified time: 2017-07-19 15:46:17
+ * @Last Modified time: 2017-07-19 18:02:01
  */
 
 
@@ -16,6 +16,7 @@
 </template>
 <script>
 import Emiter from './emiter.vue';
+import { deepCopy } from '../../../utils/assist.js';
 import { Select, Option, OptionGroup } from '../../select';
 import DatePicker from '../../date-picker';
 
@@ -24,6 +25,7 @@ var config = {};
 const FilterSlotComponent = {
     props: {
         model: {
+            type: Object,
             require: true
         }
     },
@@ -32,23 +34,36 @@ const FilterSlotComponent = {
         }
     },
     render(h) {
-        var _this= this;
+        var _this = this;
         //select组件
         if (this.model.type == 1) {
             return h(
                 Select,
                 {
                     props: {
-                        value: this.model.value,
+                        value: this.model.defaultValue,
                         multiple: this.model.multiple,
                         disabled: this.model.disabled,
                         filterable: this.model.filterable,
                         placeholder: this.model.placeholder,
-                        clearable: true
+                        clearable: true,
+                        "label-in-value": true
                     },
                     on: {
-                        "on-change": function (value, label) {
-                            Emiter.$emit("union-change", { value: value, label: label });
+                        "on-change": function (value) {
+                            var data = {
+                                type: _this.model.type,
+                                sortKey: _this.model.sortName,
+                                multiple: _this.model.multiple,
+                                value: value
+                            }
+                            if (!_this.model.sonSortKey) {
+                                Emiter.$emit("union-change-slot", data);
+                            }
+                            else{
+                                _this.model.callback["on-change"](_this.model);
+                            }
+
                         },
                         "on-query-change": function () {
                         }

@@ -45,9 +45,9 @@
         <!-- 下拉组件区域 -->
         <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
             <!-- 单选组件 -->
-            <consult-filter-single :model="singleModel"></consult-filter-single>
+            <consult-filter-single class="asv" :model="singleModel"></consult-filter-single>
             <!-- 联动组件 -->
-            <consult-filter-union :model="unionModel"></consult-filter-union>
+            <consult-filter-union :model="unionModel.modelList"></consult-filter-union>
             <!-- 多选组件 -->
             <consult-filter-multi></consult-filter-multi>
         </div>
@@ -56,7 +56,7 @@
 <script>
 
 const prefixCls = "spui-b-consultFilter";
-
+import Emiter from './emiter.vue';
 import iSelect from '../../select';
 import iInput from '../../input';
 import Tag from '../../tag';
@@ -153,72 +153,104 @@ export default {
                     "sortname": "录入时间", //筛选项类名
                     "sortvalue": "consultPeople", // 筛选项值，
                     "type": "daterange",
-                    "config":{
+                    "config": {
                         "filterable": true,
                     },
                     "defaultSelectValue": "2017-05-21",
-                    "callback": function (val) {  },
+                    "callback": function (val) { },
                     "lables": [],
-                },{
+                },
+                {
                     "sortname": "意向度", //筛选项类名
                     "sortvalue": "consultPeople", // 筛选项值，
                     "type": "default",
-                    "config":{
+                    "config": {
                         "isFilterable": true
                     },
                     "defaultSelectValue": "high",
-                    "callback": function (val) {  },
+                    "callback": function (val) { },
                     "lables": [{
-                        "text":"高",
-                        "value":"high"
-                    },{
-                        "text":"中",
-                        "value":"middle"
-                    },{
-                        "text":"低",
-                        "value":"low"
+                        "text": "高",
+                        "value": "high"
+                    }, {
+                        "text": "中",
+                        "value": "middle"
+                    }, {
+                        "text": "低",
+                        "value": "low"
                     }
                     ],
                 },
             ],
-            unionModel: [
-                {
-                    type: 1,
-                    value: "false",
-                    multiple: false,
-                    disabled: false,
-                    filterable: true,
-                    placeholder: "111",
-                    clearable: true,
-                    callback: {
-                        "on-change":function(){},
-                        "on-query-change":function(){}
+            unionModel: {
+                class: "",
+
+                modelList: [
+                    {
+                        sortValue: "a",
+                        parentSortValue: "",
+                        sonSortValue: "b",
+                        componentType: "select",
+                        componentConfig: {
+                            value: [],
+                            multiple: true,
+                            disabled: false,
+                            filterable: true,
+                            placeholder: "111",
+                            clearable: true,
+                            optionList: [
+                                {
+                                    value: "beijing",
+                                    label: "北京"
+                                },
+                                {
+                                    value: "hangzhou",
+                                    label: "杭州"
+                                }
+                            ]
+                        },
+                        callback: {
+                            "on-change": function (selectModel, modifyModel) {
+                                modifyModel.componentConfig.optionList = [
+                                    {
+                                        label: 1,
+                                        value: 2
+                                    },
+                                    {
+                                        label: 4,
+                                        value: 3
+                                    }
+                                ]
+                            }
+                        }
+
                     },
-                    optionList: [
-                        {
-                            value: "beijing",
-                            label: "北京"
-                        },
-                        {
-                            value: "hangzhou",
-                            label: "杭州"
+                    {
+                        sortValue: "b",
+                        parentSortValue: "a",
+                        sonSortValue: "",
+                        componentType: "select",
+                        componentConfig: {
+                            value: [],
+                            multiple: true,
+                            disabled: false,
+                            filterable: true,
+                            placeholder: "sfdsf",
+                            clearable: true,
+                            optionList: [
+                                {
+                                    value: "beijing1",
+                                    label: "北京1"
+                                },
+                                {
+                                    value: "hangzhou1",
+                                    label: "杭州1"
+                                }
+                            ]
                         }
-                    ]
-                },
-                {
-                    type: 2,
-                    optionList: [
-                        {
-                            value: "beijing",
-                            label: "北京"
-                        },
-                        {
-                            value: "hangzhou",
-                            label: "杭州"
-                        }
-                    ]
-                }
-            ]
+                    }
+                ]
+            }
 
         };
     },
@@ -415,8 +447,25 @@ export default {
             }
 
         },
+        onUnionChange() {
 
+        },
+        onSingleChange() {
+
+        },
+        onMultiChange() {
+
+        },
+        observeEvent() {
+            //监听二级联动模块change事件
+            Emiter.$on("union-change", this.onUnionChange);
+            //监听二级单选模块change事件
+            Emiter.$on("single-change", this.onSingleChange);
+            //监听二级多选模块change事件
+            Emiter.$on("multi-change", this.onMultiChange);
+        },
         init() {
+            this.observeEvent();
             //设置初始化搜索值
             if (this.searchData) {
                 this.searchArea.selected = {
