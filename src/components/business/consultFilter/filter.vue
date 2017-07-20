@@ -45,7 +45,7 @@
         <!-- 下拉组件区域 -->
         <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
             <!-- 单选组件 -->
-            <consult-filter-single :model="singleModelList"></consult-filter-single>
+            <consult-filter-single :model="singleModel"></consult-filter-single>
             <!-- 联动组件 -->
             <consult-filter-union :model="unionModel"></consult-filter-union>
             <!-- 多选组件 -->
@@ -148,25 +148,38 @@ export default {
                     clickEvent: function () { }
                 }
             },
-            singleModelList: [
+            singleModel: [
                 {
-                    "sortname": "咨询人数", //筛选项类名
+                    "sortname": "录入时间", //筛选项类名
                     "sortvalue": "consultPeople", // 筛选项值，
                     "type": "daterange",
-                    "isFilterable": true,
-                    "defaultSelectValue": 122,
-                    "callback": function (val) { console.log("我选择了"+val) },
+                    "config":{
+                        "filterable": true,
+                    },
+                    "defaultSelectValue": "2017-05-21",
+                    "callback": function (val) {  },
+                    "lables": [],
+                },{
+                    "sortname": "意向度", //筛选项类名
+                    "sortvalue": "consultPeople", // 筛选项值，
+                    "type": "default",
+                    "config":{
+                        "isFilterable": true
+                    },
+                    "defaultSelectValue": "high",
+                    "callback": function (val) {  },
                     "lables": [{
-                        "text": "小A", //筛选项目的类名
-                        "value": 122, //筛选项目的值
+                        "text":"高",
+                        "value":"high"
                     },{
-                        "text": "小B", //筛选项目的类名
-                        "value": 121, //筛选项目的值
+                        "text":"中",
+                        "value":"middle"
                     },{
-                        "text": "小C", //筛选项目的类名
-                        "value": 123, //筛选项目的值
-                    }],
-                }
+                        "text":"低",
+                        "value":"low"
+                    }
+                    ],
+                },
             ],
             unionModel: [
                 {

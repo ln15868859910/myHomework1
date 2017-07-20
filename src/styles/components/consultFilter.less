@@ -148,9 +148,28 @@
         margin-top:5%;
         right:0;
         width:360px;
-        height:580px;
+        padding: 30px 0;
+        max-height:580px;
         background: #fff;
+        box-sizing: border-box;
         box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
+    }
+
+    &-singleItemWrap{
+
+    }
+    
+    &-singleItem{
+        width: 140px;
+        margin-bottom:20px;
+        float:left;
+    }
+
+    &-singleItem:nth-child(odd){
+        margin-left: 30px;
+    }
+    &-singleItem:nth-child(even){
+        margin-left: 20px;
     }
 }
