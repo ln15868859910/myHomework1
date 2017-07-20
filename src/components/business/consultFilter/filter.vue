@@ -13,10 +13,10 @@
     
             <!-- 搜索内容区域 -->
             <li :class="search" v-if="searchData">
-                <Select :value="searchArea.selected.text" @on-change="setSearchItem" label-in-value style="width:100px">
+                <Select :value="searchArea.initValue" @on-change="setSearchItem" label-in-value style="width:100px">
                     <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                 </Select>
-                <Input type="text" icon="search" :placeholder="`请输入${this.searchArea.selected.text}`" @on-click="doSearch"></Input>
+                <Input type="text" icon="search" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
             </li>
     
             <!-- 筛选组件按钮区域 -->
@@ -45,7 +45,7 @@
         <!-- 下拉组件区域 -->
         <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
             <!-- 单选组件 -->
-            <consult-filter-single class="asv" :model="singleModel"></consult-filter-single>
+            <consult-filter-single :model="singleModel"></consult-filter-single>
             <!-- 联动组件 -->
             <consult-filter-union :model="unionModel.modelList"></consult-filter-union>
             <!-- 多选组件 -->
@@ -126,6 +126,7 @@ export default {
                 }],
             }],
             searchArea: {
+                initValue:"",
                 selected: {
                     "text": "",
                     "value": ""
@@ -148,40 +149,43 @@ export default {
                     clickEvent: function () { }
                 }
             },
-            singleModel: [
-                {
-                    "sortname": "录入时间", //筛选项类名
-                    "sortvalue": "consultPeople", // 筛选项值，
-                    "type": "daterange",
-                    "config": {
-                        "filterable": true,
+            singleModel: {
+                class: "",//自定义样式名
+                modelList: [
+                    {
+                        "sortValue": "time", // 筛选项类目值，
+                        "componentType": "daterange",
+                        "componentConfig": {
+                            value: [],
+                            filterable: true,
+                            placeholder: "录入时间",
+                            clearable: true
+                        },
+                        "callback": function (val) { },
                     },
-                    "defaultSelectValue": "2017-05-21",
-                    "callback": function (val) { },
-                    "lables": [],
-                },
-                {
-                    "sortname": "意向度", //筛选项类名
-                    "sortvalue": "consultPeople", // 筛选项值，
-                    "type": "default",
-                    "config": {
-                        "isFilterable": true
+                    {
+                        "sortValue": "trend", // 筛选项类目值，
+                        "componentType": "select",
+                        "componentConfig": {
+                            value: [],
+                            filterable: true,
+                            placeholder: "意向度",
+                            clearable: true,
+                            optionList: [{
+                                "text": "高",
+                                "value": "high"
+                            }, {
+                                "text": "中",
+                                "value": "middle"
+                            }, {
+                                "text": "低",
+                                "value": "low"
+                            }]
+                        },
+                        "callback": function (val) { },
                     },
-                    "defaultSelectValue": "high",
-                    "callback": function (val) { },
-                    "lables": [{
-                        "text": "高",
-                        "value": "high"
-                    }, {
-                        "text": "中",
-                        "value": "middle"
-                    }, {
-                        "text": "低",
-                        "value": "low"
-                    }
-                    ],
-                },
-            ],
+                ],
+            },
             unionModel: {
                 class: "",
 
@@ -468,10 +472,7 @@ export default {
             this.observeEvent();
             //设置初始化搜索值
             if (this.searchData) {
-                this.searchArea.selected = {
-                    "text": this.searchData.data[0].text,
-                    "value": this.searchData.data[0].value,
-                }
+                this.searchArea.initValue = this.searchData.data[0].value;
             }
             //设置初始化自定义区域显示
             if (this.customData) {

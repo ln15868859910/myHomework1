@@ -35,10 +35,10 @@ export default {
             searchData: {
                 data: [{
                     "text": "学员姓名",
-                    "value": "学员姓名"
+                    "value": "1"
                 }, {
                     "text": "学员电话",
-                    "value": "学员电话"
+                    "value": "2"
                 }],
                 opts: {
                     "isResetFilter": false //默认：false，搜索时结果是否与筛选项互斥

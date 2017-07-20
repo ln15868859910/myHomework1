@@ -1,6 +1,6 @@
 <template>
     <div :class="singleItemWrap">
-        <div :class="singleItem" v-for="(model,index) in model" :key="index" :model="model" :config="config" :is="currentView"></div>
+        <div :class="singleItem" v-for="(model,index) in model.modelList" :key="index" :model="model" :config="config" :is="currentView"></div>
     </div>
 </template>
 
@@ -69,7 +69,7 @@ var maker = {
                         type: "daterange",
                         placeholder: this.model.sortname ? this.model.sortname : "请选择日期",
                         style: "width:140px",
-                        options: me.config.datePicker
+                        options: me.config.dateRange
                     },
                     on: {
                         "on-change": function (obj) {
@@ -97,7 +97,7 @@ export default {
         return {
             currentView: maker,
             config: {
-                datePicker: {
+                dateRange: {
                     shortcuts: [
                         {
                             text: '一周内',
@@ -154,15 +154,15 @@ export default {
             return `${prefixCls}-singleItem`
         },
         singleItemWrap() {
-            return `${prefixCls}-singleItemWrap`
+            return this.model.class ? this.model.class : `${prefixCls}-singleItemWrap`;
         }
     },
     mounted() {
         Emiter.$on("single-change", this.fn);
     },
     methods: {
-        fn(aa) {
-            console.log(aa);
+        fn() {
+            console.log(1);
         }
     }
 };
