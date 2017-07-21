@@ -33,10 +33,10 @@
         <!-- 筛选内容展示区域 -->
         <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
             <ul>
-                <li v-for="data in filterResult" :key="data">
+                <li v-for="(data,dataIndex) in filterResult" v-if="data.label.length>0" :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
-                    <Tooltip v-for="(label, index) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
-                        <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data.sortValue,index)">{{label.text}}</Tag>
+                    <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
+                        <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
                     </Tooltip>
                 </li>
             </ul>
@@ -47,7 +47,7 @@
             <!-- 单选组件 -->
             <consult-filter-single :model="singleModel"></consult-filter-single>
             <!-- 联动组件 -->
-            <consult-filter-union :model="unionModel.modelList"></consult-filter-union>
+            <consult-filter-union :model="unionModel"></consult-filter-union>
             <!-- 多选组件 -->
             <consult-filter-multi></consult-filter-multi>
         </div>
@@ -89,6 +89,9 @@ export default {
     },
     data() {
         return {
+            testModel: {
+                modelList: []
+            },
             status: {
                 isContainerShow: false,
                 isCustomLeftShow: true,
@@ -97,38 +100,38 @@ export default {
             },
 
             filterResult: [
-            //     {//mock数据
-            //     sortName: "跟进状态",
-            //     sortValue: "1",
-            //     label: [{
-            //         "text": "跟进中",
-            //         "value": "11",
-            //         "isAvoidToolTip": true
-            //     }],
-            // }, {//mock数据
-            //     sortName: "跟进",
-            //     sortValue: "2",
-            //     label: [{
-            //         "text": "跟进中",
-            //         "value": "11",
-            //         "isAvoidToolTip": true
-            //     }, {
-            //         "text": "待跟进",
-            //         "value": "12",
-            //         "isAvoidToolTip": true
-            //     }, {
-            //         "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
-            //         "value": "12",
-            //         "isAvoidToolTip": true
-            //     }, {
-            //         "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            //         "value": "12",
-            //         "isAvoidToolTip": true
-            //     }],
-            // }
+                {//mock数据
+                sortName: "跟进状态",
+                sortValue: "1",
+                label: [{
+                    "text": "跟进中",
+                    "value": "11",
+                    "isAvoidToolTip": true
+                }],
+            }, {//mock数据
+                sortName: "跟进",
+                sortValue: "2",
+                label: [{
+                    "text": "跟进中",
+                    "value": "11",
+                    "isAvoidToolTip": true
+                }, {
+                    "text": "待跟进",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                }, {
+                    "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                }, {
+                    "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "value": "12",
+                    "isAvoidToolTip": true
+                }],
+            }
             ],
             searchArea: {
-                initValue:"",
+                initValue: "",
                 selected: {
                     "text": "",
                     "value": ""
@@ -195,21 +198,23 @@ export default {
                 ],
             },
             unionModel: {
-                class: "",
+                class: "aaa",
 
                 modelList: [
                     {
+                        sortName: "录入时间",
                         sortValue: "a",
                         parentSortValue: "",
                         sonSortValue: "b",
                         componentType: "select",
                         componentConfig: {
-                            value: "",
-                            multiple: false,
+                            value: [],
+                            multiple: true,
                             disabled: false,
                             filterable: true,
                             placeholder: "录入时间",
                             clearable: true,
+                            label: "hhz",
                             optionList: [
                                 {
                                     value: "beijing",
@@ -223,21 +228,25 @@ export default {
                         },
                         callback: {
                             "on-change": function (selectModel, modifyModel) {
-                                modifyModel.componentConfig.optionList = [
-                                    {
-                                        label: "杭州1",
-                                        value: "11"
-                                    },
-                                    {
-                                        label: "杭州122",
-                                        value: "12"
-                                    }
-                                ]
+                                modifyModel.componentConfig.optionList = [];
+                                modifyModel.componentConfig.optionList.push({
+                                    label: "hhh",
+                                    value: "11"
+                                });
+                                modifyModel.componentConfig.optionList.push({
+                                    label: "aaa",
+                                    value: "22"
+                                });
+                                modifyModel.componentConfig.optionList.push({
+                                    label: "ss",
+                                    value: "33"
+                                });
                             }
                         }
 
                     },
                     {
+                        sortName: "跟进",
                         sortValue: "b",
                         parentSortValue: "a",
                         sonSortValue: "",
@@ -247,7 +256,7 @@ export default {
                             multiple: true,
                             disabled: false,
                             filterable: true,
-                            placeholder: "sfdsf",
+                            placeholder: "跟进",
                             clearable: true,
                             optionList: [
                                 {
@@ -440,29 +449,47 @@ export default {
 
         },
 
-        closeTag(sortValue, index) {
+        // 删除筛选标签
+        closeTag(item, itemIndex, labelIndex) {
 
             //每次循环判断当前分类下选中项是否为空
             var CurrentSortEmptyIndex = -1;
+            item.label.splice(labelIndex, 1);
+            var data = [];
+            item.label.map(function (item) {
+                data.push(item.value);
+            })
+            //向基础组件发起数据变动通知
+            Emiter.$emit(item.sortValue + "-change", data);
+            // for (let i = 0, len = this.filterResult.length; i < len; i++) {
+            //     //找到对应的当前分类
+            //     if (this.filterResult[i].sortValue == sortValue) {
+            //         this.filterResult[i].label.splice(index, 1);
+            //         if (this.filterResult[i].label.length == 0) {
+            //             CurrentSortEmptyIndex = i;
+            //         }
+            //     }
+            // }
 
-            for (let i = 0, len = this.filterResult.length; i < len; i++) {
-                //找到对应的当前分类
-                if (this.filterResult[i].sortValue == sortValue) {
-                    this.filterResult[i].label.splice(index, 1);
-                    if (this.filterResult[i].label.length == 0) {
-                        CurrentSortEmptyIndex = i;
-                    }
-                }
-            }
-
-            //循环结束删除选项为空的分类
-            if (CurrentSortEmptyIndex != -1) {
-                this.filterResult.splice(CurrentSortEmptyIndex, 1);
-                CurrentSortEmptyIndex = -1;
-            }
+            // //循环结束删除选项为空的分类
+            // if (CurrentSortEmptyIndex != -1) {
+            //     this.filterResult.splice(CurrentSortEmptyIndex, 1);
+            //     CurrentSortEmptyIndex = -1;
+            // }
 
         },
-        onUnionChange() {
+        onUnionChange(data) {
+            var _this = this,
+                len = this.filterResult.length;
+            this.filterResult.map(function (item, index) {
+                if (item.sortValue === data.sortValue) {
+                    item.label = data.label;
+                    return;
+                }
+                else if (index === len - 1) {
+                    _this.filterResult.push(data);
+                }
+            })
 
         },
         onSingleChange(obj) {
