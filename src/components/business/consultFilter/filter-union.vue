@@ -22,7 +22,7 @@ function getComponentConfig(type, model) {
                 placeholder: model.placeholder,
                 clearable: model.clearable,
                 "label-in-value": true,
-                remote: true
+                remote: false
             }
             break;
 
@@ -69,8 +69,13 @@ const UnionFilterSlotComponent = {
                                 componentType: _this.model.componentType,
                                 sortValue: _this.model.sortValue,
                                 sortName: _this.model.sortName,
-                                multiple: _this.model.componentConfig.multiple,
-                                value: value
+                                value: []
+                            }
+                            if (_this.model.componentConfig.multiple) {
+                                data.value = value;
+                            }
+                            else {
+                                data.value = !value.value && !value.label ? [] : [value];
                             }
                             if (!_this.model.sonSortValue) {
                                 Emiter.$emit("union-change-slot", data);
@@ -134,7 +139,7 @@ const UnionFilterSlotComponent = {
                 return;
             }
             if (this.model.componentConfig.multiple) {
-                this.model.componentConfig.value = data
+                this.model.componentConfig.value = data;
             }
             else {
                 this.model.componentConfig.value = data[0];
@@ -181,22 +186,14 @@ export default {
                     sortValue: params.sortValue,
                     label: []
                 }
-                if (params.multiple) {
-                    params.value.map(function (item, index) {
-                        var model = {
-                            value: item.value,
-                            text: item.label
-                        }
-                        data.label.push(model);
-                    })
-                }
-                else {
+                params.value.map(function (item, index) {
                     var model = {
-                        value: params.value,
-                        text: params.label
+                        value: item.value,
+                        text: item.label
                     }
                     data.label.push(model);
-                }
+                })
+
 
             }
             Emiter.$emit("union-change", data);
