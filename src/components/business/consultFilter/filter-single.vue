@@ -11,12 +11,6 @@ import Emiter from './emiter.vue';
 import DatePicker from '../../date-picker';
 import { Select, Option, OptionGroup } from '../../select';
 
-//临时解决方案，时间控件会render两次，无法作区分，这里保存控件初始化状态
-var initStatus = {};
-
-
-
-
 var maker = {
     props: {
         model: {
@@ -29,7 +23,7 @@ var maker = {
     },
 
     data() {
-        return {
+        return {//临时解决方案，时间控件会render两次，无法作区分，这里保存控件初始化状态
             initStatus: {}
         }
     },
@@ -62,9 +56,10 @@ var maker = {
                         return item;
                     }
                 })
-                Emiter.$emit("single-select-change", {
+                Emiter.$emit("single-change", {
                     sortName: modelList.componentConfig.placeholder,
                     sortValue: modelList.sortValue,
+                    componentType:"select",
                     value: defaultValue,
                     label: defaultObj.label,
                 });
@@ -84,9 +79,10 @@ var maker = {
                     },
                     on: {
                         "on-change": function (obj) {
-                            Emiter.$emit("single-select-change", {
+                            Emiter.$emit("single-change", {
                                 sortName: modelList.componentConfig.placeholder,
                                 sortValue: modelList.sortValue,
+                                componentType:"select",
                                 value: obj.value,
                                 label: obj.label,
                             });
@@ -115,9 +111,10 @@ var maker = {
             var defaultValueList = modelList.componentConfig.value;
             if (!this.initStatus[modelList.sortValue] && defaultValueList.length > 0) {
 
-                Emiter.$emit("single-daterange-change", {
+                Emiter.$emit("single-change", {
                     sortName: modelList.componentConfig.placeholder,
                     sortValue: modelList.sortValue,
+                    componentType:"daterange",
                     labels: [{
                         label: "开始时间",
                         value: me.dateFormat(defaultValueList[0])
@@ -140,9 +137,10 @@ var maker = {
                     },
                     on: {
                         "on-change": function (list) {
-                            Emiter.$emit("single-daterange-change", {
+                            Emiter.$emit("single-change", {
                                 sortName: modelList.componentConfig.placeholder,
                                 sortValue: modelList.sortValue,
+                                componentType:"daterange",
                                 labels: [{
                                     label: "开始时间",
                                     value: me.dateFormat(list[0])
@@ -237,22 +235,11 @@ export default {
             return this.model.class ? this.model.class : `${prefixCls}-singleItemWrap`;
         }
     },
-    created() {
-        Emiter.$on("single-select-change", this.fn);
-        Emiter.$on("single-daterange-change", this.fn)
-    },
+
     mounted() {
 
     },
-    methods: {
-
-        contactResult(res) {
-
-        },
-        fn(obj){
-            console.log(obj)
-        }
-    }
+    methods: {}
 };
 
 </script>

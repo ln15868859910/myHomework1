@@ -96,35 +96,37 @@ export default {
                 isCustomRightShow: true
             },
 
-            filterResult: [{//mock数据
-                sortName: "跟进状态",
-                sortValue: "1",
-                label: [{
-                    "text": "跟进中",
-                    "value": "11",
-                    "isAvoidToolTip": true
-                }],
-            }, {//mock数据
-                sortName: "跟进",
-                sortValue: "2",
-                label: [{
-                    "text": "跟进中",
-                    "value": "11",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }],
-            }],
+            filterResult: [
+            //     {//mock数据
+            //     sortName: "跟进状态",
+            //     sortValue: "1",
+            //     label: [{
+            //         "text": "跟进中",
+            //         "value": "11",
+            //         "isAvoidToolTip": true
+            //     }],
+            // }, {//mock数据
+            //     sortName: "跟进",
+            //     sortValue: "2",
+            //     label: [{
+            //         "text": "跟进中",
+            //         "value": "11",
+            //         "isAvoidToolTip": true
+            //     }, {
+            //         "text": "待跟进",
+            //         "value": "12",
+            //         "isAvoidToolTip": true
+            //     }, {
+            //         "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
+            //         "value": "12",
+            //         "isAvoidToolTip": true
+            //     }, {
+            //         "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            //         "value": "12",
+            //         "isAvoidToolTip": true
+            //     }],
+            // }
+            ],
             searchArea: {
                 initValue:"",
                 selected: {
@@ -158,7 +160,14 @@ export default {
                         "componentConfig": {
                             value: ["2017/07/13", "2017/07/20"],
                             placeholder: "录入时间",
-                            format: ""
+                            format: "",
+                            optionList:[{
+                                "label":"开始时间",
+                                "value":""
+                            },{
+                                "label":"结束时间",
+                                "value":""
+                            }]
                         },
                         "callback": function (val) { },
                     },
@@ -293,6 +302,9 @@ export default {
 
             return count;
         }
+    },
+    created(){
+        this.observeEvent();
     },
     mounted() {
         this.init();
@@ -453,8 +465,8 @@ export default {
         onUnionChange() {
 
         },
-        onSingleChange() {
-
+        onSingleChange(obj) {
+             console.log(obj)
         },
         onMultiChange() {
 
@@ -467,8 +479,9 @@ export default {
             //监听二级多选模块change事件
             Emiter.$on("multi-change", this.onMultiChange);
         },
+        //根据返回
         init() {
-            this.observeEvent();
+
             //设置初始化搜索值
             if (this.searchData) {
                 this.searchArea.initValue = this.searchData.data[0].value;
@@ -488,10 +501,8 @@ export default {
                 this.setCustomCallBack();
             }
             this.setToolTipVisible();
+
         }
-
-
-
     }
 };
 
