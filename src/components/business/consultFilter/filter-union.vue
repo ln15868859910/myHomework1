@@ -1,17 +1,16 @@
 <template>
     <div :class="model.class">
-        <component v-for="(item,index) in model" key="index" :model="item" :is="currentView">
+        <component v-for="(item,index) in model.modelList" key="index" :model="item" :is="currentView">
     
         </component>
     </div>
 </template>
 <script>
-import CommonSlot1 from './filter-slot.vue';
 import Emiter from './emiter.vue';
 import { Select, Option, OptionGroup } from '../../select';
 
 
-function getComponentConfig(type,model) {
+function getComponentConfig(type, model) {
     var data;
     switch (type) {
         case "select":
@@ -22,7 +21,8 @@ function getComponentConfig(type,model) {
                 filterable: model.filterable,
                 placeholder: model.placeholder,
                 clearable: model.clearable,
-                "label-in-value": true
+                "label-in-value": true,
+                remote: true
             }
             break;
 
@@ -47,9 +47,11 @@ const UnionFilterSlotComponent = {
                 filterable: false,
                 placeholder: false,
                 clearable: false,
-                "label-in-value":true,
-                remote:false
-            }
+                "label-in-value": true,
+                remote: false,
+                disabled: false
+            },
+            testModel: "测试"
         }
     },
     render(h) {
@@ -57,23 +59,17 @@ const UnionFilterSlotComponent = {
         //select组件
         if (this.model.componentType == "select") {
             return h(
-                Select,
+                'Select',
                 {
-                    props: getComponentConfig(this.model.componentType,this.model.componentConfig),
-                        // value: this.model.componentConfig.value,
-                        // multiple: this.model.componentConfig.multiple,
-                        // disabled: this.model.componentConfig.disabled,
-                        // filterable: this.model.componentConfig.filterable,
-                        // placeholder: this.model.componentConfig.placeholder,
-                        // clearable: this.model.componentConfig.clearable,
-                        // "label-in-value": true
-                    // },
+                    props: getComponentConfig(this.model.componentType, this.model.componentConfig),
+                    attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     on: {
                         "on-change": function (value) {
                             var data = {
-                                componentType: _this.data.componentType,
+                                componentType: _this.model.componentType,
                                 sortValue: _this.model.sortValue,
-                                multiple: _this.model.multiple,
+                                sortName: _this.model.sortName,
+                                multiple: _this.model.componentConfig.multiple,
                                 value: value
                             }
                             if (!_this.model.sonSortValue) {
@@ -86,7 +82,7 @@ const UnionFilterSlotComponent = {
                                         sortValue: _this.model.sortValue,
                                         value: value
                                     }
-                                });;
+                                });
                             }
 
                         },
@@ -99,30 +95,49 @@ const UnionFilterSlotComponent = {
                         return h(Option, {
                             props: {
                                 label: item.label,
-                                value: item.value
+                                value: item.value,
+                                disabled: !item.disabled ? false : true
                             }
                         })
                     })
 
-                ])
+                ]
+
+            )
         }
     },
     mounted() {
-        this.observeEvent();
+        this.init();
     },
     methods: {
+        init() {
+            this.observeEvent();
+        },
         observeEvent() {
             if (!this.model.parentSortValue) {
                 return;
             }
             //监听联动模块子组件change事件
             Emiter.$on(this.model.parentSortValue + "union-change", this.onChange);
+            //监听父层筛选项修改事件
+            Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
         onChange(params) {
             if (params.callback && toString.call(params.callback) == "[object Function]") {
                 params.callback(params.selectModel, this.model);
 
 
+            }
+        },
+        onFilterChange(data) {
+            if (!data) {
+                return;
+            }
+            if (this.model.componentConfig.multiple) {
+                this.model.componentConfig.value = data
+            }
+            else {
+                this.model.componentConfig.value = data[0];
             }
         }
     }
@@ -140,7 +155,7 @@ export default {
     },
     data() {
         return {
-            currentView: UnionFilterSlotComponent,
+            currentView: UnionFilterSlotComponent
         };
     },
     computed: {
@@ -151,7 +166,7 @@ export default {
     },
     methods: {
         init() {
-
+            this.observeEvent();
         },
         observeEvent() {
             //监听联动模块子组件change事件
@@ -159,16 +174,18 @@ export default {
         },
         onChange(params) {
             var _this = this;
-            if (params.type == 1) {
-                var data = {
-                    sortKey: params.sortName,
+            var data = {};
+            if (params.componentType == "select") {
+                data = {
+                    sortName: params.sortName,
+                    sortValue: params.sortValue,
                     label: []
                 }
                 if (params.multiple) {
-                    params.value.map(function (value, index) {
+                    params.value.map(function (item, index) {
                         var model = {
-                            value: value.value,
-                            text: value.label
+                            value: item.value,
+                            text: item.label
                         }
                         data.label.push(model);
                     })
@@ -182,7 +199,7 @@ export default {
                 }
 
             }
-            Emiter.$on("union-change", this.onChange);
+            Emiter.$emit("union-change", data);
         }
 
     }
