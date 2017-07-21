@@ -30,14 +30,32 @@ var maker = {
     created() {
         this.createInitStatus();
     },
-
+    mounted() {
+        this.observeEvent();
+    },
     methods: {
         createInitStatus() {
-                this.initStatus[this.model.sortValue] = false;
+            this.initStatus[this.model.sortValue] = false;
         },
 
-        dateFormat(dateStr){
-            return `${dateStr.substring(0,4)}/${dateStr.substring(5,7)}/${dateStr.substring(8,10)}`;
+        dateFormat(dateStr) {
+            return `${dateStr.substring(0, 4)}/${dateStr.substring(5, 7)}/${dateStr.substring(8, 10)}`;
+        },
+
+        observeEvent() {
+            //监听父层筛选项修改事件
+            Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
+        },
+
+        onFilterChange(data) {
+            if (!data) {
+                return;
+            }
+
+            if (this.model.componentType == "daterange") {
+
+                this.model.componentConfig.value = data.value;
+            }
         }
     },
 
@@ -59,9 +77,11 @@ var maker = {
                 Emiter.$emit("single-change", {
                     sortName: modelList.componentConfig.placeholder,
                     sortValue: modelList.sortValue,
-                    componentType:"select",
-                    value: defaultValue,
-                    label: defaultObj.label,
+                    componentType: "select",
+                    label: [{
+                        text: defaultObj.label,
+                        value: defaultValue
+                    }]
                 });
             }
 
@@ -82,9 +102,11 @@ var maker = {
                             Emiter.$emit("single-change", {
                                 sortName: modelList.componentConfig.placeholder,
                                 sortValue: modelList.sortValue,
-                                componentType:"select",
-                                value: obj.value,
-                                label: obj.label,
+                                componentType: "select",
+                                label: [{
+                                    text: obj.value,
+                                    value: obj.label
+                                }]
                             });
                         },
                     }
@@ -101,7 +123,7 @@ var maker = {
                     //初始化完成记录，该分类的初始化完成状态
                     me.initStatus[modelList.sortValue] = true
                 ])
-           
+
         }
 
         //时间区间选择类型
@@ -114,14 +136,9 @@ var maker = {
                 Emiter.$emit("single-change", {
                     sortName: modelList.componentConfig.placeholder,
                     sortValue: modelList.sortValue,
-                    componentType:"daterange",
-                    labels: [{
-                        label: "开始时间",
-                        value: me.dateFormat(defaultValueList[0])
-                    }, {
-                        label: "结束时间",
-                        value: me.dateFormat(defaultValueList[1])
-                    }]
+                    componentType: "daterange",
+                    shortcut: "",
+                    label: [me.dateFormat(defaultValueList[0]), me.dateFormat(defaultValueList[1])]
                 });
             }
 
@@ -140,23 +157,17 @@ var maker = {
                             Emiter.$emit("single-change", {
                                 sortName: modelList.componentConfig.placeholder,
                                 sortValue: modelList.sortValue,
-                                componentType:"daterange",
-                                labels: [{
-                                    label: "开始时间",
-                                    value: me.dateFormat(list[0])
-                                }, {
-                                    label: "结束时间",
-                                    value: me.dateFormat(list[1])
-                                }]
+                                componentType: "daterange",
+                                label: [me.dateFormat(me.dateFormat(list[0])), me.dateFormat(me.dateFormat(list[1]))]
                             });
                         }
                     }
-                },[
+                }, [
                     //初始化完成记录，该分类的初始化完成状态
                     this.initStatus[modelList.sortValue] = true
                 ]
             )
-            
+
         }
     }
 };
@@ -239,7 +250,9 @@ export default {
     mounted() {
 
     },
-    methods: {}
+    methods: {
+
+    }
 };
 
 </script>

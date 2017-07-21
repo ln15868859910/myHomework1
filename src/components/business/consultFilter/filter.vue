@@ -34,9 +34,9 @@
         <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
             <ul>
                 <li v-for="(data,dataIndex) in filterResult" v-if="data.label.length>0" :key="data">
-                    <span :class="sortName">{{data.sortName}}：</span> 
+                    <span :class="sortName">{{data.sortName}}：</span>
                     <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
-                        <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
+                        <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
                     </Tooltip>
                 </li>
             </ul>
@@ -100,35 +100,19 @@ export default {
             },
 
             filterResult: [
-                {//mock数据
-                sortName: "跟进状态",
-                sortValue: "1",
-                label: [{
-                    "text": "跟进中",
-                    "value": "11",
-                    "isAvoidToolTip": true
-                }],
-            }, {//mock数据
-                sortName: "跟进",
-                sortValue: "2",
-                label: [{
-                    "text": "跟进中",
-                    "value": "11",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }, {
-                    "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    "value": "12",
-                    "isAvoidToolTip": true
-                }],
-            }
+                //    {//mock数据
+                //     sortName: "跟进",
+                //     sortValue: "2",
+                //     label: [ {
+                //         "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
+                //         "value": "12",
+                //         "isAvoidToolTip": true
+                //     }, {
+                //         "text": "aaaaaaaaa",
+                //         "value": "12",
+                //         "isAvoidToolTip": true
+                //     }],
+                // }
             ],
             searchArea: {
                 initValue: "",
@@ -156,123 +140,16 @@ export default {
             },
             singleModel: {
                 class: "",//自定义样式名
-                modelList: [
-                    {
-                        "sortValue": "time", // 筛选项类目值，
-                        "componentType": "daterange",
-                        "componentConfig": {
-                            value: ["2017/07/13", "2017/07/20"],
-                            placeholder: "录入时间",
-                            format: "",
-                            optionList:[{
-                                "label":"开始时间",
-                                "value":""
-                            },{
-                                "label":"结束时间",
-                                "value":""
-                            }]
-                        },
-                        "callback": function (val) { },
-                    },
-                    {
-                        "sortValue": "trend", // 筛选项类目值，
-                        "componentType": "select",
-                        "componentConfig": {
-                            value: ["high"],
-                            filterable: true,
-                            placeholder: "意向度",
-                            clearable: true,
-                            optionList: [{
-                                "label": "高",
-                                "value": "high"
-                            }, {
-                                "label": "中",
-                                "value": "middle"
-                            }, {
-                                "label": "低",
-                                "value": "low"
-                            }]
-                        },
-                        "callback": function (val) { },
-                    },
-                ],
+                modelList: [],
             },
             unionModel: {
-                class: "aaa",
-
-                modelList: [
-                    {
-                        sortName: "录入时间",
-                        sortValue: "a",
-                        parentSortValue: "",
-                        sonSortValue: "b",
-                        componentType: "select",
-                        componentConfig: {
-                            value: [],
-                            multiple: true,
-                            disabled: false,
-                            filterable: true,
-                            placeholder: "录入时间",
-                            clearable: true,
-                            label: "hhz",
-                            optionList: [
-                                {
-                                    value: "beijing",
-                                    label: "北京"
-                                },
-                                {
-                                    value: "hangzhou",
-                                    label: "杭州"
-                                }
-                            ]
-                        },
-                        callback: {
-                            "on-change": function (selectModel, modifyModel) {
-                                modifyModel.componentConfig.optionList = [];
-                                modifyModel.componentConfig.optionList.push({
-                                    label: "hhh",
-                                    value: "11"
-                                });
-                                modifyModel.componentConfig.optionList.push({
-                                    label: "aaa",
-                                    value: "22"
-                                });
-                                modifyModel.componentConfig.optionList.push({
-                                    label: "ss",
-                                    value: "33"
-                                });
-                            }
-                        }
-
-                    },
-                    {
-                        sortName: "跟进",
-                        sortValue: "b",
-                        parentSortValue: "a",
-                        sonSortValue: "",
-                        componentType: "select",
-                        componentConfig: {
-                            value: [],
-                            multiple: true,
-                            disabled: false,
-                            filterable: true,
-                            placeholder: "跟进",
-                            clearable: true,
-                            optionList: [
-                                {
-                                    value: "beijing1",
-                                    label: "北京1"
-                                },
-                                {
-                                    value: "hangzhou1",
-                                    label: "杭州1"
-                                }
-                            ]
-                        }
-                    }
-                ]
+                class: "",
+                modelList: []
+            },
+            multiModel: {
+                class: "",
+                modelList: []
             }
-
         };
     },
     computed: {
@@ -304,16 +181,19 @@ export default {
 
             var count = 0;
             for (let i = 0, len = this.filterResult.length; i < len; i++) {
-                count += this.filterResult[i].label.length
+                count += this.filterResult[i].label.length ? this.filterResult[i].label.length : 0;
             }
             return count;
         }
     },
-    created(){
+    created() {
         this.observeEvent();
     },
     mounted() {
         this.init();
+    },
+    updated() {
+        this.setToolTipVisible();
     },
     methods: {
 
@@ -393,17 +273,24 @@ export default {
         },
 
         /****************************筛选项相关*********************************/
+        //复制外部model
+        convertModel() {
+            this.singleModel.modelList = this.filterData.singleModel.modelList.map(function (item) { return item });
+            this.unionModel = this.filterData.unionModel;
+            this.multiModel = this.filterData.multiModel;
+            console.log(this.singleModel)
+        },
         //显示下拉项层
         showContainer() {
             this.status.isContainerShow = !this.status.isContainerShow;
         },
-        //设置已筛选的筛选项
-        setFilterResult() {
-
-        },
 
         //计算溢出需要显示tooltip的文字
         setToolTipVisible() {
+
+            if (this.filterResult.length == 0) {
+                return;
+            }
 
             var labelInstances = this.$refs.sortLabel,
                 sameSortStartI = -1,//记录同一类型起始位置的索引
@@ -412,7 +299,7 @@ export default {
 
             //找到内容溢出的tag
             for (let i = 0, len = labelInstances.length; i < len; i++) {
-                var labelSortNew = /sortLabel-([^]*)/.exec(labelInstances[i].$el.querySelector(`.${prefixCls}-label`).className)[1];
+                var labelSortNew = /sortLabel-([^]*)/.exec(labelInstances[i].$el.querySelector(`.${prefixCls}-label`).dataset.id)[1];
                 var labelWidth = labelInstances[i].$el.querySelector('.ivu-tag-text').clientWidth;
 
                 //初始化时给labelSortOld赋新值,并记录当前的起始索引位置,切换分类后旧值和新值不同，重新记录起始位置
@@ -432,6 +319,7 @@ export default {
             var queryData = this.filterResult;
             for (let i = 0, len = queryData.length; i < len; i++) {
 
+                //开启指定ToolTip
                 for (let j = 0, len = arr.length; j < len; j++) {
 
                     var matchedSortValue = arr[j].sortValue;
@@ -444,26 +332,32 @@ export default {
 
             }
 
+            // console.log(this.filterResult)
         },
 
         // 删除筛选标签
         closeTag(item, itemIndex, labelIndex) {
 
-            //每次循环判断当前分类下选中项是否为空
-            var CurrentSortEmptyIndex = -1;
-            
             item.label.splice(labelIndex, 1);
 
-            if(item.label.length==0){
-                this.filterResult.splice(itemIndex,1);
+            if (item.label.length == 0) {
+                this.filterResult.splice(itemIndex, 1);
             }
 
             var data = [];
-            item.label.map(function (item) {
-                data.push(item.value);
-            })
-            //向基础组件发起数据变动通知
-            Emiter.$emit(item.sortValue + "-change", data);
+            //该分类下数据被清空的情况
+            if (item.label.length == 0) {
+                 //向基础组件发起数据变动通知
+                Emiter.$emit(item.sortValue + "-change", {index:itemIndex,value:""});
+
+            } else {
+                item.label.map(function (item) {
+                    data.push(item.value);
+                })
+                //向基础组件发起数据变动通知
+                Emiter.$emit(item.sortValue + "-change", data);
+            }
+
         },
         onUnionChange(data) {
             var _this = this,
@@ -477,13 +371,39 @@ export default {
                     _this.filterResult.push(data);
                 }
             })
-
         },
-        onSingleChange(obj) {
-             console.log(obj)
+        onSingleChange(data) {
+
+            var _this = this,
+                len = this.filterResult.length;
+
+            //时间类型做一次转化
+            if (data.componentType == "daterange") {
+
+                var data = {
+                    [`sortName`]: data.sortName,
+                    [`sortValue`]: data.sortValue,
+                    [`shortcut`]: data.shortcut,
+                    [`label`]: [{
+                        text: `开始时间：${data.label[0]}-结束时间：${data.label[1]}`
+                    }],
+
+                }
+            }
+
+            if (len === 0) {
+                this.filterResult.push(data)
+            } else {
+                this.filterResult.map(function (item, index) {
+                    if (item.sortValue === data.sortValue) {
+                        item.label = data.label;
+                        return;
+                    }
+                })
+            }
+
         },
         onMultiChange() {
-
         },
         observeEvent() {
             //监听二级联动模块change事件
@@ -514,8 +434,7 @@ export default {
                 this.setCustomStyleName();
                 this.setCustomCallBack();
             }
-            this.setToolTipVisible();
-
+            this.convertModel();
         }
     }
 };
