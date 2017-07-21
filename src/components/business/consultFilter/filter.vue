@@ -34,7 +34,7 @@
         <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
             <ul>
                 <li v-for="(data,dataIndex) in filterResult" v-if="data.label.length>0" :key="data">
-                    <span :class="sortName">{{data.sortName}}：</span>
+                    <span :class="sortName">{{data.sortName}}：</span> 
                     <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
                         <Tag :class="[sortLabel, 'sortLabel-'+ data.sortValue]" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
                     </Tooltip>
@@ -303,12 +303,9 @@ export default {
         filterResultAmount() {
 
             var count = 0;
-
             for (let i = 0, len = this.filterResult.length; i < len; i++) {
-
                 count += this.filterResult[i].label.length
             }
-
             return count;
         }
     },
@@ -454,29 +451,19 @@ export default {
 
             //每次循环判断当前分类下选中项是否为空
             var CurrentSortEmptyIndex = -1;
+            
             item.label.splice(labelIndex, 1);
+
+            if(item.label.length==0){
+                this.filterResult.splice(itemIndex,1);
+            }
+
             var data = [];
             item.label.map(function (item) {
                 data.push(item.value);
             })
             //向基础组件发起数据变动通知
             Emiter.$emit(item.sortValue + "-change", data);
-            // for (let i = 0, len = this.filterResult.length; i < len; i++) {
-            //     //找到对应的当前分类
-            //     if (this.filterResult[i].sortValue == sortValue) {
-            //         this.filterResult[i].label.splice(index, 1);
-            //         if (this.filterResult[i].label.length == 0) {
-            //             CurrentSortEmptyIndex = i;
-            //         }
-            //     }
-            // }
-
-            // //循环结束删除选项为空的分类
-            // if (CurrentSortEmptyIndex != -1) {
-            //     this.filterResult.splice(CurrentSortEmptyIndex, 1);
-            //     CurrentSortEmptyIndex = -1;
-            // }
-
         },
         onUnionChange(data) {
             var _this = this,
