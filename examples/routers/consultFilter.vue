@@ -164,6 +164,56 @@ export default {
                                     }
                                 ]
                             }
+                        },
+                         {
+                            sortName: "单选",
+                            sortValue: "c",
+                            parentSortValue: "",
+                            sonSortValue: "",
+                            componentType: "select",
+                            componentConfig: {
+                                value: "beijing1",
+                                multiple: false,
+                                disabled: false,
+                                filterable: true,
+                                placeholder: "跟进",
+                                clearable: true,
+                                optionList: [
+                                    {
+                                        value: "beijing1",
+                                        label: "北京1"
+                                    },
+                                    {
+                                        value: "hangzhou1",
+                                        label: "杭州1"
+                                    }
+                                ]
+                            }
+                        },
+                         {
+                            sortName: "多选",
+                            sortValue: "d",
+                            parentSortValue: "",
+                            sonSortValue: "",
+                            componentType: "select",
+                            componentConfig: {
+                                value: ["beijing1"],
+                                multiple: true,
+                                disabled: false,
+                                filterable: true,
+                                placeholder: "跟进",
+                                clearable: true,
+                                optionList: [
+                                    {
+                                        value: "beijing1",
+                                        label: "北京1"
+                                    },
+                                    {
+                                        value: "hangzhou1",
+                                        label: "杭州1"
+                                    }
+                                ]
+                            }
                         }
                     ]
                 }

@@ -33,7 +33,7 @@
         <!-- 筛选内容展示区域 -->
         <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
             <ul>
-                <li v-for="(data,dataIndex) in filterResult" v-if="data.label.length>0" :key="data">
+                <li v-for="(data,dataIndex) in filterResult"  :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
                     <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
                         <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
@@ -346,20 +346,27 @@ export default {
 
             var data = [];
             //该分类下数据被清空的情况
-            if (item.label.length == 0) {
-                 //向基础组件发起数据变动通知
-                Emiter.$emit(item.sortValue + "-change", {index:itemIndex,value:""});
-
-            } else {
-                item.label.map(function (item) {
-                    data.push(item.value);
-                })
-                //向基础组件发起数据变动通知
-                Emiter.$emit(item.sortValue + "-change", data);
-            }
+            item.label.map(function (item) {
+                data.push(item.value);
+            })
+            //向基础组件发起数据变动通知
+            Emiter.$emit(item.sortValue + "-change", data);
 
         },
         onUnionChange(data) {
+            var _this=this,
+                 isEmpty=false;
+            if(data.label.length==0){
+                isEmpty=true;
+                this.filterResult.map(function(item,index){
+                    if(item.sortValue==data.sortValue){
+                        _this.filterResult.splice(index,1);
+                    }
+                })
+            }
+            if(isEmpty){
+                return;
+            }
             var _this = this,
                 len = this.filterResult.length;
             this.filterResult.map(function (item, index) {

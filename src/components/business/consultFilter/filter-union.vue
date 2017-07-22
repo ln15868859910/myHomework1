@@ -75,6 +75,8 @@ const UnionFilterSlotComponent = {
                                 data.value = value;
                             }
                             else {
+                                //保持当前model的value值与组件内部的value一致
+                                _this.model.componentConfig.value=value.value
                                 data.value = !value.value && !value.label ? [] : [value];
                             }
                             if (!_this.model.sonSortValue) {
@@ -117,13 +119,59 @@ const UnionFilterSlotComponent = {
     methods: {
         init() {
             this.observeEvent();
+            this.initDataChange();
+        },
+        initDataChange:function(){
+            var hasInitValue=false;
+            var model = this.model.componentConfig;
+            var data = {
+                componentType: this.model.componentType,
+                sortValue: this.model.sortValue,
+                sortName: this.model.sortName,
+                value: []
+            }
+            if (model.multiple && model.value.length > 0) {
+                var i=0;
+                model.optionList.map(function(item){
+                    if(item.value==model.value[i]){
+                        data.value.push(item);
+                        i++;
+                    }
+                })
+                hasInitValue=true;
+            }
+            else if(!model.multiple && model.value){
+                model.optionList.map(function(item){
+                    if(item.value==model.value){
+                        data.value.push(item);
+                    }
+                })
+                hasInitValue=true;
+            }
+            if(!hasInitValue){
+                return;
+            }
+            if (!this.model.sonSortValue) {
+                Emiter.$emit("union-change-slot", data);
+            }
+            else {
+                Emiter.$emit(this.model.sortValue + "union-change", {
+                    callback: this.model.callback["on-change"],
+                    selectModel: {
+                        sortValue: this.model.sortValue,
+                        value: data.value
+                    }
+                });
+            }
         },
         observeEvent() {
             if (!this.model.parentSortValue) {
-                return;
             }
-            //监听联动模块子组件change事件
-            Emiter.$on(this.model.parentSortValue + "union-change", this.onChange);
+            else{
+                //监听联动模块子组件change事件
+                Emiter.$on(this.model.parentSortValue + "union-change", this.onChange);
+            }
+            
             //监听父层筛选项修改事件
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
@@ -142,7 +190,7 @@ const UnionFilterSlotComponent = {
                 this.model.componentConfig.value = data;
             }
             else {
-                this.model.componentConfig.value = data[0];
+                this.model.componentConfig.value = !data[0]?"":data[0];
             }
         }
     }
