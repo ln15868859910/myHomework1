@@ -49,7 +49,7 @@
             <!-- 联动组件 -->
             <consult-filter-union :model="unionModel"></consult-filter-union>
             <!-- 多选组件 -->
-            <consult-filter-multi></consult-filter-multi>
+            <consult-filter-multi :model="multiModel"></consult-filter-multi>
         </div>
     </div>
 </template>
@@ -418,7 +418,7 @@ export default {
             //监听二级单选模块change事件
             Emiter.$on("single-change", this.onSingleChange);
             //监听二级多选模块change事件
-            Emiter.$on("multi-change", this.onMultiChange);
+            Emiter.$on("multi-change", this.onUnionChange);
         },
         //根据返回
         init() {
