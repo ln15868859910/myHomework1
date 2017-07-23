@@ -345,13 +345,11 @@ export default {
             }
 
             var data = [];
-            //该分类下数据被清空的情况
             item.label.map(function (item) {
                 data.push(item.value);
             })
             //向基础组件发起数据变动通知
             Emiter.$emit(item.sortValue + "-change", data);
-
         },
         onUnionChange(data) {
             var _this=this,
@@ -392,22 +390,39 @@ export default {
                     [`sortValue`]: data.sortValue,
                     [`shortcut`]: data.shortcut,
                     [`label`]: [{
-                        text: `开始时间：${data.label[0]}-结束时间：${data.label[1]}`
+                        text: data.label.length > 0 ? `开始时间：${data.label[0]}-结束时间：${data.label[1]}` : "",
+                        value: data.label.length > 0 ? `开始时间：${data.label[0]}-结束时间：${data.label[1]}` : ""
                     }],
 
                 }
             }
 
             if (len === 0) {
-                this.filterResult.push(data)
-            } else {
-                this.filterResult.map(function (item, index) {
-                    if (item.sortValue === data.sortValue) {
-                        item.label = data.label;
-                        return;
-                    }
-                })
+                this.filterResult.push(data);
+                return;
             }
+
+            //hack 给所有传入数据加一个toolTip属性实现vue绑定
+            data.label.isAvoidToolTip = true;
+            
+            var emptySort = "";
+            var isSortExist = false;
+            //修改
+            this.filterResult.map(function (item, index) {
+                if (item.sortValue === data.sortValue) {
+                    if (!data.label[0].value) {
+                        emptySort = data.sortValue;
+                    }
+                    item.label = data.label;
+                    isSortExist = true;
+                } 
+            })
+            //添加
+            !isSortExist && data.label[0].value && _this.filterResult.push(data);
+            //删除
+            this.filterResult = this.filterResult.filter(function (item, index) {
+                return item.sortValue != emptySort;
+            })
 
         },
         onMultiChange() {

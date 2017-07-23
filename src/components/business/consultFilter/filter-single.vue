@@ -39,7 +39,7 @@ var maker = {
         },
 
         dateFormat(dateStr) {
-            return `${dateStr.substring(0, 4)}/${dateStr.substring(5, 7)}/${dateStr.substring(8, 10)}`;
+            return `${dateStr.substring(0, 4)}-${dateStr.substring(5, 7)}-${dateStr.substring(8, 10)}`;
         },
 
         observeEvent() {
@@ -51,11 +51,14 @@ var maker = {
             if (!data) {
                 return;
             }
+            if (this.model.componentConfig.multiple) {
 
-            if (this.model.componentType == "daterange") {
+                this.model.componentConfig.value = data;
 
-                this.model.componentConfig.value = data.value;
+            } else {
+                this.model.componentConfig.value = data;
             }
+
         }
     },
 
@@ -99,13 +102,17 @@ var maker = {
                     },
                     on: {
                         "on-change": function (obj) {
+
+                            //保持当前model的value值与组件内部的value一致
+                            me.model.componentConfig.value=[obj.value];
+
                             Emiter.$emit("single-change", {
                                 sortName: modelList.componentConfig.placeholder,
                                 sortValue: modelList.sortValue,
                                 componentType: "select",
                                 label: [{
-                                    text: obj.value,
-                                    value: obj.label
+                                    text: obj.label,
+                                    value: obj.value
                                 }]
                             });
                         },
@@ -153,13 +160,38 @@ var maker = {
                         format: modelList.componentConfig.format ? modelList.componentConfig.format : "yyyy年MM月dd日"
                     },
                     on: {
-                        "on-change": function (list) {
+
+                        "on-clear": function(){
                             Emiter.$emit("single-change", {
-                                sortName: modelList.componentConfig.placeholder,
-                                sortValue: modelList.sortValue,
-                                componentType: "daterange",
-                                label: [me.dateFormat(me.dateFormat(list[0])), me.dateFormat(me.dateFormat(list[1]))]
-                            });
+                                    sortName: modelList.componentConfig.placeholder,
+                                    sortValue: modelList.sortValue,
+                                    componentType: "daterange",
+                                    label: []
+                                });
+                        },
+
+                        "on-change": function (list) {
+                            //删除时的分支
+                            if (!list[0]) {
+                                Emiter.$emit("single-change", {
+                                    sortName: modelList.componentConfig.placeholder,
+                                    sortValue: modelList.sortValue,
+                                    componentType: "daterange",
+                                    label: []
+                                });
+                            } else {
+
+                                 //保持当前model的value值与组件内部的value一致
+                                // me.model.componentConfig.value=list;
+
+                                Emiter.$emit("single-change", {
+                                    sortName: modelList.componentConfig.placeholder,
+                                    sortValue: modelList.sortValue,
+                                    componentType: "daterange",
+                                    label: [me.dateFormat(list[0]), me.dateFormat(list[1])]
+                                });
+                            }
+
                         }
                     }
                 }, [
