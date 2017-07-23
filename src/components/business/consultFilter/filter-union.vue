@@ -1,6 +1,6 @@
 <template>
-    <div :class="model.class">
-        <component v-for="(item,index) in model.modelList" key="index" :model="item" :is="currentView">
+    <div :class="unionItemWrap">
+        <component :class="unionItem" v-for="(item,index) in model.modelList" :key="index" :model="item" :is="currentView">
     
         </component>
     </div>
@@ -31,6 +31,7 @@ function getComponentConfig(type, model) {
     }
     return data;
 }
+const prefixCls = "spui-b-consultFilter";
 const UnionFilterSlotComponent = {
     props: {
         model: {
@@ -76,7 +77,7 @@ const UnionFilterSlotComponent = {
                             }
                             else {
                                 //保持当前model的value值与组件内部的value一致
-                                _this.model.componentConfig.value=value.value
+                                _this.model.componentConfig.value = value.value
                                 data.value = !value.value && !value.label ? [] : [value];
                             }
                             if (!_this.model.sonSortValue) {
@@ -121,8 +122,8 @@ const UnionFilterSlotComponent = {
             this.observeEvent();
             this.initDataChange();
         },
-        initDataChange:function(){
-            var hasInitValue=false;
+        initDataChange: function () {
+            var hasInitValue = false;
             var model = this.model.componentConfig;
             var data = {
                 componentType: this.model.componentType,
@@ -131,24 +132,24 @@ const UnionFilterSlotComponent = {
                 value: []
             }
             if (model.multiple && model.value.length > 0) {
-                var i=0;
-                model.optionList.map(function(item){
-                    if(item.value==model.value[i]){
+                var i = 0;
+                model.optionList.map(function (item) {
+                    if (item.value == model.value[i]) {
                         data.value.push(item);
                         i++;
                     }
                 })
-                hasInitValue=true;
+                hasInitValue = true;
             }
-            else if(!model.multiple && model.value){
-                model.optionList.map(function(item){
-                    if(item.value==model.value){
+            else if (!model.multiple && model.value) {
+                model.optionList.map(function (item) {
+                    if (item.value == model.value) {
                         data.value.push(item);
                     }
                 })
-                hasInitValue=true;
+                hasInitValue = true;
             }
-            if(!hasInitValue){
+            if (!hasInitValue) {
                 return;
             }
             if (!this.model.sonSortValue) {
@@ -167,11 +168,11 @@ const UnionFilterSlotComponent = {
         observeEvent() {
             if (!this.model.parentSortValue) {
             }
-            else{
+            else {
                 //监听联动模块子组件change事件
                 Emiter.$on(this.model.parentSortValue + "union-change", this.onChange);
             }
-            
+
             //监听父层筛选项修改事件
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
@@ -190,7 +191,7 @@ const UnionFilterSlotComponent = {
                 this.model.componentConfig.value = data;
             }
             else {
-                this.model.componentConfig.value = !data[0]?"":data[0];
+                this.model.componentConfig.value = !data[0] ? "" : data[0];
             }
         }
     }
@@ -212,7 +213,12 @@ export default {
         };
     },
     computed: {
-
+        unionItem() {
+            return `${prefixCls}-unionItem`
+        },
+        unionItemWrap() {
+            return this.model.class ? this.model.class : `${prefixCls}-unionItemWrap`;
+        }
     },
     mounted() {
         this.init();

@@ -151,22 +151,33 @@
         margin-top:5%;
         right:0;
         width:360px;
-        padding: 30px 0;
+        padding-top: 30px;
         max-height:580px;
         background: #fff;
         box-sizing: border-box;
         box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
     }
-
     &-singleItemWrap{
-
+        clear: both;
+        overflow: hidden;
+        display: block;
+    }
+    &-unionItemWrap,
+    &-multiItemWrap{
+        width:100%;
+        border-top:1px solid #d4dfe5;
+        padding:20px 31px 0 29px;
     }
     
     &-singleItem{
         width: 140px;
         margin-bottom:20px;
         float:left;
+        //bug fix
+        .ivu-select-input{
+            width:100%;
+        }
     }
 
     &-singleItem:nth-child(odd){
@@ -174,5 +185,11 @@
     }
     &-singleItem:nth-child(even){
         margin-left: 20px;
+    }
+
+    &-unionItem,
+    &-multiItem
+    {
+        margin-bottom:20px;
     }
 }

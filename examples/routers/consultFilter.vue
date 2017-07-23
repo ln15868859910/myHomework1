@@ -79,7 +79,7 @@ export default {
                                 placeholder: "意向度",
                                 clearable: true,
                                 optionList: [{
-                                    "label": "高",
+                                    "label": "高少时诵诗书所所所所所所所所所所所所所所所所所所所所所",
                                     "value": "high"
                                 }, {
                                     "label": "中",
@@ -94,7 +94,7 @@ export default {
                     ],
                 },
                 unionModel: {
-                    class: "aaa",
+                    class: "",
                     modelList: [
                         {
                             sortName: "录入时间",
@@ -218,7 +218,7 @@ export default {
                     ]
                 },
                 multiModel: {
-                    class: "aaa",
+                    class: "",
                     modelList: [
                         {
                             sortName: "多选111",

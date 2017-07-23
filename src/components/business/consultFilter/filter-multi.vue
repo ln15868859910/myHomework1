@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <component v-for="(item,index) in model.modelList" key="index" :model="item" :is="currentView">
+    <div :class="multiItemWrap">
+        <component :class="multiItem" v-for="(item,index) in model.modelList" :key="index" :model="item" :is="currentView">
     
         </component>
     </div>
@@ -31,7 +31,7 @@ function getComponentConfig(type, model) {
     }
     return data;
 }
-
+const prefixCls = "spui-b-consultFilter";
 const MultiFilterSlotComponent = {
     props: {
         model: {
@@ -167,8 +167,13 @@ export default {
             currentView: MultiFilterSlotComponent,
         };
     },
-    computed: {
-
+   computed: {
+        multiItem() {
+            return `${prefixCls}-multiItem`
+        },
+        multiItemWrap() {
+            return this.model.class ? this.model.class : `${prefixCls}-multiItemWrap`;
+        }
     },
     mounted() {
         this.init();
