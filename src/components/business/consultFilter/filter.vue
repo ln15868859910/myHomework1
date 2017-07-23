@@ -20,20 +20,29 @@
             </li>
     
             <!-- 筛选组件按钮区域 -->
-            <li :class="filterBtn" @click="showContainer">
+            <li :class="filterBtn" v-clickoutside="hidefilterContainer">
                 <Badge :count="filterResultAmount">
-                    <div class="ivu-select-selection">
+                    <div class="ivu-select-selection" @click="toggleContainer">
                         <input type="text" value="筛选" class="ivu-select-input" disabled>
                         <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
                     </div>
                 </Badge>
+                <!-- 下拉组件区域 -->
+                <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
+                    <!-- 单选组件 -->
+                    <consult-filter-single :model="singleModel"></consult-filter-single>
+                    <!-- 联动组件 -->
+                    <consult-filter-union :model="unionModel"></consult-filter-union>
+                    <!-- 多选组件 -->
+                    <consult-filter-multi :model="multiModel"></consult-filter-multi>
+                </div>
             </li>
         </ul>
     
         <!-- 筛选内容展示区域 -->
         <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
             <ul>
-                <li v-for="(data,dataIndex) in filterResult"  :key="data">
+                <li v-for="(data,dataIndex) in filterResult" :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
                     <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
                         <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
@@ -42,15 +51,6 @@
             </ul>
         </div>
     
-        <!-- 下拉组件区域 -->
-        <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
-            <!-- 单选组件 -->
-            <consult-filter-single :model="singleModel"></consult-filter-single>
-            <!-- 联动组件 -->
-            <consult-filter-union :model="unionModel"></consult-filter-union>
-            <!-- 多选组件 -->
-            <consult-filter-multi :model="multiModel"></consult-filter-multi>
-        </div>
     </div>
 </template>
 <script>
@@ -65,10 +65,12 @@ import Tooltip from '../../tooltip';
 import filterSingle from './filter-single.vue';
 import filterUnion from './filter-union.vue';
 import filterMulti from './filter-multi.vue';
+import clickoutside from '../../../directives/clickoutside';
 
 export default {
     name: 'consultFilter',
     components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti },
+    directives: { clickoutside },
     props: {
         filterData: {
             type: Object,
@@ -273,6 +275,7 @@ export default {
         },
 
         /****************************筛选项相关*********************************/
+
         //复制外部model
         convertModel() {
             this.singleModel.modelList = this.filterData.singleModel.modelList.map(function (item) { return item });
@@ -281,8 +284,11 @@ export default {
             console.log(this.singleModel)
         },
         //显示下拉项层
-        showContainer() {
+        toggleContainer() {
             this.status.isContainerShow = !this.status.isContainerShow;
+        },
+        hidefilterContainer() {
+            this.status.isContainerShow = false;
         },
 
         //计算溢出需要显示tooltip的文字
@@ -352,27 +358,37 @@ export default {
             Emiter.$emit(item.sortValue + "-change", data);
         },
         onUnionChange(data) {
-            var _this=this,
-                 isEmpty=false;
-            if(data.label.length==0){
-                isEmpty=true;
-                this.filterResult.map(function(item,index){
-                    if(item.sortValue==data.sortValue){
-                        _this.filterResult.splice(index,1);
+            var _this = this,
+                isEmpty = false;
+            if (data.label.length == 0) {
+                isEmpty = true;
+                this.filterResult.map(function (item, index) {
+                    if (item.sortValue == data.sortValue) {
+                        _this.filterResult.splice(index, 1);
                     }
                 })
             }
-            if(isEmpty){
+            if (isEmpty) {
                 return;
             }
             var _this = this,
                 len = this.filterResult.length;
             this.filterResult.map(function (item, index) {
                 if (item.sortValue === data.sortValue) {
+                    //给多选和单选添加tooltip属性
+                    data.label.map(function (item, index) {
+                        item.isAvoidToolTip = true;
+                    });
+
                     item.label = data.label;
                     return;
                 }
                 else if (index === len - 1) {
+                    //给多选和单选添加tooltip属性
+                    data.label.map(function (item, index) {
+                        item.isAvoidToolTip = true;
+                    });
+
                     _this.filterResult.push(data);
                 }
             })
@@ -390,8 +406,8 @@ export default {
                     [`sortValue`]: data.sortValue,
                     [`shortcut`]: data.shortcut,
                     [`label`]: [{
-                        text: data.label.length > 0 ? `开始时间：${data.label[0]}-结束时间：${data.label[1]}` : "",
-                        value: data.label.length > 0 ? `开始时间：${data.label[0]}-结束时间：${data.label[1]}` : ""
+                        text: data.label.length > 0 ? `开始时间：${data.label[0]} - 结束时间：${data.label[1]}` : "",
+                        value: data.label.length > 0 ? `开始时间：${data.label[0]} - 结束时间：${data.label[1]}` : ""
                     }],
 
                 }
@@ -403,8 +419,8 @@ export default {
             }
 
             //hack 给所有传入数据加一个toolTip属性实现vue绑定
-            data.label.isAvoidToolTip = true;
-            
+            data.label[0].isAvoidToolTip = true;
+
             var emptySort = "";
             var isSortExist = false;
             //修改
@@ -415,7 +431,7 @@ export default {
                     }
                     item.label = data.label;
                     isSortExist = true;
-                } 
+                }
             })
             //添加
             !isSortExist && data.label[0].value && _this.filterResult.push(data);

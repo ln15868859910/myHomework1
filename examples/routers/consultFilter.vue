@@ -221,17 +221,17 @@ export default {
                     class: "",
                     modelList: [
                         {
-                            sortName: "多选111",
+                            sortName: "多选组件",
                             sortValue: "mm",
                             parentSortValue: "",
                             sonSortValue: "",
                             componentType: "select",
                             componentConfig: {
-                                value: ["beijing1"],
+                                value: ["beijing1","hangzhou1"],
                                 multiple: true,
                                 disabled: false,
                                 filterable: true,
-                                placeholder: "跟进",
+                                placeholder: "城市",
                                 clearable: true,
                                 optionList: [
                                     {
