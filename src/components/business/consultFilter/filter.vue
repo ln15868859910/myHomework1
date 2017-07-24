@@ -10,33 +10,35 @@
                 <span id="customRight" :class="customArea.buttonRight.styleName" @click="customArea.buttonRight.clickEvent" :style="{display:status.isCustomRightShow ? 'inline-block': 'none'}">
                 </span>
             </li>
+            <li :class="flortRight">
+                <!-- 搜索内容区域 -->
+                <div :class="search" v-if="searchData">
+                    <Select :value="searchArea.initValue" @on-change="setSearchItem" label-in-value style="width:100px">
+                        <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
+                    </Select>
+                    <Input type="text" icon="search" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
+                </div>
     
-            <!-- 搜索内容区域 -->
-            <li :class="search" v-if="searchData">
-                <Select :value="searchArea.initValue" @on-change="setSearchItem" label-in-value style="width:100px">
-                    <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
-                </Select>
-                <Input type="text" icon="search" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
-            </li>
-    
-            <!-- 筛选组件按钮区域 -->
-            <li :class="filterBtn" v-clickoutside="hidefilterContainer">
-                <Badge :count="filterResultAmount">
-                    <div class="ivu-select-selection" @click="toggleContainer">
-                        <input type="text" value="筛选" class="ivu-select-input" disabled>
-                        <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
+                <!-- 筛选组件按钮区域 -->
+                <div :class="filterBtn" v-clickoutside="hidefilterContainer">
+                    <Badge :count="filterResultAmount">
+                        <div class="ivu-select-selection" @click="toggleContainer">
+                            <input type="text" value="筛选" class="ivu-select-input" disabled>
+                            <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
+                        </div>
+                    </Badge>
+                    <!-- 下拉组件区域 -->
+                    <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
+                        <!-- 单选组件 -->
+                        <consult-filter-single :model="singleModel"></consult-filter-single>
+                        <!-- 联动组件 -->
+                        <consult-filter-union :model="unionModel"></consult-filter-union>
+                        <!-- 多选组件 -->
+                        <consult-filter-multi :model="multiModel"></consult-filter-multi>
                     </div>
-                </Badge>
-                <!-- 下拉组件区域 -->
-                <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
-                    <!-- 单选组件 -->
-                    <consult-filter-single :model="singleModel"></consult-filter-single>
-                    <!-- 联动组件 -->
-                    <consult-filter-union :model="unionModel"></consult-filter-union>
-                    <!-- 多选组件 -->
-                    <consult-filter-multi :model="multiModel"></consult-filter-multi>
                 </div>
             </li>
+    
         </ul>
     
         <!-- 筛选内容展示区域 -->
@@ -186,6 +188,9 @@ export default {
                 count += this.filterResult[i].label.length ? this.filterResult[i].label.length : 0;
             }
             return count;
+        },
+        flortRight(){
+            return `${prefixCls}-flortRight`
         }
     },
     created() {
@@ -360,7 +365,7 @@ export default {
         onUnionChange(data) {
             var _this = this,
                 isEmpty = false,
-                isFinish=false;
+                isFinish = false;
             if (data.label.length == 0) {
                 isEmpty = true;
                 this.filterResult.map(function (item, index) {
@@ -376,13 +381,13 @@ export default {
                 len = this.filterResult.length;
 
             //如果filterResult没有数据直接放入数据
-             if (len === 0) {
+            if (len === 0) {
                 this.filterResult.push(data);
                 return;
             }
-            
+
             this.filterResult.map(function (item, index) {
-                if(isFinish){
+                if (isFinish) {
                     return;
                 }
                 if (item.sortValue === data.sortValue) {
@@ -392,7 +397,7 @@ export default {
                     });
 
                     item.label = data.label;
-                    isFinish=true;
+                    isFinish = true;
                 }
                 else if (index === len - 1) {
                     //给多选和单选添加tooltip属性

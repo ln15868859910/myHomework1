@@ -3,11 +3,11 @@
 
 .@{consultFilter-prefix-cls} {
 
-    width: 1186px;
+    min-width: 1186px;
     position: relative;
     background:#fff;
     border:1px solid #D4DFE5;
-
+    text-align: initial;
     
     &>ul{
         position: relative;
@@ -21,8 +21,8 @@
 
     &-custom{
         position: absolute;
-        left:2.2%;
-        margin-top:1.7%;
+        left:30px;
+        margin-top:20px;
     }
 
     &-customLeft,
@@ -56,11 +56,14 @@
         color:#3c4b59;
         border:1px solid #b9bec5;
     }
-
+    &-flortRight{
+        float:right;
+        margin-top: 20px;
+        margin-right: 30px;
+    }
     &-search{
-        position:absolute;
-        left:666px;
-        top:20px;
+        display: inline-block;
+        margin-right: 20px;
         .ivu-select{
             display:inline-block;
         }
@@ -82,9 +85,7 @@
     
 
     &-filterBtn{
-        float: right;
-        margin-top: 1.7%;
-        margin-right: 2.2%;
+        display: inline;
         .ivu-badge-count{
             top:5px;
             left:0;
@@ -98,7 +99,7 @@
     }
 
     &-fitlerResult{
-        width:1186px;
+        min-width:1186px;
         min-height:60px;
         box-sizing: border-box;
         padding: 20px 30px; 
