@@ -359,7 +359,8 @@ export default {
         },
         onUnionChange(data) {
             var _this = this,
-                isEmpty = false;
+                isEmpty = false,
+                isFinish=false;
             if (data.label.length == 0) {
                 isEmpty = true;
                 this.filterResult.map(function (item, index) {
@@ -374,6 +375,9 @@ export default {
             var _this = this,
                 len = this.filterResult.length;
             this.filterResult.map(function (item, index) {
+                if(isFinish){
+                    return;
+                }
                 if (item.sortValue === data.sortValue) {
                     //给多选和单选添加tooltip属性
                     data.label.map(function (item, index) {
@@ -381,7 +385,7 @@ export default {
                     });
 
                     item.label = data.label;
-                    return;
+                    isFinish=true;
                 }
                 else if (index === len - 1) {
                     //给多选和单选添加tooltip属性
