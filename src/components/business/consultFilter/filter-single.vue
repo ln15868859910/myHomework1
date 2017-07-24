@@ -209,7 +209,11 @@ var maker = {
                                     sortName: modelList.componentConfig.placeholder,
                                     sortValue: modelList.sortValue,
                                     componentType: "daterange",
-                                    label: [me.dateFormat(list[0]), me.dateFormat(list[1])]
+                                    shortcut: "",
+                                    label: [{
+                                        text: `开始时间：${me.dateFormat(list[0],modelList.componentConfig.format)} - 结束时间：${me.dateFormat(list[1],modelList.componentConfig.format)}`,
+                                        value: [list[0], list[1]]
+                                    }]
                                 });
                             }
 
