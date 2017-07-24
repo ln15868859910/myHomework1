@@ -19,18 +19,17 @@ var maker = {
         config: {
             require: true
         }
-
     },
 
     data() {
-        return {//临时解决方案，时间控件会render两次，无法作区分，这里保存控件初始化状态
-            initStatus: {}
+        return {
+           
         }
     },
     created() {
-        this.createInitStatus();
     },
     mounted() {
+        this.initData();
         this.observeEvent();
     },
     methods: {
@@ -38,8 +37,26 @@ var maker = {
             this.initStatus[this.model.sortValue] = false;
         },
 
-        dateFormat(dateStr) {
-            return `${dateStr.substring(0, 4)}-${dateStr.substring(5, 7)}-${dateStr.substring(8, 10)}`;
+        dateFormat(dateStr,formatStr) {
+            var isFormatValid,
+                hasFormat = formatStr ? true : false;
+            
+            isFormatValid = /YYYY[^Y]+MM[^M]+DD[^D]*/i.test(formatStr);
+                
+            if(hasFormat && !isFormatValid){
+                throw new Error("传入时间格式："+formatStr+"不符合YYYY-MM-DD格式，请检查大小写后重新输入")
+                return;
+            }
+
+            var yearSeparate = hasFormat ? /YYYY([^]*)MM/i.exec(formatStr)[1]: "年",
+                monthSeparate = hasFormat ? /MM([^]*)DD/i.exec(formatStr)[1]: "月",
+                daySeparate = hasFormat ? /DD([^]*)/i.exec(formatStr)[1]: "日",
+            
+                dateYear = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[1],
+                dateMonth = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[2],
+                dateDay = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[3];
+            
+            return dateYear+yearSeparate+dateMonth+monthSeparate+dateDay+daySeparate;
         },
 
         observeEvent() {
@@ -59,24 +76,20 @@ var maker = {
                 this.model.componentConfig.value = data;
             }
 
-        }
-    },
+        },
+        initData() {
+            var 
+                me = this,
+                modelList = this.model;
 
-    render(h) {
-        var me = this,
-            modelList = this.model;
-
-        //纯文本筛选
-        if (modelList.componentType == "select") {
-
-            //默认值处理，手动触发事件
-            var defaultValue = modelList.componentConfig.value[0];
-            if (!this.initStatus[modelList.sortValue] && defaultValue) {
+            if (modelList.componentType == "select") {
+                var defaultValue = modelList.componentConfig.value[0];
                 var defaultObj = modelList.componentConfig.optionList.find(function (item) {
                     if (item.value == defaultValue) {
                         return item;
                     }
                 })
+
                 Emiter.$emit("single-change", {
                     sortName: modelList.componentConfig.placeholder,
                     sortValue: modelList.sortValue,
@@ -87,6 +100,32 @@ var maker = {
                     }]
                 });
             }
+
+            if (modelList.componentType == "daterange") {
+
+                var defaultValueList = modelList.componentConfig.value;
+                var defaultFormat = modelList.componentConfig.format;
+                Emiter.$emit("single-change", {
+                    sortName: modelList.componentConfig.placeholder,
+                    sortValue: modelList.sortValue,
+                    componentType: "daterange",
+                    shortcut: "",
+                    label: [{
+                        text: `开始时间：${me.dateFormat(defaultValueList[0],defaultFormat)} - 结束时间：${me.dateFormat(defaultValueList[1],defaultFormat)}`,
+                        value: [defaultValueList[0], defaultValueList[1]]
+                    }]
+                });
+
+            }
+        }
+    },
+
+    render(h) {
+        var me = this,
+            modelList = this.model;
+
+        //纯文本筛选
+        if (modelList.componentType == "select") {
 
             return h(
                 Select,
@@ -104,7 +143,7 @@ var maker = {
                         "on-change": function (obj) {
 
                             //保持当前model的value值与组件内部的value一致
-                            me.model.componentConfig.value=[obj.value];
+                            me.model.componentConfig.value = [obj.value];
 
                             Emiter.$emit("single-change", {
                                 sortName: modelList.componentConfig.placeholder,
@@ -126,28 +165,13 @@ var maker = {
                                 value: item.value
                             }
                         })
-                    }),
-                    //初始化完成记录，该分类的初始化完成状态
-                    me.initStatus[modelList.sortValue] = true
+                    })
                 ])
 
         }
 
         //时间区间选择类型
         if (modelList.componentType == "daterange") {
-
-            //默认值处理，手动触发事件
-            var defaultValueList = modelList.componentConfig.value;
-            if (!this.initStatus[modelList.sortValue] && defaultValueList.length > 0) {
-
-                Emiter.$emit("single-change", {
-                    sortName: modelList.componentConfig.placeholder,
-                    sortValue: modelList.sortValue,
-                    componentType: "daterange",
-                    shortcut: "",
-                    label: [me.dateFormat(defaultValueList[0]), me.dateFormat(defaultValueList[1])]
-                });
-            }
 
             return h(
                 DatePicker,
@@ -161,13 +185,13 @@ var maker = {
                     },
                     on: {
 
-                        "on-clear": function(){
+                        "on-clear": function () {
                             Emiter.$emit("single-change", {
-                                    sortName: modelList.componentConfig.placeholder,
-                                    sortValue: modelList.sortValue,
-                                    componentType: "daterange",
-                                    label: []
-                                });
+                                sortName: modelList.componentConfig.placeholder,
+                                sortValue: modelList.sortValue,
+                                componentType: "daterange",
+                                label: []
+                            });
                         },
 
                         "on-change": function (list) {
@@ -181,9 +205,6 @@ var maker = {
                                 });
                             } else {
 
-                                 //保持当前model的value值与组件内部的value一致
-                                // me.model.componentConfig.value=list;
-
                                 Emiter.$emit("single-change", {
                                     sortName: modelList.componentConfig.placeholder,
                                     sortValue: modelList.sortValue,
@@ -194,10 +215,7 @@ var maker = {
 
                         }
                     }
-                }, [
-                    //初始化完成记录，该分类的初始化完成状态
-                    this.initStatus[modelList.sortValue] = true
-                ]
+                }
             )
 
         }

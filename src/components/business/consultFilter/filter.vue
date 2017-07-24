@@ -374,6 +374,13 @@ export default {
             }
             var _this = this,
                 len = this.filterResult.length;
+
+            //如果filterResult没有数据直接放入数据
+             if (len === 0) {
+                this.filterResult.push(data);
+                return;
+            }
+            
             this.filterResult.map(function (item, index) {
                 if(isFinish){
                     return;
@@ -402,28 +409,13 @@ export default {
             var _this = this,
                 len = this.filterResult.length;
 
-            //时间类型做一次转化
-            if (data.componentType == "daterange") {
-
-                var data = {
-                    [`sortName`]: data.sortName,
-                    [`sortValue`]: data.sortValue,
-                    [`shortcut`]: data.shortcut,
-                    [`label`]: [{
-                        text: data.label.length > 0 ? `开始时间：${data.label[0]} - 结束时间：${data.label[1]}` : "",
-                        value: data.label.length > 0 ? `开始时间：${data.label[0]} - 结束时间：${data.label[1]}` : ""
-                    }],
-
-                }
-            }
+            //hack 给所有传入数据加一个toolTip属性实现vue绑定
+            data.label[0].isAvoidToolTip = true;
 
             if (len === 0) {
                 this.filterResult.push(data);
                 return;
             }
-
-            //hack 给所有传入数据加一个toolTip属性实现vue绑定
-            data.label[0].isAvoidToolTip = true;
 
             var emptySort = "";
             var isSortExist = false;
