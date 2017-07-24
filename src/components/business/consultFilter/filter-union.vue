@@ -80,10 +80,9 @@ const UnionFilterSlotComponent = {
                                 _this.model.componentConfig.value = value.value
                                 data.value = !value.value && !value.label ? [] : [value];
                             }
-                            if (!_this.model.sonSortValue) {
+                            Emiter.$emit("union-change-slot", data);
+                            if (_this.model.sonSortValue) {
                                 Emiter.$emit("union-change-slot", data);
-                            }
-                            else {
                                 Emiter.$emit(_this.model.sortValue + "union-change", {
                                     callback: _this.model.callback["on-change"],
                                     selectModel: {
@@ -179,9 +178,8 @@ const UnionFilterSlotComponent = {
         onChange(params) {
             if (params.callback && toString.call(params.callback) == "[object Function]") {
                 params.callback(params.selectModel, this.model);
-
-
             }
+
         },
         onFilterChange(data) {
             if (!data) {
