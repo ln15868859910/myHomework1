@@ -86,6 +86,12 @@ var maker = {
 
             if (modelList.componentType == "select") {
                 var defaultValue = modelList.componentConfig.value[0];
+               
+                 //判断是否有初始值
+                if (!defaultValue) {
+                    return;
+                }
+
                 var defaultObj = modelList.componentConfig.optionList.find(function (item) {
                     if (item.value == defaultValue) {
                         return item;
@@ -109,7 +115,7 @@ var maker = {
                     defaultFormat = modelList.componentConfig.format;
 
                 //判断是否有初始值
-                if (modelList.componentConfig.value.length === 0) {
+                if (defaultValueList.length === 0) {
                     return;
                 }
 
@@ -241,58 +247,7 @@ export default {
     },
     data() {
         return {
-            currentView: maker,
-            config: {
-                dateRange: {
-                    shortcuts: [
-                        // {
-                        //     text: '一周内',
-                        //     value() {
-                        //         const end = new Date();
-                        //         const start = new Date();
-                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                        //         return [start, end];
-                        //     }
-                        // },
-                        // {
-                        //     text: '一个月内',
-                        //     value() {
-                        //         const end = new Date();
-                        //         const start = new Date();
-                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                        //         return [start, end];
-                        //     }
-                        // },
-                        // {
-                        //     text: '三个月内',
-                        //     value() {
-                        //         const end = new Date();
-                        //         const start = new Date();
-                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                        //         return [start, end];
-                        //     }
-                        // },
-                        // {
-                        //     text: '半年内',
-                        //     value() {
-                        //         const end = new Date();
-                        //         const start = new Date();
-                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
-                        //         return [start, end];
-                        //     }
-                        // },
-                        // {
-                        //     text: '一年内',
-                        //     value() {
-                        //         const end = new Date();
-                        //         const start = new Date();
-                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-                        //         return [start, end];
-                        //     }
-                        // },
-                    ]
-                }
-            }
+            currentView: maker
         };
     },
     computed: {
