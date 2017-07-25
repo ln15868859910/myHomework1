@@ -189,7 +189,7 @@ export default {
             }
             return count;
         },
-        flortRight(){
+        flortRight() {
             return `${prefixCls}-flortRight`
         }
     },
@@ -201,6 +201,14 @@ export default {
     },
     updated() {
         this.setToolTipVisible();
+    },
+    watch: {
+        filterData:{
+            deep:true,
+            handler: function(oldv, newv){
+                this.convertModel();
+            }
+        }
     },
     methods: {
 
@@ -281,12 +289,152 @@ export default {
 
         /****************************筛选项相关*********************************/
 
-        //复制外部model
+        //将外部传入数据组装成二级组件需要的数据结构
         convertModel() {
-            this.singleModel = this.filterData.singleModel;
-            this.unionModel = this.filterData.unionModel;
-            this.multiModel = this.filterData.multiModel;
-            console.log(this.singleModel)
+
+            var 
+                filterOpts = this.filterData.opts,//外部传入配置
+                filterAjaxData = this.filterData.ajaxData,//外部接口传入的数据
+                singleList = [],
+                unionList = [],
+                multiList = [];
+
+            //单选组件数据组装
+            filterOpts.singleModel.map(function (obj) {
+
+                filterAjaxData.map(function (item) {
+                    if (item.sortvalue == obj.sortValue) {
+                        var labelList = [],
+                            singleData = {};
+
+                        //TODO:重新组装label中每一项,拼成组件想要的结构,labelvalue需要转一次结构
+                        item.lables.map(function (labelItem) {
+                            labelList.push({
+                                "label": labelItem.lablename,
+                                "value": obj.componentType == "daterange" ? labelItem.lablevalue.split(",") : labelItem.lablevalue
+                            });
+                        })
+                        singleData = {
+                            "sortValue": obj.sortValue,
+                            "componentType": obj.componentType,
+                            "componentConfig": {
+                                "value": obj.value.length ? obj.value : [],
+                                "placeholder": obj.sortName ? obj.sortName : "未定义分类名",
+                                "format": obj.format ? obj.format : "", //TODO:时间类型才加上format，需删除
+                                "optionList": labelList,
+                                "filterable": obj.filterable ? obj.filterable : false
+                            }
+                        };
+                        //配置项中的是否是有效回调
+                        if (obj.callback && !toString.call(obj.callback).toLowerCase() === "[object function]") {
+                            throw new Error("请给'" + prop + "'传入有效的函数类型回调")
+                        }
+                        obj.callback ? singleData.componentConfig.callback = obj.callback : false;
+
+                        singleList.push(singleData);
+                    }
+                })
+            })
+
+            //多选组件数据组装
+            filterOpts.multiModel.map(function (obj) {
+
+                filterAjaxData.map(function (item) {
+                    if (item.sortvalue == obj.sortValue) {
+                        var labelList = [],
+                            multiData = {};
+
+                        //TODO:重新组装label中每一项,拼成组件想要的结构,labelvalue需要转一次结构
+                        item.lables.map(function (labelItem) {
+                            labelList.push({
+                                "label": labelItem.lablename,
+                                "value": labelItem.lablevalue
+                            });
+                        })
+                        multiData = {
+                            "sortName": obj.sortName ? obj.sortName : "未定义分类名",
+                            "sortValue": obj.sortValue,
+                            "componentType": obj.componentType,
+                            "componentConfig": {
+                                "value": obj.value.length ? obj.value : [],
+                                "placeholder": obj.sortName ? obj.sortName : "未定义分类名",
+                                "optionList": labelList,
+                                "filterable": obj.filterable
+                            }
+                        };
+                        //配置项中的是否是有效回调
+                        if (obj.callback && !toString.call(obj.callback).toLowerCase() === "[object function]") {
+                            throw new Error("请给'" + prop + "'传入有效的函数类型回调")
+                        }
+                        obj.callback ? multiData.componentConfig.callback = obj.callback : false;
+
+                        multiList.push(multiData);
+                    }
+                })
+            })
+            //联动组件数据组装
+            filterOpts.unionModel.map(function (list) {
+
+                var
+                    unionSort = [],
+                    unionDataUnit = {};
+                //找到同一种类下拉的每一项
+                list.map(function (sortObj) {
+
+                    filterAjaxData.map(function (item) {
+
+                        var labelList = [];
+                        if (item.sortvalue == sortObj.sortValue) {
+
+                            item.lables.map(function (labelItem) {
+                                labelList.push({
+                                    "label": labelItem.lablename,
+                                    "value": labelItem.lablevalue
+                                });
+                            });
+                            unionDataUnit = {
+                                "sortName": sortObj.sortName ? sortObj.sortName : "未定义分类名",
+                                "sortValue": sortObj.sortValue,
+                                "parentSortValue": sortObj.fatherSort,
+                                "sonSortValue": sortObj.sonSort,
+                                "componentType": sortObj.componentType,
+                                "componentConfig": {
+                                    "multiple": sortObj.isMultiple ? sortObj.isMultiple : false,
+                                    "value": sortObj.value ? sortObj.value : [],
+                                    "placeholder": sortObj.sortName ? sortObj.sortName : "未定义分类名",
+                                    "optionList": labelList,
+                                    "clearable": sortObj.clearable ? sortObj.clearable : false,
+                                    "filterable": sortObj.filterable,
+                                    "disabled": false
+                                }
+                            };
+                            if (sortObj.callback && !toString.call(sortObj.callback).toLowerCase() === "[object function]") {
+                                throw new Error("请给'" + prop + "'传入有效的函数类型回调")
+                            }
+                            sortObj.callback ? unionDataUnit.componentConfig.callback = sortObj.callback : false;
+                        }
+
+                    })
+                    // 验证ajax数据确实存在定义的模型中时
+                    if (unionDataUnit.sortValue == sortObj.sortValue) {
+                        unionSort.push(unionDataUnit);
+                    }
+                })
+                if (unionSort.length) {
+                    unionList.push(unionSort);
+                }
+            })
+
+            if (singleList.length) {
+                this.singleModel.modelList = singleList;
+            }
+            if (unionList.length) {
+                this.unionModel.modelList = unionList;
+            }
+            if (multiList.length) {
+                this.multiModel.modelList = multiList;
+            }
+
         },
         //显示下拉项层
         toggleContainer() {
@@ -342,8 +490,6 @@ export default {
                 }
 
             }
-
-            // console.log(this.filterResult)
         },
 
         // 删除筛选标签
@@ -441,8 +587,6 @@ export default {
                 return item.sortValue != emptySort;
             })
 
-        },
-        onMultiChange() {
         },
         observeEvent() {
             //监听二级联动模块change事件
