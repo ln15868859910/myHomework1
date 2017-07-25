@@ -283,7 +283,7 @@ export default {
 
         //复制外部model
         convertModel() {
-            this.singleModel.modelList = this.filterData.singleModel.modelList.map(function (item) { return item });
+            this.singleModel = this.filterData.singleModel;
             this.unionModel = this.filterData.unionModel;
             this.multiModel = this.filterData.multiModel;
             console.log(this.singleModel)
