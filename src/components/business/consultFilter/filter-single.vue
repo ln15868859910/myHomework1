@@ -23,7 +23,7 @@ var maker = {
 
     data() {
         return {
-           
+
         }
     },
     created() {
@@ -33,30 +33,38 @@ var maker = {
         this.observeEvent();
     },
     methods: {
-        createInitStatus() {
-            this.initStatus[this.model.sortValue] = false;
+        setDateRangeShotcuts(shotCutsList) {
+            return shotCutsList.map(function (item, index) {
+                return {
+                    "text": item.label,
+                    value() {
+                        const end = new Date(item.value[1]);
+                        const start = new Date(item.value[0]);
+                        return [start, end];
+                    }
+                }
+            })
         },
-
-        dateFormat(dateStr,formatStr) {
+        dateFormat(dateStr, formatStr) {
             var isFormatValid,
                 hasFormat = formatStr ? true : false;
-            
+
             isFormatValid = /YYYY[^Y]+MM[^M]+DD[^D]*/i.test(formatStr);
-                
-            if(hasFormat && !isFormatValid){
-                throw new Error("传入时间格式："+formatStr+"不符合YYYY-MM-DD格式，请检查大小写后重新输入")
+
+            if (hasFormat && !isFormatValid) {
+                throw new Error("传入时间格式：" + formatStr + "不符合YYYY-MM-DD格式，请检查大小写后重新输入")
                 return;
             }
 
-            var yearSeparate = hasFormat ? /YYYY([^]*)MM/i.exec(formatStr)[1]: "年",
-                monthSeparate = hasFormat ? /MM([^]*)DD/i.exec(formatStr)[1]: "月",
-                daySeparate = hasFormat ? /DD([^]*)/i.exec(formatStr)[1]: "日",
-            
+            var yearSeparate = hasFormat ? /YYYY([^]*)MM/i.exec(formatStr)[1] : "年",
+                monthSeparate = hasFormat ? /MM([^]*)DD/i.exec(formatStr)[1] : "月",
+                daySeparate = hasFormat ? /DD([^]*)/i.exec(formatStr)[1] : "日",
+
                 dateYear = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[1],
                 dateMonth = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[2],
                 dateDay = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[3];
-            
-            return dateYear+yearSeparate+dateMonth+monthSeparate+dateDay+daySeparate;
+
+            return dateYear + yearSeparate + dateMonth + monthSeparate + dateDay + daySeparate;
         },
 
         observeEvent() {
@@ -68,17 +76,11 @@ var maker = {
             if (!data) {
                 return;
             }
-            if (this.model.componentConfig.multiple) {
 
-                this.model.componentConfig.value = data;
-
-            } else {
-                this.model.componentConfig.value = data;
-            }
-
+            this.model.componentConfig.value = data;
         },
         initData() {
-            var 
+            var
                 me = this,
                 modelList = this.model;
 
@@ -103,15 +105,21 @@ var maker = {
 
             if (modelList.componentType == "daterange") {
 
-                var defaultValueList = modelList.componentConfig.value;
-                var defaultFormat = modelList.componentConfig.format;
+                var defaultValueList = modelList.componentConfig.value,
+                    defaultFormat = modelList.componentConfig.format;
+
+                //判断是否有初始值
+                if (modelList.componentConfig.value.length === 0) {
+                    return;
+                }
+
                 Emiter.$emit("single-change", {
                     sortName: modelList.componentConfig.placeholder,
                     sortValue: modelList.sortValue,
                     componentType: "daterange",
                     shortcut: "",
                     label: [{
-                        text: `开始时间：${me.dateFormat(defaultValueList[0],defaultFormat)} - 结束时间：${me.dateFormat(defaultValueList[1],defaultFormat)}`,
+                        text: `开始时间：${me.dateFormat(defaultValueList[0], defaultFormat)} - 结束时间：${me.dateFormat(defaultValueList[1], defaultFormat)}`,
                         value: [defaultValueList[0], defaultValueList[1]]
                     }]
                 });
@@ -180,7 +188,7 @@ var maker = {
                         type: "daterange",
                         value: modelList.componentConfig.value,
                         placeholder: modelList.componentConfig.placeholder ? modelList.componentConfig.placeholder : "请选择日期",
-                        options: me.config.dateRange,
+                        options: {shortcuts:modelList.componentConfig.optionList.length ? this.setDateRangeShotcuts(modelList.componentConfig.optionList) : []},
                         format: modelList.componentConfig.format ? modelList.componentConfig.format : "yyyy年MM月dd日"
                     },
                     on: {
@@ -190,28 +198,23 @@ var maker = {
                                 sortName: modelList.componentConfig.placeholder,
                                 sortValue: modelList.sortValue,
                                 componentType: "daterange",
-                                label: []
+                                label: [{
+                                    text:"",
+                                    value:""
+                                }]
                             });
                         },
 
                         "on-change": function (list) {
-                            //删除时的分支
-                            if (!list[0]) {
-                                Emiter.$emit("single-change", {
-                                    sortName: modelList.componentConfig.placeholder,
-                                    sortValue: modelList.sortValue,
-                                    componentType: "daterange",
-                                    label: []
-                                });
-                            } else {
 
+                            if(list[0]){
                                 Emiter.$emit("single-change", {
                                     sortName: modelList.componentConfig.placeholder,
                                     sortValue: modelList.sortValue,
                                     componentType: "daterange",
                                     shortcut: "",
                                     label: [{
-                                        text: `开始时间：${me.dateFormat(list[0],modelList.componentConfig.format)} - 结束时间：${me.dateFormat(list[1],modelList.componentConfig.format)}`,
+                                        text: `开始时间：${me.dateFormat(list[0], modelList.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], modelList.componentConfig.format)}`,
                                         value: [list[0], list[1]]
                                     }]
                                 });
@@ -242,51 +245,51 @@ export default {
             config: {
                 dateRange: {
                     shortcuts: [
-                        {
-                            text: '一周内',
-                            value() {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                                return [start, end];
-                            }
-                        },
-                        {
-                            text: '一个月内',
-                            value() {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                                return [start, end];
-                            }
-                        },
-                        {
-                            text: '三个月内',
-                            value() {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                                return [start, end];
-                            }
-                        },
-                        {
-                            text: '半年内',
-                            value() {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
-                                return [start, end];
-                            }
-                        },
-                        {
-                            text: '一年内',
-                            value() {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-                                return [start, end];
-                            }
-                        },
+                        // {
+                        //     text: '一周内',
+                        //     value() {
+                        //         const end = new Date();
+                        //         const start = new Date();
+                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        //         return [start, end];
+                        //     }
+                        // },
+                        // {
+                        //     text: '一个月内',
+                        //     value() {
+                        //         const end = new Date();
+                        //         const start = new Date();
+                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        //         return [start, end];
+                        //     }
+                        // },
+                        // {
+                        //     text: '三个月内',
+                        //     value() {
+                        //         const end = new Date();
+                        //         const start = new Date();
+                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        //         return [start, end];
+                        //     }
+                        // },
+                        // {
+                        //     text: '半年内',
+                        //     value() {
+                        //         const end = new Date();
+                        //         const start = new Date();
+                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+                        //         return [start, end];
+                        //     }
+                        // },
+                        // {
+                        //     text: '一年内',
+                        //     value() {
+                        //         const end = new Date();
+                        //         const start = new Date();
+                        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+                        //         return [start, end];
+                        //     }
+                        // },
                     ]
                 }
             }
