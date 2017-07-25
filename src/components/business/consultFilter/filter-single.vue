@@ -1,6 +1,6 @@
 <template>
     <div :class="singleItemWrap">
-        <div :class="singleItem" v-for="(model,index) in model.modelList" :key="index" :model="model" :config="config" :is="currentView"></div>
+        <div :class="singleItem" v-for="(model,index) in model.modelList" :key="index" :model="model" :is="currentView"></div>
     </div>
 </template>
 
@@ -14,9 +14,6 @@ import { Select, Option, OptionGroup } from '../../select';
 var maker = {
     props: {
         model: {
-            require: true
-        },
-        config: {
             require: true
         }
     },

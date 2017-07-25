@@ -1,5 +1,10 @@
 <template>
-    <div :class="groupName">
+    <div class="" :class="[commonGroupName,groupName]" style="position: relative;">
+        <div class="union-link">
+            <div class="union-link-line top-line"></div>
+            <Icon type="link" size="16" style="color:#ccc;margin:2px 0;"></Icon>
+            <div class="union-link-line bottom-line"></div>
+        </div>
         <component :class="unionItem" v-for="(item,index) in model" :key="index" :model="item" :is="currentView">
     
         </component>
@@ -156,7 +161,7 @@ const UnionComponentSlot = {
             }
             else {
                 Emiter.$emit(this.model.sortValue + "union-change", {
-                    callback: this.model.callback["on-change"],
+                    callback: this.model.callback?this.model.callback["on-change"]:null,
                     selectModel: {
                         sortValue: this.model.sortValue,
                         value: data.value
@@ -207,6 +212,7 @@ export default {
     },
     data() {
         return {
+            commonGroupName:"",
             groupName:"",
             currentView: UnionComponentSlot
         };
@@ -224,7 +230,8 @@ export default {
     },
     methods: {
         init() {
-            this.groupName='union-group-'+this.model.length;
+            this.commonGroupName=prefixCls+'-union-group';
+            this.groupName=prefixCls+'-union-group-'+this.model.length;
             this.observeEvent();
         },
         observeEvent() {
