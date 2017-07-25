@@ -96,125 +96,131 @@ export default {
                 unionModel: {
                     class: "",
                     modelList: [
-                        {
-                            sortName: "录入时间",
-                            sortValue: "a",
-                            parentSortValue: "",
-                            sonSortValue: "b",
-                            componentType: "select",
-                            componentConfig: {
-                                value: [],
-                                multiple: true,
-                                disabled: false,
-                                filterable: true,
-                                placeholder: "录入时间",
-                                clearable: true,
-                                label: "hhz",
-                                optionList: [
-                                    {
-                                        value: "beijing",
-                                        label: "北京"
-                                    },
-                                    {
-                                        value: "hangzhou",
-                                        label: "杭州"
+                        [
+                            {
+                                sortName: "录入时间",
+                                sortValue: "a",
+                                parentSortValue: "",
+                                sonSortValue: "b",
+                                componentType: "select",
+                                componentConfig: {
+                                    value: [],
+                                    multiple: true,
+                                    disabled: false,
+                                    filterable: true,
+                                    placeholder: "录入时间",
+                                    clearable: true,
+                                    label: "hhz",
+                                    optionList: [
+                                        {
+                                            value: "beijing",
+                                            label: "北京"
+                                        },
+                                        {
+                                            value: "hangzhou",
+                                            label: "杭州"
+                                        }
+                                    ]
+                                },
+                                callback: {
+                                    "on-change": function (selectModel, modifyModel) {
+                                        modifyModel.componentConfig.optionList = [];
+                                        modifyModel.componentConfig.optionList.push({
+                                            label: "hhh",
+                                            value: "11"
+                                        });
+                                        modifyModel.componentConfig.optionList.push({
+                                            label: "aaa",
+                                            value: "22"
+                                        });
+                                        modifyModel.componentConfig.optionList.push({
+                                            label: "ss",
+                                            value: "33"
+                                        });
                                     }
-                                ]
+                                }
+
                             },
-                            callback: {
-                                "on-change": function (selectModel, modifyModel) {
-                                    modifyModel.componentConfig.optionList = [];
-                                    modifyModel.componentConfig.optionList.push({
-                                        label: "hhh",
-                                        value: "11"
-                                    });
-                                    modifyModel.componentConfig.optionList.push({
-                                        label: "aaa",
-                                        value: "22"
-                                    });
-                                    modifyModel.componentConfig.optionList.push({
-                                        label: "ss",
-                                        value: "33"
-                                    });
+                            {
+                                sortName: "跟进",
+                                sortValue: "b",
+                                parentSortValue: "a",
+                                sonSortValue: "",
+                                componentType: "select",
+                                componentConfig: {
+                                    value: [],
+                                    multiple: true,
+                                    disabled: false,
+                                    filterable: true,
+                                    placeholder: "跟进",
+                                    clearable: true,
+                                    optionList: [
+                                        {
+                                            value: "beijing1",
+                                            label: "北京1"
+                                        },
+                                        {
+                                            value: "hangzhou1",
+                                            label: "杭州1"
+                                        }
+                                    ]
                                 }
                             }
 
-                        },
-                        {
-                            sortName: "跟进",
-                            sortValue: "b",
-                            parentSortValue: "a",
-                            sonSortValue: "",
-                            componentType: "select",
-                            componentConfig: {
-                                value: [],
-                                multiple: true,
-                                disabled: false,
-                                filterable: true,
-                                placeholder: "跟进",
-                                clearable: true,
-                                optionList: [
-                                    {
-                                        value: "beijing1",
-                                        label: "北京1"
-                                    },
-                                    {
-                                        value: "hangzhou1",
-                                        label: "杭州1"
-                                    }
-                                ]
+                        ],
+                        [
+                            {
+                                sortName: "单选",
+                                sortValue: "c",
+                                parentSortValue: "",
+                                sonSortValue: "",
+                                componentType: "select",
+                                componentConfig: {
+                                    value: "beijing1",
+                                    multiple: false,
+                                    disabled: false,
+                                    filterable: true,
+                                    placeholder: "跟进",
+                                    clearable: true,
+                                    optionList: [
+                                        {
+                                            value: "beijing1",
+                                            label: "北京1"
+                                        },
+                                        {
+                                            value: "hangzhou1",
+                                            label: "杭州1"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                sortName: "多选",
+                                sortValue: "d",
+                                parentSortValue: "",
+                                sonSortValue: "",
+                                componentType: "select",
+                                componentConfig: {
+                                    value: ["beijing1"],
+                                    multiple: true,
+                                    disabled: false,
+                                    filterable: true,
+                                    placeholder: "跟进",
+                                    clearable: true,
+                                    optionList: [
+                                        {
+                                            value: "beijing1",
+                                            label: "北京1"
+                                        },
+                                        {
+                                            value: "hangzhou1",
+                                            label: "杭州1"
+                                        }
+                                    ]
+                                }
                             }
-                        },
-                        {
-                            sortName: "单选",
-                            sortValue: "c",
-                            parentSortValue: "",
-                            sonSortValue: "",
-                            componentType: "select",
-                            componentConfig: {
-                                value: "beijing1",
-                                multiple: false,
-                                disabled: false,
-                                filterable: true,
-                                placeholder: "跟进",
-                                clearable: true,
-                                optionList: [
-                                    {
-                                        value: "beijing1",
-                                        label: "北京1"
-                                    },
-                                    {
-                                        value: "hangzhou1",
-                                        label: "杭州1"
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            sortName: "多选",
-                            sortValue: "d",
-                            parentSortValue: "",
-                            sonSortValue: "",
-                            componentType: "select",
-                            componentConfig: {
-                                value: ["beijing1"],
-                                multiple: true,
-                                disabled: false,
-                                filterable: true,
-                                placeholder: "跟进",
-                                clearable: true,
-                                optionList: [
-                                    {
-                                        value: "beijing1",
-                                        label: "北京1"
-                                    },
-                                    {
-                                        value: "hangzhou1",
-                                        label: "杭州1"
-                                    }
-                                ]
-                            }
-                        }
+                        ]
+
                     ]
                 },
                 multiModel: {
@@ -227,7 +233,7 @@ export default {
                             sonSortValue: "",
                             componentType: "select",
                             componentConfig: {
-                                value: ["beijing1","hangzhou1"],
+                                value: ["beijing1", "hangzhou1"],
                                 multiple: true,
                                 disabled: false,
                                 filterable: true,
