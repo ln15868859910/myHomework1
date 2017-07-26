@@ -153,6 +153,12 @@ export default {
             multiModel: {
                 class: "",
                 modelList: []
+            },
+            debounceObj: {
+                toBizModelFn: {
+                    timer: null,
+                    timeOut: 500
+                }
             }
         };
     },
@@ -203,14 +209,35 @@ export default {
         this.setToolTipVisible();
     },
     watch: {
-        filterData:{
-            deep:true,
-            handler: function(oldv, newv){
-                this.convertModel();
+        filterResult: {
+            deep: true,
+            handler: function (oldv, newv) {
+
+                var timer = this.debounceObj.toBizModelFn.timer,
+                    timeOut = this.debounceObj.toBizModelFn.timeOut;
+
+                timer && clearTimeout(timer);
+                this.debounceObj.toBizModelFn.timer = setTimeout(() => {
+                    this.uiModeltoBizModel();
+                }, timeOut)
+
+
             }
         }
     },
     methods: {
+
+        _debounce(fn, arg, timeout, context) {
+            var timeoutID = null;
+            var arg = arg;
+            return function () {
+                clearTimeout(timeoutID);
+
+                timeoutID = setTimeout(function () {
+                    fn.call(context, arg);
+                }, timeout);
+            };
+        },
 
         /****************************自定义区域相关*********************************/
         setCustomStyleName() {
@@ -276,7 +303,6 @@ export default {
                 "text": obj.label,
                 "value": obj.value,
             }
-            // console.log(this.searchArea.selected.text);
         },
 
         doSearch() {
@@ -289,151 +315,31 @@ export default {
 
         /****************************筛选项相关*********************************/
 
+        uiModeltoBizModel() {
+            var outPutFn = this.filterData.callback["selected"];
+
+            if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
+                throw new Error("请传入有效的函数类型回调")
+            }
+
+            var bizData = {};
+
+            this.filterResult.map(function (sortItem) {
+
+                bizData[sortItem.sortValue] = [];
+                sortItem.label.map(function (labelItem) {
+                    bizData[sortItem.sortValue].push(labelItem.value)
+                })
+            })
+            outPutFn(bizData);
+        },
+
         //将外部传入数据组装成二级组件需要的数据结构
         convertModel() {
 
-            var 
-                filterOpts = this.filterData.opts,//外部传入配置
-                filterAjaxData = this.filterData.ajaxData,//外部接口传入的数据
-                singleList = [],
-                unionList = [],
-                multiList = [];
-
-            //单选组件数据组装
-            filterOpts.singleModel.map(function (obj) {
-
-                filterAjaxData.map(function (item) {
-                    if (item.sortvalue == obj.sortValue) {
-                        var labelList = [],
-                            singleData = {};
-
-                        //TODO:重新组装label中每一项,拼成组件想要的结构,labelvalue需要转一次结构
-                        item.lables.map(function (labelItem) {
-                            labelList.push({
-                                "label": labelItem.lablename,
-                                "value": obj.componentType == "daterange" ? labelItem.lablevalue.split(",") : labelItem.lablevalue
-                            });
-                        })
-                        singleData = {
-                            "sortValue": obj.sortValue,
-                            "componentType": obj.componentType,
-                            "componentConfig": {
-                                "value": obj.value.length ? obj.value : [],
-                                "placeholder": obj.sortName ? obj.sortName : "未定义分类名",
-                                "format": obj.format ? obj.format : "", //TODO:时间类型才加上format，需删除
-                                "optionList": labelList,
-                                "filterable": obj.filterable ? obj.filterable : false
-                            }
-                        };
-                        //配置项中的是否是有效回调
-                        if (obj.callback && !toString.call(obj.callback).toLowerCase() === "[object function]") {
-                            throw new Error("请给'" + prop + "'传入有效的函数类型回调")
-                        }
-                        obj.callback ? singleData.componentConfig.callback = obj.callback : false;
-
-                        singleList.push(singleData);
-                    }
-                })
-            })
-
-            //多选组件数据组装
-            filterOpts.multiModel.map(function (obj) {
-
-                filterAjaxData.map(function (item) {
-                    if (item.sortvalue == obj.sortValue) {
-                        var labelList = [],
-                            multiData = {};
-
-                        //TODO:重新组装label中每一项,拼成组件想要的结构,labelvalue需要转一次结构
-                        item.lables.map(function (labelItem) {
-                            labelList.push({
-                                "label": labelItem.lablename,
-                                "value": labelItem.lablevalue
-                            });
-                        })
-                        multiData = {
-                            "sortName": obj.sortName ? obj.sortName : "未定义分类名",
-                            "sortValue": obj.sortValue,
-                            "componentType": obj.componentType,
-                            "componentConfig": {
-                                "value": obj.value.length ? obj.value : [],
-                                "placeholder": obj.sortName ? obj.sortName : "未定义分类名",
-                                "optionList": labelList,
-                                "filterable": obj.filterable
-                            }
-                        };
-                        //配置项中的是否是有效回调
-                        if (obj.callback && !toString.call(obj.callback).toLowerCase() === "[object function]") {
-                            throw new Error("请给'" + prop + "'传入有效的函数类型回调")
-                        }
-                        obj.callback ? multiData.componentConfig.callback = obj.callback : false;
-
-                        multiList.push(multiData);
-                    }
-                })
-            })
-            //联动组件数据组装
-            filterOpts.unionModel.map(function (list) {
-
-                var
-                    unionSort = [],
-                    unionDataUnit = {};
-                //找到同一种类下拉的每一项
-                list.map(function (sortObj) {
-
-                    filterAjaxData.map(function (item) {
-
-                        var labelList = [];
-                        if (item.sortvalue == sortObj.sortValue) {
-
-                            item.lables.map(function (labelItem) {
-                                labelList.push({
-                                    "label": labelItem.lablename,
-                                    "value": labelItem.lablevalue
-                                });
-                            });
-                            unionDataUnit = {
-                                "sortName": sortObj.sortName ? sortObj.sortName : "未定义分类名",
-                                "sortValue": sortObj.sortValue,
-                                "parentSortValue": sortObj.fatherSort,
-                                "sonSortValue": sortObj.sonSort,
-                                "componentType": sortObj.componentType,
-                                "componentConfig": {
-                                    "multiple": sortObj.isMultiple ? sortObj.isMultiple : false,
-                                    "value": sortObj.value ? sortObj.value : [],
-                                    "placeholder": sortObj.sortName ? sortObj.sortName : "未定义分类名",
-                                    "optionList": labelList,
-                                    "clearable": sortObj.clearable ? sortObj.clearable : false,
-                                    "filterable": sortObj.filterable,
-                                    "disabled": false
-                                }
-                            };
-                            if (sortObj.callback && !toString.call(sortObj.callback).toLowerCase() === "[object function]") {
-                                throw new Error("请给'" + prop + "'传入有效的函数类型回调")
-                            }
-                            sortObj.callback ? unionDataUnit.componentConfig.callback = sortObj.callback : false;
-                        }
-
-                    })
-                    // 验证ajax数据确实存在定义的模型中时
-                    if (unionDataUnit.sortValue == sortObj.sortValue) {
-                        unionSort.push(unionDataUnit);
-                    }
-                })
-                if (unionSort.length) {
-                    unionList.push(unionSort);
-                }
-            })
-
-            if (singleList.length) {
-                this.singleModel.modelList = singleList;
-            }
-            if (unionList.length) {
-                this.unionModel.modelList = unionList;
-            }
-            if (multiList.length) {
-                this.multiModel.modelList = multiList;
-            }
+            this.singleModel = this.filterData.singleModel;
+            this.unionModel = this.filterData.unionModel;
+            this.multiModel = this.filterData.multiModel;
 
         },
         //显示下拉项层

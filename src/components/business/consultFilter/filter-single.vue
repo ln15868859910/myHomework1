@@ -96,7 +96,7 @@ var maker = {
                 })
 
                 Emiter.$emit("single-change", {
-                    sortName: modelList.componentConfig.placeholder,
+                    sortName: modelList.sortName,
                     sortValue: modelList.sortValue,
                     componentType: "select",
                     label: [{
@@ -117,7 +117,7 @@ var maker = {
                 }
 
                 Emiter.$emit("single-change", {
-                    sortName: modelList.componentConfig.placeholder,
+                    sortName: modelList.sortName,
                     sortValue: modelList.sortValue,
                     componentType: "daterange",
                     shortcut: "",
@@ -146,7 +146,7 @@ var maker = {
                         multiple: modelList.componentConfig.multiple,
                         disabled: modelList.componentConfig.disabled,
                         filterable: modelList.componentConfig.filterable,
-                        placeholder: modelList.componentConfig.placeholder,
+                        placeholder: modelList.sortName,
                         clearable: modelList.componentConfig.clearable,
                         "label-in-value": true
                     },
@@ -157,7 +157,7 @@ var maker = {
                             me.model.componentConfig.value = [obj.value];
 
                             Emiter.$emit("single-change", {
-                                sortName: modelList.componentConfig.placeholder,
+                                sortName: modelList.componentConfig.sortName,
                                 sortValue: modelList.sortValue,
                                 componentType: "select",
                                 label: [{
@@ -190,7 +190,7 @@ var maker = {
                     props: {
                         type: "daterange",
                         value: modelList.componentConfig.value,
-                        placeholder: modelList.componentConfig.placeholder ? modelList.componentConfig.placeholder : "请选择日期",
+                        placeholder: modelList.sortName ? modelList.sortName : "请选择日期",
                         options: {shortcuts:modelList.componentConfig.optionList.length ? this.setDateRangeShotcuts(modelList.componentConfig.optionList) : []},
                         format: modelList.componentConfig.format ? modelList.componentConfig.format : "yyyy年MM月dd日"
                     },
@@ -198,7 +198,7 @@ var maker = {
 
                         "on-clear": function () {
                             Emiter.$emit("single-change", {
-                                sortName: modelList.componentConfig.placeholder,
+                                sortName: modelList.sortName,
                                 sortValue: modelList.sortValue,
                                 componentType: "daterange",
                                 label: [{
@@ -212,7 +212,7 @@ var maker = {
 
                             if(list[0]){
                                 Emiter.$emit("single-change", {
-                                    sortName: modelList.componentConfig.placeholder,
+                                    sortName: modelList.sortName,
                                     sortValue: modelList.sortValue,
                                     componentType: "daterange",
                                     shortcut: "",
