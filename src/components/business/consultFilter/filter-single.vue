@@ -157,7 +157,7 @@ var maker = {
                             me.model.componentConfig.value = [obj.value];
 
                             Emiter.$emit("single-change", {
-                                sortName: modelList.componentConfig.sortName,
+                                sortName: modelList.sortName,
                                 sortValue: modelList.sortValue,
                                 componentType: "select",
                                 label: [{

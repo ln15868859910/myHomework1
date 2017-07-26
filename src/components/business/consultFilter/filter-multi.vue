@@ -10,7 +10,7 @@
 import Emiter from './emiter.vue';
 import { Select, Option, OptionGroup } from '../../select';
 
-function getComponentConfig(type, model) {
+function getComponentConfig(type, model,placeholder) {
     var data;
     switch (type) {
         case "select":
@@ -19,7 +19,7 @@ function getComponentConfig(type, model) {
                 multiple: true,
                 disabled: model.disabled,
                 filterable: model.filterable,
-                placeholder: model.placeholder,
+                placeholder:placeholder,
                 clearable: model.clearable,
                 "label-in-value": true,
                 remote: false
@@ -50,7 +50,7 @@ const MultiFilterSlotComponent = {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model.componentType, this.model.componentConfig),
+                    props: getComponentConfig(this.model.componentType, this.model.componentConfig,this.model.sortName),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     on: {
                         "on-change": function (value) {
