@@ -89,7 +89,7 @@ const UnionComponentSlot = {
                             if (_this.model.sonSortValue) {
                                 Emiter.$emit("union-change-slot", data);
                                 Emiter.$emit(_this.model.sortValue + "union-change", {
-                                    callback: _this.model.componentConfig.callback["on-change"],
+                                    callback: _this.model.callback ? this.model.callback["on-change"] : null,
                                     selectModel: {
                                         sortValue: _this.model.sortValue,
                                         value: value
@@ -161,7 +161,7 @@ const UnionComponentSlot = {
             }
             else {
                 Emiter.$emit(this.model.sortValue + "union-change", {
-                    callback: this.model.callback?this.model.callback["on-change"]:null,
+                    callback: this.model.callback ? this.model.callback["on-change"] : null,
                     selectModel: {
                         sortValue: this.model.sortValue,
                         value: data.value
@@ -212,8 +212,8 @@ export default {
     },
     data() {
         return {
-            commonGroupName:"",
-            groupName:"",
+            commonGroupName: "",
+            groupName: "",
             currentView: UnionComponentSlot
         };
     },
@@ -230,8 +230,8 @@ export default {
     },
     methods: {
         init() {
-            this.commonGroupName=prefixCls+'-union-group';
-            this.groupName=prefixCls+'-union-group-'+this.model.length;
+            this.commonGroupName = prefixCls + '-union-group';
+            this.groupName = prefixCls + '-union-group-' + this.model.length;
             this.observeEvent();
         },
         observeEvent() {
