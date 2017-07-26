@@ -89,7 +89,7 @@ const UnionComponentSlot = {
                             if (_this.model.sonSortValue) {
                                 Emiter.$emit("union-change-slot", data);
                                 Emiter.$emit(_this.model.sortValue + "union-change", {
-                                    callback: _this.model.callback ? this.model.callback["on-change"] : null,
+                                    callback: _this.model.callback ? _this.model.callback["on-change"] : null,
                                     selectModel: {
                                         sortValue: _this.model.sortValue,
                                         value: value
