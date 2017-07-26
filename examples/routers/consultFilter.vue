@@ -43,8 +43,8 @@ export default {
                 opts: {
                     "isResetFilter": false //默认：false，搜索时结果是否与筛选项互斥
                 },
-                callback: function () {
-                    console.log("我是搜索回调")
+                callback: function (obj) {
+                    console.log("我搜索了"+obj.key+"下的"+ obj.value)
                 }
             },
 

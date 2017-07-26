@@ -35,8 +35,8 @@ var maker = {
                 return {
                     "text": item.label,
                     value() {
-                        const end = new Date(item.value[1]);
-                        const start = new Date(item.value[0]);
+                        const end = new Date(item.value.split(",")[1]);
+                        const start = new Date(item.value.split(",")[0]);
                         return [start, end];
                     }
                 }
@@ -218,7 +218,7 @@ var maker = {
                                     shortcut: "",
                                     label: [{
                                         text: `开始时间：${me.dateFormat(list[0], modelList.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], modelList.componentConfig.format)}`,
-                                        value: [list[0], list[1]]
+                                        value: [me.dateFormat(list[0],"YYYY-MM-DD"), me.dateFormat(list[1],"YYYY-MM-DD")]
                                     }]
                                 });
                             }

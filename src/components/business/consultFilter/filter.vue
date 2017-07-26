@@ -13,10 +13,10 @@
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
                 <div :class="search" v-if="searchData">
-                    <Select :value="searchArea.initValue" @on-change="setSearchItem" label-in-value style="width:100px">
+                    <Select :value="searchInputInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
                         <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                     </Select>
-                    <Input type="text" icon="search" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
+                    <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
                 </div>
     
                 <!-- 筛选组件按钮区域 -->
@@ -123,7 +123,8 @@ export default {
                 selected: {
                     "text": "",
                     "value": ""
-                }
+                },
+                searchInput:"",
             },
             customArea: {
                 buttonLeft: {
@@ -197,6 +198,16 @@ export default {
         },
         flortRight() {
             return `${prefixCls}-flortRight`
+        },
+        searchInputInitVal() {
+            if (this.searchData.data.length) {
+                // this.searchArea.selected.text = this.searchData.data[0].text
+                this.searchArea.selected = {
+                    "text": this.searchData.data[0].text,
+                    "value": this.searchData.data[0].value
+                }
+                return this.searchData.data[0].value;
+            }
         }
     },
     created() {
@@ -210,7 +221,7 @@ export default {
     },
     watch: {
         filterResult: {
-            deep: true,
+            // deep: true,
             handler: function (oldv, newv) {
 
                 var timer = this.debounceObj.toBizModelFn.timer,
@@ -226,18 +237,6 @@ export default {
         }
     },
     methods: {
-
-        _debounce(fn, arg, timeout, context) {
-            var timeoutID = null;
-            var arg = arg;
-            return function () {
-                clearTimeout(timeoutID);
-
-                timeoutID = setTimeout(function () {
-                    fn.call(context, arg);
-                }, timeout);
-            };
-        },
 
         /****************************自定义区域相关*********************************/
         setCustomStyleName() {
@@ -299,6 +298,12 @@ export default {
         /****************************搜索项相关*********************************/
 
         setSearchItem(obj) {
+
+            //已经有初始化赋值时
+            if(!obj.label && obj.value){
+                return;
+            }
+
             this.searchArea.selected = {
                 "text": obj.label,
                 "value": obj.value,
@@ -307,7 +312,8 @@ export default {
 
         doSearch() {
             if (typeof this.searchData.callback == "function") {
-                this.searchData.callback();
+                this.searchData.callback({key:this.searchArea.selected.value,value:this.searchArea.searchInput});
+                // console.log(this.searchArea.searchInput)
             } else {
                 throw new Error("请传入正确的搜索回调！")
             }
@@ -328,7 +334,11 @@ export default {
 
                 bizData[sortItem.sortValue] = [];
                 sortItem.label.map(function (labelItem) {
-                    bizData[sortItem.sortValue].push(labelItem.value)
+                    if (toString.call(labelItem.value).toLowerCase() === "[object array]") {
+                        bizData[sortItem.sortValue] = labelItem.value;
+                    } else {
+                        bizData[sortItem.sortValue].push(labelItem.value)
+                    }
                 })
             })
             outPutFn(bizData);
@@ -505,10 +515,6 @@ export default {
         //根据返回
         init() {
 
-            //设置初始化搜索值
-            if (this.searchData) {
-                this.searchArea.initValue = this.searchData.data[0].value;
-            }
             //设置初始化自定义区域显示
             if (this.customData) {
                 this.status.isCustomLeftShow = this.customData.buttonLeft.isShow === false ? false : true;
