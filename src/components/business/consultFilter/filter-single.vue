@@ -73,8 +73,7 @@ var maker = {
             if (!data) {
                 return;
             }
-            Vue.set(this.model.componentConfig,"value",data)
-            // this.model.componentConfig.value = data;
+            this.model.componentConfig.value = data;
         },
         initData() {
             var

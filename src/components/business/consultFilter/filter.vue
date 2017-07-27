@@ -160,7 +160,8 @@ export default {
                     timer: null,
                     timeOut: 500
                 }
-            }
+            },
+            delQueue:[]//删除队列
         };
     },
     computed: {
@@ -247,11 +248,16 @@ export default {
                         if (filterResult.length) {
                             filterResult.map(function (item, itemIndex) {
                                 item.label.map(function (labelItem, labelIndex) {
-                                    me.closeTag(me.filterResult[itemIndex], itemIndex, labelIndex)
+                                   me.delQueue.push([item,itemIndex,labelIndex]);
                                 })
                             })
                         }
                     }
+                    //找到所有队列依次执行
+                    this.delQueue.map(function(item,index){
+                        me.closeTag(item[0],item[1],item[2])
+                    })
+                    this.delQueue = [];
                 }
             
         }
@@ -442,28 +448,6 @@ export default {
             item.label.map(function (item) {
                 data.push(item.value);
             })
-
-            //修改数据模型中的默认数据
-            this.singleModel.modelList.map(function(sortItem, sortIndex){
-                if(sortItem.sortValue == item.sortValue){
-                    sortItem.componentConfig.value = [];
-                }
-            })
-
-            //修改数据模型中的默认数据
-            this.unionModel.modelList.map(function(sortItem, sortIndex){
-                if(sortItem.sortValue == item.sortValue){
-                    sortItem.componentConfig.value = [];
-                }
-            })
-
-            //修改数据模型中的默认数据
-            this.multiModel.modelList.map(function(sortItem, sortIndex){
-                if(sortItem.sortValue == item.sortValue){
-                    sortItem.componentConfig.value = [];
-                }
-            })
-
 
             //向基础组件发起数据变动通知
             Emiter.$emit(item.sortValue + "-change", data);
