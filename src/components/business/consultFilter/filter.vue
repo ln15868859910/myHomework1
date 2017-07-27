@@ -158,7 +158,7 @@ export default {
             debounceObj: {
                 toBizModelFn: {
                     timer: null,
-                    timeOut: 500
+                    timeOut: 800
                 }
             },
             delQueue: []//删除队列
@@ -231,7 +231,6 @@ export default {
                 timer && clearTimeout(timer);
                 this.debounceObj.toBizModelFn.timer = setTimeout(() => {
                     this.uiModeltoBizModel();
-                    console.log(1);
                 }, timeOut)
 
 
@@ -245,7 +244,6 @@ export default {
                     this.emptyTag();
                 }
             }
-
         }
 
     },
