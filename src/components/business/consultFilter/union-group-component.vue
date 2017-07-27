@@ -57,8 +57,12 @@ const UnionComponentSlot = {
                 remote: false,
                 disabled: false
             },
-            testModel: "测试"
+            selectValue: ""
         }
+    },
+    watch: {
+        //监听选中值变化
+        'selectValue': 'onSelectChange'
     },
     render(h) {
         var _this = this;
@@ -71,31 +75,7 @@ const UnionComponentSlot = {
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     on: {
                         "on-change": function (value) {
-                            var data = {
-                                componentType: _this.model.componentType,
-                                sortValue: _this.model.sortValue,
-                                sortName: _this.model.sortName,
-                                value: []
-                            }
-                            if (_this.model.componentConfig.multiple) {
-                                data.value = value;
-                            }
-                            else {
-                                //保持当前model的value值与组件内部的value一致
-                                _this.model.componentConfig.value = value.value
-                                data.value = !value.value && !value.label ? [] : [value];
-                            }
-                            Emiter.$emit("union-change-slot", data);
-                            if (_this.model.sonSortValue) {
-                                Emiter.$emit(_this.model.sortValue + "union-change", {
-                                    callback: _this.model.callback ? _this.model.callback["on-change"] : null,
-                                    selectModel: {
-                                        sortValue: _this.model.sortValue,
-                                        value: value
-                                    }
-                                });
-                            }
-
+                            _this.selectValue = value;
                         },
                         "on-query-change": function () {
                         }
@@ -124,60 +104,62 @@ const UnionComponentSlot = {
         init() {
             this.observeEvent();
             this.initDataChange();
+            if (this.model.parentSortValue) {
+                Emiter.$emit(this.model.parentSortValue + "-union-empty-init", this.model);
+            }
         },
         initDataChange: function () {
-            var hasInitValue = false;
-            var model = this.model.componentConfig;
-            var data = {
-                componentType: this.model.componentType,
-                sortValue: this.model.sortValue,
-                sortName: this.model.sortName,
-                value: []
+            if (!this.model.componentConfig.value || this.model.componentConfig.value.length == 0) {
             }
-            if (model.multiple && model.value.length > 0) {
-                var i = 0;
-                model.optionList.map(function (item) {
-                    if (item.value == model.value[i]) {
-                        data.value.push(item);
-                        i++;
-                    }
-                })
-                hasInitValue = true;
-            }
-            else if (!model.multiple && model.value) {
-                model.optionList.map(function (item) {
-                    if (item.value == model.value) {
-                        data.value.push(item);
-                    }
-                })
-                hasInitValue = true;
-            }
-            if (!hasInitValue) {
-                return;
-            }
-            Emiter.$emit("union-change-slot", data);
-            if (this.model.sonSortValue) {
-                Emiter.$emit(this.model.sortValue + "union-change", {
-                    callback: this.model.callback ? this.model.callback["on-change"] : null,
-                    selectModel: {
-                        sortValue: this.model.sortValue,
-                        value: data.value
-                    }
-                });
+            else {
+                var model = this.model.componentConfig,
+                    data = [];
+                if (model.multiple && model.value.length > 0) {
+                    var i = 0;
+                    model.optionList.map(function (item) {
+                        if (item.value == model.value[i]) {
+                            data.push(item);
+                            i++;
+                        }
+                    })
+                }
+                else if (!model.multiple && model.value) {
+                    model.optionList.map(function (item) {
+                        if (item.value == model.value) {
+                            data = item;
+                        }
+                    })
+                }
+                this.selectValue = data;
             }
         },
         observeEvent() {
-            if (!this.model.parentSortValue) {
+            if (this.model.sonSortValue) {
+                //监听联动模块父组件值初始化是否为空事件
+                Emiter.$once(this.model.sortValue + "-union-empty-init", this.onDisableSon);
             }
-            else {
-                //监听联动模块子组件change事件
-                Emiter.$on(this.model.parentSortValue + "union-change", this.onChange);
+            if (!!this.model.parentSortValue) {
+                //监听联动模块父组件change事件
+                Emiter.$on(this.model.parentSortValue + "-union-change", this.onParentChange);
+                //监听联动模块父组件值为空事件
+                Emiter.$on(this.model.parentSortValue + "-union-empty", this.onParentEmpty);
             }
 
             //监听父层筛选项修改事件
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
-        onChange(params) {
+        onParentChange(params) {
+            if (toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
+                this.onParentEmpty();
+                Emiter.$emit(this.model.sortValue + "-union-empty");
+            }
+            else if (toString.call(params.selectModel.value) == "[object Object]" && !params.selectModel.value.value && !params.selectModel.value.label) {
+                this.onParentEmpty();
+                Emiter.$emit(this.model.sortValue + "-union-empty");
+            }
+            else {
+                this.model.componentConfig.disabled = false;
+            }
             if (params.callback && toString.call(params.callback) == "[object Function]") {
                 params.callback(params.selectModel, this.model);
             }
@@ -192,6 +174,54 @@ const UnionComponentSlot = {
             }
             else {
                 this.model.componentConfig.value = !data[0] ? "" : data[0];
+            }
+        },
+        onDisableSon: function (sonModel) {
+            if (this.model.componentConfig.multiple && this.model.componentConfig.value.length == 0) {
+                sonModel.componentConfig.disabled = true;
+            }
+            else if (!this.model.componentConfig.multiple && !this.model.componentConfig.value) {
+                sonModel.componentConfig.disabled = true;
+            }
+            else {
+            }
+        },
+        onParentEmpty: function () {
+            if (this.model.componentConfig.multiple) {
+                this.model.componentConfig.value = [];
+                this.model.componentConfig.optionList = [];
+            }
+            else {
+                this.model.componentConfig.value = "";
+                this.model.componentConfig.optionList = [];
+            }
+            this.model.componentConfig.disabled = true;
+        },
+        onSelectChange: function (value, oldValue) {
+            var _this = this;
+            var data = {
+                componentType: _this.model.componentType,
+                sortValue: _this.model.sortValue,
+                sortName: _this.model.sortName,
+                value: []
+            }
+            if (_this.model.componentConfig.multiple) {
+                data.value = value;
+            }
+            else {
+                //保持当前model的value值与组件内部的value一致
+                _this.model.componentConfig.value = value.value
+                data.value = !value.value && !value.label ? [] : [value];
+            }
+            Emiter.$emit("union-change-slot", data);
+            if (_this.model.sonSortValue) {
+                Emiter.$emit(_this.model.sortValue + "-union-change", {
+                    callback: _this.model.callback ? _this.model.callback["on-change"] : null,
+                    selectModel: {
+                        sortValue: _this.model.sortValue,
+                        value: value
+                    }
+                });
             }
         }
     }
