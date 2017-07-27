@@ -161,7 +161,7 @@ export default {
                     timeOut: 500
                 }
             },
-            delQueue:[]//删除队列
+            delQueue: []//删除队列
         };
     },
     computed: {
@@ -239,27 +239,13 @@ export default {
         },
         //清空操作
         "filterData": {
-                deep: true,
-                handler: function (oldv, newv) {
-                    var me = this;
-                    if (newv.isClear === true) {
-                        //每次初始化赋值的时候先清空原先筛选项数据
-                        var filterResult = this.filterResult;
-                        if (filterResult.length) {
-                            filterResult.map(function (item, itemIndex) {
-                                item.label.map(function (labelItem, labelIndex) {
-                                   me.delQueue.push([item,itemIndex,labelIndex]);
-                                })
-                            })
-                        }
-                    }
-                    //找到所有队列依次执行
-                    this.delQueue.map(function(item,index){
-                        me.closeTag(item[0],item[1],item[2])
-                    })
-                    this.delQueue = [];
+            deep: true,
+            handler: function (oldv, newv) {
+                if (newv.isClear === true) {
+                    this.emptyTag();
                 }
-            
+            }
+
         }
 
     },
@@ -434,7 +420,30 @@ export default {
 
             }
         },
+        // 清空所有标签
+        emptyTag() {
+            //每次初始化赋值的时候先清空原先筛选项数据
+            var filterResult = this.filterResult,
+                me = this;
 
+            if (filterResult.length) {
+                filterResult.map(function (item, itemIndex) {
+                    item.label.map(function (labelItem, labelIndex) {
+                        me.delQueue.push([item, labelIndex]);
+                    })
+                })
+            }
+
+            //找到所有队列依次执行
+            this.delQueue.map(function (item) {
+                item[0].label.splice(item[1], 1);
+            })
+
+            if (this.delQueue.length) {
+                this.filterResult = [];
+                this.delQueue = [];
+            }
+        },
         // 删除筛选标签
         closeTag(item, itemIndex, labelIndex) {
 
