@@ -44,12 +44,13 @@ export default {
                     "isResetFilter": false //默认：false，搜索时结果是否与筛选项互斥
                 },
                 callback: function (obj) {
-                    console.log("我搜索了"+obj.key+"下的"+ obj.value)
+                    console.log("我搜索了" + obj.key + "下的" + obj.value)
                 }
             },
 
             //筛选项数据
             filterData: {
+                isClear: false,
                 singleModel: {
                     class: "",//自定义样式名
                     modelList: [],//异步返回
@@ -358,8 +359,8 @@ export default {
                     ]
                 },
                 // 输出：选中项回调
-                callback:{
-                    "selected":function(obj){
+                callback: {
+                    "selected": function (obj) {
                         console.log(obj)
                     }
                 }
@@ -372,8 +373,8 @@ export default {
         // 模拟异步
         setTimeout(() => {
             var ajaxData = [
-                {   
-                    "SortName":"录入时间",
+                {
+                    "SortName": "录入时间",
                     "SortValue": "time", // 筛选项类目值，
                     "ComponentType": "daterange",
                     "ComponentConfig": {
@@ -389,8 +390,8 @@ export default {
                     },
                     "Callback": function (val) { },
                 },
-                {   
-                    "sortName":"意向度",
+                {
+                    "sortName": "意向度",
                     "SortValue": "trend", // 筛选项类目值，
                     "ComponentType": "select",
                     "ComponentConfig": {
@@ -417,7 +418,16 @@ export default {
 
             console.log("ajax获取数据计时器结束")
 
+            setTimeout(() => {
+                console.log("执行数据删除操作");
+                // this.filterData.isClear = true;
+
+
+            }, 3000)
+
         }, 3000)
+
+
     },
     methods: {
         firstStrlowerCase(obj) {

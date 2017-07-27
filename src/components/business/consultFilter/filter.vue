@@ -124,7 +124,7 @@ export default {
                     "text": "",
                     "value": ""
                 },
-                searchInput:"",
+                searchInput: "",
             },
             customArea: {
                 buttonLeft: {
@@ -221,7 +221,7 @@ export default {
     },
     watch: {
         filterResult: {
-            // deep: true,
+            deep: true,
             handler: function (oldv, newv) {
 
                 var timer = this.debounceObj.toBizModelFn.timer,
@@ -230,11 +230,32 @@ export default {
                 timer && clearTimeout(timer);
                 this.debounceObj.toBizModelFn.timer = setTimeout(() => {
                     this.uiModeltoBizModel();
+                    console.log(1);
                 }, timeOut)
 
 
             }
+        },
+        //清空操作
+        "filterData": {
+                deep: true,
+                handler: function (oldv, newv) {
+                    var me = this;
+                    if (newv.isClear === true) {
+                        //每次初始化赋值的时候先清空原先筛选项数据
+                        var filterResult = this.filterResult;
+                        if (filterResult.length) {
+                            filterResult.map(function (item, itemIndex) {
+                                item.label.map(function (labelItem, labelIndex) {
+                                    me.closeTag(me.filterResult[itemIndex], itemIndex, labelIndex)
+                                })
+                            })
+                        }
+                    }
+                }
+            
         }
+
     },
     methods: {
 
@@ -300,7 +321,7 @@ export default {
         setSearchItem(obj) {
 
             //已经有初始化赋值时
-            if(!obj.label && obj.value){
+            if (!obj.label && obj.value) {
                 return;
             }
 
@@ -312,7 +333,7 @@ export default {
 
         doSearch() {
             if (typeof this.searchData.callback == "function") {
-                this.searchData.callback({key:this.searchArea.selected.value,value:this.searchArea.searchInput});
+                this.searchData.callback({ key: this.searchArea.selected.value, value: this.searchArea.searchInput });
                 // console.log(this.searchArea.searchInput)
             } else {
                 throw new Error("请传入正确的搜索回调！")
@@ -421,8 +442,32 @@ export default {
             item.label.map(function (item) {
                 data.push(item.value);
             })
+
+            //修改数据模型中的默认数据
+            this.singleModel.modelList.map(function(sortItem, sortIndex){
+                if(sortItem.sortValue == item.sortValue){
+                    sortItem.componentConfig.value = [];
+                }
+            })
+
+            //修改数据模型中的默认数据
+            this.unionModel.modelList.map(function(sortItem, sortIndex){
+                if(sortItem.sortValue == item.sortValue){
+                    sortItem.componentConfig.value = [];
+                }
+            })
+
+            //修改数据模型中的默认数据
+            this.multiModel.modelList.map(function(sortItem, sortIndex){
+                if(sortItem.sortValue == item.sortValue){
+                    sortItem.componentConfig.value = [];
+                }
+            })
+
+
             //向基础组件发起数据变动通知
             Emiter.$emit(item.sortValue + "-change", data);
+
         },
         onUnionChange(data) {
             var _this = this,

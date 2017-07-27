@@ -73,8 +73,8 @@ var maker = {
             if (!data) {
                 return;
             }
-
-            this.model.componentConfig.value = data;
+            Vue.set(this.model.componentConfig,"value",data)
+            // this.model.componentConfig.value = data;
         },
         initData() {
             var
@@ -191,6 +191,7 @@ var maker = {
                         type: "daterange",
                         value: modelList.componentConfig.value,
                         placeholder: modelList.sortName ? modelList.sortName : "请选择日期",
+                        placement: "bottom-end",
                         options: {shortcuts:modelList.componentConfig.optionList.length ? this.setDateRangeShotcuts(modelList.componentConfig.optionList) : []},
                         format: modelList.componentConfig.format ? modelList.componentConfig.format : "yyyy年MM月dd日"
                     },
