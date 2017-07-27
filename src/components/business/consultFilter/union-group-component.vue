@@ -87,7 +87,6 @@ const UnionComponentSlot = {
                             }
                             Emiter.$emit("union-change-slot", data);
                             if (_this.model.sonSortValue) {
-                                Emiter.$emit("union-change-slot", data);
                                 Emiter.$emit(_this.model.sortValue + "union-change", {
                                     callback: _this.model.callback ? _this.model.callback["on-change"] : null,
                                     selectModel: {
@@ -156,10 +155,8 @@ const UnionComponentSlot = {
             if (!hasInitValue) {
                 return;
             }
-            if (!this.model.sonSortValue) {
-                Emiter.$emit("union-change-slot", data);
-            }
-            else {
+            Emiter.$emit("union-change-slot", data);
+            if (this.model.sonSortValue) {
                 Emiter.$emit(this.model.sortValue + "union-change", {
                     callback: this.model.callback ? this.model.callback["on-change"] : null,
                     selectModel: {
