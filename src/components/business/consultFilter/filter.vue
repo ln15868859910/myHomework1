@@ -13,7 +13,7 @@
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
                 <div :class="search" v-if="searchData">
-                    <Select :value="searchInputInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
+                    <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
                         <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                     </Select>
                     <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
@@ -100,7 +100,8 @@ export default {
                 isContainerShow: false,
                 isCustomLeftShow: true,
                 isCustomCenterShow: true,
-                isCustomRightShow: true
+                isCustomRightShow: true,
+                isInitCompleted: false
             },
 
             filterResult: [
@@ -200,16 +201,34 @@ export default {
         flortRight() {
             return `${prefixCls}-flortRight`
         },
-        searchInputInitVal() {
+        searchSelectInitVal() {
             if (this.searchData.data.length) {
-                // this.searchArea.selected.text = this.searchData.data[0].text
-                this.searchArea.selected = {
-                    "text": this.searchData.data[0].text,
-                    "value": this.searchData.data[0].value
+
+                var defaultSearchKey = this.searchData.opts.defaultSearchKey,
+                    defaultSearchText;
+
+                if (defaultSearchKey) {
+                    //找到searchKey对应的文案
+                    this.searchData.data.map(function(item,index){
+                        if(item.value == defaultSearchKey){
+                            defaultSearchText = item.text;
+                        }
+                    })
+                    this.searchArea.selected = {
+                        "text": defaultSearchText,
+                        "value": defaultSearchKey
+                    }
+                    return defaultSearchKey;
+
+                } else {
+                    this.searchArea.selected = {
+                        "text": this.searchData.data[0].text,
+                        "value": this.searchData.data[0].value
+                    }
+                    return this.searchData.data[0].value;
                 }
-                return this.searchData.data[0].value;
             }
-        }
+        },
     },
     created() {
         this.observeEvent();
@@ -242,6 +261,19 @@ export default {
             handler: function (oldv, newv) {
                 if (newv.isClear === true) {
                     this.emptyTag();
+                }
+            }
+        },
+        "searchData": {
+            deep: true,
+            handler: function (newv) {
+
+                if(!this.searchData.opts.defaultSearchKey){
+                    console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
+                }
+
+                if (newv.opts.defaultSearchValue) {
+                    this.searchArea.searchInput = newv.opts.defaultSearchValue
                 }
             }
         }
@@ -339,29 +371,31 @@ export default {
                 throw new Error("请传入有效的函数类型回调")
             }
 
-            var bizData = {};
+            var filterRes = {};
+            var searchRes = {
+                key: this.searchArea.selected.value,
+                value: this.searchArea.searchInput
+            }
 
             this.filterResult.map(function (sortItem) {
 
-                bizData[sortItem.sortValue] = [];
+                filterRes[sortItem.sortValue] = [];
                 sortItem.label.map(function (labelItem) {
                     if (toString.call(labelItem.value).toLowerCase() === "[object array]") {
-                        bizData[sortItem.sortValue] = labelItem.value;
+                        filterRes[sortItem.sortValue] = labelItem.value;
                     } else {
-                        bizData[sortItem.sortValue].push(labelItem.value)
+                        filterRes[sortItem.sortValue].push(labelItem.value)
                     }
                 })
             })
-            outPutFn(bizData);
+            outPutFn(filterRes, searchRes);
         },
 
         //将外部传入数据组装成二级组件需要的数据结构
         convertModel() {
-
             this.singleModel = this.filterData.singleModel;
             this.unionModel = this.filterData.unionModel;
             this.multiModel = this.filterData.multiModel;
-
         },
         //显示下拉项层
         toggleContainer() {
