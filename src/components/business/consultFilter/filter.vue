@@ -21,7 +21,7 @@
     
                 <!-- 筛选组件按钮区域 -->
                 <div :class="filterBtn" v-clickoutside="hidefilterContainer">
-                    <Badge :count="filterResultAmount">
+                    <Badge :count="status.isInitCompleted ? filterResultAmount : ''">
                         <div class="ivu-select-selection" @click="toggleContainer">
                             <input type="text" value="筛选" class="ivu-select-input" disabled>
                             <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
@@ -42,7 +42,7 @@
         </ul>
     
         <!-- 筛选内容展示区域 -->
-        <div :class="fitlerResult" :style="{display:filterResult.length > 0 ? 'block': 'none'}">
+        <div :class="fitlerResult" :style="{display: (status.isInitCompleted && filterResult.length) > 0 ? 'block': 'none'}">
             <ul>
                 <li v-for="(data,dataIndex) in filterResult" :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
@@ -209,8 +209,8 @@ export default {
 
                 if (defaultSearchKey) {
                     //找到searchKey对应的文案
-                    this.searchData.data.map(function(item,index){
-                        if(item.value == defaultSearchKey){
+                    this.searchData.data.map(function (item, index) {
+                        if (item.value == defaultSearchKey) {
                             defaultSearchText = item.text;
                         }
                     })
@@ -229,13 +229,13 @@ export default {
                 }
             }
         },
-        buttonLeftShow(){
+        buttonLeftShow() {
             return this.customData.buttonLeft.isShow;
         },
-        buttonCenterShow(){
+        buttonCenterShow() {
             return this.customData.buttonCenter.isShow;
         },
-        buttonRightShow(){
+        buttonRightShow() {
             return this.customData.buttonRight.isShow;
         }
     },
@@ -258,7 +258,13 @@ export default {
 
                 timer && clearTimeout(timer);
                 this.debounceObj.toBizModelFn.timer = setTimeout(() => {
+
+                    if (!this.status.isInitCompleted) {
+                        this.status.isInitCompleted = true;
+                        return;
+                    }
                     this.uiModeltoBizModel();
+                    
                 }, timeOut)
 
 
@@ -270,6 +276,8 @@ export default {
             handler: function (oldv, newv) {
                 if (newv.isClear === true) {
                     this.emptyTag();
+                    //做清空操作后，重置组件初始化状态
+                    this.status.isInitCompleted = false;
                 }
             }
         },
@@ -277,7 +285,7 @@ export default {
             deep: true,
             handler: function (newv) {
 
-                if(!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue){
+                if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
                 }
 
@@ -311,17 +319,10 @@ export default {
                 tplCenter = this.customData.buttonCenter.template,
                 tplRight = this.customData.buttonRight.template;
 
-                // tplLeftDefult = this.customArea.buttonLeft.template,
-                // tplCenterDefult = this.customArea.buttonCenter.template,
-                // tplRightDefult = this.customArea.buttonRight.template;
-
             tplLeft ? this.customArea.buttonLeft.template = tplLeft : false;
             tplCenter ? this.customArea.buttonCenter.template = tplCenter : false;
             tplRight ? this.customArea.buttonRight.template = tplRight : false;
 
-            // this.$el.querySelector("#customLeft").innerHTML = tplLeftDefult;
-            // this.$el.querySelector("#customCenter").innerHTML = tplCenterDefult;
-            // this.$el.querySelector("#customRight").innerHTML = tplRightDefult;
         },
 
         setCustomCallBack() {
@@ -364,6 +365,12 @@ export default {
 
         doSearch() {
             if (typeof this.searchData.callback == "function") {
+
+                //搜索结果互斥时，清空筛选项
+                if (this.searchData.opts.isResetFilter) {
+                    this.emptyTag();
+                }
+
                 this.searchData.callback({ key: this.searchArea.selected.value, value: this.searchArea.searchInput });
                 // console.log(this.searchArea.searchInput)
             } else {
@@ -478,6 +485,9 @@ export default {
             //找到所有队列依次执行
             this.delQueue.map(function (item) {
                 item[0].label.splice(item[1], 1);
+
+                // //向基础组件发起数据变动通知
+                Emiter.$emit(item[0].sortValue + "-change", []);
             })
 
             if (this.delQueue.length) {

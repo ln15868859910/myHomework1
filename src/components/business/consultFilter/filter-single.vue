@@ -155,6 +155,11 @@ var maker = {
                             //保持当前model的value值与组件内部的value一致
                             me.model.componentConfig.value = [obj.value];
 
+                            //已经删除了值的时候无需再通知上层
+                            if(!obj.value && !obj.label){
+                                return;
+                            }
+
                             Emiter.$emit("single-change", {
                                 sortName: modelList.sortName,
                                 sortValue: modelList.sortValue,
