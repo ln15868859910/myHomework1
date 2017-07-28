@@ -21,7 +21,7 @@ function getComponentConfig(model, remoteMethod) {
     switch (model.componentType) {
         case "select":
             data = {
-                value: model.componentConfig.value,
+                value: model.componentConfig.multiple ? model.componentConfig.value : model.componentConfig.value[0],
                 multiple: model.componentConfig.multiple,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
@@ -30,7 +30,7 @@ function getComponentConfig(model, remoteMethod) {
                 "label-in-value": true,
             }
             if (remoteMethod) {
-                var optionList = data.componentConfig.optionList;
+                var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
                 data.label = [];
@@ -46,7 +46,7 @@ function getComponentConfig(model, remoteMethod) {
                 }
                 else {
                     for (var i = 0, l = optionList.length; i < l; i++) {
-                        if (optionList[i].value == item.value) {
+                        if (optionList[i].value == data.value) {
                             data.label = optionList[i].label;
                             return;
                         }
@@ -185,6 +185,7 @@ const UnionComponentSlot = {
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
         onParentChange(params) {
+            var _this = this;
             this.parentSelectValue = params.selectModel.value;
             if (toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
                 this.onParentEmpty();
@@ -195,7 +196,7 @@ const UnionComponentSlot = {
             }
 
 
-            if (params.remoteUrl && toString.call(params.remoteUrl) == "[object String]") {
+            if (params.onChangeUrl && toString.call(params.onChangeUrl) == "[object String]") {
                 var parentValue = [];
                 params.selectModel.value.map(function (item) {
                     parentValue.push(item.value);
@@ -209,15 +210,15 @@ const UnionComponentSlot = {
                     }
                 }
                 Axios.post(params.onChangeUrl, req).then(function (res) {
-                    var data = data;
+                    var data = res.data;
                     if (data && data.Status) {
-                        _this.componentModel.componentConfig.optionList = [];
+                        _this.model.componentConfig.optionList = [];
                         _.each(data.Data.ComponentConfig.OptionList, function (item) {
                             var model = {
                                 label: item.Label,
                                 value: item.Value
                             }
-                            _this.componentModel.componentConfig.optionList.push(model);
+                            _this.model.componentConfig.optionList.push(model);
                         });
                     }
                     else {
@@ -281,7 +282,7 @@ const UnionComponentSlot = {
                     onChangeUrl: _this.model.remoteUrl ? _this.model.remoteUrl["onChange"] : "",
                     selectModel: {
                         sortValue: _this.model.sortValue,
-                        value: value
+                        value: data.value
                     }
                 });
             }
@@ -299,16 +300,16 @@ const UnionComponentSlot = {
                     }
                 }
             }
-            Axios.post(params.remoteUrl.onSearch, req).then(function (res) {
-                var data = data;
+            Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
+                var data = res.data;
                 if (data && data.Status) {
-                    _this.componentModel.componentConfig.optionList = [];
+                    _this.model.componentConfig.optionList = [];
                     _.each(data.Data.ComponentConfig.OptionList, function (item) {
                         var model = {
                             label: item.Label,
                             value: item.Value
                         }
-                        _this.componentModel.componentConfig.optionList.push(model);
+                        _this.model.componentConfig.optionList.push(model);
                     });
                 }
                 else {

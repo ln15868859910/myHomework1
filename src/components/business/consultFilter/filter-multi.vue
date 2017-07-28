@@ -17,7 +17,7 @@ function getComponentConfig(model, remoteMethod) {
         case "select":
             data = {
                 value: model.componentConfig.value,
-                multiple: model.componentConfig.multiple,
+                multiple: true,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
                 placeholder: model.sortName,
@@ -25,7 +25,7 @@ function getComponentConfig(model, remoteMethod) {
                 "label-in-value": true,
             }
             if (remoteMethod) {
-                var optionList = data.componentConfig.optionList;
+                var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
                 data.label = [];
@@ -171,7 +171,7 @@ const MultiFilterSlotComponent = {
                     }
                 }
             }
-            Axios.post(params.remoteUrl.onSearch, req).then(function (res) {
+            Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = data;
                 if (data && data.Status) {
                     _this.componentModel.componentConfig.optionList = [];
