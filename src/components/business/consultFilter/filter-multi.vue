@@ -8,21 +8,38 @@
 <script>
 
 import Emiter from './emiter.vue';
+import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../select';
 
-function getComponentConfig(type, model,placeholder) {
+function getComponentConfig(model, remoteMethod) {
     var data;
-    switch (type) {
+    switch (model.componentType) {
         case "select":
             data = {
-                value: model.value,
-                multiple: true,
-                disabled: model.disabled,
-                filterable: model.filterable,
-                placeholder:placeholder,
-                clearable: model.clearable,
+                value: model.componentConfig.value,
+                multiple: model.componentConfig.multiple,
+                disabled: model.componentConfig.disabled,
+                filterable: model.componentConfig.filterable,
+                placeholder: model.sortName,
+                clearable: model.componentConfig.clearable,
                 "label-in-value": true,
-                remote: false
+            }
+            if (remoteMethod) {
+                var optionList = data.componentConfig.optionList;
+                data.remote = true;
+                data["remote-method"] = remoteMethod;
+                data.label = [];
+                if (data.value.length > 0) {
+                    data.value.map(function (item, index) {
+                        for (var i = 0, l = optionList.length; i < l; i++) {
+                            if (optionList[i].value == item.value) {
+                                data.label.push(optionList[i].label);
+                                return;
+                            }
+                        }
+                    })
+                }
+                data.loading = false;
             }
             break;
 
@@ -44,13 +61,17 @@ const MultiFilterSlotComponent = {
         }
     },
     render(h) {
-        var _this = this;
+        var _this = this,
+            remoteMethod = null
+        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            remoteMethod = this.remoteMethod;
+        }
         //select组件
         if (this.model.componentType == "select") {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model.componentType, this.model.componentConfig,this.model.sortName),
+                    props: getComponentConfig(this.model, remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     on: {
                         "on-change": function (value) {
@@ -61,20 +82,8 @@ const MultiFilterSlotComponent = {
                                 value: []
                             }
                             data.value = value;
-                            if (!_this.model.sonSortValue) {
-                                Emiter.$emit("multi-change-slot", data);
-                            }
-                            else {
-                                Emiter.$emit(_this.model.sortValue + "union-change", {
-                                    callback: _this.model.callback["on-change"],
-                                    selectModel: {
-                                        sortValue: _this.model.sortValue,
-                                        value: value
-                                    }
-                                });
-                            }
-                        },
-                        "on-query-change": function () {
+                            Emiter.$emit("multi-change-slot", data);
+
                         }
                     }
                 },
@@ -148,7 +157,37 @@ const MultiFilterSlotComponent = {
             }
             this.model.componentConfig.value = data;
 
-        }
+        },
+        remoteMethod(query) {
+            if (query == "") {
+                return;
+            }
+            var _this = this;
+            var req = {
+                "req": {
+                    "Filter": {
+                        "ParentValue": [],
+                        "Filter": query
+                    }
+                }
+            }
+            Axios.post(params.remoteUrl.onSearch, req).then(function (res) {
+                var data = data;
+                if (data && data.Status) {
+                    _this.componentModel.componentConfig.optionList = [];
+                    _.each(data.Data.ComponentConfig.OptionList, function (item) {
+                        var model = {
+                            label: item.Label,
+                            value: item.Value
+                        }
+                        _this.componentModel.componentConfig.optionList.push(model);
+                    });
+                }
+                else {
+
+                }
+            })
+        },
     }
 
 };
@@ -167,7 +206,7 @@ export default {
             currentView: MultiFilterSlotComponent,
         };
     },
-   computed: {
+    computed: {
         multiItem() {
             return `${prefixCls}-multiItem`
         },

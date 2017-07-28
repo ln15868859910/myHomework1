@@ -317,7 +317,7 @@ const UnionComponentSlot = {
             })
         },
         debounce: function (func, type) {
-            clearTimeout(this.debounce[type])；
+            clearTimeout(this.debounce[type]);
             this.debounce[type] = setTimeout(function () {
                 func;
             }, 500);
