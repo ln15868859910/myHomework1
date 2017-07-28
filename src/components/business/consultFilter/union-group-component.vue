@@ -12,22 +12,47 @@
 </template>
 <script>
 import Emiter from './emiter.vue';
+import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../select';
 
 
-function getComponentConfig(type, model, placeholder) {
+function getComponentConfig(model, remoteMethod) {
     var data;
-    switch (type) {
+    switch (model.componentType) {
         case "select":
             data = {
-                value: model.value,
-                multiple: model.multiple,
-                disabled: model.disabled,
-                filterable: model.filterable,
-                placeholder: placeholder,
-                clearable: model.clearable,
+                value: model.componentConfig.value,
+                multiple: model.componentConfig.multiple,
+                disabled: model.componentConfig.disabled,
+                filterable: model.componentConfig.filterable,
+                placeholder: model.sortName,
+                clearable: model.componentConfig.clearable,
                 "label-in-value": true,
-                remote: false
+            }
+            if (remoteMethod) {
+                var optionList = data.componentConfig.optionList;
+                data.remote = true;
+                data["remote-method"] = remoteMethod;
+                data.label = [];
+                if (data.multiple && data.value.length > 0) {
+                    data.value.map(function (item, index) {
+                        for (var i = 0, l = optionList.length; i < l; i++) {
+                            if (optionList[i].value == item.value) {
+                                data.label.push(optionList[i].label);
+                                return;
+                            }
+                        }
+                    })
+                }
+                else {
+                    for (var i = 0, l = optionList.length; i < l; i++) {
+                        if (optionList[i].value == item.value) {
+                            data.label = optionList[i].label;
+                            return;
+                        }
+                    }
+                }
+                data.loading = false;
             }
             break;
 
@@ -57,7 +82,13 @@ const UnionComponentSlot = {
                 remote: false,
                 disabled: false
             },
-            selectValue: ""
+            selectValue: "",
+            optionList: "",
+            isInit: true,
+            parentSelectValue: "",
+            debounceObj: {
+
+            }
         }
     },
     watch: {
@@ -65,19 +96,22 @@ const UnionComponentSlot = {
         'selectValue': 'onSelectChange'
     },
     render(h) {
-        var _this = this;
+        var _this = this,
+            remoteMethod = null;
+        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            remoteMethod = this.remoteMethod;
+        }
         //select组件
         if (this.model.componentType == "select") {
             return h(
                 'Select',
                 {
-                    props: getComponentConfig(this.model.componentType, this.model.componentConfig, this.model.sortName),
+                    props: getComponentConfig(this.model, remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     on: {
                         "on-change": function (value) {
+                            _this.isInit = true;
                             _this.selectValue = value;
-                        },
-                        "on-query-change": function () {
                         }
                     }
                 },
@@ -87,7 +121,8 @@ const UnionComponentSlot = {
                             props: {
                                 label: item.label,
                                 value: item.value,
-                                disabled: !item.disabled ? false : true
+                                disabled: !item.disabled ? false : true,
+                                key: item.value
                             }
                         })
                     })
@@ -104,6 +139,7 @@ const UnionComponentSlot = {
         init() {
             this.observeEvent();
             this.initDataChange();
+            this.optionList = this.model.componentConfig.optionList;
             if (this.model.parentSortValue) {
                 Emiter.$emit(this.model.parentSortValue + "-union-empty-init", this.model);
             }
@@ -149,19 +185,45 @@ const UnionComponentSlot = {
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
         onParentChange(params) {
+            this.parentSelectValue = params.selectModel.value;
             if (toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
-                this.onParentEmpty();
-                Emiter.$emit(this.model.sortValue + "-union-empty");
-            }
-            else if (toString.call(params.selectModel.value) == "[object Object]" && !params.selectModel.value.value && !params.selectModel.value.label) {
                 this.onParentEmpty();
                 Emiter.$emit(this.model.sortValue + "-union-empty");
             }
             else {
                 this.model.componentConfig.disabled = false;
             }
-            if (params.callback && toString.call(params.callback) == "[object Function]") {
-                params.callback(params.selectModel, this.model);
+
+
+            if (params.remoteUrl && toString.call(params.remoteUrl) == "[object String]") {
+                var parentValue = [];
+                params.selectModel.value.map(function (item) {
+                    parentValue.push(item.value);
+                });
+                var req = {
+                    "req": {
+                        "Filter": {
+                            "ParentValue": parentValue,
+                            "Filter": ""
+                        }
+                    }
+                }
+                Axios.post(params.onChangeUrl, req).then(function (res) {
+                    var data = data;
+                    if (data && data.Status) {
+                        _this.componentModel.componentConfig.optionList = [];
+                        _.each(data.Data.ComponentConfig.OptionList, function (item) {
+                            var model = {
+                                label: item.Label,
+                                value: item.Value
+                            }
+                            _this.componentModel.componentConfig.optionList.push(model);
+                        });
+                    }
+                    else {
+
+                    }
+                })
             }
 
         },
@@ -216,13 +278,49 @@ const UnionComponentSlot = {
             Emiter.$emit("union-change-slot", data);
             if (_this.model.sonSortValue) {
                 Emiter.$emit(_this.model.sortValue + "-union-change", {
-                    callback: _this.model.callback ? _this.model.callback["on-change"] : null,
+                    onChangeUrl: _this.model.remoteUrl ? _this.model.remoteUrl["onChange"] : "",
                     selectModel: {
                         sortValue: _this.model.sortValue,
                         value: value
                     }
                 });
             }
+        },
+        remoteMethod(query) {
+            if (query == "") {
+                return;
+            }
+            var _this = this;
+            var req = {
+                "req": {
+                    "Filter": {
+                        "ParentValue": this.parentSelectValue,
+                        "Filter": query
+                    }
+                }
+            }
+            Axios.post(params.remoteUrl.onSearch, req).then(function (res) {
+                var data = data;
+                if (data && data.Status) {
+                    _this.componentModel.componentConfig.optionList = [];
+                    _.each(data.Data.ComponentConfig.OptionList, function (item) {
+                        var model = {
+                            label: item.Label,
+                            value: item.Value
+                        }
+                        _this.componentModel.componentConfig.optionList.push(model);
+                    });
+                }
+                else {
+
+                }
+            })
+        },
+        debounce: function (func, type) {
+            clearTimeout(this.debounce[type])；
+            this.debounce[type] = setTimeout(function () {
+                func;
+            }, 500);
         }
     }
 };
