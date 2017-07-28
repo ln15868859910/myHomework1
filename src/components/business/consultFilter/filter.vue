@@ -3,11 +3,11 @@
         <ul>
             <!-- 自定义内容区域 -->
             <li :class="custom" v-if="customData">
-                <span id="customLeft" :class="customArea.buttonLeft.styleName" @click="customArea.buttonLeft.clickEvent" :style="{display:status.isCustomLeftShow ? 'inline-block': 'none'}">
+                <span id="customLeft" :class="customArea.buttonLeft.styleName" @click="customArea.buttonLeft.clickEvent" v-if="buttonLeftShow" v-html="customArea.buttonLeft.template">
                 </span>
-                <span id="customCenter" :class="customArea.buttonCenter.styleName" @click="customArea.buttonCenter.clickEvent" :style="{display:status.isCustomCenterShow ? 'inline-block': 'none'}">
+                <span id="customCenter" :class="customArea.buttonCenter.styleName" @click="customArea.buttonCenter.clickEvent" v-if="buttonCenterShow" v-html="customArea.buttonCenter.template">
                 </span>
-                <span id="customRight" :class="customArea.buttonRight.styleName" @click="customArea.buttonRight.clickEvent" :style="{display:status.isCustomRightShow ? 'inline-block': 'none'}">
+                <span id="customRight" :class="customArea.buttonRight.styleName" @click="customArea.buttonRight.clickEvent" v-if="buttonRightShow" v-html="customArea.buttonRight.template">
                 </span>
             </li>
             <li :class="flortRight">
@@ -229,6 +229,15 @@ export default {
                 }
             }
         },
+        buttonLeftShow(){
+            return this.customData.buttonLeft.isShow;
+        },
+        buttonCenterShow(){
+            return this.customData.buttonCenter.isShow;
+        },
+        buttonRightShow(){
+            return this.customData.buttonRight.isShow;
+        }
     },
     created() {
         this.observeEvent();
@@ -268,7 +277,7 @@ export default {
             deep: true,
             handler: function (newv) {
 
-                if(!this.searchData.opts.defaultSearchKey){
+                if(!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue){
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
                 }
 
@@ -300,19 +309,19 @@ export default {
             var
                 tplLeft = this.customData.buttonLeft.template,
                 tplCenter = this.customData.buttonCenter.template,
-                tplRight = this.customData.buttonRight.template,
+                tplRight = this.customData.buttonRight.template;
 
-                tplLeftDefult = this.customArea.buttonLeft.template,
-                tplCenterDefult = this.customArea.buttonCenter.template,
-                tplRightDefult = this.customArea.buttonRight.template;
+                // tplLeftDefult = this.customArea.buttonLeft.template,
+                // tplCenterDefult = this.customArea.buttonCenter.template,
+                // tplRightDefult = this.customArea.buttonRight.template;
 
-            tplLeft ? tplLeftDefult = tplLeft : false;
-            tplCenter ? tplCenterDefult = tplCenter : false;
-            tplRight ? tplRightDefult = tplRight : false;
+            tplLeft ? this.customArea.buttonLeft.template = tplLeft : false;
+            tplCenter ? this.customArea.buttonCenter.template = tplCenter : false;
+            tplRight ? this.customArea.buttonRight.template = tplRight : false;
 
-            this.$el.querySelector("#customLeft").innerHTML = tplLeftDefult;
-            this.$el.querySelector("#customCenter").innerHTML = tplCenterDefult;
-            this.$el.querySelector("#customRight").innerHTML = tplRightDefult;
+            // this.$el.querySelector("#customLeft").innerHTML = tplLeftDefult;
+            // this.$el.querySelector("#customCenter").innerHTML = tplCenterDefult;
+            // this.$el.querySelector("#customRight").innerHTML = tplRightDefult;
         },
 
         setCustomCallBack() {
@@ -587,10 +596,6 @@ export default {
 
             //设置初始化自定义区域显示
             if (this.customData) {
-                this.status.isCustomLeftShow = this.customData.buttonLeft.isShow === false ? false : true;
-                this.status.isCustomCenterShow = this.customData.buttonCenter.isShow === false ? false : true;
-                this.status.isCustomRightShow = this.customData.buttonRight.isShow === false ? false : true;
-
                 //传入customData时
                 if (!this.customData.buttonLeft || !this.customData.buttonCenter || !this.customData.buttonRight) {
                     throw new Error("请传入正确格式的customData配置项");
