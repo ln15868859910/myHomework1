@@ -1,37 +1,62 @@
 <template>
+    
     <div>
-        <div class="demo-upload-list" v-for="item in uploadList">
-            <template v-if="item.status === 'finished'">
-                <img :src="item.url">
-                <div class="demo-upload-list-cover">
-                    <Icon type="eye" @click.native="handleView(item.name)"></Icon>
-                    <Icon type="trash" @click.native="handleRemove(item)"></Icon>
+        <div style="width:360px;height:118px;">
+            <Upload multiple type="drag" action="//jsonplaceholder.typicode.com/posts/">
+                <div style="padding: 20px 0;">
+                    <Icon type="cloud-upload" size="52" style="color: #3f4d5b"></Icon>
+                    <p>点击或将文件拖拽到这里上传</p>
                 </div>
-            </template>
-            <template v-else>
-                <i-progress v-if="item.showProgress" :percent="item.percentage" hide-info></i-progress>
-            </template>
+            </Upload>
         </div>
-        <Upload
-                ref="upload"
-                :show-upload-list="false"
-                :default-file-list="defaultList"
-                :on-success="handleSuccess"
-                :format="['jpg','jpeg','png']"
-                :max-size="2048"
-                :on-format-error="handleFormatError"
-                :on-exceeded-size="handleMaxSize"
-                @on-progress="handleProgress"
-                :before-upload="handleBeforeUpload"
-                multiple
-                type="drag"
-                action="//jsonplaceholder.typicode.com/posts/"
-                style="display: inline-block;width:58px;">
-            <div style="width: 58px;height:58px;line-height: 58px;">
-                <Icon type="camera" size="20"></Icon>
-            </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <Button type="ghost" icon="cloud-upload">上传文件</Button>
         </Upload>
-        {{ visible }}
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+            <div class="demo-upload-list" v-for="item in uploadList">
+        <template v-if="item.status === 'finished'">
+            <img :src="item.url">
+            <div class="demo-upload-list-cover">
+                <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+            </div>
+        </template>
+        <template v-else>
+            <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+        </template>
+    </div>
+    <Upload
+        ref="upload"
+        :show-upload-list="false"
+        :default-file-list="defaultList"
+        :on-success="handleSuccess"
+        :format="['jpg','jpeg','png']"
+        :max-size="2048"
+        :on-format-error="handleFormatError"
+        :on-exceeded-size="handleMaxSize"
+        :before-upload="handleBeforeUpload"
+        multiple
+        type="drag"
+        action="//jsonplaceholder.typicode.com/posts/"
+        style="display: inline-block;width:80px;">
+        <div style="width: 78px;height:78px;line-height: 94px;">
+            <Icon type="camera" size="32"></Icon>
+        </div>
+    </Upload>
+    <Modal title="查看图片" v-model="visible">
+        <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+    </Modal>
+        </div>
     </div>
 </template>
 <script>
@@ -110,16 +135,15 @@
 <style>
     .demo-upload-list{
         display: inline-block;
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         text-align: center;
-        line-height: 60px;
-        border: 1px solid transparent;
+        line-height: 80px;
+        border: 1px solid #b9bec5;
         border-radius: 4px;
         overflow: hidden;
         background: #fff;
         position: relative;
-        box-shadow: 0 1px 1px rgba(0,0,0,.2);
         margin-right: 4px;
     }
     .demo-upload-list img{
@@ -144,6 +168,7 @@
         cursor: pointer;
         margin: 0 2px;
     }
+    
 </style>
 
 
