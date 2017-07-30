@@ -116,13 +116,14 @@ var maker = {
             var sortValue = this.model.sortValue;
             setTimeout(() => {
                 this.$refs[sortValue].clearSingleSelect();
-            },0)
+                this.$refs[sortValue].selectedSingle = "";
+            }, 0)
         },
         remoteMethod(query) {
             if (query == "") {
                 return;
             }
-            var _this = this;
+            var me = this;
             var req = {
                 "req": {
                     "Filter": {
@@ -133,18 +134,27 @@ var maker = {
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = res.data;
                 if (data && data.Status) {
-                    _this.model.componentConfig.optionList = [];
-                    _.each(data.Data.ComponentConfig.OptionList, function (item) {
-                        var model = {
-                            label: item.Label,
-                            value: item.Value
-                        }
-                        _this.model.componentConfig.optionList.push(model);
-                    });
-                }
-                else {
+                    var tempList = [];
 
+                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                        tempList.push({
+                            label: item.Label,
+                            value: item.Value,
+                            disabled: false
+                        })
+                    })
+
+                    //数据超过50条，添加自定义文案
+                    if (data.Data.ComponentConfig.ItemCount >= 50) {
+                        tempList.push({
+                            value: "abadon",
+                            label: "【更多选项请输入更多关键词】",
+                            disabled: true
+                        })
+                    }
+                    me.model.componentConfig.optionList = tempList;
                 }
+
             })
         },
         initData() {
@@ -154,6 +164,22 @@ var maker = {
 
             if (modelList.componentType == "select") {
                 var defaultValue = modelList.componentConfig.value[0];
+
+                //给每一项下拉添加默认disabled属性
+                if (modelList.componentConfig.optionList.length) {
+
+                    modelList.componentConfig.optionList.map(function (item, index) {
+                        item.disabled = false;
+                    })
+                    //数据超过50条，添加自定义文案
+                    if (modelList.componentConfig.itemCount >= 50) {
+                        modelList.componentConfig.optionList.push({
+                            value: "abadon",
+                            label: "【更多选项请搜索】",
+                            disabled: true
+                        })
+                    }
+                }
 
                 //判断是否有初始值
                 if (!defaultValue) {
@@ -220,21 +246,21 @@ var maker = {
                     ref: this.model.sortValue,
                     on: {
                         "on-change": function (obj) {
-                            
+
                             var result = {};
-                            
-                            if(toString.call(obj).toLowerCase() === "[object object]"){
+
+                            if (toString.call(obj).toLowerCase() === "[object object]") {
                                 result = obj;
-                                 //保持当前model的value值与组件内部的value一致
+                                //保持当前model的value值与组件内部的value一致
                                 me.model.componentConfig.value = [result.value];
                             }
                             //bugFix(临时)：针对obj有时只返回value值手动去找一遍它的value值
-                            else if(typeof obj === "string"){
-                                var 
+                            else if (typeof obj === "string") {
+                                var
                                     optsList = me.model.componentConfig.optionList;
 
-                                optsList.map(function(item,index){
-                                    if(item.value == obj){
+                                optsList.map(function (item, index) {
+                                    if (item.value == obj) {
                                         result.label = item.label;
                                         return;
                                     }
@@ -259,7 +285,8 @@ var maker = {
                         return h(Option, {
                             props: {
                                 label: item.label,
-                                value: item.value
+                                value: item.value,
+                                disabled: item.disabled
                             }
                         })
                     })
