@@ -103,11 +103,12 @@ const UnionComponentSlot = {
         }
         //select组件
         if (this.model.componentType == "select") {
-            return h(   
+            return h(
                 'Select',
                 {
                     props: getComponentConfig(this.model, remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
+                    ref: this.model.sortValue,
                     on: {
                         "on-change": function (value) {
                             _this.isInit = true;
@@ -250,13 +251,24 @@ const UnionComponentSlot = {
             }
         },
         onParentEmpty: function () {
+            var sortValue = this.model.sortValue;
             if (this.model.componentConfig.multiple) {
                 this.model.componentConfig.value = [];
                 this.model.componentConfig.optionList = [];
+                //bugFix（临时）：修复清空了值上一个未清空选中项的bug
+                setTimeout(() => {
+                 this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple=[] : "";
+                },0)
             }
             else {
                 this.model.componentConfig.value = "";
                 this.model.componentConfig.optionList = [];
+                //bugFix（临时）：修复清空了值上一个未清空选中项的bug
+                setTimeout(() => {
+                    this.$refs[sortValue] ? this.$refs[sortValue].clearSingleSelect() : "";
+                    //bugFix（临时）：修复清空了值上一个未清空选中项的bug
+                    this.$refs[sortValue] ? this.$refs[sortValue].selectedSingle = "" : "";
+                }, 0)
             }
             this.model.componentConfig.disabled = true;
         },
@@ -300,21 +312,32 @@ const UnionComponentSlot = {
                     }
                 }
             }
+            this.model.loading
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = res.data;
                 if (data && data.Status) {
-                    _this.model.componentConfig.optionList = [];
-                    _.each(data.Data.ComponentConfig.OptionList, function (item) {
-                        var model = {
-                            label: item.Label,
-                            value: item.Value
-                        }
-                        _this.model.componentConfig.optionList.push(model);
-                    });
-                }
-                else {
+                    //优化：修改遍历时同时进行插入操作的bug by tianyu.chen
+                    var tempList = [];
 
+                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                        tempList.push({
+                            label: item.Label,
+                            value: item.Value,
+                            disabled: false
+                        })
+                    })
+
+                    //数据超过50条，添加自定义文案
+                    if (data.Data.ComponentConfig.ItemCount >= 50) {
+                        tempList.push({
+                            value: "abadon",
+                            label: "【更多选项请输入更多关键词】",
+                            disabled: true
+                        })
+                    }
+                    _this.model.componentConfig.optionList = tempList;
                 }
+
             })
         },
         debounce: function (func, type) {
