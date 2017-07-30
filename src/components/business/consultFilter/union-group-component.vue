@@ -133,6 +133,13 @@ const UnionComponentSlot = {
             )
         }
     },
+    created(){
+        if(this.model.parentSortValue){
+            this.model.componentConfig.disabled = true;
+        }else{
+            this.model.componentConfig.disabled = false;
+        }
+    },
     mounted() {
         this.init();
     },
@@ -140,7 +147,22 @@ const UnionComponentSlot = {
         init() {
             this.observeEvent();
             this.initDataChange();
-            this.optionList = this.model.componentConfig.optionList;
+            
+            var optsList = this.model.componentConfig.optionList;     
+            //给每一项下拉添加默认disabled属性
+            optsList.map(function (item, index) {
+                item.disabled = false;
+            })
+
+            //数据超过50条，添加自定义文案
+            if (this.model.componentConfig.itemCount >= 50) {
+                this.model.componentConfig.optionList.push({
+                    value: "abadon",
+                    label: "【更多选项请搜索】",
+                    disabled: true
+                })
+            }
+
             if (this.model.parentSortValue) {
                 Emiter.$emit(this.model.parentSortValue + "-union-empty-init", this.model);
             }
@@ -257,8 +279,8 @@ const UnionComponentSlot = {
                 this.model.componentConfig.optionList = [];
                 //bugFix（临时）：修复清空了值上一个未清空选中项的bug
                 setTimeout(() => {
-                 this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple=[] : "";
-                },0)
+                    this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+                }, 0)
             }
             else {
                 this.model.componentConfig.value = "";
