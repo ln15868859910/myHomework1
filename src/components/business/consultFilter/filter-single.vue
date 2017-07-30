@@ -9,7 +9,46 @@ const prefixCls = "spui-b-consultFilter";
 
 import Emiter from './emiter.vue';
 import DatePicker from '../../date-picker';
+import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../select';
+
+//拼装数据
+function getComponentConfig(model, remoteMethod) {
+    var data;
+    switch (model.componentType) {
+        case "select":
+            data = {
+                value: model.componentConfig.value[0],
+                multiple: model.componentConfig.multiple,
+                disabled: model.componentConfig.disabled,
+                filterable: model.componentConfig.filterable,
+                placeholder: model.sortName,
+                clearable: model.componentConfig.clearable,
+                "label-in-value": true
+            };
+
+            if (remoteMethod) {
+                var optionList = model.componentConfig.optionList;
+                data.remote = true;
+                data["remote-method"] = remoteMethod;
+                data.loading = false;
+                data.label = "";
+                for (var i = 0, l = optionList.length; i < l; i++) {
+                    if (optionList[i].value == data.value) {
+                        data.label = optionList[i].label;
+                        return;
+                    }
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+    return data;
+}
+
+
 
 var maker = {
     props: {
@@ -74,6 +113,39 @@ var maker = {
                 return;
             }
             this.model.componentConfig.value = data;
+            var sortValue = this.model.sortValue;
+            setTimeout(() => {
+                this.$refs[sortValue].clearSingleSelect();
+            },0)
+        },
+        remoteMethod(query) {
+            if (query == "") {
+                return;
+            }
+            var _this = this;
+            var req = {
+                "req": {
+                    "Filter": {
+                        "Filter": query
+                    }
+                }
+            }
+            Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
+                var data = res.data;
+                if (data && data.Status) {
+                    _this.model.componentConfig.optionList = [];
+                    _.each(data.Data.ComponentConfig.OptionList, function (item) {
+                        var model = {
+                            label: item.Label,
+                            value: item.Value
+                        }
+                        _this.model.componentConfig.optionList.push(model);
+                    });
+                }
+                else {
+
+                }
+            })
         },
         initData() {
             var
@@ -82,8 +154,8 @@ var maker = {
 
             if (modelList.componentType == "select") {
                 var defaultValue = modelList.componentConfig.value[0];
-               
-                 //判断是否有初始值
+
+                //判断是否有初始值
                 if (!defaultValue) {
                     return;
                 }
@@ -132,48 +204,58 @@ var maker = {
 
     render(h) {
         var me = this,
-            modelList = this.model;
+            remoteMethod = null;
+
+        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            remoteMethod = this.remoteMethod;
+        }
 
         //纯文本筛选
-        if (modelList.componentType == "select") {
+        if (me.model.componentType == "select") {
 
             return h(
                 Select,
                 {
-                    props: {
-                        value: modelList.componentConfig.value[0],
-                        multiple: modelList.componentConfig.multiple,
-                        disabled: modelList.componentConfig.disabled,
-                        filterable: modelList.componentConfig.filterable,
-                        placeholder: modelList.sortName,
-                        clearable: modelList.componentConfig.clearable,
-                        "label-in-value": true
-                    },
+                    props: getComponentConfig(this.model, remoteMethod),
+                    ref: this.model.sortValue,
                     on: {
                         "on-change": function (obj) {
+                            
+                            var result = {};
+                            
+                            if(toString.call(obj).toLowerCase() === "[object object]"){
+                                result = obj;
+                                 //保持当前model的value值与组件内部的value一致
+                                me.model.componentConfig.value = [result.value];
+                            }
+                            //bugFix(临时)：针对obj有时只返回value值手动去找一遍它的value值
+                            else if(typeof obj === "string"){
+                                var 
+                                    optsList = me.model.componentConfig.optionList;
 
-                            //保持当前model的value值与组件内部的value一致
-                            me.model.componentConfig.value = [obj.value];
-
-                            //已经删除了值的时候无需再通知上层
-                            if(!obj.value && !obj.label){
-                                return;
+                                optsList.map(function(item,index){
+                                    if(item.value == obj){
+                                        result.label = item.label;
+                                        return;
+                                    }
+                                })
+                                result.value = obj;
                             }
 
                             Emiter.$emit("single-change", {
-                                sortName: modelList.sortName,
-                                sortValue: modelList.sortValue,
+                                sortName: me.model.sortName,
+                                sortValue: me.model.sortValue,
                                 componentType: "select",
                                 label: [{
-                                    text: obj.label,
-                                    value: obj.value
+                                    text: result.label,
+                                    value: result.value
                                 }]
                             });
                         },
                     }
                 },
                 [
-                    modelList.componentConfig.optionList.map(function (item) {
+                    me.model.componentConfig.optionList.map(function (item) {
                         return h(Option, {
                             props: {
                                 label: item.label,
@@ -186,44 +268,44 @@ var maker = {
         }
 
         //时间区间选择类型
-        if (modelList.componentType == "daterange") {
+        if (me.model.componentType == "daterange") {
 
             return h(
                 DatePicker,
                 {
                     props: {
                         type: "daterange",
-                        value: modelList.componentConfig.value,
-                        placeholder: modelList.sortName ? modelList.sortName : "请选择日期",
+                        value: me.model.componentConfig.value,
+                        placeholder: me.model.sortName ? me.model.sortName : "请选择日期",
                         placement: "bottom-end",
-                        options: {shortcuts:modelList.componentConfig.optionList.length ? this.setDateRangeShotcuts(modelList.componentConfig.optionList) : []},
-                        format: modelList.componentConfig.format ? modelList.componentConfig.format : "yyyy年MM月dd日"
+                        options: { shortcuts: me.model.componentConfig.optionList.length ? this.setDateRangeShotcuts(me.model.componentConfig.optionList) : [] },
+                        format: me.model.componentConfig.format ? me.model.componentConfig.format : "yyyy年MM月dd日"
                     },
                     on: {
 
                         "on-clear": function () {
                             Emiter.$emit("single-change", {
-                                sortName: modelList.sortName,
-                                sortValue: modelList.sortValue,
+                                sortName: me.model.sortName,
+                                sortValue: me.model.sortValue,
                                 componentType: "daterange",
                                 label: [{
-                                    text:"",
-                                    value:""
+                                    text: "",
+                                    value: ""
                                 }]
                             });
                         },
 
                         "on-change": function (list) {
 
-                            if(list[0]){
+                            if (list[0]) {
                                 Emiter.$emit("single-change", {
-                                    sortName: modelList.sortName,
-                                    sortValue: modelList.sortValue,
+                                    sortName: me.model.sortName,
+                                    sortValue: me.model.sortValue,
                                     componentType: "daterange",
                                     shortcut: "",
                                     label: [{
-                                        text: `开始时间：${me.dateFormat(list[0], modelList.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], modelList.componentConfig.format)}`,
-                                        value: [me.dateFormat(list[0],"YYYY-MM-DD"), me.dateFormat(list[1],"YYYY-MM-DD")]
+                                        text: `开始时间：${me.dateFormat(list[0], me.model.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], modelList.componentConfig.format)}`,
+                                        value: [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
                                     }]
                                 });
                             }

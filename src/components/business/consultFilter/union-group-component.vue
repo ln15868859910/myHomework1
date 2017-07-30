@@ -103,7 +103,7 @@ const UnionComponentSlot = {
         }
         //select组件
         if (this.model.componentType == "select") {
-            return h(
+            return h(   
                 'Select',
                 {
                     props: getComponentConfig(this.model, remoteMethod),
@@ -318,8 +318,8 @@ const UnionComponentSlot = {
             })
         },
         debounce: function (func, type) {
-            clearTimeout(this.debounce[type]);
-            this.debounce[type] = setTimeout(function () {
+            clearTimeout(this.debounceObj[type]);
+            this.debounceObj[type] = setTimeout(function () {
                 func;
             }, 500);
         }
