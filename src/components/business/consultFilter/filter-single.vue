@@ -115,8 +115,9 @@ var maker = {
             this.model.componentConfig.value = data;
             var sortValue = this.model.sortValue;
             setTimeout(() => {
-                this.$refs[sortValue].clearSingleSelect();
-                this.$refs[sortValue].selectedSingle = "";
+                this.$refs[sortValue] ? this.$refs[sortValue].clearSingleSelect() : "";
+                //bugFix（临时）：修复清空了值上一个未清空选中项的bug
+                this.$refs[sortValue] ? this.$refs[sortValue].selectedSingle = "" : "";
             }, 0)
         },
         remoteMethod(query) {
