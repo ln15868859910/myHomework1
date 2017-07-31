@@ -133,12 +133,9 @@ const UnionComponentSlot = {
             )
         }
     },
-    created(){
-        if(this.model.parentSortValue){
-            this.model.componentConfig.disabled = true;
-        }else{
-            this.model.componentConfig.disabled = false;
-        }
+    created() {
+        //动态添加disabled属性，双向绑定
+        this.$set(this.model.componentConfig, "disabled", false);
     },
     mounted() {
         this.init();
@@ -147,15 +144,12 @@ const UnionComponentSlot = {
         init() {
             this.observeEvent();
             this.initDataChange();
-            
-            var optsList = this.model.componentConfig.optionList;     
-            //给每一项下拉添加默认disabled属性
-            optsList.map(function (item, index) {
-                item.disabled = false;
-            })
+
+            var optsList = this.model.componentConfig.optionList;
+
 
             //数据超过50条，添加自定义文案
-            if (this.model.componentConfig.itemCount >= 50) {
+            if (this.model.componentConfig.optionList.length >= 50) {
                 this.model.componentConfig.optionList.push({
                     value: "abadon",
                     label: "【更多选项请搜索】",
