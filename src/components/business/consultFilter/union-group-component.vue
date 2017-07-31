@@ -109,6 +109,18 @@ const UnionComponentSlot = {
                     ref: this.model.sortValue,
                     on: {
                         "on-change": function (value) {
+                            if (_this.model.componentConfig.multiple) {
+                                value.map(function (item) {
+                                    if (toString.call(item.label) == "object Undefined") {
+                                        for (var i = 0, l = _this.selectValue.length; i < l; i++) {
+                                            if (item.value == _this.selectValue[i].value) {
+                                                item.label = _this.selectValue[i].label;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                })
+                            }
                             _this.isInit = true;
                             _this.selectValue = value;
                         }
