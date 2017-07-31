@@ -16,7 +16,7 @@ import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../select';
 
 
-function getComponentConfig(model, remoteMethod) {
+function getComponentConfig(model, remoteMethod, isRemote) {
     var data;
     switch (model.componentType) {
         case "select":
@@ -29,7 +29,7 @@ function getComponentConfig(model, remoteMethod) {
                 clearable: model.componentConfig.clearable,
                 "label-in-value": true,
             }
-            if (model.remoteUrl && model.remoteUrl.onSearch) {
+            if (isRemote) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
@@ -88,7 +88,8 @@ const UnionComponentSlot = {
             parentSelectValue: "",
             debounceObj: {
 
-            }
+            },
+            isRemote: false
         }
     },
     watch: {
@@ -103,7 +104,7 @@ const UnionComponentSlot = {
             return h(
                 'Select',
                 {
-                    props: getComponentConfig(this.model, this.remoteMethod),
+                    props: getComponentConfig(this.model, this.remoteMethod, this.isRemote),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     ref: this.model.sortValue,
                     on: {
@@ -132,8 +133,9 @@ const UnionComponentSlot = {
     },
     created() {
         if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            this.isRemote = true;
             //动态添加loading属性，双向绑定
-            this.$set(this.model.componentConfig, "loading", false);
+            this.$set(this.model.componentConfig, "loading", true);
         }
         //动态添加disabled属性，双向绑定
         this.$set(this.model.componentConfig, "disabled", false);
@@ -242,6 +244,9 @@ const UnionComponentSlot = {
                     else {
 
                     }
+                    if (_this.isRemote) {
+                        _this.model.componentConfig.loading = false;
+                    }
                 })
             }
 
@@ -326,7 +331,7 @@ const UnionComponentSlot = {
                     }
                 }
             }
-            this.model.componentConfig.loading=true;
+            this.model.componentConfig.loading = true;
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = res.data;
                 if (data && data.Status) {
@@ -351,7 +356,7 @@ const UnionComponentSlot = {
                     }
                     _this.model.componentConfig.optionList = tempList;
                 }
-                this.model.componentConfig.loading=false;
+                this.model.componentConfig.loading = false;
             })
         },
         debounce: function (func, type) {
