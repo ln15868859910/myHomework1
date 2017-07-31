@@ -52,7 +52,6 @@
                 </li>
             </ul>
         </div>
-    
     </div>
 </template>
 <script>
@@ -264,13 +263,12 @@ export default {
                         return;
                     }
                     this.uiModeltoBizModel();
-                    
+
                 }, timeOut)
 
 
             }
         },
-        //清空操作
         "filterData": {
             deep: true,
             handler: function (oldv, newv) {
@@ -278,6 +276,12 @@ export default {
                     this.emptyTag();
                     //做清空操作后，重置组件初始化状态
                     this.status.isInitCompleted = false;
+                }
+                //异步传入了数据判断其中是否有默认值执行获取下拉列表数据操作
+                if(newv.singleModel.modelList.length || newv.unionModel.modelList.length || newv.multiModel.modelList.length){
+                    if(!this.hasDefaultValue()){
+                        this.uiModeltoBizModel();
+                    }
                 }
             }
         },
@@ -289,9 +293,9 @@ export default {
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
                 }
 
-                if (newv.opts.defaultSearchValue) {
-                    this.searchArea.searchInput = newv.opts.defaultSearchValue
-                }
+                // if (newv.opts.defaultSearchValue) {
+                this.searchArea.searchInput = newv.opts.defaultSearchValue
+                // }
             }
         }
 
@@ -600,6 +604,27 @@ export default {
             Emiter.$on("single-change", this.onSingleChange);
             //监听二级多选模块change事件
             Emiter.$on("multi-change", this.onUnionChange);
+        },
+        //判断各项传入数据是否有默认值
+        hasDefaultValue(){
+            
+            var hasValue = false;
+
+            this.singleModel.modelList.map(function(item,index){
+                item.componentConfig.value.length ? hasValue = true : "";
+            });
+
+            this.unionModel.modelList.map(function(itemGroup,index){
+                itemGroup.map(function(item){
+                    item.componentConfig.value.length ? hasValue = true : "";
+                })
+            });
+
+            this.multiModel.modelList.map(function(item,index){
+                item.componentConfig.value.length ? hasValue = true : "";
+            });
+
+            return hasValue
         },
         //根据返回
         init() {
