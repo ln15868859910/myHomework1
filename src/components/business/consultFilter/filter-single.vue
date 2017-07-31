@@ -158,15 +158,6 @@ var maker = {
                 if (data && data.Status) {
                     var tempList = [];
                     
-                    //后端没有查询到数据的分支
-                    // if (!data.Data.ComponentConfig.OptionList.length) {
-                    //     tempList.push({
-                    //         label: "暂无数据",
-                    //         value: "emptyData",
-                    //         disabled: true
-                    //     })
-
-                    // } else {
                         data.Data.ComponentConfig.OptionList.map(function (item, index) {
                             tempList.push({
                                 label: item.Label,
@@ -183,7 +174,6 @@ var maker = {
                                 disabled: true
                             })
                         }
-                    // }
                     me.model.componentConfig.optionList = tempList;
                 }
 

@@ -180,16 +180,6 @@ const MultiFilterSlotComponent = {
                 if (data && data.Status) {
 
                     var tempList = [];
-
-                    //后端没有查询到数据的分支
-                    // if (!data.Data.ComponentConfig.OptionList.length) {
-                        // tempList.push({
-                        //     label: "暂无数据",
-                        //     value: "emptyData",
-                        //     disabled: true
-                        // })
-
-                    // } else {
                         data.Data.ComponentConfig.OptionList.map(function (item, index) {
                             tempList.push({
                                 label: item.Label,
@@ -206,8 +196,6 @@ const MultiFilterSlotComponent = {
                                 disabled: true
                             })
                         }
-                    // }
-
                     _this.model.componentConfig.optionList = tempList;
                 }
                

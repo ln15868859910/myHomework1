@@ -506,28 +506,11 @@ export default {
                 })
             }
 
-            //找到所有队列依次执行
-            // this.delQueue.map(function (item) {
-            //     item[0].label.splice(item[1], 1);
-
-            //     // //向基础组件发起数据变动通知
-            //     Emiter.$emit(item[0].sortValue + "-change", []);
-            // })
-
-            // if (this.delQueue.length) {
-            //     this.filterResult = [];
-            //     this.delQueue = [];
-            // }
         },
         // 删除筛选标签
         closeTag(sortItem, labelIndex) {
 
             sortItem.label.splice(labelIndex, 1);
-
-            // if (sortItem.label.length == 0) {
-            //     this.filterResult.splice(sortItemIndex, 1);
-            // }
-
             var data = [];
             sortItem.label.map(function (item) {
                 data.push(item.value);
