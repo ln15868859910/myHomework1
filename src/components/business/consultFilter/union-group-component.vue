@@ -29,7 +29,7 @@ function getComponentConfig(model, remoteMethod) {
                 clearable: model.componentConfig.clearable,
                 "label-in-value": true,
             }
-            if (remoteMethod) {
+            if (model.remoteUrl && model.remoteUrl.onSearch) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
@@ -52,7 +52,7 @@ function getComponentConfig(model, remoteMethod) {
                         }
                     }
                 }
-                data.loading = false;
+                data.loading = model.componentConfig.loading;
             }
             break;
 
@@ -96,17 +96,14 @@ const UnionComponentSlot = {
         'selectValue': 'onSelectChange'
     },
     render(h) {
-        var _this = this,
-            remoteMethod = null;
-        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
-            remoteMethod = this.remoteMethod;
-        }
+        var _this = this;
+
         //select组件
         if (this.model.componentType == "select") {
             return h(
                 'Select',
                 {
-                    props: getComponentConfig(this.model, remoteMethod),
+                    props: getComponentConfig(this.model, this.remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     ref: this.model.sortValue,
                     on: {
@@ -134,6 +131,10 @@ const UnionComponentSlot = {
         }
     },
     created() {
+        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            //动态添加loading属性，双向绑定
+            this.$set(this.model.componentConfig, "loading", false);
+        }
         //动态添加disabled属性，双向绑定
         this.$set(this.model.componentConfig, "disabled", false);
     },
@@ -257,10 +258,7 @@ const UnionComponentSlot = {
             }
         },
         onDisableSon: function (sonModel) {
-            if (this.model.componentConfig.multiple && this.model.componentConfig.value.length == 0) {
-                sonModel.componentConfig.disabled = true;
-            }
-            else if (!this.model.componentConfig.multiple && !this.model.componentConfig.value) {
+            if (this.model.componentConfig.value.length == 0) {
                 sonModel.componentConfig.disabled = true;
             }
             else {
@@ -328,7 +326,7 @@ const UnionComponentSlot = {
                     }
                 }
             }
-            this.model.loading
+            this.model.componentConfig.loading=true;
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = res.data;
                 if (data && data.Status) {
@@ -353,7 +351,7 @@ const UnionComponentSlot = {
                     }
                     _this.model.componentConfig.optionList = tempList;
                 }
-
+                this.model.componentConfig.loading=false;
             })
         },
         debounce: function (func, type) {

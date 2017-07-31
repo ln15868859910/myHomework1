@@ -24,7 +24,7 @@ function getComponentConfig(model, remoteMethod) {
                 clearable: model.componentConfig.clearable,
                 "label-in-value": true,
             }
-            if (remoteMethod) {
+            if (model.remoteUrl && model.remoteUrl.onSearch) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
@@ -39,7 +39,7 @@ function getComponentConfig(model, remoteMethod) {
                         }
                     })
                 }
-                data.loading = false;
+                data.loading = model.componentConfig.loading;
             }
             break;
 
@@ -61,17 +61,14 @@ const MultiFilterSlotComponent = {
         }
     },
     render(h) {
-        var _this = this,
-            remoteMethod = null
-        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
-            remoteMethod = this.remoteMethod;
-        }
+        var _this = this;
+        
         //select组件
         if (this.model.componentType == "select") {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model, remoteMethod),
+                    props: getComponentConfig(this.model, this.remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     on: {
                         "on-change": function (value) {
@@ -98,6 +95,12 @@ const MultiFilterSlotComponent = {
                     })
 
                 ])
+        }
+    },
+    created() {
+        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            //动态添加loading属性，双向绑定
+            this.$set(this.model.componentConfig, "loading", false);
         }
     },
     mounted() {
@@ -171,6 +174,7 @@ const MultiFilterSlotComponent = {
                     }
                 }
             }
+            this.model.componentConfig.loading=true;
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = data;
                 if (data && data.Status) {
@@ -186,6 +190,7 @@ const MultiFilterSlotComponent = {
                 else {
 
                 }
+                this.model.componentConfig.loading=false;
             })
         },
     }
