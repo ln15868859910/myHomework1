@@ -15,7 +15,7 @@ module.exports = merge(webpackBaseConfig, {
     // 入口
     entry: {
         main: './examples/main',
-        vendors: ['vue', 'vue-router']
+        vendors: ['vue', 'vue-router','axios']
     },
     // 输出
     output: {
@@ -30,6 +30,7 @@ module.exports = merge(webpackBaseConfig, {
             vue: 'vue/dist/vue.js'
         }
     },
+    devtool: '#eval-source-map',
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.bundle.js' }),
         new HtmlWebpackPlugin({
