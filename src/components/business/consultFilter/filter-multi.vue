@@ -62,7 +62,7 @@ const MultiFilterSlotComponent = {
     },
     render(h) {
         var _this = this;
-        
+
         //select组件
         if (this.model.componentType == "select") {
             return h(
@@ -174,23 +174,44 @@ const MultiFilterSlotComponent = {
                     }
                 }
             }
-            this.model.componentConfig.loading=true;
+            this.model.componentConfig.loading = true;
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = data;
                 if (data && data.Status) {
-                    _this.componentModel.componentConfig.optionList = [];
-                    _.each(data.Data.ComponentConfig.OptionList, function (item) {
-                        var model = {
-                            label: item.Label,
-                            value: item.Value
-                        }
-                        _this.componentModel.componentConfig.optionList.push(model);
-                    });
-                }
-                else {
 
+                    var tempList = [];
+
+                    //后端没有查询到数据的分支
+                    // if (!data.Data.ComponentConfig.OptionList.length) {
+                        // tempList.push({
+                        //     label: "暂无数据",
+                        //     value: "emptyData",
+                        //     disabled: true
+                        // })
+
+                    // } else {
+                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                            tempList.push({
+                                label: item.Label,
+                                value: item.Value,
+                                disabled: false
+                            })
+                        })
+
+                        //数据超过50条，添加自定义文案
+                        if (data.Data.ComponentConfig.ItemCount >= 50) {
+                            tempList.push({
+                                value: "abadon",
+                                label: "【更多选项请输入更多关键词】",
+                                disabled: true
+                            })
+                        }
+                    // }
+
+                    _this.model.componentConfig.optionList = tempList;
                 }
-                _this.model.componentConfig.loading=false;
+               
+                _this.model.componentConfig.loading = false;
             })
         },
     }

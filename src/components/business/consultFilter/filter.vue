@@ -47,7 +47,7 @@
                 <li v-for="(data,dataIndex) in filterResult" :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
                     <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
-                        <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,dataIndex,labelIndex)">{{label.text}}</Tag>
+                        <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
                     </Tooltip>
                 </li>
             </ul>
@@ -496,42 +496,45 @@ export default {
                 me = this;
 
             if (filterResult.length) {
-                filterResult.map(function (item, itemIndex) {
-                    item.label.map(function (labelItem, labelIndex) {
-                        me.delQueue.push([item, labelIndex]);
+                filterResult.map(function (sortItem, itemIndex) {
+                    sortItem.label.map(function (labelItem, labelIndex) {
+
+                        me.closeTag(sortItem,labelIndex)
+
+                        // me.delQueue.push([item, labelIndex]);
                     })
                 })
             }
 
             //找到所有队列依次执行
-            this.delQueue.map(function (item) {
-                item[0].label.splice(item[1], 1);
+            // this.delQueue.map(function (item) {
+            //     item[0].label.splice(item[1], 1);
 
-                // //向基础组件发起数据变动通知
-                Emiter.$emit(item[0].sortValue + "-change", []);
-            })
+            //     // //向基础组件发起数据变动通知
+            //     Emiter.$emit(item[0].sortValue + "-change", []);
+            // })
 
-            if (this.delQueue.length) {
-                this.filterResult = [];
-                this.delQueue = [];
-            }
+            // if (this.delQueue.length) {
+            //     this.filterResult = [];
+            //     this.delQueue = [];
+            // }
         },
         // 删除筛选标签
-        closeTag(item, itemIndex, labelIndex) {
+        closeTag(sortItem, labelIndex) {
 
-            item.label.splice(labelIndex, 1);
+            sortItem.label.splice(labelIndex, 1);
 
-            if (item.label.length == 0) {
-                this.filterResult.splice(itemIndex, 1);
-            }
+            // if (sortItem.label.length == 0) {
+            //     this.filterResult.splice(sortItemIndex, 1);
+            // }
 
             var data = [];
-            item.label.map(function (item) {
+            sortItem.label.map(function (item) {
                 data.push(item.value);
             })
 
             //向基础组件发起数据变动通知
-            Emiter.$emit(item.sortValue + "-change", data);
+            Emiter.$emit(sortItem.sortValue + "-change", data);
 
         },
         onUnionChange(data) {

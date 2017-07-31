@@ -160,9 +160,6 @@ const UnionComponentSlot = {
             this.observeEvent();
             this.initDataChange();
 
-            var optsList = this.model.componentConfig.optionList;
-
-
             //数据超过50条，添加自定义文案
             if (this.model.componentConfig.optionList.length >= 50) {
                 this.model.componentConfig.optionList.push({
@@ -350,25 +347,25 @@ const UnionComponentSlot = {
                     //优化：修改遍历时同时进行插入操作的bug by tianyu.chen
                     var tempList = [];
 
-                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                        tempList.push({
-                            label: item.Label,
-                            value: item.Value,
-                            disabled: false
+                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                            tempList.push({
+                                label: item.Label,
+                                value: item.Value,
+                                disabled: false
+                            })
                         })
-                    })
 
-                    //数据超过50条，添加自定义文案
-                    if (data.Data.ComponentConfig.ItemCount >= 50) {
-                        tempList.push({
-                            value: "abadon",
-                            label: "【更多选项请输入更多关键词】",
-                            disabled: true
-                        })
-                    }
+                        //数据超过50条，添加自定义文案
+                        if (data.Data.ComponentConfig.ItemCount >= 50) {
+                            tempList.push({
+                                value: "abadon",
+                                label: "【更多选项请输入更多关键词】",
+                                disabled: true
+                            })
+                        }
                     _this.model.componentConfig.optionList = tempList;
                 }
-                _this.model.componentConfig.loading=false;
+                _this.model.componentConfig.loading = false;
             })
         },
         debounce: function (func, type) {

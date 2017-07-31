@@ -65,7 +65,7 @@ var maker = {
     created() {
         if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
             //动态添加loading属性，双向绑定
-            this.$set(this.model.componentConfig, "loading", true);
+            this.$set(this.model.componentConfig, "loading", false);
         }
     },
     mounted() {
@@ -117,10 +117,25 @@ var maker = {
                 return;
             }
             this.model.componentConfig.value = data;
+
+            var me = this;
+            //bugFix(临时)：修复时间类型清空了默认值父层检测不到事件的bug
+            if (this.model.componentType == "daterange") {
+                Emiter.$emit("single-change", {
+                    sortName: me.model.sortName,
+                    sortValue: me.model.sortValue,
+                    componentType: "daterange",
+                    label: [{
+                        text: "",
+                        value: ""
+                    }]
+                });
+            }
+
             var sortValue = this.model.sortValue;
             setTimeout(() => {
-                this.$refs[sortValue] ? this.$refs[sortValue].clearSingleSelect() : "";
                 //bugFix（临时）：修复清空了值上一个未清空选中项的bug
+                this.$refs[sortValue] ? this.$refs[sortValue].clearSingleSelect() : "";
                 this.$refs[sortValue] ? this.$refs[sortValue].selectedSingle = "" : "";
             }, 0)
         },
@@ -136,27 +151,39 @@ var maker = {
                     }
                 }
             }
+            me.model.componentConfig.loading = true;
             Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
                 var data = res.data;
+                me.model.componentConfig.loading = false;
                 if (data && data.Status) {
                     var tempList = [];
-                    me.model.componentConfig.loading = false;
-                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                        tempList.push({
-                            label: item.Label,
-                            value: item.Value,
-                            disabled: false
-                        })
-                    })
+                    
+                    //后端没有查询到数据的分支
+                    // if (!data.Data.ComponentConfig.OptionList.length) {
+                    //     tempList.push({
+                    //         label: "暂无数据",
+                    //         value: "emptyData",
+                    //         disabled: true
+                    //     })
 
-                    //数据超过50条，添加自定义文案
-                    if (data.Data.ComponentConfig.ItemCount >= 50) {
-                        tempList.push({
-                            value: "abadon",
-                            label: "【更多选项请输入更多关键词】",
-                            disabled: true
+                    // } else {
+                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                            tempList.push({
+                                label: item.Label,
+                                value: item.Value,
+                                disabled: false
+                            })
                         })
-                    }
+
+                        //数据超过50条，添加自定义文案
+                        if (data.Data.ComponentConfig.ItemCount >= 50) {
+                            tempList.push({
+                                value: "abadon",
+                                label: "【更多选项请输入更多关键词】",
+                                disabled: true
+                            })
+                        }
+                    // }
                     me.model.componentConfig.optionList = tempList;
                 }
 
