@@ -190,7 +190,7 @@ const MultiFilterSlotComponent = {
                 else {
 
                 }
-                this.model.componentConfig.loading=false;
+                _this.model.componentConfig.loading=false;
             })
         },
     }

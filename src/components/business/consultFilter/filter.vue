@@ -159,6 +159,10 @@ export default {
                 toBizModelFn: {
                     timer: null,
                     timeOut: 800
+                },
+                checkDefaultVal: {
+                    timer: null,
+                    timeOut: 800
                 }
             },
             delQueue: []//删除队列
@@ -265,8 +269,6 @@ export default {
                     this.uiModeltoBizModel();
 
                 }, timeOut)
-
-
             }
         },
         "filterData": {
@@ -278,10 +280,23 @@ export default {
                     this.status.isInitCompleted = false;
                 }
                 //异步传入了数据判断其中是否有默认值执行获取下拉列表数据操作
-                if(newv.singleModel.modelList.length || newv.unionModel.modelList.length || newv.multiModel.modelList.length){
-                    if(!this.hasDefaultValue()){
-                        this.uiModeltoBizModel();
-                    }
+                if (newv.singleModel.modelList.length || newv.unionModel.modelList.length || newv.multiModel.modelList.length) {
+
+                    var timer = this.debounceObj.checkDefaultVal.timer,
+                        timeOut = this.debounceObj.checkDefaultVal.timeOut;
+
+                    timer && clearTimeout(timer);
+                    this.debounceObj.checkDefaultVal.timer = setTimeout(() => {
+
+                        if (!this.hasDefaultValue()) {
+                            var outPutFn = this.filterData.callback["selected"];
+                            if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
+                                throw new Error("请传入有效的函数类型回调")
+                            }
+                            outPutFn({}, { "key": "", "value": "" });
+                        }
+
+                    }, timeOut)
                 }
             }
         },
@@ -385,11 +400,6 @@ export default {
         /****************************筛选项相关*********************************/
 
         uiModeltoBizModel() {
-            var outPutFn = this.filterData.callback["selected"];
-
-            if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
-                throw new Error("请传入有效的函数类型回调")
-            }
 
             var filterRes = {};
             var searchRes = {
@@ -408,6 +418,13 @@ export default {
                     }
                 })
             })
+
+            var outPutFn = this.filterData.callback["selected"];
+
+            if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
+                throw new Error("请传入有效的函数类型回调")
+            }
+
             outPutFn(filterRes, searchRes);
         },
 
@@ -606,21 +623,21 @@ export default {
             Emiter.$on("multi-change", this.onUnionChange);
         },
         //判断各项传入数据是否有默认值
-        hasDefaultValue(){
-            
+        hasDefaultValue() {
+
             var hasValue = false;
 
-            this.singleModel.modelList.map(function(item,index){
+            this.singleModel.modelList.map(function (item, index) {
                 item.componentConfig.value.length ? hasValue = true : "";
             });
 
-            this.unionModel.modelList.map(function(itemGroup,index){
-                itemGroup.map(function(item){
+            this.unionModel.modelList.map(function (itemGroup, index) {
+                itemGroup.map(function (item) {
                     item.componentConfig.value.length ? hasValue = true : "";
                 })
             });
 
-            this.multiModel.modelList.map(function(item,index){
+            this.multiModel.modelList.map(function (item, index) {
                 item.componentConfig.value.length ? hasValue = true : "";
             });
 

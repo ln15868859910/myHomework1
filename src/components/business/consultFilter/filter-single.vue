@@ -31,7 +31,7 @@ function getComponentConfig(model, remoteMethod) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
-                data.loading = false;
+                data.loading = model.componentConfig.loading === true ? true : false
                 data.label = "";
                 for (var i = 0, l = optionList.length; i < l; i++) {
                     if (optionList[i].value == data.value) {
@@ -63,6 +63,10 @@ var maker = {
         }
     },
     created() {
+        if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            //动态添加loading属性，双向绑定
+            this.$set(this.model.componentConfig, "loading", true);
+        }
     },
     mounted() {
         this.initData();
@@ -136,7 +140,7 @@ var maker = {
                 var data = res.data;
                 if (data && data.Status) {
                     var tempList = [];
-
+                    me.model.componentConfig.loading = false;
                     data.Data.ComponentConfig.OptionList.map(function (item, index) {
                         tempList.push({
                             label: item.Label,
@@ -332,7 +336,7 @@ var maker = {
                                     componentType: "daterange",
                                     shortcut: "",
                                     label: [{
-                                        text: `开始时间：${me.dateFormat(list[0], me.model.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], modelList.componentConfig.format)}`,
+                                        text: `开始时间：${me.dateFormat(list[0], me.model.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], me.model.componentConfig.format)}`,
                                         value: [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
                                     }]
                                 });
