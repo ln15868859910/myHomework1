@@ -16,7 +16,7 @@
                     <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
                         <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                     </Select>
-                    <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch"></Input>
+                    <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
                 </div>
     
                 <!-- 筛选组件按钮区域 -->
