@@ -87,12 +87,15 @@
 
     &-filterBtn{
         display: inline;
+        .ivu-select-selection>input{
+            width:100px;
+        }
         .ivu-badge-count{
             top:5px;
             left:0;
             margin-left:40px;
             transform:none;
-            right: initial;
+            right: auto;
         }
         .ivu-badge-count-alone{
             position: absolute;
@@ -100,6 +103,7 @@
     }
 
     &-fitlerResult{
+        text-align: left;//bug fix:解决业务中全局样式为 text-align:center的问题
         min-width:1186px;
         min-height:60px;
         box-sizing: border-box;
@@ -167,11 +171,12 @@
         overflow: hidden;
         display: block;
     }
+
     &-unionItemWrap,
-    &-multiItemWrap{
+     &-multiItemWrap{
         width:100%;
         border-top:1px solid #d4dfe5;
-        padding:20px 31px 0 29px;
+        padding: 10px 31px 10px 29px;
     }
     
     &-singleItem{
@@ -189,6 +194,17 @@
     }
     &-singleItem:nth-child(even){
         margin-left: 20px;
+    }
+
+    &-singleItem,
+    &-unionItem,
+    &-multiItem{
+        .ivu-select-selection {
+            text-align: left;
+        }
+        .ivu-select-dropdown{
+            text-align: left;
+        }
     }
 
     &-unionItem,
