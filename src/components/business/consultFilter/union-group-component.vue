@@ -216,14 +216,14 @@ const UnionComponentSlot = {
         onParentChange(params) {
             var _this = this;
             this.parentSelectValue = params.selectModel.value;
+            this.onParentEmpty();
             if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
-                this.onParentEmpty();
+                this.model.componentConfig.disabled = true;
                 Emiter.$emit(this.model.sortValue + "-union-empty");
             }
             else {
                 this.model.componentConfig.disabled = false;
             }
-
 
             if (params.onChangeUrl && Object.prototype.toString.call(params.onChangeUrl) == "[object String]") {
                 var parentValue = [];
@@ -281,23 +281,40 @@ const UnionComponentSlot = {
             }
 
         },
-        onFilterChange(data) {
-            if (!data) {
+        onFilterChange(value, label) {
+            if (!value) {
                 return;
             }
             if (this.model.componentConfig.multiple) {
-                //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
+                this.model.componentConfig.value = value;
+            }
+            else {
+                this.model.componentConfig.value = !value[0] ? "" : value[0];
+            }
+            //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
+
+            if (this.isRemote) {
+                var model = [];
                 var sortValue = this.model.sortValue;
-                if (!data.length) {
+                if (this.model.componentConfig.multiple) {
+                    value.map(function (item, index) {
+                        model.push(
+                            {
+                                label: label[index],
+                                value: item
+                            }
+                        )
+                    });
                     setTimeout(() => {
-                        this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+                        this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = model : "";
+                    })
+                }
+                else {
+                    setTimeout(() => {
+                        this.$refs[sortValue] ? this.$refs[sortValue].selectedSingle = label : "";
                     })
                 }
 
-                this.model.componentConfig.value = data;
-            }
-            else {
-                this.model.componentConfig.value = !data[0] ? "" : data[0];
             }
         },
         onDisableSon: function (sonModel) {
@@ -327,7 +344,6 @@ const UnionComponentSlot = {
                     this.$refs[sortValue] ? this.$refs[sortValue].selectedSingle = "" : "";
                 }, 0)
             }
-            this.model.componentConfig.disabled = true;
         },
         onSelectChange: function (value, oldValue) {
             var _this = this;

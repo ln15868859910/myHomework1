@@ -11,7 +11,7 @@ import Emiter from './emiter.vue';
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../select';
 
-function getComponentConfig(model, remoteMethod) {
+function getComponentConfig(model, remoteMethod, isRemote) {
     var data;
     switch (model.componentType) {
         case "select":
@@ -24,7 +24,7 @@ function getComponentConfig(model, remoteMethod) {
                 clearable: model.componentConfig.clearable,
                 "label-in-value": true,
             }
-            if (model.remoteUrl && model.remoteUrl.onSearch) {
+            if (isRemote) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
@@ -58,6 +58,11 @@ const MultiFilterSlotComponent = {
     },
     data() {
         return {
+            debounceObj: {
+
+            },
+            selectValue: [],
+            isRemote: false
         }
     },
     render(h) {
@@ -68,7 +73,7 @@ const MultiFilterSlotComponent = {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model, this.remoteMethod),
+                    props: getComponentConfig(this.model, this.remoteMethod, this.isRemote),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     ref: this.model.sortValue,
                     on: {
@@ -79,7 +84,18 @@ const MultiFilterSlotComponent = {
                                 sortName: _this.model.sortName,
                                 value: []
                             }
+                            value.map(function (item) {
+                                if (Object.prototype.toString.call(item.label).toLowerCase() == "[object undefined]") {
+                                    for (var i = 0, l = _this.selectValue.length; i < l; i++) {
+                                        if (item.value == _this.selectValue[i].value) {
+                                            item.label = _this.selectValue[i].label;
+                                            break;
+                                        }
+                                    }
+                                }
+                            })
                             data.value = value;
+                            _this.selectValue = data.value;
                             Emiter.$emit("multi-change-slot", data);
 
                         }
@@ -100,6 +116,7 @@ const MultiFilterSlotComponent = {
     },
     created() {
         if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
+            this.isRemote = true;
             //动态添加loading属性，双向绑定
             this.$set(this.model.componentConfig, "loading", false);
         }
@@ -155,21 +172,27 @@ const MultiFilterSlotComponent = {
                 });
             }
         },
-        onFilterChange(data) {
-            if (!data) {
+        onFilterChange(value, label) {
+            if (!value) {
                 return;
             }
+            var sortValue = this.model.sortValue,
+                model = [];
             //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
-            if (!data.length) {
-
-                var sortValue = this.model.sortValue;
+            this.model.componentConfig.value = value;
+            if (this.isRemote) {
+                value.map(function (item, index) {
+                    model.push(
+                        {
+                            label: label[index],
+                            value: item
+                        }
+                    )
+                });
                 setTimeout(() => {
-                    this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+                    this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = model : "";
                 })
             }
-
-            this.model.componentConfig.value = data;
-
         },
         remoteMethod(query) {
             if (query == "") {
@@ -185,33 +208,44 @@ const MultiFilterSlotComponent = {
                 }
             }
             this.model.componentConfig.loading = true;
-            Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
-                var data = data;
-                if (data && data.Status) {
+            this.debounce(function (scope) {
+                var _this = scope;
+                Axios.post(_this.model.remoteUrl.onSearch, req).then(function (res) {
+                    var data = res.data;
+                    if (data && data.Status) {
 
-                    var tempList = [];
-                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                        tempList.push({
-                            label: item.Label,
-                            value: item.Value,
-                            disabled: false
+                        var tempList = [];
+                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                            tempList.push({
+                                label: item.Label,
+                                value: item.Value,
+                                disabled: false
+                            })
                         })
-                    })
 
-                    //数据超过50条，添加自定义文案
-                    if (data.Data.ComponentConfig.ItemCount >= 50) {
-                        tempList.push({
-                            value: "abadon",
-                            label: "【更多选项请输入更多关键词】",
-                            disabled: true
-                        })
+                        //数据超过50条，添加自定义文案
+                        if (data.Data.ComponentConfig.ItemCount >= 50) {
+                            tempList.push({
+                                value: "abadon",
+                                label: "【更多选项请输入更多关键词】",
+                                disabled: true
+                            })
+                        }
+                        _this.model.componentConfig.optionList = tempList;
                     }
-                    _this.model.componentConfig.optionList = tempList;
-                }
 
-                _this.model.componentConfig.loading = false;
-            })
+                    _this.model.componentConfig.loading = false;
+                })
+            }, "onSearch")
+
         },
+        debounce: function (func, type) {
+            var _this = this;
+            clearTimeout(this.debounceObj[type]);
+            this.debounceObj[type] = setTimeout(function () {
+                func(_this);
+            }, 500);
+        }
     }
 
 };

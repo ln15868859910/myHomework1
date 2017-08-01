@@ -259,7 +259,7 @@ export default {
         },
         "searchData": {
             deep: true,
-            handler: function (oldv,newv) {
+            handler: function (oldv, newv) {
 
                 if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
@@ -455,7 +455,7 @@ export default {
             if (filterResult.length) {
                 filterResult.map(function (sortItem, itemIndex) {
 
-                    Emiter.$emit(sortItem.sortValue + "-change", []);
+                    Emiter.$emit(sortItem.sortValue + "-change", [],[]);
                     // sortItem.label.map(function (labelItem, labelIndex) {
                     //     sortItem.label = [];
                     //     me.closeTag(sortItem,labelIndex)
@@ -468,15 +468,17 @@ export default {
         closeTag(sortItem, labelIndex) {
 
             sortItem.label.splice(labelIndex, 1);
-            var data = [];
+            var value = [],
+                label = [];
 
 
             sortItem.label.map(function (item) {
-                data.push(item.value);
+                value.push(item.value);
+                label.push(item.text);
             })
 
             //向基础组件发起数据变动通知
-            Emiter.$emit(sortItem.sortValue + "-change", data);
+            Emiter.$emit(sortItem.sortValue + "-change", value,label);
 
         },
         onUnionChange(data) {
@@ -594,7 +596,7 @@ export default {
             this.debounceObj[type] = setTimeout(() => {
                 func()
             }, timeout);
-            
+
         },
         //根据返回
         init() {
