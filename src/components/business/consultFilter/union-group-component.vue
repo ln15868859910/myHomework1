@@ -121,6 +121,12 @@ const UnionComponentSlot = {
                                     }
                                 })
                             }
+                            else {
+                                //单选组有时会触发一次value不为空，label值为空的异常事件，临时解决
+                                if ((!value.value && value.label) || (value.value && !value.label)) {
+                                    return;
+                                }
+                            }
                             _this.isInit = true;
                             _this.selectValue = value;
                         }
