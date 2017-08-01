@@ -286,6 +286,11 @@ const UnionComponentSlot = {
                 return;
             }
             if (this.model.componentConfig.multiple) {
+                //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
+                var sortValue = this.model.sortValue;
+                setTimeout(() => {
+                    this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+                })
                 this.model.componentConfig.value = data;
             }
             else {
@@ -362,8 +367,8 @@ const UnionComponentSlot = {
                 }
             }
             this.model.componentConfig.loading = true;
-            this.debounce(function(scope){
-                var _this=scope;
+            this.debounce(function (scope) {
+                var _this = scope;
                 Axios.post(_this.model.remoteUrl.onSearch, req).then(function (res) {
                     var data = res.data;
                     if (data && data.Status) {
@@ -388,13 +393,13 @@ const UnionComponentSlot = {
                         }
                         _this.model.componentConfig.optionList = tempList;
                     }
-                    _this.model.componentConfig.loading=false;
+                    _this.model.componentConfig.loading = false;
                 })
-            },"onSearch")
-            
+            }, "onSearch")
+
         },
         debounce: function (func, type) {
-            var _this=this;
+            var _this = this;
             clearTimeout(this.debounceObj[type]);
             this.debounceObj[type] = setTimeout(function () {
                 func(_this);

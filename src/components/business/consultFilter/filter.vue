@@ -21,7 +21,7 @@
     
                 <!-- 筛选组件按钮区域 -->
                 <div :class="filterBtn" v-clickoutside="hidefilterContainer">
-                    <Badge :count="status.isInitCompleted ? filterResultAmount : ''">
+                    <Badge :count="filterResultAmount">
                         <div class="ivu-select-selection" @click="toggleContainer">
                             <input type="text" value="筛选" class="ivu-select-input" disabled>
                             <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
@@ -42,7 +42,7 @@
         </ul>
     
         <!-- 筛选内容展示区域 -->
-        <div :class="fitlerResult" :style="{display: (status.isInitCompleted && filterResult.length) > 0 ? 'block': 'none'}">
+        <div :class="fitlerResult" :style="{display:  filterResult.length > 0 ? 'block': 'none'}">
             <ul>
                 <li v-for="(data,dataIndex) in filterResult" :key="data">
                     <span :class="sortName">{{data.sortName}}：</span>
@@ -100,7 +100,7 @@ export default {
                 isCustomLeftShow: true,
                 isCustomCenterShow: true,
                 isCustomRightShow: true,
-                isInitCompleted: false
+                // isInitCompleted: false
             },
 
             filterResult: [
@@ -155,16 +155,7 @@ export default {
                 class: "",
                 modelList: []
             },
-            debounceObj: {
-                toBizModelFn: {
-                    timer: null,
-                    timeOut: 800
-                },
-                checkDefaultVal: {
-                    timer: null,
-                    timeOut: 800
-                }
-            },
+            debounceObj: {},
             delQueue: []//删除队列
         };
     },
@@ -255,20 +246,9 @@ export default {
         filterResult: {
             deep: true,
             handler: function (oldv, newv) {
-
-                var timer = this.debounceObj.toBizModelFn.timer,
-                    timeOut = this.debounceObj.toBizModelFn.timeOut;
-
-                timer && clearTimeout(timer);
-                this.debounceObj.toBizModelFn.timer = setTimeout(() => {
-
-                    if (!this.status.isInitCompleted) {
-                        this.status.isInitCompleted = true;
-                        return;
-                    }
+                this.debounce(() => {
                     this.uiModeltoBizModel();
-
-                }, timeOut)
+                }, 800, "filterChange");
             }
         },
         "filterData": {
@@ -276,18 +256,11 @@ export default {
             handler: function (oldv, newv) {
                 if (newv.isClear === true) {
                     this.emptyTag();
-                    //做清空操作后，重置组件初始化状态
-                    this.status.isInitCompleted = false;
                 }
                 //异步传入了数据判断其中是否有默认值执行获取下拉列表数据操作
                 if (newv.singleModel.modelList.length || newv.unionModel.modelList.length || newv.multiModel.modelList.length) {
 
-                    var timer = this.debounceObj.checkDefaultVal.timer,
-                        timeOut = this.debounceObj.checkDefaultVal.timeOut;
-
-                    timer && clearTimeout(timer);
-                    this.debounceObj.checkDefaultVal.timer = setTimeout(() => {
-
+                    this.debounce(() => {
                         if (!this.hasDefaultValue()) {
                             var outPutFn = this.filterData.callback["selected"];
                             if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
@@ -295,8 +268,7 @@ export default {
                             }
                             outPutFn({}, { "key": "", "value": "" });
                         }
-
-                    }, timeOut)
+                    }, 800, "filterDataChange")
                 }
             }
         },
@@ -497,12 +469,12 @@ export default {
 
             if (filterResult.length) {
                 filterResult.map(function (sortItem, itemIndex) {
-                    sortItem.label.map(function (labelItem, labelIndex) {
 
-                        me.closeTag(sortItem,labelIndex)
-
-                        // me.delQueue.push([item, labelIndex]);
-                    })
+                    Emiter.$emit(sortItem.sortValue + "-change", []);
+                    // sortItem.label.map(function (labelItem, labelIndex) {
+                    //     sortItem.label = [];
+                    //     me.closeTag(sortItem,labelIndex)
+                    // })
                 })
             }
 
@@ -512,6 +484,8 @@ export default {
 
             sortItem.label.splice(labelIndex, 1);
             var data = [];
+
+
             sortItem.label.map(function (item) {
                 data.push(item.value);
             })
@@ -628,6 +602,14 @@ export default {
             });
 
             return hasValue
+        },
+        debounce: function (func, timeout, type) {
+
+            this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
+            this.debounceObj[type] = setTimeout(() => {
+                func()
+            }, timeout);
+            
         },
         //根据返回
         init() {

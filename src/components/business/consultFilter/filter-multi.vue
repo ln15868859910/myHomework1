@@ -70,6 +70,7 @@ const MultiFilterSlotComponent = {
                 {
                     props: getComponentConfig(this.model, this.remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
+                    ref:this.model.sortValue,
                     on: {
                         "on-change": function (value) {
                             var data = {
@@ -158,6 +159,12 @@ const MultiFilterSlotComponent = {
             if (!data) {
                 return;
             }
+            //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
+            var sortValue = this.model.sortValue;
+            setTimeout(()=>{
+                this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+            })
+            
             this.model.componentConfig.value = data;
 
         },
