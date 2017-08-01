@@ -70,7 +70,7 @@ const MultiFilterSlotComponent = {
                 {
                     props: getComponentConfig(this.model, this.remoteMethod),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
-                    ref:this.model.sortValue,
+                    ref: this.model.sortValue,
                     on: {
                         "on-change": function (value) {
                             var data = {
@@ -160,11 +160,14 @@ const MultiFilterSlotComponent = {
                 return;
             }
             //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
-            var sortValue = this.model.sortValue;
-            setTimeout(()=>{
-                this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
-            })
-            
+            if (!data.length) {
+
+                var sortValue = this.model.sortValue;
+                setTimeout(() => {
+                    this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+                })
+            }
+
             this.model.componentConfig.value = data;
 
         },
@@ -187,25 +190,25 @@ const MultiFilterSlotComponent = {
                 if (data && data.Status) {
 
                     var tempList = [];
-                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                            tempList.push({
-                                label: item.Label,
-                                value: item.Value,
-                                disabled: false
-                            })
+                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                        tempList.push({
+                            label: item.Label,
+                            value: item.Value,
+                            disabled: false
                         })
+                    })
 
-                        //数据超过50条，添加自定义文案
-                        if (data.Data.ComponentConfig.ItemCount >= 50) {
-                            tempList.push({
-                                value: "abadon",
-                                label: "【更多选项请输入更多关键词】",
-                                disabled: true
-                            })
-                        }
+                    //数据超过50条，添加自定义文案
+                    if (data.Data.ComponentConfig.ItemCount >= 50) {
+                        tempList.push({
+                            value: "abadon",
+                            label: "【更多选项请输入更多关键词】",
+                            disabled: true
+                        })
+                    }
                     _this.model.componentConfig.optionList = tempList;
                 }
-               
+
                 _this.model.componentConfig.loading = false;
             })
         },

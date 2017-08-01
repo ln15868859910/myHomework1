@@ -100,24 +100,9 @@ export default {
                 isCustomLeftShow: true,
                 isCustomCenterShow: true,
                 isCustomRightShow: true,
-                // isInitCompleted: false
             },
 
-            filterResult: [
-                //    {//mock数据
-                //     sortName: "跟进",
-                //     sortValue: "2",
-                //     label: [ {
-                //         "text": "待跟进少时诵诗书所所所所所所所所所所所所所所所三生三世少时诵诗书所所所",
-                //         "value": "12",
-                //         "isAvoidToolTip": true
-                //     }, {
-                //         "text": "aaaaaaaaa",
-                //         "value": "12",
-                //         "isAvoidToolTip": true
-                //     }],
-                // }
-            ],
+            filterResult: [],
             searchArea: {
                 initValue: "",
                 selected: {
@@ -266,7 +251,7 @@ export default {
                             if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
                                 throw new Error("请传入有效的函数类型回调")
                             }
-                            outPutFn({}, { "key": "", "value": "" });
+                            outPutFn({}, { key: this.searchArea.selected.value, value: this.searchArea.searchInput });
                         }
                     }, 800, "filterDataChange")
                 }
@@ -274,7 +259,7 @@ export default {
         },
         "searchData": {
             deep: true,
-            handler: function (newv) {
+            handler: function (oldv,newv) {
 
                 if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")

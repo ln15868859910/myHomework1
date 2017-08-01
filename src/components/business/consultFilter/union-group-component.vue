@@ -288,9 +288,12 @@ const UnionComponentSlot = {
             if (this.model.componentConfig.multiple) {
                 //bugFix(临时)：修复清空了带搜索项的下拉，值没有被清空的bug
                 var sortValue = this.model.sortValue;
-                setTimeout(() => {
-                    this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
-                })
+                if (!data.length) {
+                    setTimeout(() => {
+                        this.$refs[sortValue] ? this.$refs[sortValue].selectedMultiple = [] : "";
+                    })
+                }
+
                 this.model.componentConfig.value = data;
             }
             else {
