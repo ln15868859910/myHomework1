@@ -271,7 +271,7 @@ var maker = {
 
                             var result = {};
 
-                            if (toString.call(obj).toLowerCase() === "[object object]") {
+                            if (Object.prototype.toString.call(obj).toLowerCase() === "[object object]") {
                                 result = obj;
                                 //保持当前model的value值与组件内部的value一致
                                 me.model.componentConfig.value = [result.value];

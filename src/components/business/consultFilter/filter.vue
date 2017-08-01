@@ -248,7 +248,7 @@ export default {
                     this.debounce(() => {
                         if (!this.hasDefaultValue()) {
                             var outPutFn = this.filterData.callback["selected"];
-                            if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
+                            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
                                 throw new Error("请传入有效的函数类型回调")
                             }
                             outPutFn({}, { key: this.searchArea.selected.value, value: this.searchArea.searchInput });
@@ -368,7 +368,7 @@ export default {
 
                 filterRes[sortItem.sortValue] = [];
                 sortItem.label.map(function (labelItem) {
-                    if (toString.call(labelItem.value).toLowerCase() === "[object array]") {
+                    if (Object.prototype.toString.call(labelItem.value).toLowerCase() === "[object array]") {
                         filterRes[sortItem.sortValue] = labelItem.value;
                     } else {
                         filterRes[sortItem.sortValue].push(labelItem.value)
@@ -378,7 +378,7 @@ export default {
 
             var outPutFn = this.filterData.callback["selected"];
 
-            if (outPutFn && !(toString.call(outPutFn).toLowerCase() === "[object function]")) {
+            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
                 throw new Error("请传入有效的函数类型回调")
             }
 

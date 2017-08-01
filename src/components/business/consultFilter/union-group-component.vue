@@ -111,7 +111,7 @@ const UnionComponentSlot = {
                         "on-change": function (value) {
                             if (_this.model.componentConfig.multiple) {
                                 value.map(function (item) {
-                                    if (toString.call(item.label).toLowerCase() == "[object undefined]") {
+                                    if (Object.prototype.toString.call(item.label).toLowerCase() == "[object undefined]") {
                                         for (var i = 0, l = _this.selectValue.length; i < l; i++) {
                                             if (item.value == _this.selectValue[i].value) {
                                                 item.label = _this.selectValue[i].label;
@@ -216,7 +216,7 @@ const UnionComponentSlot = {
         onParentChange(params) {
             var _this = this;
             this.parentSelectValue = params.selectModel.value;
-            if (toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
+            if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
                 this.onParentEmpty();
                 Emiter.$emit(this.model.sortValue + "-union-empty");
             }
@@ -225,7 +225,7 @@ const UnionComponentSlot = {
             }
 
 
-            if (params.onChangeUrl && toString.call(params.onChangeUrl) == "[object String]") {
+            if (params.onChangeUrl && Object.prototype.toString.call(params.onChangeUrl) == "[object String]") {
                 var parentValue = [];
                 params.selectModel.value.map(function (item) {
                     parentValue.push(item.value);
