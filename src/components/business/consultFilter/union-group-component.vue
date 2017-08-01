@@ -363,7 +363,7 @@ const UnionComponentSlot = {
             }
             this.model.componentConfig.loading = true;
             this.debounce(function(scope){
-                var _this=this;
+                var _this=scope;
                 Axios.post(_this.model.remoteUrl.onSearch, req).then(function (res) {
                     var data = res.data;
                     if (data && data.Status) {
