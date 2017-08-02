@@ -241,6 +241,7 @@ const UnionComponentSlot = {
             if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
                 this.model.componentConfig.disabled = true;
                 Emiter.$emit(this.model.sortValue + "-union-empty");
+                return;
             }
             else {
                 this.model.componentConfig.disabled = false;
