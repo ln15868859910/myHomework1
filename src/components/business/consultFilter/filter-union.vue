@@ -1,7 +1,7 @@
 <template>
     <div :class="unionItemWrap">
         <union-group-component :model="item" v-for="(item,index) in model.modelList" :key="index"></union-group-component>
-
+    
     </div>
 </template>
 <script>
@@ -36,6 +36,10 @@ export default {
     },
     mounted() {
         this.init();
+    },
+    beforeDestroy() {
+        //移除联动模块子组件change事件
+        Emiter.$off("union-change-slot", this.onChange);
     },
     methods: {
         init() {

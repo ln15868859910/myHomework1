@@ -124,6 +124,14 @@ const MultiFilterSlotComponent = {
     mounted() {
         this.init();
     },
+    beforeDestroy() {
+        if (this.model.parentSortValue) {
+            //移除父层筛选项修改事件
+            Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+        }
+        //移除父层筛选项修改事件
+        Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+    },
     methods: {
         init() {
             this.observeEvent();
@@ -274,6 +282,10 @@ export default {
     },
     mounted() {
         this.init();
+    },
+    beforeDestroy() {
+        //监听联动模块子组件change事件
+        Emiter.$off("multi-change-slot", this.onChange);
     },
     methods: {
         init() {

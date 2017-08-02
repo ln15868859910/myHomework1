@@ -161,6 +161,21 @@ const UnionComponentSlot = {
     mounted() {
         this.init();
     },
+    beforeDestroy() {
+        if (this.model.sonSortValue) {
+            //移除联动模块父组件值初始化是否为空事件
+            Emiter.$off(this.model.sortValue + "-union-empty-init", this.onDisableSon);
+        }
+        if (!!this.model.parentSortValue) {
+            //移除联动模块父组件change事件
+            Emiter.$off(this.model.parentSortValue + "-union-change", this.onParentChange);
+            //移除联动模块父组件值为空事件
+            Emiter.$off(this.model.parentSortValue + "-union-empty", this.onParentEmpty);
+        }
+
+        //移除父层筛选项修改事件
+        Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+    },
     methods: {
         init() {
             this.observeEvent();

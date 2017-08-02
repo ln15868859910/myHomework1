@@ -72,6 +72,10 @@ var maker = {
         this.initData();
         this.observeEvent();
     },
+    beforeDestroy() {
+        //移除父层筛选项修改事件
+        Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+    },
     methods: {
         setDateRangeShotcuts(shotCutsList) {
             return shotCutsList.map(function (item, index) {
@@ -157,23 +161,23 @@ var maker = {
                 me.model.componentConfig.loading = false;
                 if (data && data.Status) {
                     var tempList = [];
-                    
-                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                            tempList.push({
-                                label: item.Label,
-                                value: item.Value,
-                                disabled: false
-                            })
-                        })
 
-                        //数据超过50条，添加自定义文案
-                        if (data.Data.ComponentConfig.ItemCount >= 50) {
-                            tempList.push({
-                                value: "abadon",
-                                label: "【更多选项请输入更多关键词】",
-                                disabled: true
-                            })
-                        }
+                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                        tempList.push({
+                            label: item.Label,
+                            value: item.Value,
+                            disabled: false
+                        })
+                    })
+
+                    //数据超过50条，添加自定义文案
+                    if (data.Data.ComponentConfig.ItemCount >= 50) {
+                        tempList.push({
+                            value: "abadon",
+                            label: "【更多选项请输入更多关键词】",
+                            disabled: true
+                        })
+                    }
                     me.model.componentConfig.optionList = tempList;
                 }
 

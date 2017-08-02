@@ -227,6 +227,14 @@ export default {
     updated() {
         this.setToolTipVisible();
     },
+    beforeDestroy() {
+        //移除二级联动模块change事件
+        Emiter.$off("union-change", this.onUnionChange);
+        //移除二级单选模块change事件
+        Emiter.$off("single-change", this.onSingleChange);
+        //移除二级多选模块change事件
+        Emiter.$off("multi-change", this.onUnionChange);
+    },
     watch: {
         filterResult: {
             deep: true,
@@ -455,7 +463,7 @@ export default {
             if (filterResult.length) {
                 filterResult.map(function (sortItem, itemIndex) {
 
-                    Emiter.$emit(sortItem.sortValue + "-change", [],[]);
+                    Emiter.$emit(sortItem.sortValue + "-change", [], []);
                     // sortItem.label.map(function (labelItem, labelIndex) {
                     //     sortItem.label = [];
                     //     me.closeTag(sortItem,labelIndex)
@@ -478,7 +486,7 @@ export default {
             })
 
             //向基础组件发起数据变动通知
-            Emiter.$emit(sortItem.sortValue + "-change", value,label);
+            Emiter.$emit(sortItem.sortValue + "-change", value, label);
 
         },
         onUnionChange(data) {
