@@ -89,8 +89,8 @@ export default {
             type: [Boolean, Object],
             default: false
         },
-        selected: {
-            type: Function,
+        callback: {
+            type: Object,
             default: null
         }
     },
@@ -408,7 +408,7 @@ export default {
                 })
             })
 
-            var outPutFn = this.filterData.callback["selected"];
+            var outPutFn = this.callback["selected"];
 
             if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
                 throw new Error("请传入有效的函数类型回调")
