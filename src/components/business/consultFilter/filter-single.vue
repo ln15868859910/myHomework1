@@ -284,7 +284,8 @@ var maker = {
                             else if (typeof obj === "string") {
                                 var
                                     optsList = me.model.componentConfig.optionList;
-
+                                //保持当前model的value值与组件内部的value一致
+                                me.model.componentConfig.value = [obj];
                                 optsList.map(function (item, index) {
                                     if (item.value == obj) {
                                         result.label = item.label;
@@ -337,6 +338,10 @@ var maker = {
                     on: {
 
                         "on-clear": function () {
+
+                            //保持当前model的value值与组件内部的value一致
+                            me.model.componentConfig.value = [];
+
                             Emiter.$emit("single-change", {
                                 sortName: me.model.sortName,
                                 sortValue: me.model.sortValue,
@@ -351,6 +356,10 @@ var maker = {
                         "on-change": function (list) {
 
                             if (list[0]) {
+
+                                //保持当前model的value值与组件内部的value一致
+                                me.model.componentConfig.value = [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
+
                                 Emiter.$emit("single-change", {
                                     sortName: me.model.sortName,
                                     sortValue: me.model.sortValue,

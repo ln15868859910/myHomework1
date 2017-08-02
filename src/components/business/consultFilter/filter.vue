@@ -69,6 +69,7 @@ import Tooltip from '../../tooltip';
 import filterSingle from './filter-single.vue';
 import filterUnion from './filter-union.vue';
 import filterMulti from './filter-multi.vue';
+
 import clickoutside from '../../../directives/clickoutside';
 
 export default {
@@ -131,20 +132,7 @@ export default {
                     clickEvent: function () { }
                 }
             },
-            singleModel: {
-                class: "",//自定义样式名
-                modelList: [],
-            },
-            unionModel: {
-                class: "",
-                modelList: []
-            },
-            multiModel: {
-                class: "",
-                modelList: []
-            },
             debounceObj: {},
-            delQueue: []//删除队列
         };
     },
     computed: {
@@ -219,7 +207,53 @@ export default {
         },
         buttonRightShow() {
             return this.customData.buttonRight.isShow;
-        }
+        },
+
+        singleModel() {
+
+            //清空操作传入空值
+            if (this.filterData.isClear) {
+                return {
+                    class: "",
+                    modelList: []
+                }
+            }
+
+            return {
+                class: "",
+                modelList: this.filterData.data.singleModel ? this.filterData.data.singleModel.modelList : []
+            }
+        },
+        unionModel() {
+
+            //清空操作传入空值
+            if (this.filterData.isClear) {
+                return {
+                    class: "",
+                    modelList: []
+                }
+            }
+
+            return {
+                class: "",
+                modelList: this.filterData.data.unionModel ? this.filterData.data.unionModel.modelList : []
+            }
+        },
+        multiModel() {
+
+            //清空操作传入空值
+            if (this.filterData.isClear) {
+                return {
+                    class: "",
+                    modelList: []
+                }
+            }
+
+            return {
+                class: "",
+                modelList: this.filterData.data.multiModel ? this.filterData.data.multiModel.modelList : []
+            }
+        },
     },
     created() {
         this.observeEvent();
@@ -239,33 +273,23 @@ export default {
         Emiter.$off("multi-change", this.onUnionChange);
     },
     watch: {
-        filterResult: {
-            deep: true,
-            handler: function (oldv, newv) {
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 800, "filterChange");
-            }
-        },
+
         "filterData": {
             deep: true,
             handler: function (oldv, newv) {
                 if (newv.isClear === true) {
-                    this.emptyTag();
+                    this.clearAllData();
+                    return;
                 }
-                //异步传入了数据判断其中是否有默认值执行获取下拉列表数据操作
-                if (newv.singleModel.modelList.length || newv.unionModel.modelList.length || newv.multiModel.modelList.length) {
 
+                //数据返回结构存在时
+                if (newv.data.singleModel) {
                     this.debounce(() => {
-                        if (!this.hasDefaultValue()) {
-                            var outPutFn = this.filterData.callback["selected"];
-                            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
-                                throw new Error("请传入有效的函数类型回调")
-                            }
-                            outPutFn({}, { key: this.searchArea.selected.value, value: this.searchArea.searchInput });
-                        }
+                        this.uiModeltoBizModel();
                     }, 800, "filterDataChange")
+
                 }
+
             }
         },
         "searchData": {
@@ -276,9 +300,8 @@ export default {
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
                 }
 
-                // if (newv.opts.defaultSearchValue) {
                 this.searchArea.searchInput = newv.opts.defaultSearchValue
-                // }
+
             }
         }
 
@@ -351,17 +374,15 @@ export default {
         },
 
         doSearch() {
-            if (typeof this.searchData.callback == "function") {
 
-                //搜索结果互斥时，清空筛选项
-                if (this.searchData.opts.isResetFilter) {
-                    this.emptyTag();
-                }
+            //搜索结果互斥时，清空筛选项
+            if (this.searchData.opts.isResetFilter) {
+                this.emptyTag();
 
-                this.searchData.callback({ key: this.searchArea.selected.value, value: this.searchArea.searchInput });
-                // console.log(this.searchArea.searchInput)
             } else {
-                throw new Error("请传入正确的搜索回调！")
+                this.debounce(() => {
+                    this.uiModeltoBizModel();
+                }, 500, "doSearch")
             }
         },
 
@@ -397,11 +418,11 @@ export default {
         },
 
         //将外部传入数据组装成二级组件需要的数据结构
-        convertModel() {
-            this.singleModel = this.filterData.singleModel;
-            this.unionModel = this.filterData.unionModel;
-            this.multiModel = this.filterData.multiModel;
-        },
+        // convertModel() {
+        //     this.singleModel = this.filterData.singleModel;
+        //     this.unionModel = this.filterData.unionModel;
+        //     this.multiModel = this.filterData.multiModel;
+        // },
         //显示下拉项层
         toggleContainer() {
             this.status.isContainerShow = !this.status.isContainerShow;
@@ -457,6 +478,20 @@ export default {
 
             }
         },
+        //销毁数据实例
+        clearAllData() {
+            //清空已选择的数据
+            this.filterResult = [];
+            //清空下拉数据和搜索项
+            this.searchArea = {
+                initValue: "",
+                selected: {
+                    "text": "",
+                    "value": ""
+                },
+                searchInput: "",
+            };
+        },
         // 清空所有标签
         emptyTag() {
             //每次初始化赋值的时候先清空原先筛选项数据
@@ -465,12 +500,7 @@ export default {
 
             if (filterResult.length) {
                 filterResult.map(function (sortItem, itemIndex) {
-
                     Emiter.$emit(sortItem.sortValue + "-change", [], []);
-                    // sortItem.label.map(function (labelItem, labelIndex) {
-                    //     sortItem.label = [];
-                    //     me.closeTag(sortItem,labelIndex)
-                    // })
                 })
             }
 
@@ -481,7 +511,6 @@ export default {
             sortItem.label.splice(labelIndex, 1);
             var value = [],
                 label = [];
-
 
             sortItem.label.map(function (item) {
                 value.push(item.value);
@@ -580,27 +609,7 @@ export default {
             //监听二级多选模块change事件
             Emiter.$on("multi-change", this.onUnionChange);
         },
-        //判断各项传入数据是否有默认值
-        hasDefaultValue() {
 
-            var hasValue = false;
-
-            this.singleModel.modelList.map(function (item, index) {
-                item.componentConfig.value.length ? hasValue = true : "";
-            });
-
-            this.unionModel.modelList.map(function (itemGroup, index) {
-                itemGroup.map(function (item) {
-                    item.componentConfig.value.length ? hasValue = true : "";
-                })
-            });
-
-            this.multiModel.modelList.map(function (item, index) {
-                item.componentConfig.value.length ? hasValue = true : "";
-            });
-
-            return hasValue
-        },
         debounce: function (func, timeout, type) {
 
             this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
@@ -622,7 +631,6 @@ export default {
                 this.setCustomStyleName();
                 this.setCustomCallBack();
             }
-            this.convertModel();
         }
     }
 };
