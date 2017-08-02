@@ -1,6 +1,11 @@
 <style></style>
 <template>
     <consult-Filter :customData="customData" :searchData="searchData" :filterData="filterData">
+    <div style="float:left" slot="customLeft">
+        <i-button type="primary" @click="addConsult()" style="margin-right:10px">新建咨询</i-button>
+        <i-button type="ghost" @click="showUploadPop()" style="margin-right:10px">导入</i-button>
+        <i-button type="ghost" @click="exportExcel()">导出</i-button>
+      </div>
     </consult-Filter>
 </template>
 <script>
@@ -438,6 +443,15 @@ export default {
             })
 
             return JSON.parse(strObj2);
+        },
+        addConsult:function(){
+            console.log("新增咨询");
+        },
+        showUploadPop:function(){
+            console.log("导入");
+        },
+        exportExcel:function(){
+            console.log("导出");
         }
     }
 

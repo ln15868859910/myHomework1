@@ -3,12 +3,15 @@
         <ul>
             <!-- 自定义内容区域 -->
             <li :class="custom" v-if="customData">
+            <slot name="customLeft"></slot>
+            
                 <span id="customLeft" :class="customArea.buttonLeft.styleName" @click="customArea.buttonLeft.clickEvent" v-if="buttonLeftShow" v-html="customArea.buttonLeft.template">
                 </span>
                 <span id="customCenter" :class="customArea.buttonCenter.styleName" @click="customArea.buttonCenter.clickEvent" v-if="buttonCenterShow" v-html="customArea.buttonCenter.template">
                 </span>
                 <span id="customRight" :class="customArea.buttonRight.styleName" @click="customArea.buttonRight.clickEvent" v-if="buttonRightShow" v-html="customArea.buttonRight.template">
                 </span>
+            
             </li>
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
