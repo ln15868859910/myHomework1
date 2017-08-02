@@ -260,46 +260,50 @@ const UnionComponentSlot = {
                         }
                     }
                 }
-                Axios.post(params.onChangeUrl, req).then(function (res) {
-                    var data = res.data;
-                    if (data && data.Status) {
+                this.debounce(function (scope) {
+                    var _this=scope;
+                    Axios.post(params.onChangeUrl, req).then(function (res) {
+                        var data = res.data;
+                        if (data && data.Status) {
 
-                        //优化：修改遍历时同时进行插入操作的bug by tianyu.chen
-                        var tempList = [];
+                            //优化：修改遍历时同时进行插入操作的bug by tianyu.chen
+                            var tempList = [];
 
-                        if (!data.Data.ComponentConfig.OptionList.length) {
+                            if (!data.Data.ComponentConfig.OptionList.length) {
 
-                            _this.model.componentConfig.optionList = [];
-                            _this.model.componentConfig.optionList.push({
-                                value: "emptyData",
-                                label: "暂无数据",
-                                disabled: true
-                            })
-
-                        } else {
-                            data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                                tempList.push({
-                                    label: item.Label,
-                                    value: item.Value,
-                                    disabled: false
-                                })
-                            })
-
-                            //数据超过50条，添加自定义文案
-                            if (data.Data.ComponentConfig.ItemCount >= 50) {
-                                tempList.push({
-                                    value: "abadon",
-                                    label: "【更多选项请输入更多关键词】",
+                                _this.model.componentConfig.optionList = [];
+                                _this.model.componentConfig.optionList.push({
+                                    value: "emptyData",
+                                    label: "暂无数据",
                                     disabled: true
                                 })
+
+                            } else {
+                                data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                                    tempList.push({
+                                        label: item.Label,
+                                        value: item.Value,
+                                        disabled: false
+                                    })
+                                })
+
+                                //数据超过50条，添加自定义文案
+                                if (data.Data.ComponentConfig.ItemCount >= 50) {
+                                    tempList.push({
+                                        value: "abadon",
+                                        label: "【更多选项请输入更多关键词】",
+                                        disabled: true
+                                    })
+                                }
+                                _this.model.componentConfig.optionList = tempList;
                             }
-                            _this.model.componentConfig.optionList = tempList;
                         }
-                    }
-                    if (_this.isRemote) {
-                        _this.model.componentConfig.loading = false;
-                    }
-                })
+                        if (_this.isRemote) {
+                            _this.model.componentConfig.loading = false;
+                        }
+                    })
+                }, "onchange")
+
             }
 
         },
