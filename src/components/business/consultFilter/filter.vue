@@ -1,60 +1,57 @@
 <template>
     <div :class="classes">
-        <ul>
-            <!-- 自定义内容区域 -->
-            <li :class="custom" v-if="customData">
-                <slot name="customLeft"></slot>
-    
-                <span id="customLeft" :class="customArea.buttonLeft.styleName" @click="customArea.buttonLeft.clickEvent" v-if="buttonLeftShow" v-html="customArea.buttonLeft.template">
-                </span>
-                <span id="customCenter" :class="customArea.buttonCenter.styleName" @click="customArea.buttonCenter.clickEvent" v-if="buttonCenterShow" v-html="customArea.buttonCenter.template">
-                </span>
-                <span id="customRight" :class="customArea.buttonRight.styleName" @click="customArea.buttonRight.clickEvent" v-if="buttonRightShow" v-html="customArea.buttonRight.template">
-                </span>
-    
-            </li>
-            <li :class="flortRight">
-                <!-- 搜索内容区域 -->
-                <div :class="search" v-if="searchData && status.isInitCompleted">
-                    <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
-                        <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
-                    </Select>
-                    <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
-                </div>
-    
-                <!-- 筛选组件按钮区域 -->
-                <div :class="filterBtn" v-clickoutside="hidefilterContainer">
-                    <Badge :count="filterResultAmount">
-                        <div class="ivu-select-selection" @click="toggleContainer">
-                            <input type="text" value="筛选" class="ivu-select-input" disabled>
-                            <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
-                        </div>
-                    </Badge>
-                    <!-- 下拉组件区域 -->
-                    <div :class="filterContainer" :style="{display:status.isContainerShow ? 'block': 'none'}">
-                        <!-- 单选组件 -->
-                        <consult-filter-single :model="singleModel"></consult-filter-single>
-                        <!-- 联动组件 -->
-                        <consult-filter-union :model="unionModel"></consult-filter-union>
-                        <!-- 多选组件 -->
-                        <consult-filter-multi :model="multiModel"></consult-filter-multi>
-                    </div>
-                </div>
-            </li>
-    
-        </ul>
-    
-        <!-- 筛选内容展示区域 -->
-        <div :class="fitlerResult" :style="{display:  filterResult.length > 0 ? 'block': 'none'}">
             <ul>
-                <li v-for="(data,dataIndex) in filterResult" :key="data">
-                    <span :class="sortName">{{data.sortName}}：</span>
-                    <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
-                        <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
-                    </Tooltip>
+                <!-- 自定义内容区域 -->
+                <li :class="custom">
+                    <slot name="customLeft"></slot>
                 </li>
+                
+                <li :class="flortRight">
+                    <!-- 搜索内容区域 -->
+                    <div :class="search" v-if="searchData && status.isInitCompleted">
+                        <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
+                            <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
+                        </Select>
+                        <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
+                    </div>
+    
+                    <!-- 筛选组件按钮区域 -->
+                    <div :class="filterBtn" v-clickoutside="hidefilterContainer">
+                        <Badge :count="filterResultAmount">
+                            <div class="ivu-select-selection" @click="toggleContainer">
+                                <input type="text" value="筛选" class="ivu-select-input" disabled>
+                                 <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow"  style="display:block"></i> 
+                            </div>
+                        </Badge>
+                        <!-- 下拉组件区域 -->
+                        <transition name="slide-up">
+                            <div :class="filterContainer" v-if="status.isContainerShow">
+                                <!-- 单选组件 -->
+                                <consult-filter-single :model="singleModel"></consult-filter-single>
+                                <!-- 联动组件 -->
+                                <consult-filter-union :model="unionModel"></consult-filter-union>
+                                <!-- 多选组件 -->
+                                <consult-filter-multi :model="multiModel"></consult-filter-multi>
+                            </div>
+                        </transition>
+                    </div>
+                </li>
+    
             </ul>
-        </div>
+    
+            <!-- 筛选内容展示区域 -->
+            <transition name="slide-up">
+                <div :class="fitlerResult" v-if="filterResult.length">
+                    <ul>
+                        <li v-for="(data,dataIndex) in filterResult" :key="data">
+                            <span :class="sortName">{{data.sortName}}：</span>
+                            <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
+                                <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
+                            </Tooltip>
+                        </li>
+                    </ul>
+                </div>
+            </transition>
     </div>
 </template>
 <script>
@@ -85,10 +82,6 @@ export default {
             type: [Boolean, Object],
             default: false
         },
-        customData: {
-            type: [Boolean, Object],
-            default: false
-        },
         callback: {
             type: Object,
             default: null
@@ -101,9 +94,6 @@ export default {
             },
             status: {
                 isContainerShow: false,
-                isCustomLeftShow: true,
-                isCustomCenterShow: true,
-                isCustomRightShow: true,
                 isInitCompleted: false
             },
 
@@ -115,23 +105,6 @@ export default {
                     "value": ""
                 },
                 searchInput: "",
-            },
-            customArea: {
-                buttonLeft: {
-                    styleName: `${prefixCls}-customLeft`,
-                    template: "新增咨询",
-                    clickEvent: function () { }
-                },
-                buttonCenter: {
-                    styleName: `${prefixCls}-customCenter`,
-                    template: "导入",
-                    clickEvent: function () { }
-                },
-                buttonRight: {
-                    styleName: `${prefixCls}-customRight`,
-                    template: "导出",
-                    clickEvent: function () { }
-                }
             },
             debounceObj: {},
         };
@@ -153,7 +126,9 @@ export default {
             return `${prefixCls}-search`
         },
         filterBtn() {
-            return `${prefixCls}-filterBtn`
+            return [`${prefixCls}-filterBtn`,{
+                 [`${prefixCls}-isSelected`]: this.status.isContainerShow
+            }]
         },
         fitlerResult() {
             return `${prefixCls}-fitlerResult`
@@ -200,15 +175,6 @@ export default {
                     return this.searchData.data[0].value;
                 }
             }
-        },
-        buttonLeftShow() {
-            return this.customData.buttonLeft.isShow;
-        },
-        buttonCenterShow() {
-            return this.customData.buttonCenter.isShow;
-        },
-        buttonRightShow() {
-            return this.customData.buttonRight.isShow;
         },
 
         singleModel() {
@@ -310,55 +276,6 @@ export default {
     },
     methods: {
 
-        /****************************自定义区域相关*********************************/
-        setCustomStyleName() {
-
-            var
-                leftStyleName = this.customData.buttonLeft.styleName,
-                centerStyleName = this.customData.buttonCenter.styleName,
-                rightStyleName = this.customData.buttonRight.styleName;
-
-            leftStyleName ? this.customArea.buttonLeft.styleName = leftStyleName : false;
-            centerStyleName ? this.customArea.buttonCenter.styleName = centerStyleName : false;
-            rightStyleName ? this.customArea.buttonRight.styleName = rightStyleName : false;
-
-        },
-
-        setCustomTemplate() {
-
-            var
-                tplLeft = this.customData.buttonLeft.template,
-                tplCenter = this.customData.buttonCenter.template,
-                tplRight = this.customData.buttonRight.template;
-
-            tplLeft ? this.customArea.buttonLeft.template = tplLeft : false;
-            tplCenter ? this.customArea.buttonCenter.template = tplCenter : false;
-            tplRight ? this.customArea.buttonRight.template = tplRight : false;
-
-        },
-
-        setCustomCallBack() {
-            var
-                leftCallBack = this.customData.buttonLeft.clickEvent,
-                centerCallBack = this.customData.buttonCenter.clickEvent,
-                rightCallBack = this.customData.buttonRight.clickEvent;
-
-            if (leftCallBack && !(typeof leftCallBack === "function")) {
-                throw new Error("请给buttonLeft点击事件传入正确的函数")
-            }
-            leftCallBack ? this.customArea.buttonLeft.clickEvent = leftCallBack : false;
-
-            if (centerCallBack && !(typeof centerCallBack === "function")) {
-                throw new Error("请给buttonCenter点击事件传入正确的函数")
-            }
-            centerCallBack ? this.customArea.buttonCenter.clickEvent = centerCallBack : false;
-
-            if (rightCallBack && !(typeof rightCallBack === "function")) {
-                throw new Error("请给buttonRight点击事件传入正确的函数")
-            }
-            rightCallBack ? this.customArea.buttonRight.clickEvent = rightCallBack : false;
-        },
-
 
         /****************************搜索项相关*********************************/
 
@@ -424,12 +341,6 @@ export default {
             outPutFn(filterRes, searchRes);
         },
 
-        //将外部传入数据组装成二级组件需要的数据结构
-        // convertModel() {
-        //     this.singleModel = this.filterData.singleModel;
-        //     this.unionModel = this.filterData.unionModel;
-        //     this.multiModel = this.filterData.multiModel;
-        // },
         //显示下拉项层
         toggleContainer() {
             this.status.isContainerShow = !this.status.isContainerShow;
@@ -648,7 +559,7 @@ export default {
             Emiter.$on("multi-change", this.onUnionChange);
         },
 
-        debounce: function (func, timeout, type) {
+        debounce(func, timeout, type) {
 
             this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
             this.debounceObj[type] = setTimeout(() => {
@@ -657,19 +568,7 @@ export default {
 
         },
         //根据返回
-        init() {
-
-            //设置初始化自定义区域显示
-            if (this.customData) {
-                //传入customData时
-                if (!this.customData.buttonLeft || !this.customData.buttonCenter || !this.customData.buttonRight) {
-                    throw new Error("请传入正确格式的customData配置项");
-                }
-                this.setCustomTemplate();
-                this.setCustomStyleName();
-                this.setCustomCallBack();
-            }
-        }
+        init() {}
     }
 };
 

@@ -1,7 +1,7 @@
 <style></style>
 <template>
-    <consult-Filter :customData="customData" :searchData="searchData" :filterData="filterData">
-    <div style="float:left" slot="customLeft">
+    <consult-Filter :searchData="searchData" :filterData="filterData">
+    <div style="float:left">
         <i-button type="primary" @click="addConsult()" style="margin-right:10px">新建咨询</i-button>
         <i-button type="ghost" @click="showUploadPop()" style="margin-right:10px">导入</i-button>
         <i-button type="ghost" @click="exportExcel()">导出</i-button>
