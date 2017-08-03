@@ -15,7 +15,7 @@
             </li>
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
-                <div :class="search" v-if="searchData">
+                <div :class="search" v-if="searchData && status.isInitCompleted">
                     <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
                         <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                     </Select>
@@ -173,6 +173,7 @@ export default {
             return `${prefixCls}-flortRight`
         },
         searchSelectInitVal() {
+
             if (this.searchData.data.length) {
 
                 var defaultSearchKey = this.searchData.opts.defaultSearchKey,
@@ -488,15 +489,6 @@ export default {
         clearAllData() {
             //清空已选择的数据
             this.filterResult = [];
-            //清空下拉数据和搜索项
-            this.searchArea = {
-                initValue: "",
-                selected: {
-                    "text": "",
-                    "value": ""
-                },
-                searchInput: "",
-            };
             this.status.isInitCompleted = false;
         },
         // 清空所有标签
