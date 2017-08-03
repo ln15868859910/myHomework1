@@ -497,6 +497,7 @@ export default {
                 },
                 searchInput: "",
             };
+            this.status.isInitCompleted = false;
         },
         // 清空所有标签
         emptyTag() {
