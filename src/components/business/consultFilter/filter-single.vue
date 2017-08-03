@@ -144,6 +144,7 @@ var maker = {
             }, 0)
         },
         remoteMethod(query) {
+            query=query.trim();
             if (query == "") {
                 return;
             }
