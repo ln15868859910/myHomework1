@@ -62,7 +62,8 @@ const MultiFilterSlotComponent = {
 
             },
             selectValue: [],
-            isRemote: false
+            isRemote: false,
+            type:"fromBottom"
         }
     },
     render(h) {
@@ -96,7 +97,8 @@ const MultiFilterSlotComponent = {
                             })
                             data.value = value;
                             _this.selectValue = data.value;
-                            Emiter.$emit("multi-change-slot", data);
+                            Emiter.$emit("multi-change-slot", data, _this.type);
+                            _this.type = "fromBottom";
 
                         }
                     }
@@ -180,7 +182,10 @@ const MultiFilterSlotComponent = {
                 });
             }
         },
-        onFilterChange(value, label) {
+        onFilterChange(value, label,type) {
+
+            this.type = type ? type : this.type;
+
             if (!value) {
                 return;
             }
@@ -297,7 +302,7 @@ export default {
             Emiter.$on("multi-change-slot", this.onChange);
 
         },
-        onChange(params) {
+        onChange(params,type) {
             var _this = this,
                 data = {};
             if (params.componentType == "select") {
@@ -314,7 +319,8 @@ export default {
                     data.label.push(model);
                 })
             }
-            Emiter.$emit("multi-change", data);
+            Emiter.$emit("multi-change", data,type);
+
         }
 
     }

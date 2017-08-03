@@ -59,7 +59,7 @@ var maker = {
 
     data() {
         return {
-
+            type: "fromBottom"
         }
     },
     created() {
@@ -116,7 +116,10 @@ var maker = {
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
 
-        onFilterChange(data) {
+        onFilterChange(data,list,type) {
+
+            this.type = type ? type : this.type;
+
             if (!data) {
                 return;
             }
@@ -133,9 +136,10 @@ var maker = {
                         text: "",
                         value: ""
                     }]
-                });
+                },type);
+                this.type = "fromBottom";
             }
-
+            
             var sortValue = this.model.sortValue;
             setTimeout(() => {
                 //bugFix（临时）：修复清空了值上一个未清空选中项的bug
@@ -304,7 +308,8 @@ var maker = {
                                     text: result.label,
                                     value: result.value
                                 }]
-                            });
+                            },me.type);
+                            me.type = "fromBottom"
                         },
                     }
                 },
@@ -351,7 +356,8 @@ var maker = {
                                     text: "",
                                     value: ""
                                 }]
-                            });
+                            },me.type);
+                            me.type = "fromBottom"
                         },
 
                         "on-change": function (list) {
@@ -370,7 +376,8 @@ var maker = {
                                         text: `开始时间：${me.dateFormat(list[0], me.model.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], me.model.componentConfig.format)}`,
                                         value: [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
                                     }]
-                                });
+                                },me.type);
+                                me.type = "fromBottom"
                             }
 
                         }

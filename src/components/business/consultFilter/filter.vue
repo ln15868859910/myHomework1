@@ -3,15 +3,15 @@
         <ul>
             <!-- 自定义内容区域 -->
             <li :class="custom" v-if="customData">
-            <slot name="customLeft"></slot>
-            
+                <slot name="customLeft"></slot>
+    
                 <span id="customLeft" :class="customArea.buttonLeft.styleName" @click="customArea.buttonLeft.clickEvent" v-if="buttonLeftShow" v-html="customArea.buttonLeft.template">
                 </span>
                 <span id="customCenter" :class="customArea.buttonCenter.styleName" @click="customArea.buttonCenter.clickEvent" v-if="buttonCenterShow" v-html="customArea.buttonCenter.template">
                 </span>
                 <span id="customRight" :class="customArea.buttonRight.styleName" @click="customArea.buttonRight.clickEvent" v-if="buttonRightShow" v-html="customArea.buttonRight.template">
                 </span>
-            
+    
             </li>
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
@@ -104,6 +104,7 @@ export default {
                 isCustomLeftShow: true,
                 isCustomCenterShow: true,
                 isCustomRightShow: true,
+                isInitCompleted: false
             },
 
             filterResult: [],
@@ -253,7 +254,7 @@ export default {
                 class: "",
                 modelList: this.filterData.data.multiModel ? this.filterData.data.multiModel.modelList : []
             }
-        },
+        }
     },
     created() {
         this.observeEvent();
@@ -282,12 +283,12 @@ export default {
                     return;
                 }
 
-                //数据返回结构存在时
-                if (newv.data.singleModel) {
+                //初始化下拉项无值,手动调一次回调
+                if (newv.data.singleModel && !this.status.isInitCompleted) {
                     this.debounce(() => {
                         this.uiModeltoBizModel();
-                    }, 800, "filterDataChange")
-
+                        this.status.isInitCompleted = true;
+                    }, 800, "initFilterData")
                 }
 
             }
@@ -377,7 +378,11 @@ export default {
 
             //搜索结果互斥时，清空筛选项
             if (this.searchData.opts.isResetFilter) {
+                this.status.isDoResetFilter = true;
                 this.emptyTag();
+                this.debounce(() => {
+                    this.uiModeltoBizModel();
+                }, 500, "doSearch")
 
             } else {
                 this.debounce(() => {
@@ -389,6 +394,7 @@ export default {
         /****************************筛选项相关*********************************/
 
         uiModeltoBizModel() {
+
 
             var filterRes = {};
             var searchRes = {
@@ -500,7 +506,7 @@ export default {
 
             if (filterResult.length) {
                 filterResult.map(function (sortItem, itemIndex) {
-                    Emiter.$emit(sortItem.sortValue + "-change", [], []);
+                    Emiter.$emit(sortItem.sortValue + "-change", [], [], "emptyOnly");
                 })
             }
 
@@ -521,27 +527,39 @@ export default {
             Emiter.$emit(sortItem.sortValue + "-change", value, label);
 
         },
-        onUnionChange(data) {
+        onUnionChange(data, type) {
+
             var _this = this,
                 isEmpty = false,
                 isFinish = false;
+
             if (data.label.length == 0) {
                 isEmpty = true;
-                this.filterResult.map(function (item, index) {
-                    if (item.sortValue == data.sortValue) {
-                        _this.filterResult.splice(index, 1);
-                    }
-                })
             }
+
             if (isEmpty) {
+                this.filterResult = this.filterResult.filter(function (item, index) {
+                    return item.sortValue != data.sortValue;
+                })
+                if (type == "fromBottom") {
+                    this.debounce(() => {
+                        this.uiModeltoBizModel();
+                    }, 800, "dataChange")
+                }
                 return;
             }
+
             var _this = this,
                 len = this.filterResult.length;
 
             //如果filterResult没有数据直接放入数据
             if (len === 0) {
                 this.filterResult.push(data);
+
+                this.debounce(() => {
+                    this.uiModeltoBizModel();
+                }, 800, "dataChange")
+
                 return;
             }
 
@@ -567,38 +585,65 @@ export default {
                     _this.filterResult.push(data);
                 }
             })
+
+            //修改和添加事件触发回调
+            this.debounce(() => {
+                this.uiModeltoBizModel();
+            }, 800, "dataChange")
+
         },
-        onSingleChange(data) {
+        onSingleChange(data, type) {
 
             var _this = this,
-                len = this.filterResult.length;
+                len = this.filterResult.length,
+                isSortExist = false,
+                isEmpty = false;
+
+            if (!data.label[0].value) { isEmpty = true; }
+
+            //删除事件,清空并触发回调
+            if (isEmpty) {
+
+                this.filterResult = this.filterResult.filter(function (item, index) {
+                    return item.sortValue != data.sortValue;
+                })
+                if (type == "fromBottom") {
+                    this.debounce(() => {
+                        this.uiModeltoBizModel();
+                    }, 800, "dataChange")
+                }
+                return;
+            }
 
             //hack 给所有传入数据加一个toolTip属性实现vue绑定
             data.label[0].isAvoidToolTip = true;
 
             if (len === 0) {
                 this.filterResult.push(data);
+
+                this.debounce(() => {
+                    this.uiModeltoBizModel();
+                }, 800, "dataChange")
+
                 return;
             }
 
-            var emptySort = "";
-            var isSortExist = false;
             //修改
             this.filterResult.map(function (item, index) {
                 if (item.sortValue === data.sortValue) {
-                    if (!data.label[0].value) {
-                        emptySort = data.sortValue;
-                    }
+
                     item.label = data.label;
                     isSortExist = true;
                 }
             })
+
             //添加
             !isSortExist && data.label[0].value && _this.filterResult.push(data);
-            //删除
-            this.filterResult = this.filterResult.filter(function (item, index) {
-                return item.sortValue != emptySort;
-            })
+
+            //修改或添加事件触发回调
+            this.debounce(() => {
+                this.uiModeltoBizModel();
+            }, 800, "dataChange")
 
         },
         observeEvent() {

@@ -49,7 +49,7 @@ export default {
             //监听联动模块子组件change事件
             Emiter.$on("union-change-slot", this.onChange);
         },
-        onChange(params) {
+        onChange(params,type) {
             var _this = this;
             var data = {};
             if (params.componentType == "select") {
@@ -68,7 +68,7 @@ export default {
 
 
             }
-            Emiter.$emit("union-change", data);
+            Emiter.$emit("union-change", data,type);
         }
 
     }

@@ -71,6 +71,7 @@ const UnionComponentSlot = {
     },
     data() {
         return {
+            type: "fromBottom",
             data: {
                 value: "",
                 multiple: false,
@@ -310,7 +311,8 @@ const UnionComponentSlot = {
             }
 
         },
-        onFilterChange(value, label) {
+        onFilterChange(value, label, type) {
+            this.type = type ? type : this.type;
             if (!value) {
                 return;
             }
@@ -356,6 +358,9 @@ const UnionComponentSlot = {
         onParentEmpty: function () {
             var sortValue = this.model.sortValue;
             if (this.model.componentConfig.multiple) {
+                if (this.selectValue.length == 0) {
+                    return;
+                }
                 this.model.componentConfig.value = [];
                 this.model.componentConfig.optionList = [];
                 //bugFix（临时）：修复清空了值上一个未清空选中项的bug
@@ -364,6 +369,9 @@ const UnionComponentSlot = {
                 }, 0)
             }
             else {
+                if (this.selectValue.label == "" && this.selectValue.value == "") {
+                    return;
+                }
                 this.model.componentConfig.value = "";
                 this.model.componentConfig.optionList = [];
                 //bugFix（临时）：修复清空了值上一个未清空选中项的bug
@@ -390,7 +398,9 @@ const UnionComponentSlot = {
                 _this.model.componentConfig.value = value.value
                 data.value = !value.value && !value.label ? [] : [value];
             }
-            Emiter.$emit("union-change-slot", data);
+            Emiter.$emit("union-change-slot", data, this.type);
+            this.type = "fromBottom";
+
             if (_this.model.sonSortValue) {
                 Emiter.$emit(_this.model.sortValue + "-union-change", {
                     onChangeUrl: _this.model.remoteUrl ? _this.model.remoteUrl["onChange"] : "",
