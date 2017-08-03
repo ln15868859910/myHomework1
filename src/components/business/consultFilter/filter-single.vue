@@ -129,14 +129,14 @@ var maker = {
             //bugFix(临时)：修复时间类型清空了默认值父层检测不到事件的bug
             if (this.model.componentType == "daterange") {
                 Emiter.$emit("single-change", {
-                    sortName: me.model.sortName,
+                    sortName: me.model.sortName,    
                     sortValue: me.model.sortValue,
                     componentType: "daterange",
                     label: [{
                         text: "",
                         value: ""
                     }]
-                },type);
+                },this.type);
                 this.type = "fromBottom";
             }
             
