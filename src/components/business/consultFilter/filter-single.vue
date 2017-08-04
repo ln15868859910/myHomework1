@@ -36,7 +36,7 @@ function getComponentConfig(model, remoteMethod) {
                 for (var i = 0, l = optionList.length; i < l; i++) {
                     if (optionList[i].value == data.value) {
                         data.label = optionList[i].label;
-                        return;
+                        break;
                     }
                 }
             }
@@ -59,7 +59,10 @@ var maker = {
 
     data() {
         return {
-            type: "fromBottom"
+            type: "fromBottom",
+            status: {
+                isInitComplete: false
+            }
         }
     },
     created() {
@@ -67,10 +70,41 @@ var maker = {
             //动态添加loading属性，双向绑定
             this.$set(this.model.componentConfig, "loading", false);
         }
+        //根据外部传入数据设置type标识数据来源
+        if (this.model.componentConfig.value.length) {
+            this.type = "fromOutSide"
+        }
+
+        if (this.model.componentConfig.componentType == "select") {
+
+            //给每一项下拉添加默认disabled属性
+            if (this.model.componentConfig.optionList.length) {
+
+                this.model.componentConfig.optionList.map(function (item, index) {
+                    item.disabled = false;
+                })
+                //数据超过50条，添加自定义文案
+                if (this.model.componentConfig.itemCount >= 50) {
+                    this.model.componentConfig.optionList.push({
+                        value: "abadon",
+                        label: "【更多选项请搜索】",
+                        disabled: true
+                    })
+                }
+            } else {
+
+                this.model.componentConfig.optionList.push({
+                    value: "emptyData",
+                    label: "暂无数据",
+                    disabled: true
+                })
+
+            }
+        }
     },
     mounted() {
-        this.initData();
         this.observeEvent();
+        this.initData();
     },
     beforeDestroy() {
         //移除父层筛选项修改事件
@@ -116,7 +150,7 @@ var maker = {
             Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
 
-        onFilterChange(data,list,type) {
+        onFilterChange(data, list, type) {
 
             this.type = type ? type : this.type;
 
@@ -126,20 +160,20 @@ var maker = {
             this.model.componentConfig.value = data;
 
             var me = this;
-            //bugFix(临时)：修复时间类型清空了默认值父层检测不到事件的bug
+            // bugFix(临时)：修复时间类型清空了默认值父层检测不到事件的bug
             if (this.model.componentType == "daterange") {
                 Emiter.$emit("single-change", {
-                    sortName: me.model.sortName,    
+                    sortName: me.model.sortName,
                     sortValue: me.model.sortValue,
                     componentType: "daterange",
                     label: [{
                         text: "",
                         value: ""
                     }]
-                },this.type);
+                }, this.type);
                 this.type = "fromBottom";
             }
-            
+
             var sortValue = this.model.sortValue;
             setTimeout(() => {
                 //bugFix（临时）：修复清空了值上一个未清空选中项的bug
@@ -148,7 +182,7 @@ var maker = {
             }, 0)
         },
         remoteMethod(query) {
-            query=query.trim();
+            query = query.trim();
             if (query == "") {
                 return;
             }
@@ -194,23 +228,7 @@ var maker = {
                 modelList = this.model;
 
             if (modelList.componentType == "select") {
-                var defaultValue = modelList.componentConfig.value[0];
-
-                //给每一项下拉添加默认disabled属性
-                if (modelList.componentConfig.optionList.length) {
-
-                    modelList.componentConfig.optionList.map(function (item, index) {
-                        item.disabled = false;
-                    })
-                    //数据超过50条，添加自定义文案
-                    if (modelList.componentConfig.itemCount >= 50) {
-                        modelList.componentConfig.optionList.push({
-                            value: "abadon",
-                            label: "【更多选项请搜索】",
-                            disabled: true
-                        })
-                    }
-                }
+                var defaultValue = this.model.componentConfig.value[0];
 
                 //判断是否有初始值
                 if (!defaultValue) {
@@ -231,7 +249,8 @@ var maker = {
                         text: defaultObj.label,
                         value: defaultValue
                     }]
-                });
+                }, me.type);
+                me.type = "fromBottom";
             }
 
             if (modelList.componentType == "daterange") {
@@ -253,8 +272,8 @@ var maker = {
                         text: `开始时间：${me.dateFormat(defaultValueList[0], defaultFormat)} - 结束时间：${me.dateFormat(defaultValueList[1], defaultFormat)}`,
                         value: [defaultValueList[0], defaultValueList[1]]
                     }]
-                });
-
+                }, me.type);
+                me.type = "fromBottom";
             }
         }
     },
@@ -308,7 +327,7 @@ var maker = {
                                     text: result.label,
                                     value: result.value
                                 }]
-                            },me.type);
+                            }, me.type);
                             me.type = "fromBottom"
                         },
                     }
@@ -356,7 +375,7 @@ var maker = {
                                     text: "",
                                     value: ""
                                 }]
-                            },me.type);
+                            }, me.type);
                             me.type = "fromBottom"
                         },
 
@@ -376,7 +395,7 @@ var maker = {
                                         text: `开始时间：${me.dateFormat(list[0], me.model.componentConfig.format)} - 结束时间：${me.dateFormat(list[1], me.model.componentConfig.format)}`,
                                         value: [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
                                     }]
-                                },me.type);
+                                }, me.type);
                                 me.type = "fromBottom"
                             }
 

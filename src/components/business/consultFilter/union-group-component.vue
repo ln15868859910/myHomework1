@@ -158,6 +158,30 @@ const UnionComponentSlot = {
         }
         //动态添加disabled属性，双向绑定
         this.$set(this.model.componentConfig, "disabled", false);
+
+        if (!this.model.componentConfig.optionList.length) {
+
+            this.model.componentConfig.optionList.push({
+                value: "emptyData",
+                label: "暂无数据",
+                disabled: true
+            })
+
+        }
+        //数据超过50条，添加自定义文案
+        if (this.model.componentConfig.optionList.length >= 50) {
+            this.model.componentConfig.optionList.push({
+                value: "abadon",
+                label: "【更多选项请搜索】",
+                disabled: true
+            })
+        }
+
+
+        //根据外部传入数据设置type标识数据来源
+        if (this.model.componentConfig.value.length) {
+            this.type = "fromOutSide"
+        }
     },
     mounted() {
         this.init();
@@ -181,15 +205,6 @@ const UnionComponentSlot = {
         init() {
             this.observeEvent();
             this.initDataChange();
-
-            //数据超过50条，添加自定义文案
-            if (this.model.componentConfig.optionList.length >= 50) {
-                this.model.componentConfig.optionList.push({
-                    value: "abadon",
-                    label: "【更多选项请搜索】",
-                    disabled: true
-                })
-            }
 
             if (this.model.parentSortValue) {
                 Emiter.$emit(this.model.parentSortValue + "-union-empty-init", this.model);

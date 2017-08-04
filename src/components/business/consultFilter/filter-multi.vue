@@ -63,7 +63,7 @@ const MultiFilterSlotComponent = {
             },
             selectValue: [],
             isRemote: false,
-            type:"fromBottom"
+            type: "fromBottom"
         }
     },
     render(h) {
@@ -108,7 +108,8 @@ const MultiFilterSlotComponent = {
                         return h(Option, {
                             props: {
                                 label: item.label,
-                                value: item.value
+                                value: item.value,
+                                disabled: !item.disabled ? false : true,
                             }
                         })
                     })
@@ -121,6 +122,29 @@ const MultiFilterSlotComponent = {
             this.isRemote = true;
             //动态添加loading属性，双向绑定
             this.$set(this.model.componentConfig, "loading", false);
+        }
+
+        if (!this.model.componentConfig.optionList.length) {
+
+            this.model.componentConfig.optionList.push({
+                value: "emptyData",
+                label: "暂无数据",
+                disabled: true
+            })
+
+        }
+        //数据超过50条，添加自定义文案
+        else if (this.model.componentConfig.optionList.length >= 50) {
+            this.model.componentConfig.optionList.push({
+                value: "abadon",
+                label: "【更多选项请搜索】",
+                disabled: true
+            })
+        }
+
+        //根据外部传入数据设置type标识数据来源
+        if (this.model.componentConfig.value.length) {
+            this.type = "fromOutSide"
         }
     },
     mounted() {
@@ -149,6 +173,7 @@ const MultiFilterSlotComponent = {
         },
         initDataChange: function () {
             var hasInitValue = false;
+            var me = this;
             var model = this.model.componentConfig;
             var data = {
                 componentType: this.model.componentType,
@@ -179,10 +204,12 @@ const MultiFilterSlotComponent = {
                         sortValue: this.model.sortValue,
                         value: data.value
                     }
-                });
+                }, me.type);
+                this.type = "fromBottom"
+
             }
         },
-        onFilterChange(value, label,type) {
+        onFilterChange(value, label, type) {
 
             this.type = type ? type : this.type;
 
@@ -208,7 +235,7 @@ const MultiFilterSlotComponent = {
             }
         },
         remoteMethod(query) {
-            query=query.trim();
+            query = query.trim();
             if (query == "") {
                 return;
             }
@@ -229,23 +256,35 @@ const MultiFilterSlotComponent = {
                     if (data && data.Status) {
 
                         var tempList = [];
-                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                            tempList.push({
-                                label: item.Label,
-                                value: item.Value,
-                                disabled: false
-                            })
-                        })
 
-                        //数据超过50条，添加自定义文案
-                        if (data.Data.ComponentConfig.ItemCount >= 50) {
-                            tempList.push({
-                                value: "abadon",
-                                label: "【更多选项请输入更多关键词】",
+                        if (!data.Data.ComponentConfig.OptionList.length) {
+
+                            _this.model.componentConfig.optionList = [];
+                            _this.model.componentConfig.optionList.push({
+                                value: "emptyData",
+                                label: "暂无数据",
                                 disabled: true
                             })
+
+                        } else {
+                            data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                                tempList.push({
+                                    label: item.Label,
+                                    value: item.Value,
+                                    disabled: false
+                                })
+                            })
+
+                            //数据超过50条，添加自定义文案
+                            if (data.Data.ComponentConfig.ItemCount >= 50) {
+                                tempList.push({
+                                    value: "abadon",
+                                    label: "【更多选项请输入更多关键词】",
+                                    disabled: true
+                                })
+                            }
+                            _this.model.componentConfig.optionList = tempList;
                         }
-                        _this.model.componentConfig.optionList = tempList;
                     }
 
                     _this.model.componentConfig.loading = false;
@@ -302,7 +341,7 @@ export default {
             Emiter.$on("multi-change-slot", this.onChange);
 
         },
-        onChange(params,type) {
+        onChange(params, type) {
             var _this = this,
                 data = {};
             if (params.componentType == "select") {
@@ -319,7 +358,7 @@ export default {
                     data.label.push(model);
                 })
             }
-            Emiter.$emit("multi-change", data,type);
+            Emiter.$emit("multi-change", data, type);
 
         }
 

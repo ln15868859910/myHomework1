@@ -1,57 +1,57 @@
 <template>
     <div :class="classes">
-            <ul>
-                <!-- 自定义内容区域 -->
-                <li :class="custom">
-                    <slot name="customLeft"></slot>
-                </li>
-                
-                <li :class="flortRight">
-                    <!-- 搜索内容区域 -->
-                    <div :class="search" v-if="searchData && status.isInitCompleted">
-                        <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
-                            <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
-                        </Select>
-                        <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
-                    </div>
+        <ul>
+            <!-- 自定义内容区域 -->
+            <li :class="custom">
+                <slot name="customLeft"></slot>
+            </li>
     
-                    <!-- 筛选组件按钮区域 -->
-                    <div :class="filterBtn" v-clickoutside="hidefilterContainer">
-                        <Badge :count="filterResultAmount">
-                            <div class="ivu-select-selection" @click="toggleContainer">
-                                <input type="text" value="筛选" class="ivu-select-input" disabled>
-                                 <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow"  style="display:block"></i> 
-                            </div>
-                        </Badge>
-                        <!-- 下拉组件区域 -->
-                        <transition name="slide-up">
-                            <div :class="filterContainer" v-if="status.isContainerShow">
-                                <!-- 单选组件 -->
-                                <consult-filter-single :model="singleModel"></consult-filter-single>
-                                <!-- 联动组件 -->
-                                <consult-filter-union :model="unionModel"></consult-filter-union>
-                                <!-- 多选组件 -->
-                                <consult-filter-multi :model="multiModel"></consult-filter-multi>
-                            </div>
-                        </transition>
-                    </div>
-                </li>
-    
-            </ul>
-    
-            <!-- 筛选内容展示区域 -->
-            <transition name="slide-up">
-                <div :class="fitlerResult" v-if="filterResult.length">
-                    <ul>
-                        <li v-for="(data,dataIndex) in filterResult" :key="data">
-                            <span :class="sortName">{{data.sortName}}：</span>
-                            <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
-                                <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
-                            </Tooltip>
-                        </li>
-                    </ul>
+            <li :class="flortRight">
+                <!-- 搜索内容区域 -->
+                <div :class="search" v-if="searchData && status.isInitCompleted">
+                    <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
+                        <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
+                    </Select>
+                    <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
                 </div>
-            </transition>
+    
+                <!-- 筛选组件按钮区域 -->
+                <div :class="filterBtn" v-clickoutside="hidefilterContainer">
+                    <Badge :count="filterResultAmount">
+                        <div class="ivu-select-selection" @click="toggleContainer">
+                            <input type="text" value="筛选" class="ivu-select-input" disabled>
+                            <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
+                        </div>
+                    </Badge>
+                    <!-- 下拉组件区域 -->
+                    <transition name="slide-up">
+                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}">
+                            <!-- 单选组件 -->
+                            <consult-filter-single :model="singleModel"></consult-filter-single>
+                            <!-- 联动组件 -->
+                            <consult-filter-union :model="unionModel"></consult-filter-union>
+                            <!-- 多选组件 -->
+                            <consult-filter-multi :model="multiModel"></consult-filter-multi>
+                        </div>
+                    </transition>
+                </div>
+            </li>
+    
+        </ul>
+    
+        <!-- 筛选内容展示区域 -->
+        <transition name="slide-up">
+            <div :class="fitlerResult" v-if="filterResult.length">
+                <ul>
+                    <li v-for="(data,dataIndex) in filterResult" :key="data">
+                        <span :class="sortName">{{data.sortName}}：</span>
+                        <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
+                            <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
+                        </Tooltip>
+                    </li>
+                </ul>
+            </div>
+        </transition>
     </div>
 </template>
 <script>
@@ -126,8 +126,8 @@ export default {
             return `${prefixCls}-search`
         },
         filterBtn() {
-            return [`${prefixCls}-filterBtn`,{
-                 [`${prefixCls}-isSelected`]: this.status.isContainerShow
+            return [`${prefixCls}-filterBtn`, {
+                [`${prefixCls}-isSelected`]: this.status.isContainerShow
             }]
         },
         fitlerResult() {
@@ -250,12 +250,10 @@ export default {
                     return;
                 }
 
-                //初始化下拉项无值,手动调一次回调
+                //初始化调用回调
                 if (newv.data.singleModel && !this.status.isInitCompleted) {
-                    this.debounce(() => {
-                        this.uiModeltoBizModel();
-                        this.status.isInitCompleted = true;
-                    }, 800, "initFilterData")
+                    this.uiModeltoBizModel(this.getInitData(newv.data));
+                    this.status.isInitCompleted = true;
                 }
 
             }
@@ -296,7 +294,6 @@ export default {
 
             //搜索结果互斥时，清空筛选项
             if (this.searchData.opts.isResetFilter) {
-                this.status.isDoResetFilter = true;
                 this.emptyTag();
                 this.debounce(() => {
                     this.uiModeltoBizModel();
@@ -311,13 +308,23 @@ export default {
 
         /****************************筛选项相关*********************************/
 
-        uiModeltoBizModel() {
+        uiModeltoBizModel(initFilterData) {
 
 
             var filterRes = {};
             var searchRes = {
                 key: this.searchArea.selected.value,
                 value: this.searchArea.searchInput
+            };
+            var outPutFn = this.callback["selected"];
+
+            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
+                throw new Error("请传入有效的函数类型回调")
+            }
+
+            if (initFilterData) {
+                outPutFn(initFilterData, searchRes);
+                return;
             }
 
             this.filterResult.map(function (sortItem) {
@@ -331,12 +338,6 @@ export default {
                     }
                 })
             })
-
-            var outPutFn = this.callback["selected"];
-
-            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
-                throw new Error("请传入有效的函数类型回调")
-            }
 
             outPutFn(filterRes, searchRes);
         },
@@ -459,11 +460,11 @@ export default {
             //如果filterResult没有数据直接放入数据
             if (len === 0) {
                 this.filterResult.push(data);
-
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 800, "dataChange")
-
+                if (type == "fromBottom") {
+                    this.debounce(() => {
+                        this.uiModeltoBizModel();
+                    }, 800, "dataChange")
+                }
                 return;
             }
 
@@ -491,9 +492,11 @@ export default {
             })
 
             //修改和添加事件触发回调
-            this.debounce(() => {
-                this.uiModeltoBizModel();
-            }, 800, "dataChange")
+            if (type == "fromBottom") {
+                this.debounce(() => {
+                    this.uiModeltoBizModel();
+                }, 800, "dataChange")
+            }
 
         },
         onSingleChange(data, type) {
@@ -524,11 +527,11 @@ export default {
 
             if (len === 0) {
                 this.filterResult.push(data);
-
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 800, "dataChange")
-
+                if (type == "fromBottom") {
+                    this.debounce(() => {
+                        this.uiModeltoBizModel();
+                    }, 800, "dataChange")
+                }
                 return;
             }
 
@@ -545,10 +548,11 @@ export default {
             !isSortExist && data.label[0].value && _this.filterResult.push(data);
 
             //修改或添加事件触发回调
-            this.debounce(() => {
-                this.uiModeltoBizModel();
-            }, 800, "dataChange")
-
+            if (type == "fromBottom") {
+                this.debounce(() => {
+                    this.uiModeltoBizModel();
+                }, 800, "dataChange")
+            }
         },
         observeEvent() {
             //监听二级联动模块change事件
@@ -567,8 +571,27 @@ export default {
             }, timeout);
 
         },
+        //获取初始化传入数据默认值
+        getInitData(model) {
+
+            var initfilterResult = {};
+            var setFn = function (sortItem) {
+                if (sortItem.componentConfig.value.length) {
+                    initfilterResult[sortItem.sortValue] = sortItem.componentConfig.value;
+                }
+            };
+
+            model.singleModel.modelList.map(function (sortItem) { setFn(sortItem) })
+            model.multiModel.modelList.map(function (sortItem) { setFn(sortItem) })
+
+            model.unionModel.modelList.map(function (sortItemList) {
+                sortItemList.map(function (sortItem) { setFn(sortItem) })
+            })
+
+            return initfilterResult;
+        },
         //根据返回
-        init() {}
+        init() { }
     }
 };
 
