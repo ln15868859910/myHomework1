@@ -37,7 +37,7 @@ function getComponentConfig(model, remoteMethod, isRemote) {
                 if (data.multiple && data.value.length > 0) {
                     data.value.map(function (item, index) {
                         for (var i = 0, l = optionList.length; i < l; i++) {
-                            if (optionList[i].value == item.value) {
+                            if (optionList[i].value == item) {
                                 data.label.push(optionList[i].label);
                                 return;
                             }
