@@ -77,7 +77,6 @@ const spui = {
     consultFilterSingle:consultFilter.single,
     consultFilterMulti:consultFilter.multi,
     consultFilterUnion:consultFilter.union,
-    consultFilterSlot:consultFilter.slot,
 
     Col,
     iCol: Col,

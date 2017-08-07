@@ -19,7 +19,7 @@
                 <div :class="filterBtn" v-clickoutside="hidefilterContainer">
                     <Badge :count="filterResultAmount">
                         <div class="ivu-select-selection" @click="toggleContainer">
-                            <input type="text" value="筛选" class="ivu-select-input" disabled>
+                            <input type="text" value="筛选" class="ivu-select-input filterBtn" disabled>
                             <i class="ivu-icon ivu-icon-arrow-down ivu-select-arrow" style="display:block"></i>
                         </div>
                     </Badge>
