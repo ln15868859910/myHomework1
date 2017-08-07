@@ -235,10 +235,10 @@ const MultiFilterSlotComponent = {
             }
         },
         remoteMethod(query) {
-            query = query.trim();
-            if (query == "") {
+            if (query.trim() == "" && query.length > 0) {
                 return;
             }
+            query = query.trim();
             var _this = this;
             var req = {
                 "req": {
