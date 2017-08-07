@@ -1,12 +1,12 @@
 <style></style>
 <template>
-    <consult-Filter :searchData="searchData" :filterData="filterData">
-        <div style="float:left">
+    <consult-filter :search-data="searchData" :filter-data="filterData" :callback="callback">
+        <div style="float:left" slot="customLeft">
             <i-button type="primary" @click="addConsult()" style="margin-right:10px">新建咨询</i-button>
             <i-button type="ghost" @click="showUploadPop()" style="margin-right:10px">导入</i-button>
             <i-button type="ghost" @click="exportExcel()">导出</i-button>
         </div>
-    </consult-Filter>
+    </consult-filter>
 </template>
 <script>
 export default {
@@ -27,7 +27,7 @@ export default {
                 opts: {
                     "defaultSearchKey": "", //默认搜索类型（iview only：搜索类型必须在下拉项中）
                     "defaultSearchValue": "", //搜索默认值
-                    "isResetFilter": true //默认：false，搜索时结果是否与筛选项互斥
+                    "isResetFilter": false //默认：false，搜索时结果是否与筛选项互斥
                 },
                 callback: function (obj) {
                     console.log("我搜索了" + obj.key + "下的" + obj.value)
@@ -40,7 +40,45 @@ export default {
                 data: {
                     singleModel: {
                         class: "",//自定义样式名
-                        modelList: [],//异步返回
+                        modelList: [
+                            {
+                                "sortName": "录入时间",
+                                "sortValue": "Adddate",
+                                "parentSortValue": null,
+                                "sonSortValue": null,
+                                "componentType": "daterange",
+                                "componentConfig": {
+                                    "value": [],
+                                    "filterable": false,
+                                    "multiple": false,
+                                    "clearable": true,
+                                    "itemCount": 0,
+                                    "optionList": [
+                                        {
+                                            "label": "一周内",
+                                            "value": "2017-08-01,2017-08-07"
+                                        },
+                                        {
+                                            "label": "一个月内",
+                                            "value": "2017-07-09,2017-08-07"
+                                        },
+                                        {
+                                            "label": "三个月内",
+                                            "value": "2017-05-10,2017-08-07"
+                                        },
+                                        {
+                                            "label": "半年内",
+                                            "value": "2017-02-09,2017-08-07"
+                                        },
+                                        {
+                                            "label": "一年内",
+                                            "value": "2016-08-08,2017-08-07"
+                                        }
+                                    ]
+                                },
+                                "remoteUrl": null
+                            },
+                        ],//异步返回
                     },
                     unionModel: {
                         class: "",
@@ -350,7 +388,7 @@ export default {
             //筛选按钮选中回调
             callback: {
                 "selected": function (filterObj, searchObj) {
-                    console.log(JSON.stringify(me.searchParam), JSON.stringify(me.filterParam))
+                    console.log(JSON.stringify(filterObj), JSON.stringify(searchObj))
                 }
             },
 
