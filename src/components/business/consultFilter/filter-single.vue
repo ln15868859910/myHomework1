@@ -62,7 +62,9 @@ var maker = {
             type: "fromBottom",
             status: {
                 isInitComplete: false
-            }
+            },
+            debounceObj: {},
+            selectedValue: ""
         }
     },
     created() {
@@ -182,10 +184,19 @@ var maker = {
             }, 0)
         },
         remoteMethod(query) {
-            query = query.trim();
-            if (query == "") {
+            this.query=query;
+            //bugFix(临时)：单选选中选项后不再请求
+            if (this.isValueChange) {
+                this.isValueChange = !this.isValueChange;
                 return;
             }
+
+            //输入空格不做请求
+            if (/\s+/.test(query)) {
+                return;
+            }
+            query = query.trim();
+
             var me = this;
             var req = {
                 "req": {
@@ -195,32 +206,44 @@ var maker = {
                 }
             }
             me.model.componentConfig.loading = true;
-            Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
-                var data = res.data;
-                me.model.componentConfig.loading = false;
-                if (data && data.Status) {
-                    var tempList = [];
 
-                    data.Data.ComponentConfig.OptionList.map(function (item, index) {
-                        tempList.push({
-                            label: item.Label,
-                            value: item.Value,
-                            disabled: false
-                        })
-                    })
+            var ajax = () => {
+                Axios.post(this.model.remoteUrl.onSearch, req).then(function (res) {
+                    var data = res.data;
+                    me.model.componentConfig.loading = false;
+                    if (data && data.Status) {
+                        var tempList = [];
 
-                    //数据超过50条，添加自定义文案
-                    if (data.Data.ComponentConfig.ItemCount >= 50) {
-                        tempList.push({
-                            value: "abadon",
-                            label: "【更多选项请输入更多关键词】",
-                            disabled: true
+                        data.Data.ComponentConfig.OptionList.map(function (item, index) {
+                            tempList.push({
+                                label: item.Label,
+                                value: item.Value,
+                                disabled: false
+                            })
                         })
+
+                        //数据超过50条，添加自定义文案
+                        if (data.Data.ComponentConfig.ItemCount >= 50) {
+                            tempList.push({
+                                value: "abadon",
+                                label: "【更多选项请输入更多关键词】",
+                                disabled: true
+                            })
+                        }
+                        me.model.componentConfig.optionList = tempList;
                     }
-                    me.model.componentConfig.optionList = tempList;
-                }
 
-            })
+                })
+            }
+            this.debounce(ajax, 500, "remoteMethod")
+
+        },
+        debounce(func, timeout, type) {
+
+            this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
+            this.debounceObj[type] = setTimeout(() => {
+                func()
+            }, timeout)
         },
         initData() {
             var
@@ -298,6 +321,11 @@ var maker = {
                         "on-change": function (obj) {
 
                             var result = {};
+                            if (!me.selectedValue && !me.query) {
+                                me.isValueChange = true;
+                            }
+                            me.selectedValue = obj.value;
+                            //bugFix（临时）：解决iview单选组件选中后默认会去请求一次接口，现根据是否有选中值去调不同的方法
 
                             if (Object.prototype.toString.call(obj).toLowerCase() === "[object object]") {
                                 result = obj;
@@ -305,19 +333,19 @@ var maker = {
                                 me.model.componentConfig.value = [result.value];
                             }
                             //bugFix(临时)：针对obj有时只返回value值手动去找一遍它的value值
-                            else if (typeof obj === "string") {
-                                var
-                                    optsList = me.model.componentConfig.optionList;
-                                //保持当前model的value值与组件内部的value一致
-                                me.model.componentConfig.value = [obj];
-                                optsList.map(function (item, index) {
-                                    if (item.value == obj) {
-                                        result.label = item.label;
-                                        return;
-                                    }
-                                })
-                                result.value = obj;
-                            }
+                            // else if (typeof obj === "string") {
+                            //     var
+                            //         optsList = me.model.componentConfig.optionList;
+                            //     //保持当前model的value值与组件内部的value一致
+                            //     me.model.componentConfig.value = [obj];
+                            //     optsList.map(function (item, index) {
+                            //         if (item.value == obj) {
+                            //             result.label = item.label;
+                            //             return;
+                            //         }
+                            //     })
+                            //     result.value = obj;
+                            // }
 
                             Emiter.$emit("single-change", {
                                 sortName: me.model.sortName,

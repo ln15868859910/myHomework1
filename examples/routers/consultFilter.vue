@@ -78,6 +78,39 @@ export default {
                                 },
                                 "remoteUrl": null
                             },
+                            {
+                                "sortName": "意向度",
+                                "sortValue": "Interest",
+                                "parentSortValue": null,
+                                "sonSortValue": null,
+                                "componentType": "select",
+                                "componentConfig": {
+                                    "value": [],
+                                    "filterable": false,
+                                    "multiple": false,
+                                    "clearable": true,
+                                    "itemCount": 0,
+                                    "optionList": [
+                                        {
+                                            "label": "高",
+                                            "value": "高"
+                                        },
+                                        {
+                                            "label": "中",
+                                            "value": "中"
+                                        },
+                                        {
+                                            "Label": "低",
+                                            "Value": "低"
+                                        },
+                                        {
+                                            "Label": "？",
+                                            "Value": "？"
+                                        }
+                                    ]
+                                },
+                                "RemoteUrl": null
+                            },
                         ],//异步返回
                     },
                     unionModel: {
