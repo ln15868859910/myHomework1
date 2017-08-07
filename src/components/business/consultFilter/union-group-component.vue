@@ -259,11 +259,13 @@ const UnionComponentSlot = {
             this.onParentEmpty();
             if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
                 this.model.componentConfig.disabled = true;
+                this.model.componentConfig.filterable = false;
                 Emiter.$emit(this.model.sortValue + "-union-empty");
                 return;
             }
             else {
                 this.model.componentConfig.disabled = false;
+                this.model.componentConfig.filterable = true;
             }
 
             if (params.onChangeUrl && Object.prototype.toString.call(params.onChangeUrl) == "[object String]") {
@@ -366,8 +368,10 @@ const UnionComponentSlot = {
         onDisableSon: function (sonModel) {
             if (this.model.componentConfig.value.length == 0) {
                 sonModel.componentConfig.disabled = true;
+                sonModel.componentConfig.filterable = false;
             }
             else {
+                sonModel.componentConfig.filterable = true;
             }
         },
         onParentEmpty: function () {
