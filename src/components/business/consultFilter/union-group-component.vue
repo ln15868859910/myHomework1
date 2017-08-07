@@ -111,6 +111,9 @@ const UnionComponentSlot = {
                     on: {
                         "on-change": function (value) {
                             if (_this.model.componentConfig.multiple) {
+                                if (value.length == 0) {
+                                    _this.remoteMethod("");
+                                }
                                 value.map(function (item) {
                                     if (Object.prototype.toString.call(item.label).toLowerCase() == "[object undefined]") {
                                         for (var i = 0, l = _this.selectValue.length; i < l; i++) {
@@ -123,6 +126,9 @@ const UnionComponentSlot = {
                                 })
                             }
                             else {
+                                if (!value.value && !value.label) {
+                                    _this.remoteMethod("");
+                                }
                                 //单选组有时会触发一次value不为空，label值为空的异常事件，临时解决
                                 if ((!value.value && value.label) || (value.value && !value.label)) {
                                     return;
@@ -431,10 +437,10 @@ const UnionComponentSlot = {
             }
         },
         remoteMethod(query) {
-            query = query.trim();
-            if (query == "") {
+            if (query.trim() == "" && query.length > 0) {
                 return;
             }
+            query = query.trim();
             var _this = this;
             var req = {
                 "req": {
