@@ -181,7 +181,7 @@ const MultiFilterSlotComponent = {
                 sortName: this.model.sortName,
                 value: []
             }
-            if (model.multiple && model.value.length > 0) {
+            if (model.value.length > 0) {
                 var i = 0;
                 model.optionList.map(function (item) {
                     if (item.value == model.value[i]) {
@@ -194,20 +194,10 @@ const MultiFilterSlotComponent = {
             if (!hasInitValue) {
                 return;
             }
-            if (!this.model.sonSortValue) {
-                Emiter.$emit("union-change-slot", data);
-            }
-            else {
-                Emiter.$emit(this.model.sortValue + "union-change", {
-                    callback: this.model.callback["on-change"],
-                    selectModel: {
-                        sortValue: this.model.sortValue,
-                        value: data.value
-                    }
-                }, me.type);
-                this.type = "fromBottom"
 
-            }
+            Emiter.$emit("union-change-slot", data, me.type);
+            this.type = "fromBottom";
+
         },
         onFilterChange(value, label, type) {
 
