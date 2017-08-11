@@ -1,5 +1,5 @@
 <template>
-    <div :class="unionItemWrap">
+    <div :class="unionItemWrap" :style="{display:model.modelList.length?'block':'none'}">
         <union-group-component :model="item" v-for="(item,index) in model.modelList" :key="index"></union-group-component>
     
     </div>

@@ -1,5 +1,5 @@
 <template>
-    <div :class="singleItemWrap">
+    <div :class="singleItemWrap" :style="{display:model.modelList.length?'block':'none'}">
         <div :class="singleItem" v-for="(model,index) in model.modelList" :key="index" :model="model" :is="currentView"></div>
     </div>
 </template>
