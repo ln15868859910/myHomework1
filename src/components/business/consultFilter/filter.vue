@@ -459,6 +459,10 @@ export default {
 
             //如果filterResult没有数据直接放入数据
             if (len === 0) {
+                //给多选和单选添加tooltip属性
+                data.label.map(function (item, index) {
+                    item.isAvoidToolTip = true;
+                });
                 this.filterResult.push(data);
                 if (type == "fromBottom") {
                     this.debounce(() => {

@@ -100,12 +100,12 @@ export default {
                                             "value": "中"
                                         },
                                         {
-                                            "Label": "低",
-                                            "Value": "低"
+                                            "label": "低",
+                                            "value": "低"
                                         },
                                         {
-                                            "Label": "？",
-                                            "Value": "？"
+                                            "label": "？",
+                                            "value": "？"
                                         }
                                     ]
                                 },
@@ -142,24 +142,7 @@ export default {
                                             }
                                         ]
                                     },
-                                    callback: {
-                                        "on-change": function (selectModel, modifyModel) {
-                                            modifyModel.componentConfig.value = [];
-                                            modifyModel.componentConfig.optionList = [];
-                                            modifyModel.componentConfig.optionList.push({
-                                                label: "hhh",
-                                                value: "11"
-                                            });
-                                            modifyModel.componentConfig.optionList.push({
-                                                label: "aaa",
-                                                value: "22"
-                                            });
-                                            modifyModel.componentConfig.optionList.push({
-                                                label: "ss",
-                                                value: "33"
-                                            });
-                                        }
-                                    }
+                                    "RemoteUrl": null
 
                                 },
                                 {
@@ -185,7 +168,8 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 }
                             ],
                             [
@@ -196,7 +180,7 @@ export default {
                                     sonSortValue: "group2_b",
                                     componentType: "select",
                                     componentConfig: {
-                                        value: "beijing1",
+                                        value: ["beijing1"],
                                         multiple: false,
                                         disabled: false,
                                         filterable: true,
@@ -212,7 +196,8 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 },
                                 {
                                     sortName: "多选",
@@ -237,7 +222,8 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 },
                                 {
                                     sortName: "多选",
@@ -262,8 +248,10 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 }
+
                             ],
                             [
                                 {
@@ -291,25 +279,7 @@ export default {
                                             }
                                         ]
                                     },
-                                    callback: {
-                                        "on-change": function (selectModel, modifyModel) {
-                                            modifyModel.componentConfig.value = [];
-                                            modifyModel.componentConfig.optionList = [];
-                                            modifyModel.componentConfig.optionList.push({
-                                                label: "hhh",
-                                                value: "11"
-                                            });
-                                            modifyModel.componentConfig.optionList.push({
-                                                label: "aaa",
-                                                value: "22"
-                                            });
-                                            modifyModel.componentConfig.optionList.push({
-                                                label: "ss",
-                                                value: "33"
-                                            });
-                                        }
-                                    }
-
+                                    "RemoteUrl": null
                                 },
                                 {
                                     sortName: "跟进",
@@ -334,7 +304,8 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 },
                                 {
                                     sortName: "跟进",
@@ -359,7 +330,8 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 },
                                 {
                                     sortName: "跟进",
@@ -384,8 +356,10 @@ export default {
                                                 label: "杭州1"
                                             }
                                         ]
-                                    }
+                                    },
+                                    "RemoteUrl": null
                                 }
+
                             ]
 
                         ]
@@ -412,8 +386,10 @@ export default {
                                             label: "杭州1"
                                         }
                                     ]
-                                }
+                                },
+                                "RemoteUrl": null
                             }
+
                         ]
                     },
                 }
