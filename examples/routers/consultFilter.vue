@@ -48,7 +48,7 @@ export default {
                                 "sonSortValue": null,
                                 "componentType": "daterange",
                                 "componentConfig": {
-                                    "value": [],
+                                    "value": ["2017-08-01","2017-08-07"],
                                     "filterable": false,
                                     "multiple": false,
                                     "clearable": true,
@@ -85,7 +85,7 @@ export default {
                                 "sonSortValue": null,
                                 "componentType": "select",
                                 "componentConfig": {
-                                    "value": [],
+                                    "value": ["高"],
                                     "filterable": false,
                                     "multiple": false,
                                     "clearable": true,
@@ -118,7 +118,7 @@ export default {
                         modelList: [
                             [
                                 {
-                                    sortName: "录入时间",
+                                    sortName: "省份",
                                     sortValue: "group1_a",
                                     parentSortValue: "",
                                     sonSortValue: "group1_b",
@@ -128,17 +128,15 @@ export default {
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "录入时间",
                                         clearable: true,
-                                        label: "hhz",
                                         optionList: [
                                             {
-                                                value: "beijing",
-                                                label: "北京"
+                                                value: "nj",
+                                                label: "南京"
                                             },
                                             {
-                                                value: "hangzhou",
-                                                label: "杭州"
+                                                value: "zj",
+                                                label: "浙江"
                                             }
                                         ]
                                     },
@@ -146,7 +144,7 @@ export default {
 
                                 },
                                 {
-                                    sortName: "跟进",
+                                    sortName: "城市",
                                     sortValue: "group1_b",
                                     parentSortValue: "group1_a",
                                     sonSortValue: "",
@@ -156,18 +154,8 @@ export default {
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
-                                        optionList: [
-                                            {
-                                                value: "beijing1",
-                                                label: "北京1"
-                                            },
-                                            {
-                                                value: "hangzhou1",
-                                                label: "杭州1"
-                                            }
-                                        ]
+                                        optionList: []
                                     },
                                     "RemoteUrl": null
                                 }
@@ -184,7 +172,6 @@ export default {
                                         multiple: false,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
                                         optionList: [
                                             {
@@ -206,22 +193,12 @@ export default {
                                     sonSortValue: "group2_c",
                                     componentType: "select",
                                     componentConfig: {
-                                        value: ["beijing1"],
+                                        value: [],
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
-                                        optionList: [
-                                            {
-                                                value: "beijing1",
-                                                label: "北京1"
-                                            },
-                                            {
-                                                value: "hangzhou1",
-                                                label: "杭州1"
-                                            }
-                                        ]
+                                        optionList: []
                                     },
                                     "RemoteUrl": null
                                 },
@@ -232,22 +209,12 @@ export default {
                                     sonSortValue: "group2_a",
                                     componentType: "select",
                                     componentConfig: {
-                                        value: ["beijing1"],
+                                        value: [],
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
-                                        optionList: [
-                                            {
-                                                value: "beijing1",
-                                                label: "北京1"
-                                            },
-                                            {
-                                                value: "hangzhou1",
-                                                label: "杭州1"
-                                            }
-                                        ]
+                                        optionList: []
                                     },
                                     "RemoteUrl": null
                                 }
@@ -265,9 +232,7 @@ export default {
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "录入时间",
                                         clearable: true,
-                                        label: "hhz",
                                         optionList: [
                                             {
                                                 value: "beijing",
@@ -292,18 +257,8 @@ export default {
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
-                                        optionList: [
-                                            {
-                                                value: "beijing1",
-                                                label: "北京1"
-                                            },
-                                            {
-                                                value: "hangzhou1",
-                                                label: "杭州1"
-                                            }
-                                        ]
+                                        optionList: []
                                     },
                                     "RemoteUrl": null
                                 },
@@ -318,18 +273,8 @@ export default {
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
-                                        optionList: [
-                                            {
-                                                value: "beijing1",
-                                                label: "北京1"
-                                            },
-                                            {
-                                                value: "hangzhou1",
-                                                label: "杭州1"
-                                            }
-                                        ]
+                                        optionList: []
                                     },
                                     "RemoteUrl": null
                                 },
@@ -344,18 +289,8 @@ export default {
                                         multiple: true,
                                         disabled: false,
                                         filterable: true,
-                                        placeholder: "跟进",
                                         clearable: true,
-                                        optionList: [
-                                            {
-                                                value: "beijing1",
-                                                label: "北京1"
-                                            },
-                                            {
-                                                value: "hangzhou1",
-                                                label: "杭州1"
-                                            }
-                                        ]
+                                        optionList: []
                                     },
                                     "RemoteUrl": null
                                 }
@@ -375,7 +310,6 @@ export default {
                                     value: ["beijing1", "hangzhou1"],
                                     multiple: true,
                                     filterable: true,
-                                    placeholder: "城市",
                                     optionList: [
                                         {
                                             value: "beijing1",
