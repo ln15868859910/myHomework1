@@ -111,7 +111,7 @@ const UnionComponentSlot = {
                     on: {
                         "on-change": function (value) {
                             if (_this.model.componentConfig.multiple) {
-                                if (value.length == 0) {
+                                if (value.length == 0 && _this.isRemote) {
                                     _this.remoteMethod("");
                                 }
                                 value.map(function (item) {
@@ -126,7 +126,7 @@ const UnionComponentSlot = {
                                 })
                             }
                             else {
-                                if (!value.value && !value.label) {
+                                if (!value.value && !value.label && _this.isRemote) {
                                     _this.remoteMethod("");
                                 }
                                 //单选组有时会触发一次value不为空，label值为空的异常事件，临时解决
@@ -289,6 +289,7 @@ const UnionComponentSlot = {
                 }
                 this.debounce(function (scope) {
                     var _this = scope;
+                    _this.model.componentConfig.loading = true;
                     Axios.post(params.onChangeUrl, req).then(function (res) {
                         var data = res.data;
                         if (data && data.Status) {
