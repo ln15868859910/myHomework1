@@ -9,7 +9,7 @@
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
                 <div :class="search" v-if="searchData && status.isInitCompleted">
-                    <Select :value="searchArea.selected.value" @on-change="setSearchItem" label-in-value style="width:100px">
+                    <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
                         <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                     </Select>
                     <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
@@ -147,10 +147,35 @@ export default {
         flortRight() {
             return `${prefixCls}-flortRight`
         },
-        // searchSelectInitVal() {
+        searchSelectInitVal() {
 
+            if (this.searchData.data.length) {
 
-        // },
+                var defaultSearchKey = this.searchData.opts.defaultSearchKey,
+                    defaultSearchText;
+
+                if (defaultSearchKey) {
+                    //找到searchKey对应的文案
+                    this.searchData.data.map(function (item, index) {
+                        if (item.value == defaultSearchKey) {
+                            defaultSearchText = item.text;
+                        }
+                    })
+                    this.searchArea.selected = {
+                        "text": defaultSearchText,
+                        "value": defaultSearchKey
+                    }
+                    return defaultSearchKey;
+
+                } else {
+                    this.searchArea.selected = {
+                        "text": this.searchData.data[0].text,
+                        "value": this.searchData.data[0].value
+                    }
+                    return this.searchData.data[0].value;
+                }
+            }
+        },
 
         singleModel() {
 
@@ -240,33 +265,9 @@ export default {
                 if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
                     console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
                 }
-                //给搜索框赋值
-                this.searchArea.searchInput = newv.opts.defaultSearchValue
+                this.searchArea.selected.value = newv.opts.defaultSearchKey;
+                this.searchArea.searchInput = newv.opts.defaultSearchValue;
 
-                if (this.searchData.data.length) {
-
-                    var defaultSearchKey = this.searchData.opts.defaultSearchKey,
-                        defaultSearchText;
-
-                    if (defaultSearchKey) {
-                        //找到searchKey对应的文案
-                        this.searchData.data.map(function (item, index) {
-                            if (item.value == defaultSearchKey) {
-                                defaultSearchText = item.text;
-                            }
-                        })
-                        this.searchArea.selected = {
-                            "text": defaultSearchText,
-                            "value": defaultSearchKey
-                        }
-
-                    } else {
-                        this.searchArea.selected = {
-                            "text": this.searchData.data[0].text,
-                            "value": this.searchData.data[0].value
-                        }
-                    }
-                }
             }
         }
 
