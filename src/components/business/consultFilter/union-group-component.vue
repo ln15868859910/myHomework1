@@ -90,7 +90,8 @@ const UnionComponentSlot = {
             debounceObj: {
 
             },
-            isRemote: false
+            isRemote: false,
+            isParentChange: false
         }
     },
     watch: {
@@ -273,7 +274,10 @@ const UnionComponentSlot = {
                 this.model.componentConfig.disabled = false;
                 this.model.componentConfig.filterable = true;
             }
-
+            if (params.selectModel.value.length == 0) {
+                return;
+            }
+            this.isParentChange=true;
             if (params.onChangeUrl && Object.prototype.toString.call(params.onChangeUrl) == "[object String]") {
                 var parentValue = [];
                 params.selectModel.value.map(function (item) {
@@ -329,6 +333,7 @@ const UnionComponentSlot = {
                         if (_this.isRemote) {
                             _this.model.componentConfig.loading = false;
                         }
+                        _this.isParentChange=false;
                     })
                 }, "onchange")
 
@@ -438,11 +443,18 @@ const UnionComponentSlot = {
             }
         },
         remoteMethod(query) {
+            //父层修改时，不执行该方法
+            if(this.isParentChange){
+                return;
+            }
             if (query.trim() == "" && query.length > 0) {
                 return;
             }
             query = query.trim();
             var _this = this;
+            if (this.parentSelectValue.length == 0) {
+                return;
+            }
             var req = {
                 "req": {
                     "Filter": {
