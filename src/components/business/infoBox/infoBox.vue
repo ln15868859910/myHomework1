@@ -111,7 +111,6 @@ export default {
     methods: {
         setDataItem(data) {
             let _this = this;
-            let outPutFn = this.callback["infoBoxData"];
             let obj = {};
             if (data.type == 1) {
                 obj = {
@@ -130,10 +129,10 @@ export default {
                 setTimeout(function () {
                     let dateDate = data.default;
                     data.default = obj.value = dateDate.getFullYear() + "-" + (dateDate.getMonth() + 1) + "-" + dateDate.getDate();
-                    outPutFn(obj);
+                    this.$emit("arrCallBack", obj);
                 }, 0);
             } else {
-                outPutFn(obj);
+                this.$emit("arrCallBack", obj);
             }
             setTimeout(function () {
                 _this.toDataModel();
@@ -145,7 +144,6 @@ export default {
             this.toDataModel();
         },
         toDataModel() {
-            let outPutFn = this.callback["infoBoxDataList"];
             let list = this.infoData.dataList;
             let arr = [];
             for (let i = 0; i < list.length; i++) {
@@ -165,7 +163,7 @@ export default {
                 }
                 arr.push(obj);
             }
-            outPutFn(arr);
+            this.$emit("dataCallBack", arr);
         },
         getDataLabel(obj, data) {
             for (let i = 0; i < data.list.length; i++) {

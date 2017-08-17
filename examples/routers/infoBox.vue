@@ -1,6 +1,6 @@
 <style></style>
 <template>
-    <info-Box :info-data="infoData" :callback="callback">
+    <info-Box :info-data="infoData" @dataCallBack="callback11" @arrCallBack="callback22">
     </info-Box>
 </template>
 <script>
@@ -276,22 +276,19 @@ export default {
                         value: "jiebo"
                     }
                 ],
-            },
-            callback: {
-                "infoBoxData": function (obj) {
-                    console.log(obj)
-                },
-                "infoBoxDataList": function (obj) {
-                    console.log(obj)
-                }
             }
-
         };
     },
     computed: {},
     mounted() { },
     methods: {
+        callback11(obj) {
+            console.log(obj)
 
+        },
+        callback22(obj) {
+            console.log(obj)
+        }
     }
 
 
