@@ -56,7 +56,8 @@ export default {
     data() {
         return {
             search: false,
-            debounceObj: {}
+            debounceObj: {},
+            oldIndex: ""
         };
     },
     computed: {
@@ -175,11 +176,13 @@ export default {
             }
         },
         remoteMethod(query) {
-            console.log(query);
+            let index;
             if (!event) {
-                return;
+                index = this.oldIndex;
+            } else {
+                index = event.target.parentElement.parentElement.getAttribute("index");
+                this.oldIndex = index;
             }
-            let index = event.target.parentElement.parentElement.getAttribute("index");
             if (!index) {
                 return;
             }
@@ -189,44 +192,25 @@ export default {
             query = query.trim();
             var _this = this;
             let param = {
-                Search: query
+                param: {
+                    Search: query,
+                    PageArgument: {
+                        PageIndex: 1,
+                        PageSize: 50
+                    }
+                }
             };
             console.log(param);
 
             this.debounce(function () {
                 _this.search = true;
                 let url = _this.infoData.dataList[index].url;
-                Axios.post(url, JSON.stringify(param)).then(function (res) {
-                    var data = res.data;
-                    data.Data = {
-                        itemType: "sman",
-                        List: [
-                            {
-                                value: -1,
-                                label: '1全部员工',
-                                phone: '158*****1234'
-                            },
-                            {
-                                value: 123,
-                                label: '2高富帅',
-                                phone: '158*****1234'
-                            },
-                            {
-                                value: 234,
-                                label: '3事实上',
-                                phone: '158*****1234'
-                            },
-                            {
-                                value: 444,
-                                label: '4去去去',
-                                phone: ''
-                            }
-                        ],
-                    }
-                    if (data && data.Status) {
-                        //优化：修改遍历时同时进行插入操作的bug by tianyu.chen
+                Axios.post(url, param).then(function (res) {
+                    console.log(res);
+                    var data = res;
+                    if (data && data.status) {
                         var tempList = [];
-                        if (!data.Data.List.length) {
+                        if (!res.data.Data.List.length) {
                             tempList.push({
                                 value: "emptyData",
                                 label: "暂无数据",
@@ -234,17 +218,17 @@ export default {
                             })
                         }
                         else {
-                            data.Data.List.map(function (item, index) {
+                            res.data.Data.List.map(function (item, index) {
                                 tempList.push({
-                                    label: item.label,
-                                    value: item.value,
-                                    phone: item.phone,
+                                    label: item.Name,
+                                    value: item.Id,
+                                    phone: item.Phone,
                                     disabled: false
                                 })
                             })
 
                             //数据超过50条，添加自定义文案
-                            if (data.Data.List.length >= 50) {
+                            if (res.data.Data.List.length >= 50) {
                                 tempList.push({
                                     value: "abadon",
                                     label: "【更多选项请输入更多关键词】",
@@ -254,108 +238,6 @@ export default {
                         }
                         _this.infoData.dataList[index].list = tempList;
                     }
-                    _this.search = false;
-                }).catch(function (err) {
-
-                    var Data = {
-                        itemType: "sman",
-                        List: [
-                            [
-                                {
-                                    value: -1,
-                                    label: ' qwe  s',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 123,
-                                    label: '好好睡',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 234,
-                                    label: '天赋',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 444,
-                                    label: '水电气热',
-                                    phone: ''
-                                }
-                            ],
-                            [
-                                {
-                                    value: -1,
-                                    label: '1全部员工',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 123,
-                                    label: '2高富帅',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 234,
-                                    label: '3事实上',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 444,
-                                    label: '4去去去',
-                                    phone: ''
-                                }
-                            ],
-                            [
-                                {
-                                    value: -1,
-                                    label: ' qwe  s',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 123,
-                                    label: '好好睡',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 234,
-                                    label: '天赋',
-                                    phone: '158*****1234'
-                                },
-                                {
-                                    value: 444,
-                                    label: '水电气热',
-                                    phone: ''
-                                }
-                            ]
-                        ],
-                    }
-                    var tempList = [];
-                    if (!Data.List.length) {
-                        tempList.push({
-                            value: "emptyData",
-                            label: "暂无数据",
-                            disabled: true
-                        })
-                    }
-                    else {
-                        Data.List[index].map(function (item, index) {
-                            tempList.push({
-                                label: item.label,
-                                value: item.value,
-                                phone: item.phone,
-                                disabled: false
-                            })
-                        })
-
-                        //数据超过50条，添加自定义文案
-                        if (Data.List.length >= 3) {
-                            tempList.push({
-                                value: "abadon",
-                                label: "【更多选项请输入更多关键词】",
-                                disabled: true
-                            })
-                        }
-                    }
-                    _this.infoData.dataList[index].list = tempList;
                     _this.search = false;
                 })
             }, 500, "onSearch")
