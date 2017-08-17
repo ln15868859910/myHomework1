@@ -188,15 +188,15 @@ export default {
             }
             query = query.trim();
             var _this = this;
-            let req = {
-                "label": query
+            let param = {
+                Search: query
             };
-            console.log(req);
+            console.log(param);
 
             this.debounce(function () {
                 _this.search = true;
                 let url = _this.infoData.dataList[index].url;
-                Axios.post(url, req).then(function (res) {
+                Axios.post(url, JSON.stringify(param)).then(function (res) {
                     var data = res.data;
                     data.Data = {
                         itemType: "sman",
