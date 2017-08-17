@@ -22,44 +22,38 @@ export default {
                         list: [//数据数组
                             {
                                 value: 'all',
-                                name: '全部校区',
-                                type: "schoolid"
+                                label: '全部校区'
                             },
                             {
                                 value: 'beijing',
-                                name: '北海校区',
-                                type: "schoolid"
+                                label: '北海校区'
                             },
                             {
                                 value: 'shanghai',
-                                name: '上海市校区',
-                                type: "schoolid"
+                                label: '上海市校区'
                             },
                             {
                                 value: 'shenzhen',
-                                name: '深圳市校区',
-                                type: "schoolid"
+                                label: '深圳市校区'
                             },
                             {
                                 value: 'hangzhou',
-                                name: '杭州市校区',
-                                type: "schoolid"
+                                label: '杭州市校区'
                             },
                             {
                                 value: 'nanjing',
-                                name: '南京市校区',
-                                type: "schoolid"
+                                label: '南京市校区'
                             },
                             {
                                 value: 'chongqing',
-                                name: '重庆市校区重庆市校区重庆市校区重庆市校区重庆市校区',
-                                type: "schoolid"
+                                label: '重庆市校区重庆市校区重庆市校区重庆市校区重庆市校区'
                             }
                         ]
                     },
                     {
                         type: 1,//type,决定组件的样式，type：1 select类型；type：2 datepicker类型； tyoe：3 input类型
-                        itemType: "salesman",
+                        itemType: "sman",
+                        url: "http",
                         title: "销售员",//选项标题
                         isShowPhone: true,//开启后可以显示 phone数据
                         isDisabled: false,//是否不能改变
@@ -68,38 +62,137 @@ export default {
                         list: [//数据数组
                             {
                                 value: -1,
-                                name: '全部员工',
+                                label: '全部员工',
                                 phone: '158*****1234'
                             },
                             {
                                 value: 123,
-                                name: '高富帅',
+                                label: '高富帅',
                                 phone: '158*****1234'
                             },
                             {
                                 value: 234,
-                                name: '事实上',
+                                label: '事实上',
                                 phone: '158*****1234'
                             },
                             {
                                 value: 444,
-                                name: '去去去',
+                                label: '去去去',
                                 phone: ''
                             },
                             {
                                 value: 222,
-                                name: '嗯嗯嗯',
+                                label: '嗯嗯嗯',
                                 phone: '158*****1234'
                             },
                             {
                                 value: 221,
-                                name: '去去去人',
+                                label: '去去去人',
                                 phone: '158*****1234'
                             },
                             {
                                 value: 66,
-                                name: '爱上对方过后就哭了',
+                                label: '爱上对方过后就哭了',
                                 phone: '158*****1234'
+                            },
+                            {
+                                value: 66,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 663,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 662,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 661,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: -2,
+                                label: '更多销售员信息请搜索',
+                                phone: '',
+                                disabled: true
+                            }
+                        ]
+                    },
+                    {
+                        type: 1,//type,决定组件的样式，type：1 select类型；type：2 datepicker类型； tyoe：3 input类型
+                        itemType: "sman1",
+                        url: "http",
+                        title: "采购员",//选项标题
+                        isShowPhone: true,//开启后可以显示 phone数据
+                        isDisabled: false,//是否不能改变
+                        isSearch: true,//是否开启搜索
+                        default: "",//默认值
+                        list: [//数据数组
+                            {
+                                value: -1,
+                                label: '全部员工',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 123,
+                                label: '高富帅',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 234,
+                                label: '事实上',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 444,
+                                label: '去去去',
+                                phone: ''
+                            },
+                            {
+                                value: 222,
+                                label: '嗯嗯嗯',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 221,
+                                label: '去去去人',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 66,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 66,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 663,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 662,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: 661,
+                                label: '爱上对方过后就哭了',
+                                phone: '158*****1234'
+                            },
+                            {
+                                value: -2,
+                                label: '更多销售员信息请搜索',
+                                phone: '',
+                                disabled: true
                             }
                         ]
                     },
@@ -113,11 +206,11 @@ export default {
                         list: [//数据数组
                             {
                                 value: -1,
-                                name: '全部员工'
+                                label: '全部员工'
                             },
                             {
                                 value: 123,
-                                name: '高富帅'
+                                label: '高富帅'
                             }
                         ]
                     },
