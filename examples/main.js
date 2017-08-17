@@ -9,15 +9,16 @@ import Spui from '../src/index';
 import locale from '../src/locale/lang/zh-CN';
 
 Vue.use(VueRouter);
-Vue.use(Spui, { locale });
+Vue.use(Spui, {
+    locale
+});
 
 // 开启debug模式
 Vue.config.debug = true;
 
 // 路由配置
 const router = new VueRouter({
-    routes: [
-        {
+    routes: [{
             path: '/affix',
             component: require('./routers/affix.vue')
         },
@@ -184,6 +185,10 @@ const router = new VueRouter({
         {
             path: '/consultFilter',
             component: require('./routers/consultFilter.vue')
+        },
+        {
+            path: '/infoBox',
+            component: require('./routers/infoBox.vue')
         }
     ]
 });

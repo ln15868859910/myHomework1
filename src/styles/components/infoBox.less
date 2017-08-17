@@ -1,0 +1,71 @@
+// 经办信息组件 样式 by lh 2017-8-15 14:24:03
+@infoBox-prefix-cls: ~"@{css-prefix-spui-business}infoBox";
+
+.@{infoBox-prefix-cls} {
+    min-width:1186px;
+    background:#fff;
+    border:1px #d4dfe5 solid;
+
+    &-boxTitle{
+        height: 33px;
+        line-height: 33px;
+        text-align: center;
+        font-size: 14px;
+        color: #fff;
+        border-bottom: none;
+        background: #354A63;
+    }
+    &-content{
+        padding: 20px 0;
+        margin-bottom: 20px;
+    }
+    &-ul{
+        padding: 0;
+        margin: 0;
+        text-align: left;
+        display: block;
+        list-style-type: disc;
+
+    }
+    &-li{
+        min-width: 278px;
+        margin-bottom: 0;
+        padding: 10px 0;
+        min-height: 30px;
+        line-height: 30px;
+        box-sizing: border-box;
+        display: inline-block;
+    }           
+    &-label{
+        display: inline-block;
+        margin-right: 16px;
+        width: 90px;
+        text-align: right;
+        color: #30404f;
+    }
+    &-select{
+        width:160px;
+    }
+    &-selectMan{
+        width:160px;
+        .ivu-select-dropdown {
+            width: 240px !important;
+            margin-left: 80px;
+        }
+    }
+    &-spanName{
+        width:80px;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-right:20px; 
+    }
+    &-spanPhone{
+        display: inline-block;
+        vertical-align: middle;
+        white-space: nowrap;
+    }          
+    
+    
+}

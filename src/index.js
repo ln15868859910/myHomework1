@@ -42,11 +42,19 @@ import Tooltip from './components/tooltip';
 // import Transfer from './components/transfer';
 import Tree from './components/tree';
 import Upload from './components/upload';
-import { Row, Col } from './components/grid';
-import { Select, Option, OptionGroup } from './components/select';
+import {
+    Row,
+    Col
+} from './components/grid';
+import {
+    Select,
+    Option,
+    OptionGroup
+} from './components/select';
 import locale from './locale';
 //业务组件
 import consultFilter from './components/business/consultFilter';
+import infoBox from './components/business/infoBox';
 
 const spui = {
     Affix,
@@ -74,9 +82,12 @@ const spui = {
     FormItem: Form.Item,
     //新筛选组件
     consultFilter: consultFilter,
-    consultFilterSingle:consultFilter.single,
-    consultFilterMulti:consultFilter.multi,
-    consultFilterUnion:consultFilter.union,
+    consultFilterSingle: consultFilter.single,
+    consultFilterMulti: consultFilter.multi,
+    consultFilterUnion: consultFilter.union,
+
+    //经办信息组件
+    infoBox: infoBox,
 
     Col,
     iCol: Col,
@@ -147,4 +158,6 @@ if (typeof window !== 'undefined' && window.Vue) {
     install(window.Vue);
 }
 
-module.exports = Object.assign(spui, {install});   // eslint-disable-line no-undef
+module.exports = Object.assign(spui, {
+    install
+}); // eslint-disable-line no-undef
