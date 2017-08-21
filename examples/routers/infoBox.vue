@@ -1,6 +1,6 @@
 <style></style>
 <template>
-    <info-Box :info-data="infoData" @dataCallBack="callback11" @arrCallBack="callback22">
+    <info-Box :info-data="infoData" @datacallback="callback11" @arrcallback="callback22">
     </info-Box>
 </template>
 <script>
@@ -274,6 +274,27 @@ export default {
                         isDisabled: true,//是否不能改变，灰底
                         default: 6889,//默认值 id
                         value: "jiebo"
+                    },
+                    {
+                        type: 5,//type,决定组件的样式，type：1 select类型；type：2 datepicker类型； tyoe：3 input类型
+                        itemType: "二级联动",
+                        title: "采购员",//选项标题
+                        isDisabled: false,//是否不能改变，灰底
+                        default: "",//默认值 id
+                        list: [
+                            {
+                                value: 'beijing',
+                                label: '北京',
+                                children: [],
+                                loading: false
+                            },
+                            {
+                                value: 'hangzhou',
+                                label: '杭州',
+                                children: [],
+                                loading: false
+                            }
+                        ]
                     }
                 ],
             }

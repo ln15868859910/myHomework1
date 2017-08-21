@@ -28,9 +28,13 @@
                         <label :class="label">{{data.title}}</label>
                         <Input v-model="data.default" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
                     </div>
-                    <div v-else>
+                    <div v-else-if="data.type==4">
                         <label :class="label">{{data.title}}</label>
                         <Input v-model="data.value" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
+                    </div>
+                    <div v-else>
+                        <label :class="label">{{data.title}}</label>
+                        <Cascader :data="data.list" :load-data="loadData" filterable @on-change="setDataItem(data)"></Cascader>
                     </div>
                 </li>
             </ul>
@@ -116,6 +120,7 @@ export default {
     },
     methods: {
         setDataItem(data) {
+            console.log(data);
             let _this = this;
             let obj = {};
             if (data.type == 1) {
@@ -135,10 +140,10 @@ export default {
                 setTimeout(function () {
                     let dateDate = data.default;
                     data.default = obj.value = dateDate.getFullYear() + "-" + (dateDate.getMonth() + 1) + "-" + dateDate.getDate();
-                    this.$emit("arrCallBack", obj);
+                    this.$emit("arrcallback", obj);
                 }, 0);
             } else {
-                this.$emit("arrCallBack", obj);
+                this.$emit("arrcallback", obj);
             }
             setTimeout(function () {
                 _this.toDataModel();
@@ -168,7 +173,7 @@ export default {
                 }
                 arr.push(obj);
             }
-            this.$emit("dataCallBack", arr);
+            this.$emit("datacallback", arr);
         },
         getDataLabel(obj, data) {
             for (let i = 0; i < data.list.length; i++) {
@@ -250,6 +255,40 @@ export default {
                 func()
             }, timeout);
 
+        },
+        loadData(item, callback) {
+            item.loading = true;
+            setTimeout(() => {
+                if (item.value === 'beijing') {
+                    item.children = [
+                        {
+                            value: 'talkingdata',
+                            label: 'TalkingData'
+                        },
+                        {
+                            value: 'baidu',
+                            label: '百度'
+                        },
+                        {
+                            value: 'sina',
+                            label: '新浪'
+                        }
+                    ];
+                } else if (item.value === 'hangzhou') {
+                    item.children = [
+                        {
+                            value: 'ali',
+                            label: '阿里巴巴'
+                        },
+                        {
+                            value: '163',
+                            label: '网易'
+                        }
+                    ];
+                }
+                item.loading = false;
+                callback();
+            }, 1000);
         }
     }
 };
