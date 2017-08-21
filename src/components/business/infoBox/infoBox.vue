@@ -32,9 +32,10 @@
                         <label :class="label">{{data.title}}</label>
                         <Input v-model="data.value" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
                     </div>
-                    <div v-else>
+                    <!--todo 多级联动选择未完成-->
+                    <div v-else :index="dataIndex">
                         <label :class="label">{{data.title}}</label>
-                        <Cascader :data="data.list" :load-data="loadData" filterable @on-change="setDataItem(data)"></Cascader>
+                        <Cascader :data="data.list" :load-data="loadData" filterable @on-change="getMultistepData"></Cascader>
                     </div>
                 </li>
             </ul>
@@ -140,10 +141,10 @@ export default {
                 setTimeout(function () {
                     let dateDate = data.default;
                     data.default = obj.value = dateDate.getFullYear() + "-" + (dateDate.getMonth() + 1) + "-" + dateDate.getDate();
-                    this.$emit("arrcallback", obj);
+                    this.$emit("datacallback", obj);
                 }, 0);
             } else {
-                this.$emit("arrcallback", obj);
+                this.$emit("datacallback", obj);
             }
             setTimeout(function () {
                 _this.toDataModel();
@@ -165,6 +166,8 @@ export default {
                         label: null
                     }
                     this.getDataLabel(obj, list[i]);
+                } else if ((list[i].type == 5)) {
+                    //todo 多级联动选择未完成
                 } else {
                     obj = {
                         dataType: list[i].itemType,
@@ -173,7 +176,7 @@ export default {
                 }
                 arr.push(obj);
             }
-            this.$emit("datacallback", arr);
+            this.$emit("arrcallback", arr);
         },
         getDataLabel(obj, data) {
             for (let i = 0; i < data.list.length; i++) {
@@ -200,19 +203,13 @@ export default {
             query = query.trim();
             var _this = this;
             let param = {
-                param: {
-                    Search: query,
-                    PageArgument: {
-                        PageIndex: 1,
-                        PageSize: 50
-                    }
-                }
+                Search: query
             };
 
             this.debounce(function () {
                 _this.search = true;
-                let url = _this.infoData.dataList[index].url;
-                Axios.post(url, param).then(function (res) {
+                let url = _this.infoData.dataList[index].url + "?search=";
+                Axios.get(url + query).then(function (res) {
                     var data = res;
                     if (data && data.status) {
                         var tempList = [];
@@ -255,6 +252,21 @@ export default {
                 func()
             }, timeout);
 
+        },
+        //todo 多级联动选择未完成
+        getMultistepData(data) {
+            var _this = this;
+            console.log(data);
+            let index = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+
+            let obj = {
+                dataType: _this.infoData.dataList[index].itemType,
+                value: data.length > 0 ? data[0] : "",
+                label: data.length > 0 ? data[1] : ""
+            }
+            this.$emit("datacallback", obj);
+            //todo 多级联动选择未完成
+            _this.toDataModel();
         },
         loadData(item, callback) {
             item.loading = true;
