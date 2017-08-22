@@ -268,6 +268,9 @@ export default {
             }
         },
         changeVal(val) {
+            if(this.hidestep){
+                return;
+            }
             if (isValueNumber(val) || val === 0) {
                 val = Number(val);
                 const step = this.step;
@@ -284,13 +287,7 @@ export default {
         this.changeVal(this.currentValue);
     },
     watch: {
-        // value (val,oldval) {
-        //     this.currentValue = val;
-        //     debugger
-        //     console.log("ValueChange"+new Date().getTime(),oldval);
-        // },
         currentValue(val) {
-
             this.changeVal(val);
         }
     }
