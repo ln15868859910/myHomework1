@@ -1,20 +1,20 @@
 <template>
     <div>
-        <xb-input-number :max="10" name="he" :min="-1" v-model="v1" :autofocus="autofocus" :defaultnumber=4></xb-input-number>
+        <Xb-Input-number :max="10" name="he" :min="-1" v-model="v1" :autofocus="autofocus" :defaultnumber=4></Xb-Input-number>
         {{ v1 }}
         <div @click="c">change v1</div>
-        <xb-input-number disabled :max="10" :min="1" :step="1.2" v-model="v2"></xb-input-number>
+        <Xb-Input-number disabled :max="10" :min="1" :step="1.2" v-model="v2"></Xb-Input-number>
 
         隐藏步数 hidestep：
-        <xb-input-number :max="10" name="he" :min="-1" v-model="v2" :autofocus="autofocus" hidestep></xb-input-number>
+        <Xb-Input-number :max="10" name="he" :min="-1" v-model="v2" :autofocus="autofocus" hidestep></Xb-Input-number>
 
         小数位数：
-        <xb-input-number  name="he" v-model="v3" :autofocus="autofocus" :fixed=2></xb-input-number>
+        <Xb-Input-number  name="he" v-model="v3" :autofocus="autofocus" :fixed=2></Xb-Input-number>
 
         可为空：
-        <xb-input-number :max="10" name="he" :min="-1" v-model="v4" :autofocus="autofocus" :required=false></xb-input-number>
+        <Xb-Input-number :max="10" name="he" :min="-1" v-model="v4" :autofocus="autofocus" :required=false></Xb-Input-number>
         默认值：
-        <xb-input-number :max="10" name="he" :min="-1" v-model="v5" :autofocus="autofocus" :defaultnumber=2 @input="change2"></xb-input-number>
+        <Xb-Input-number :max="10" name="he" :min="-1" v-model="v5" :autofocus="autofocus" :defaultnumber=2 @input="change2"></Xb-Input-number>
     </div>
 </template>
 <script>

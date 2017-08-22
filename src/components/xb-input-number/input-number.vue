@@ -1,6 +1,6 @@
 <template>
     <div :class="wrapClasses">
-        <div :class="handlerClasses">
+        <div :class="handlerClasses" v-if="!hidestep">
             <a @click="up" @mouse.down="preventDefault" :class="upClasses">
                 <span :class="innerUpClasses" @click="preventDefault"></span>
             </a>
@@ -208,7 +208,6 @@ export default {
             this.setValue(val);
         },
         setValue(val) {
-            console.log("ValueChange" + new Date().getTime());
             this.$nextTick(() => {
                 this.currentValue = val;
                 this.$emit('input', val);
