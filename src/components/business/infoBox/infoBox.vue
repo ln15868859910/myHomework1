@@ -121,7 +121,6 @@ export default {
     },
     methods: {
         setDataItem(data) {
-            console.log(data);
             let _this = this;
             let obj = {};
             if (data.type == 1) {
@@ -141,7 +140,7 @@ export default {
                 setTimeout(function () {
                     let dateDate = data.default;
                     data.default = obj.value = dateDate.getFullYear() + "-" + (dateDate.getMonth() + 1) + "-" + dateDate.getDate();
-                    this.$emit("datacallback", obj);
+                    _this.$emit("datacallback", obj);
                 }, 0);
             } else {
                 this.$emit("datacallback", obj);
@@ -256,7 +255,6 @@ export default {
         //todo 多级联动选择未完成
         getMultistepData(data) {
             var _this = this;
-            console.log(data);
             let index = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
 
             let obj = {
