@@ -71,6 +71,10 @@ const router = new VueRouter({
             component: require('./routers/input-number.vue')
         },
         {
+            path: '/xb-input-number',
+            component: require('./routers/xb-input-number.vue')
+        },
+        {
             path: '/upload',
             component: require('./routers/upload.vue')
         },

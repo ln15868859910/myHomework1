@@ -73,6 +73,9 @@ li+li {
                     <router-link to="/input-number">InputNumber</router-link>
                 </li>
                 <li>
+                    <router-link to="/xb-input-number">XbInputNumber</router-link>
+                </li>
+                <li>
                     <router-link to="/progress">Progress</router-link>
                 </li>
                 <li>

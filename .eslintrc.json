@@ -7,6 +7,10 @@
     "env": {
         "browser": true
     },
+    "globals": {
+        "require":true,
+        "module":true
+    },
     "extends": "eslint:recommended",
     "plugins": [ "html" ],
     "rules": {

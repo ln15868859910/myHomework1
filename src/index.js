@@ -19,6 +19,7 @@ import Form from './components/form';
 import Icon from './components/icon';
 import Input from './components/input';
 import InputNumber from './components/input-number';
+import XbInputNumber from './components/xb-input-number';
 import LoadingBar from './components/loading-bar';
 import Menu from './components/menu';
 // import Message from './components/message';
@@ -96,6 +97,7 @@ const spui = {
     Input,
     iInput: Input,
     InputNumber,
+    XbInputNumber,
     LoadingBar,
     Menu,
     iMenu: Menu,
