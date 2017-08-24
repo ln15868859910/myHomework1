@@ -220,6 +220,7 @@ export default {
         },
         blur() {
             this.focused = false;
+            this.$emit('on-blur');
         },
         keyDown(e) {
             if (e.keyCode === 38) {
@@ -230,6 +231,15 @@ export default {
                 this.down(e);
             }
         },
+        fiexdNumber(val) {
+            //小数点补足原则  整数或小数未超过指定小数位数长度 不管，超过后截取指定小数位数
+            var strarr = ('' + Number(val)).split('.');
+            if (strarr.length == 2 && this.fixed) {
+                return strarr[0] + '.' + strarr[1].substring(0, this.fixed);
+            } else {
+                return strarr[0];
+            }
+        },
         change(event) {
             let val = event.target.value.trim();
 
@@ -238,9 +248,8 @@ export default {
 
             if (isValueNumber(val)) {
                 val = Number(val);
-                if (this.fixed) {
-                    var strarr = ('' + val).split('.');
-                    val = strarr[0] + '.' + (strarr[1] ? strarr[1].substring(0, this.fixed) : ('' + Math.pow(10, this.fixed)).substring(1, this.fixed+1));
+                if (this.fixed > -1) {
+                    val = this.fiexdNumber(val);
                 }
                 this.currentValue = val;
 
@@ -268,7 +277,7 @@ export default {
             }
         },
         changeVal(val) {
-            if(this.hidestep){
+            if (this.hidestep) {
                 return;
             }
             if (isValueNumber(val) || val === 0) {
