@@ -1,17 +1,19 @@
 <template>
-    <div :class="wrapClasses">
-        <div :class="handlerClasses" v-if="!hidestep">
-            <a @click="up" @mouse.down="preventDefault" :class="upClasses">
-                <span :class="innerUpClasses" @click="preventDefault"></span>
-            </a>
-            <a @click="down" @mouse.down="preventDefault" :class="downClasses">
-                <span :class="innerDownClasses" @click="preventDefault"></span>
-            </a>
+    <Xb-Poptip mistake title="提示标题" :content="errcontent" placement="top" :show="iferror">
+        <div :class="wrapClasses">
+            <div :class="handlerClasses" v-if="!hidestep">
+                <a @click="up" @mouse.down="preventDefault" :class="upClasses">
+                    <span :class="innerUpClasses" @click="preventDefault"></span>
+                </a>
+                <a @click="down" @mouse.down="preventDefault" :class="downClasses">
+                    <span :class="innerDownClasses" @click="preventDefault"></span>
+                </a>
+            </div>
+            <div :class="inputWrapClasses">
+                <input :class="inputClasses" :disabled="disabled" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue">
+            </div>
         </div>
-        <div :class="inputWrapClasses">
-            <input :class="inputClasses" :disabled="disabled" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue">
-        </div>
-    </div>
+    </Xb-Poptip>
 </template>
 <script>
 import { oneOf } from '../../utils/assist';
@@ -102,6 +104,8 @@ export default {
             focused: false,
             upDisabled: false,
             downDisabled: false,
+            iferror: false,
+            errcontent: ''
             // currentValue: this.value
         };
     },
@@ -234,11 +238,41 @@ export default {
         fiexdNumber(val) {
             //小数点补足原则  整数或小数未超过指定小数位数长度 不管，超过后截取指定小数位数
             var strarr = ('' + Number(val)).split('.');
+            if (strarr.length == 2 && strarr[1].length > this.fixed) {
+                this.setError('fixed');
+            }
             if (strarr.length == 2 && this.fixed) {
                 return strarr[0] + '.' + strarr[1].substring(0, this.fixed);
             } else {
                 return strarr[0];
             }
+
+        },
+        setError(type) {
+            var tip = '';
+            switch (type) {
+                case 'max':
+                    tip = '最大值为' + this.max;
+                    break;
+                case 'min':
+                    tip = '最小值为' + this.min;
+                    break;
+                case 'fixed':
+                    tip = this.fixed === 0 ? '只能输入整数' : '只保留' + this.fixed + '位小数';
+                    break;
+                case 'nan':
+                    tip = '只能输入合法数值';
+                    break;
+                default:
+                    break;
+            }
+            this.iferror = true;
+            this.errcontent = tip;
+            let timer = setTimeout(() => {
+                this.iferror = false;
+                clearTimeout(timer);
+            }, 1000);
+
         },
         change(event) {
             let val = event.target.value.trim();
@@ -255,12 +289,16 @@ export default {
 
                 if (val > max) {
                     this.setValue(max);
+                    this.setError('max');
+
                 } else if (val < min) {
                     this.setValue(min);
+                    this.setError('min');
                 } else {
                     this.setValue(val);
                 }
             } else {
+                this.setError('nan');
                 if (this.defaultnumber != undefined) {
                     event.target.value = this.defaultnumber;
                     this.setValue(this.defaultnumber);

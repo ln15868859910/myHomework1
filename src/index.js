@@ -27,6 +27,7 @@ import Modal from './components/modal';
 import Notice from './components/notice';
 import Page from './components/page';
 import Poptip from './components/poptip';
+import XbPoptip from './components/xb-poptip';
 import Progress from './components/progress';
 import Radio from './components/radio';
 import Rate from './components/rate';
@@ -113,6 +114,7 @@ const spui = {
     Page,
     Panel: Collapse.Panel,
     Poptip,
+    XbPoptip,
     Progress,
     iProgress: Progress,
     Radio,

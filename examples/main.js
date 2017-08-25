@@ -119,6 +119,10 @@ const router = new VueRouter({
             component: require('./routers/poptip.vue')
         },
         {
+            path: '/xbpoptip',
+            component: require('./routers/xb-poptip.vue')
+        },
+        {
             path: '/slider',
             component: require('./routers/slider.vue')
         },

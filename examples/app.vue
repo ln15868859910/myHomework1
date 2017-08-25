@@ -109,6 +109,9 @@ li+li {
                     <router-link to="/poptip">Poptip</router-link>
                 </li>
                 <li>
+                    <router-link to="/xbpoptip">Xb-Poptip</router-link>
+                </li>
+                <li>
                     <router-link to="/slider">Slider</router-link>
                 </li>
                 <li>
