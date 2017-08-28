@@ -10,7 +10,7 @@
                 </a>
             </div>
             <div :class="inputWrapClasses">
-                <input :class="inputClasses" :disabled="disabled" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue">
+                <input :class="inputClasses" :disabled="disabled" :placeholder="placeholder" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue">
             </div>
         </div>
     </Xb-Poptip>
@@ -94,6 +94,9 @@ export default {
         hidestep: {//隐藏step
             type: Boolean,
             default: false
+        },
+        placeholder:{
+            type:String
         },
         fixed: {//小数位数
             type: Number
