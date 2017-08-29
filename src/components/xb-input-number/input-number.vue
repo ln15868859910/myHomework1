@@ -1,6 +1,6 @@
 <template>
     <Xb-Poptip mistake title="提示标题" :content="errcontent" placement="top" :show="iferror">
-        <div :class="wrapClasses">
+        <div :class="wrapClasses" style="width:100%;">
             <div :class="handlerClasses" v-if="!hidestep">
                 <a @click="up" @mouse.down="preventDefault" :class="upClasses">
                     <span :class="innerUpClasses" @click="preventDefault"></span>
