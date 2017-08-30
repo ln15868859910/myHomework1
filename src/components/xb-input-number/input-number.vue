@@ -266,6 +266,9 @@ export default {
                 case 'nan':
                     tip = '只能输入合法数值';
                     break;
+                case 'empty':
+                    tip = '不可为空';
+                    break;
                 default:
                     break;
             }
@@ -301,7 +304,13 @@ export default {
                     this.setValue(val);
                 }
             } else {
-                this.setError('nan');
+                if(val!=""){
+                    this.setError('nan');
+                }else{
+                    if(this.required){
+                        this.setError('empty');
+                    }
+                }
                 if (this.defaultnumber != undefined) {
                     event.target.value = this.defaultnumber;
                     this.setValue(this.defaultnumber);
