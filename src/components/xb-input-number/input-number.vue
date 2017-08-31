@@ -10,7 +10,7 @@
                 </a>
             </div>
             <div :class="inputWrapClasses">
-                <input :class="inputClasses" :disabled="disabled" :placeholder="placeholder" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue">
+                <input :class="inputClasses" :disabled="disabled" :placeholder="placeholder" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue" :style="this.hidestep?'text-align:right':'text-align:left'">
             </div>
         </div>
     </Xb-Poptip>
