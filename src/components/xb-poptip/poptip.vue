@@ -174,6 +174,9 @@
                 this.visible = !this.visible;
             },
             handleClose () {
+                if(this.show!=undefined){
+                    return;
+                }
                 if (this.confirm) {
                     this.visible = false;
                     return true;
@@ -243,12 +246,20 @@
                     this.isInput = true;
                 }
             }
+            if(this.show!=undefined){
+                this.visible = this.show;
+            }
         },
         beforeDestroy () {
             const $children = this.getInputChildren();
             if ($children) {
                 $children.removeEventListener('focus', this.handleFocus, false);
                 $children.removeEventListener('blur', this.handleBlur, false);
+            }
+        },
+        watch: {
+            show(val) {
+                this.visible = val;
             }
         }
     };
