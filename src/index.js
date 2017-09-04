@@ -26,6 +26,7 @@ import Menu from './components/menu';
 import Modal from './components/modal';
 import Notice from './components/notice';
 import Page from './components/page';
+import XbPage from './components/xb-page';
 import Poptip from './components/poptip';
 import XbPoptip from './components/xb-poptip';
 import Progress from './components/progress';
@@ -112,6 +113,7 @@ const spui = {
     iOption: Option,
     OptionGroup,
     Page,
+    XbPage,
     Panel: Collapse.Panel,
     Poptip,
     XbPoptip,
