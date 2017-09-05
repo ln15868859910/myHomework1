@@ -26,6 +26,7 @@ import Menu from './components/menu';
 import Modal from './components/modal';
 import Notice from './components/notice';
 import Page from './components/page';
+import XbPage from './components/xb-page';
 import Poptip from './components/poptip';
 import XbPoptip from './components/xb-poptip';
 import Progress from './components/progress';
@@ -55,8 +56,8 @@ import {
 } from './components/select';
 import locale from './locale';
 //业务组件
-import consultFilter from './components/business/consultFilter';
-import infoBox from './components/business/infoBox';
+import consultFilter from './b-component/consultFilter';
+import infoBox from './b-component/infoBox';
 
 const spui = {
     Affix,
@@ -112,6 +113,7 @@ const spui = {
     iOption: Option,
     OptionGroup,
     Page,
+    XbPage,
     Panel: Collapse.Panel,
     Poptip,
     XbPoptip,

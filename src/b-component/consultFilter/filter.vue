@@ -58,16 +58,16 @@
 
 const prefixCls = "spui-b-consultFilter";
 import Emiter from './emiter.vue';
-import iSelect from '../../select';
-import iInput from '../../input';
-import Tag from '../../tag';
-import Badge from '../../badge';
-import Tooltip from '../../tooltip';
+import iSelect from '../../components/select';
+import iInput from '../../components/input';
+import Tag from '../../components/tag';
+import Badge from '../../components/badge';
+import Tooltip from '../../components/tooltip';
 import filterSingle from './filter-single.vue';
 import filterUnion from './filter-union.vue';
 import filterMulti from './filter-multi.vue';
 
-import clickoutside from '../../../directives/clickoutside';
+import clickoutside from '../../directives/clickoutside';
 
 export default {
     name: 'consultFilter',

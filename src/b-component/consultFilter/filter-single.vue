@@ -8,9 +8,9 @@
 const prefixCls = "spui-b-consultFilter";
 
 import Emiter from './emiter.vue';
-import DatePicker from '../../date-picker';
+import DatePicker from '../../components/date-picker';
 import Axios from 'axios';
-import { Select, Option, OptionGroup } from '../../select';
+import { Select, Option, OptionGroup } from '../../components/select';
 
 //拼装数据
 function getComponentConfig(model, remoteMethod) {

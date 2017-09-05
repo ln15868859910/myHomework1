@@ -1,6 +1,6 @@
 <template>
     <Xb-Poptip mistake title="提示标题" :content="errcontent" placement="top" :show="iferror">
-        <div :class="wrapClasses">
+        <div :class="wrapClasses" style="width:100%;">
             <div :class="handlerClasses" v-if="!hidestep">
                 <a @click="up" @mouse.down="preventDefault" :class="upClasses">
                     <span :class="innerUpClasses" @click="preventDefault"></span>
@@ -10,7 +10,7 @@
                 </a>
             </div>
             <div :class="inputWrapClasses">
-                <input :class="inputClasses" :disabled="disabled" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue">
+                <input :class="inputClasses" :disabled="disabled" :placeholder="placeholder" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue" :style="this.hidestep?'text-align:right':'text-align:left'">
             </div>
         </div>
     </Xb-Poptip>
@@ -94,6 +94,9 @@ export default {
         hidestep: {//隐藏step
             type: Boolean,
             default: false
+        },
+        placeholder:{
+            type:String
         },
         fixed: {//小数位数
             type: Number
@@ -263,6 +266,9 @@ export default {
                 case 'nan':
                     tip = '只能输入合法数值';
                     break;
+                case 'empty':
+                    tip = '不可为空';
+                    break;
                 default:
                     break;
             }
@@ -298,7 +304,13 @@ export default {
                     this.setValue(val);
                 }
             } else {
-                this.setError('nan');
+                if(val!=""){
+                    this.setError('nan');
+                }else{
+                    if(this.required){
+                        this.setError('empty');
+                    }
+                }
                 if (this.defaultnumber != undefined) {
                     event.target.value = this.defaultnumber;
                     this.setValue(this.defaultnumber);
