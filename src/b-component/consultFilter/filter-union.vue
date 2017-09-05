@@ -7,7 +7,7 @@
 <script>
 import Emiter from './emiter.vue';
 import UnionGroupComponent from './union-group-component.vue';
-import { Select, Option, OptionGroup } from '../../select';
+import { Select, Option, OptionGroup } from '../../components/select';
 
 
 const prefixCls = "spui-b-consultFilter";

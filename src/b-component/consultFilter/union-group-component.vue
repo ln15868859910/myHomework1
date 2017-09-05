@@ -13,7 +13,7 @@
 <script>
 import Emiter from './emiter.vue';
 import Axios from 'axios';
-import { Select, Option, OptionGroup } from '../../select';
+import { Select, Option, OptionGroup } from '../../components/select';
 
 
 function getComponentConfig(model, remoteMethod, isRemote) {

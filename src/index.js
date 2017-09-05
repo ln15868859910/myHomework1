@@ -56,8 +56,8 @@ import {
 } from './components/select';
 import locale from './locale';
 //业务组件
-import consultFilter from './components/business/consultFilter';
-import infoBox from './components/business/infoBox';
+import consultFilter from './b-component/consultFilter';
+import infoBox from './b-component/infoBox';
 
 const spui = {
     Affix,
