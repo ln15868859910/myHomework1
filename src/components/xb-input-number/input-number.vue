@@ -312,7 +312,7 @@ export default {
                     }
                 }
                 if (this.defaultnumber != undefined) {
-                    var fixedval = (''+Number(this.defaultnumber)).toFiexd(this.fixed||0);
+                    var fixedval = this.defaultnumber.toFixed(this.fixed||0);
                     event.target.value = fixedval;
                     this.setValue(fixedval);
                 } else {
