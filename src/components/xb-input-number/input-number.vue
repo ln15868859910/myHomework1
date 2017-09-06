@@ -312,8 +312,8 @@ export default {
                     }
                 }
                 if (this.defaultnumber != undefined) {
-                    var fixedval = ''+Number(this.defaultnumber);
-                    event.target.value = fixedval.toFiexd(this.fixed||0);
+                    var fixedval = (''+Number(this.defaultnumber)).toFiexd(this.fixed||0);
+                    event.target.value = fixedval;
                     this.setValue(fixedval);
                 } else {
                     if (this.required) {
