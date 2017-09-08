@@ -76,6 +76,9 @@ li+li {
                     <router-link to="/xb-input-number">XbInputNumber</router-link>
                 </li>
                 <li>
+                    <router-link to="/xb-overflow-tip">xb-overflow-tip</router-link>
+                </li>
+                <li>
                     <router-link to="/progress">Progress</router-link>
                 </li>
                 <li>

@@ -55,6 +55,7 @@ import {
     OptionGroup
 } from './components/select';
 import locale from './locale';
+import XbOverflowTip from './components/xb-overflow-tip';
 //业务组件
 import consultFilter from './b-component/consultFilter';
 import infoBox from './b-component/infoBox';
@@ -142,7 +143,8 @@ const spui = {
     Tooltip,
     // Transfer,
     Tree,
-    Upload
+    Upload,
+    XbOverflowTip
 };
 
 const install = function (Vue, opts = {}) {

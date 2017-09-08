@@ -1,0 +1,57 @@
+<template>
+    <div style="display:inline-block">
+        <Tooltip :content="content" placement="top" :disabled="!isShowTip">
+            <span class="txt-hide" :style="styles" style="display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{content}}
+            </span>
+        </Tooltip>
+    </div>
+</template>
+<script>
+import Tooltip from '../tooltip/tooltip.vue';
+
+export default {
+    name: 'XbOverflowTip',
+    components: { Tooltip },
+    props: {
+        content: {
+            type: String
+        },
+        width: {
+            type: String
+        }
+    },
+    data() {
+        return {
+            isShowTip: false,
+            textWrap: ""
+        };
+    },
+    computed: {
+        styles() {
+            let style = {};
+            if (this.width) {
+                style.width = this.width;
+            }
+            return style;
+        }
+    },
+    mounted() {
+        this.init();
+    },
+    methods: {
+        init() {
+            this.textWrap = this.$el.querySelector('.txt-hide');
+            this.setToolTipVisible();
+        },
+        //判断是否溢出
+        setToolTipVisible() {
+            if (this.textWrap.offsetWidth < this.textWrap.scrollWidth) {
+                this.isShowTip = true;
+            }
+        }
+    },
+    updated() {
+        this.setToolTipVisible();
+    }
+};
+</script>
