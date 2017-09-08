@@ -1,7 +1,7 @@
 <template>
     <div style="display:inline-block">
         <Tooltip :content="content" placement="top" :disabled="!isShowTip">
-            <span class="txt-hide" :style="styles" style="display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{content}}
+            <span class="txt-hide" :style="styles" :class="innnerClass" style="display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{content}}
             </span>
         </Tooltip>
     </div>
@@ -16,7 +16,12 @@ export default {
         content: {
             type: String
         },
+        //限制宽度，也可在innerClass里控制
         width: {
+            type: String
+        },
+        //内部文本框的样式
+        innnerClass:{
             type: String
         }
     },
