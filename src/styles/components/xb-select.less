@@ -1,0 +1,15 @@
+@xbselect-prefix-cls: ~"@{css-prefix}xbselect";
+
+.@{xbselect-prefix-cls} {
+    &-close{
+        display:none;
+        position: absolute;
+        right: 25px;
+        top: 8px
+    }
+    &-selection:hover{
+      .@{xbselect-prefix-cls}-close{
+        display:inline-block
+      }
+  }
+}

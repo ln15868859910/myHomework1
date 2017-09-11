@@ -166,6 +166,9 @@ li+li {
                     <router-link to="/notice">Notice</router-link>
                 </li>
                 <li>
+                    <router-link to="/xbSelect">Notice</router-link>
+                </li>
+                <li>
                     <router-link to="/consultFilter">consultFilter</router-link>
                 </li>
                 <li>

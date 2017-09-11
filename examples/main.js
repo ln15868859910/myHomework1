@@ -201,6 +201,10 @@ const router = new VueRouter({
         {
             path: '/infoBox',
             component: require('./routers/infoBox.vue')
+        },
+        {
+            path: '/xbselect',
+            component: require('./routers/xb-select.vue')
         }
     ]
 });
