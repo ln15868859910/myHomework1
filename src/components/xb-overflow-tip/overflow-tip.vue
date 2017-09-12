@@ -53,6 +53,9 @@ export default {
             if (this.textWrap.offsetWidth < this.textWrap.scrollWidth) {
                 this.isShowTip = true;
             }
+            else{
+                this.isShowTip = false;
+            }
         }
     },
     updated() {
