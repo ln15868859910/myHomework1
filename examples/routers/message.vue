@@ -1,14 +1,20 @@
 <template>
     <div>
+        <i-button @click.native="info">显示普通提示</i-button>
         <i-button @click.native="success">显示成功提示</i-button>
         <i-button @click.native="warning">显示警告提示</i-button>
         <i-button @click.native="error">显示错误提示</i-button>
+        <i-button @click.native="loading">显示加载提示</i-button>
+        <i-button @click.native="time">延时10秒</i-button>
         <i-button @click.native="destroy">销毁提示</i-button>
     </div>
 </template>
 <script>
     export default {
         methods: {
+            info () {
+                this.$Message.info('这是一条普通的提示');
+            },
             success () {
                 this.$Message.success('这是一条成功的提示');
             },
@@ -17,6 +23,12 @@
             },
             error () {
                 this.$Message.error('对方不想说话，并且向你抛出了一个异常');
+            },
+            loading () {
+                this.$Message.loading('这是一条加载的提示');
+            },
+            time () {
+                this.$Message.info('我将在10秒后消失', 10);
             },
             destroy () {
                 this.$Message.destroy();

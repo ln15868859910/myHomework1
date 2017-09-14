@@ -9,14 +9,6 @@ let top;
 let messageInstance;
 let name = 1;
 
-const iconTypes = {
-    'info': 'information-circled',
-    'success': 'checkmark-circled',
-    'warning': 'android-alert',
-    'error': 'close-circled',
-    'loading': 'load-c'
-};
-
 function getMessageInstance () {
     messageInstance = messageInstance || Notification.newInstance({
         prefixCls: prefixCls,
@@ -34,10 +26,9 @@ function notice (content, duration = defaultDuration, type, onClose) {
 
         };
     }
-    const iconType = iconTypes[type];
 
     // if loading
-    const loadCls = type === 'loading' ? ' ivu-load-loop' : '';
+    const loadCls = type === 'loading' ? 'mine-spin-loading mine-spin-loading-s' : '';
 
     let instance = getMessageInstance();
 
@@ -48,7 +39,7 @@ function notice (content, duration = defaultDuration, type, onClose) {
         transitionName: 'move-up',
         content: `
             <div class="${prefixCls}-custom-content ${prefixCls}-${type}">
-                <i class="${iconPrefixCls} ${iconPrefixCls}-${iconType}${loadCls}"></i>
+                <i class="${iconPrefixCls} ${loadCls}"></i>
                 <span>${content}</span>
             </div>
         `,

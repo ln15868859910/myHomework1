@@ -22,7 +22,7 @@ import InputNumber from './components/input-number';
 import XbInputNumber from './components/xb-input-number';
 import LoadingBar from './components/loading-bar';
 import Menu from './components/menu';
-// import Message from './components/message';
+import Message from './components/message';
 import Modal from './components/modal';
 import Notice from './components/notice';
 import Page from './components/page';
@@ -109,7 +109,7 @@ const spui = {
     MenuGroup: Menu.Group,
     MenuItem: Menu.Item,
     Submenu: Menu.Sub,
-    // Message,
+    Message,
     Modal,
     Notice,
     Option: Option,
@@ -159,7 +159,7 @@ const install = function (Vue, opts = {}) {
     });
 
     Vue.prototype.$Loading = LoadingBar;
-    // Vue.prototype.$Message = Message;
+    Vue.prototype.$Message = Message;
     Vue.prototype.$Modal = Modal;
     Vue.prototype.$Notice = Notice;
 };
