@@ -57,6 +57,7 @@ import {
 import locale from './locale';
 import XbOverflowTip from './components/xb-overflow-tip';
 import XbSelect from './components/xb-select';
+import XbTransfer from './components/xb-transfer';
 
 //业务组件
 import consultFilter from './b-component/consultFilter';
@@ -147,6 +148,7 @@ const spui = {
     Tree,
     Upload,
     XbOverflowTip,
+    XbTransfer,
     XbSelect
 };
 

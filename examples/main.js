@@ -205,6 +205,10 @@ const router = new VueRouter({
         {
             path: '/xbselect',
             component: require('./routers/xb-select.vue')
+        },
+        {
+            path: '/xbtransfer',
+            component: require('./routers/xb-transfer.vue')
         }
     ]
 });
