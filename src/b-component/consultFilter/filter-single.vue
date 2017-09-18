@@ -8,6 +8,7 @@
 const prefixCls = "spui-b-consultFilter";
 
 import Emiter from './emiter.vue';
+import { toDate } from '../../components/date-picker/util';
 import DatePicker from '../../components/date-picker';
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
@@ -146,6 +147,29 @@ var maker = {
 
             return dateYear + yearSeparate + dateMonth + monthSeparate + dateDay + daySeparate;
         },
+
+        parseDate(date) {
+            return toDate(this.dateFormat(date, "YYYY-MM-DD"));
+        },
+
+        getMoment(date, format) {            
+            switch(format) {
+                case "day":
+                    return date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                case "month":
+                    return date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+                case "year":
+                    return date.getFullYear();
+                default:
+                    return "";
+            }
+        },
+
+        setMaxspan(date) {
+            var endDate = this.parseDate(date);
+            endDate.setDate(endDate.getDate() - this.model.componentConfig.maxspan);
+            return this.getMoment(endDate, "year") + this.getMoment(endDate, "month") + this.getMoment(endDate, "day");
+        },        
 
         observeEvent() {
             //监听父层筛选项修改事件
@@ -410,9 +434,15 @@ var maker = {
                         "on-change": function (list) {
 
                             if (list[0]) {
+                                if (me.model.componentConfig.maxspan) {
+                                    if ((me.parseDate(list[1]) - me.parseDate(list[0]))/86400000 > me.model.componentConfig.maxspan) {
+                                        me.$set(list, 0, me.setMaxspan(list[1]));
+                                        me.$Message.error(`您已超出最长时间跨度${me.model.componentConfig.maxspan}天`);
+                                    }
+                                }
 
                                 //保持当前model的value值与组件内部的value一致
-                                me.model.componentConfig.value = [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
+                                me.model.componentConfig.value = [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")];
 
                                 Emiter.$emit("single-change", {
                                     sortName: me.model.sortName,
@@ -424,9 +454,8 @@ var maker = {
                                         value: [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
                                     }]
                                 }, me.type);
-                                me.type = "fromBottom"
+                                me.type = "fromBottom";
                             }
-
                         }
                     }
                 }

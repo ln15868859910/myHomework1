@@ -9,7 +9,7 @@
             <li :class="flortRight">
                 <!-- 搜索内容区域 -->
                 <div :class="search" v-if="searchData && status.isInitCompleted">
-                    <Select :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
+                    <Select v-show="searchData.data.length > 1" :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
                         <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
                     </Select>
                     <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
