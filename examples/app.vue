@@ -76,6 +76,9 @@ li+li {
                     <router-link to="/xb-input-number">XbInputNumber</router-link>
                 </li>
                 <li>
+                    <router-link to="/xb-overflow-tip">xb-overflow-tip</router-link>
+                </li>
+                <li>
                     <router-link to="/progress">Progress</router-link>
                 </li>
                 <li>
@@ -161,6 +164,15 @@ li+li {
                 </li>
                 <li>
                     <router-link to="/notice">Notice</router-link>
+                </li>
+                <li>
+                    <router-link to="/xbSelect">Notice</router-link>
+                </li>
+                <li>
+                    <router-link to="/xbselect">xbSelect</router-link>
+                </li>
+                <li>
+                    <router-link to="/xbtransfer">xbtransfer</router-link>
                 </li>
                 <li>
                     <router-link to="/consultFilter">consultFilter</router-link>

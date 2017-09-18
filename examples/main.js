@@ -75,6 +75,10 @@ const router = new VueRouter({
             component: require('./routers/xb-input-number.vue')
         },
         {
+            path: '/xb-overflow-tip',
+            component: require('./routers/xb-overflow-tip.vue')
+        },
+        {
             path: '/upload',
             component: require('./routers/upload.vue')
         },
@@ -197,6 +201,14 @@ const router = new VueRouter({
         {
             path: '/infoBox',
             component: require('./routers/infoBox.vue')
+        },
+        {
+            path: '/xbselect',
+            component: require('./routers/xb-select.vue')
+        },
+        {
+            path: '/xbtransfer',
+            component: require('./routers/xb-transfer.vue')
         }
     ]
 });

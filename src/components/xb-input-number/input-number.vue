@@ -312,8 +312,9 @@ export default {
                     }
                 }
                 if (this.defaultnumber != undefined) {
-                    event.target.value = this.defaultnumber;
-                    this.setValue(this.defaultnumber);
+                    var fixedval = this.defaultnumber.toFixed(this.fixed||0);
+                    event.target.value = fixedval;
+                    this.setValue(fixedval);
                 } else {
                     if (this.required) {
                         event.target.value = this.currentValue;
