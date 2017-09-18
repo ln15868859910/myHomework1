@@ -3,7 +3,7 @@
         <div class="ivu-select-selection" @click="toggleMenu" :class="[prefixCls2 + '-selection']">
             <span class="ivu-select-placeholder" v-if="!selectedData.name">请选择</span>
             <input class="ivu-select-input" type="text" v-model="selectedData.name" readonly style="width:100%;" @focus="showClose=true">
-            <i class="ivu-icon ivu-icon-close" :class="[prefixCls2 + '-close']" v-show="selectedData.name" @click.stop.prevent="deleteSelect($event)"></i>
+            <i class="ivu-icon ivu-icon-close" :class="[prefixCls2 + '-close']" v-show="showdelete&&selectedData.name" @click.stop.prevent="deleteSelect($event)"></i>
             <Icon type="arrow-down" class="ivu-select-arrow" style="position: absolute;right: 10px;top: 13px;display: inline-block;"></Icon>
         </div>
 
@@ -53,6 +53,10 @@ export default {
         remote: {
             type: Boolean,
             default: false
+        },
+        showdelete:{
+            type: Boolean,
+            default: true
         }
     },
     data() {
