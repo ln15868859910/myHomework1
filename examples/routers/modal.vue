@@ -40,6 +40,10 @@
                 <Button type="primary" @click="ok2">确定</Button>
             </div>
         </Modal>
+        <Button @click="confirm">标准</Button>
+        <Button @click="custom">自定义按钮文字</Button>
+        <Button @click="async">异步关闭</Button>
+    
     </div>
 </template>
 <script>
@@ -66,6 +70,40 @@ export default {
             this.modal2 = false;
         },
         countDown() {
+        },
+        confirm() {
+            this.$Modal.confirm({
+                title: '确认对话框标题',
+                content: '<p>一些对话框内容</p><p>一些对话框内容</p>',
+                onOk: () => {
+                    this.$Message.info('点击了确定');
+                },
+                onCancel: () => {
+                    this.$Message.info('点击了取消');
+                }
+            });
+        },
+        custom() {
+            this.$XbConfirm.confirm({
+                title: '确认对话框标题',
+                content: '<p>一些对话框内容</p><p>一些对话框内容</p>',
+                showIcon: true,
+                okText: 'OK',
+                cancelText: 'Cancel'
+            });
+        },
+        async() {
+            this.$XbConfirm.confirm({
+                title: '确认对话框标题',
+                content: '<p>对话框将在 2秒 后关闭</p>',
+                loading: true,
+                onOk: () => {
+                    setTimeout(() => {
+                        this.$XbConfirm.remove();
+                        this.$Message.info('异步关闭了对话框');
+                    }, 2000);
+                }
+            });
         }
     }
 }
