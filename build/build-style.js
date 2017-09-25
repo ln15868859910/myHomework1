@@ -22,4 +22,10 @@ gulp.task('fonts', function () {
         .pipe(gulp.dest('../dist/styles/fonts'));
 });
 
-gulp.task('default', ['css', 'fonts']);
+// 拷贝雪碧图
+gulp.task('sprite', function () {
+    gulp.src('../src/styles/sprites/sprite.png')
+        .pipe(gulp.dest('../dist/styles'));
+});
+
+gulp.task('default', ['css', 'fonts','sprite']);
