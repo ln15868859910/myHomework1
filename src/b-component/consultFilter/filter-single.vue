@@ -457,10 +457,11 @@ export default {
             return `${prefixCls}-singleItem`
         },
         singleItemWrap() {
-            return this.model.class ? this.model.class : `${prefixCls}-singleItemWrap`;
+            return [`${prefixCls}-singleItemWrap`,{
+                [this.model.class]: this.model.class
+            }];
         }
     },
-
     mounted() {
 
     },

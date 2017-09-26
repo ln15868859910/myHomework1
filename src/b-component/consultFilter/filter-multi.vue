@@ -315,7 +315,9 @@ export default {
             return `${prefixCls}-multiItem`
         },
         multiItemWrap() {
-            return this.model.class ? this.model.class : `${prefixCls}-multiItemWrap`;
+             return [`${prefixCls}-multiItemWrap`,{
+                [this.model.class]: this.model.class
+            }];
         }
     },
     created(){

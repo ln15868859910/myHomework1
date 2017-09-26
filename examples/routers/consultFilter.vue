@@ -14,7 +14,7 @@ export default {
     props: {},
     data() {
         return {
-            //↓ 搜索区域，传入null该对象则整块区域隐藏
+            //↓ searchData 搜索区域，传入null该对象则整块区域隐藏
             searchData: {
                 // ↓ searchData.data 必填，搜索下拉项，至少一项。其中的text会成为搜索框的placeholder，例： “请选择 + 学员姓名”
                 data: [{"text": "学员姓名","value": "1"}, {"text": "学员电话","value": "2"}],
@@ -34,7 +34,7 @@ export default {
                 data: {
                     // ↓ filterData.data.singleModel 单选筛选项数据结构
                     singleModel: {
-                        class: "",//自定义样式名
+                        class: "",//自定义样式名,不会替换援用样式
                         modelList: [
                             {
                                 "sortName": "录入时间",
@@ -110,7 +110,7 @@ export default {
                     },
                     // ↓ filterData.data.unionModel 联动筛选项数据结构
                     unionModel: {
-                        class: "",
+                        class: "",//自定义样式名,不会替换援用样式
                         modelList: [
                             [
                                 {
@@ -297,7 +297,7 @@ export default {
                     },
                     // ↓ filterData.data.multiModel 多选筛选项数据结构
                     multiModel: {
-                        class: "",
+                        class: "",//自定义样式名,不会替换援用样式
                         modelList: [
                             {
                                 sortName: "多选组件",

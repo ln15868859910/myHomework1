@@ -32,7 +32,9 @@ export default {
             return `${prefixCls}-unionItem`
         },
         unionItemWrap() {
-            return this.model.class ? this.model.class : `${prefixCls}-unionItemWrap`;
+             return [`${prefixCls}-unionItemWrap`,{
+                [this.model.class]: this.model.class
+            }];
         }
     },
     created () {

@@ -189,7 +189,7 @@ export default {
             }
 
             return {
-                class: "",
+                class: this.filterData.data.singleModel ? this.filterData.data.singleModel.class:"",
                 modelList: this.filterData.data.singleModel ? this.filterData.data.singleModel.modelList : []
             }
         },
@@ -204,7 +204,7 @@ export default {
             }
 
             return {
-                class: "",
+                class: this.filterData.data.unionModel ? this.filterData.data.unionModel.class:"",
                 modelList: this.filterData.data.unionModel ? this.filterData.data.unionModel.modelList : []
             }
         },
@@ -219,7 +219,7 @@ export default {
             }
 
             return {
-                class: "",
+                class: this.filterData.data.multiModel ? this.filterData.data.multiModel.class:"",
                 modelList: this.filterData.data.multiModel ? this.filterData.data.multiModel.modelList : []
             }
         }
