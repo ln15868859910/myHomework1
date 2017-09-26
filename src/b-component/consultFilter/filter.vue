@@ -411,7 +411,7 @@ export default {
                 me = this;
 
             if (filterResult.length) {
-                filterResult.map(function (sortItem, itemIndex) {
+                filterResult.map( (sortItem, itemIndex) => {
                     this.broadcast("selectComponent",sortItem.sortValue + "-change", [], [], "emptyOnly");
                 })
             }
