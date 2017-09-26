@@ -14,27 +14,25 @@ export default {
     props: {},
     data() {
         return {
-
-            //搜索区域
+            //↓ 搜索区域，传入null该对象则整块区域隐藏
             searchData: {
-                data: [{
-                    "text": "学员姓名",
-                    "value": "1"
-                }, {
-                    "text": "学员电话",
-                    "value": "2"
-                }],
+                // ↓ searchData.data 必填，搜索下拉项，至少一项。其中的text会成为搜索框的placeholder，例： “请选择 + 学员姓名”
+                data: [{"text": "学员姓名","value": "1"}, {"text": "学员电话","value": "2"}],
+                // ↓ searchData.opts 必填，没有配置传入空对象{}，否则报错给你看 _(:з」∠)_
                 opts: {
-                    "defaultSearchKey": "", //默认搜索类型（iview only：搜索类型必须在下拉项中）
-                    "defaultSearchValue": "", //搜索默认值
-                    "isResetFilter": false //默认：false，搜索时结果是否与筛选项互斥
+                    "defaultSearchKey": "", //← 非必填，默认搜索类型（iview only：搜索类型必须在下拉项中），不填取默认第一项
+                    "defaultSearchValue": "", //← 非必填：搜索默认值，不填取默认第一项
+                    "isHideOptsList": false,//← 非必填：是否隐藏搜索栏边上的下拉列表，默认：false
+                    "isResetFilter": false //← 非必填：搜索时结果是否与筛选项互斥，默认：false
                 }
             },
 
-            //筛选项数据
+            //筛选项数据，必传
             filterData: {
+                //↓ filterData.isClear 是否清空数据，true：是，false：否
                 isClear: false,
                 data: {
+                    // ↓ filterData.data.singleModel 单选筛选项数据结构
                     singleModel: {
                         class: "",//自定义样式名
                         modelList: [
@@ -110,6 +108,7 @@ export default {
                             },
                         ],//异步返回
                     },
+                    // ↓ filterData.data.unionModel 联动筛选项数据结构
                     unionModel: {
                         class: "",
                         modelList: [
@@ -296,6 +295,7 @@ export default {
 
                         ]
                     },
+                    // ↓ filterData.data.multiModel 多选筛选项数据结构
                     multiModel: {
                         class: "",
                         modelList: [
