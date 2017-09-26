@@ -61,6 +61,7 @@
 // import Locale from '../../mixins/locale';
 // import Emitter from '../../mixins/emitter';
 import transferselect from './transferselect.vue';
+import { throttle } from './../../utils/throttle';
 
 const prefixCls = 'ivu-xbtransfer';
 
@@ -119,7 +120,10 @@ export default {
         }
     },
     created: function() {
-        console.log("created");
+        // console.log("created");
+        this.initSelectData();
+        this.onchangeAll();
+        this.throttlefunc = throttle(this.filterData, 300);
     },
     methods: {
         initSelectData() {
@@ -127,12 +131,7 @@ export default {
             var that = this;
             this.allData.map((data) => {
                 data.list.map((item) => {
-                    if (
-                        this.find(that.selectData, (dd) => {
-                            var Id = dd.ItemId || dd.Id;
-                            return Id === item.Id;
-                        })
-                    ) {
+                    if (this.find(that.selectData,item.Id)) {
                         item.select = true;
                     } else {
                         item.select = false;
@@ -141,10 +140,11 @@ export default {
                 that.allDataLength += data.list.length;
             });
         },
-        find(Arr, f) {
-            return Arr.filter((item) => {
-                f(item);
+        find(Arr, id) {
+            var arr = Arr.filter((item) => {
+                return item.Id == id||item.ItemId == id;
             });
+            return arr.length;
         },
         selectThis(item) {
             //选择某一项
@@ -172,7 +172,7 @@ export default {
         onSearch() {
             this.searchTag = !!this.searchvalue; //查询框有值时 为搜索状态
             if (this.searchvalue) {
-                this.throttle();
+                this.throttlefunc();
             }
         },
         filterData() {

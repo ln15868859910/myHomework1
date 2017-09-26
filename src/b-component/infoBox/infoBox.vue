@@ -16,7 +16,7 @@
                                 <span v-if="item.disabled">{{item.label}}</span>
                             </Option>
                         </Select>
-                        <Select v-else v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value>
+                        <Select v-else v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
                             <Option v-for="item in data.list" :value="item.value" :key="item">{{ item.label }}</Option>
                         </Select>
                     </div>
