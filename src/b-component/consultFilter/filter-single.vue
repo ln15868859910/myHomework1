@@ -11,7 +11,7 @@ import Emiter from './emiter.vue';
 import DatePicker from '../../components/date-picker';
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
-
+import emitter from "./emit";
 //拼装数据
 function getComponentConfig(model, remoteMethod) {
     var data;
@@ -51,12 +51,14 @@ function getComponentConfig(model, remoteMethod) {
 
 
 var maker = {
+    
     props: {
         model: {
             require: true
         }
     },
-
+    name: "selectComponent",
+    mixins: [ emitter ],
     data() {
         return {
             type: "fromBottom",
@@ -110,7 +112,7 @@ var maker = {
     },
     beforeDestroy() {
         //移除父层筛选项修改事件
-        Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+        this.$off(this.model.sortValue + "-change", this.onFilterChange);
     },
     methods: {
         setDateRangeShotcuts(shotCutsList) {
@@ -149,7 +151,7 @@ var maker = {
 
         observeEvent() {
             //监听父层筛选项修改事件
-            Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
+            this.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
 
         onFilterChange(data, list, type) {
@@ -164,7 +166,7 @@ var maker = {
             var me = this;
             // bugFix(临时)：修复时间类型清空了默认值父层检测不到事件的bug
             if (this.model.componentType == "daterange") {
-                Emiter.$emit("single-change", {
+                this.dispatch("consultFilter","single-change", {
                     sortName: me.model.sortName,
                     sortValue: me.model.sortValue,
                     componentType: "daterange",
@@ -264,7 +266,7 @@ var maker = {
                     }
                 })
 
-                Emiter.$emit("single-change", {
+                this.dispatch("consultFilter","single-change", {
                     sortName: modelList.sortName,
                     sortValue: modelList.sortValue,
                     componentType: "select",
@@ -286,7 +288,7 @@ var maker = {
                     return;
                 }
 
-                Emiter.$emit("single-change", {
+                this.dispatch("consultFilter","single-change", {
                     sortName: modelList.sortName,
                     sortValue: modelList.sortValue,
                     componentType: "daterange",
@@ -347,7 +349,7 @@ var maker = {
                             //     result.value = obj;
                             // }
 
-                            Emiter.$emit("single-change", {
+                            me.dispatch("consultFilter","single-change", {
                                 sortName: me.model.sortName,
                                 sortValue: me.model.sortValue,
                                 componentType: "select",
@@ -395,7 +397,7 @@ var maker = {
                             //保持当前model的value值与组件内部的value一致
                             me.model.componentConfig.value = [];
 
-                            Emiter.$emit("single-change", {
+                            me.dispatch("consultFilter","single-change", {
                                 sortName: me.model.sortName,
                                 sortValue: me.model.sortValue,
                                 componentType: "daterange",
@@ -414,7 +416,7 @@ var maker = {
                                 //保持当前model的value值与组件内部的value一致
                                 me.model.componentConfig.value = [me.dateFormat(list[0], "YYYY-MM-DD"), me.dateFormat(list[1], "YYYY-MM-DD")]
 
-                                Emiter.$emit("single-change", {
+                                me.dispatch("consultFilter","single-change", {
                                     sortName: me.model.sortName,
                                     sortValue: me.model.sortValue,
                                     componentType: "daterange",

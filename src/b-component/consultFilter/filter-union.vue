@@ -5,7 +5,7 @@
     </div>
 </template>
 <script>
-import Emiter from './emiter.vue';
+import emitter from "./emit";
 import UnionGroupComponent from './union-group-component.vue';
 import { Select, Option, OptionGroup } from '../../components/select';
 
@@ -14,6 +14,7 @@ const prefixCls = "spui-b-consultFilter";
 
 export default {
     name: 'consultFilterUnion',
+    mixins:[emitter],
     props: {
         model: {
             require: true
@@ -34,21 +35,15 @@ export default {
             return this.model.class ? this.model.class : `${prefixCls}-unionItemWrap`;
         }
     },
-    mounted() {
-        this.init();
+    created () {
+        this.$on("union-change-slot", this.onChange);
     },
     beforeDestroy() {
         //移除联动模块子组件change事件
-        Emiter.$off("union-change-slot", this.onChange);
+        this.$off("union-change-slot", this.onChange);
     },
     methods: {
-        init() {
-            this.observeEvent();
-        },
-        observeEvent() {
-            //监听联动模块子组件change事件
-            Emiter.$on("union-change-slot", this.onChange);
-        },
+
         onChange(params,type) {
             var _this = this;
             var data = {};
@@ -68,7 +63,7 @@ export default {
 
 
             }
-            Emiter.$emit("union-change", data,type);
+            this.dispatch("consultFilter","union-change", data,type);
         }
 
     }

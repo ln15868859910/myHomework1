@@ -11,7 +11,7 @@
     </div>
 </template>
 <script>
-import Emiter from './emiter.vue';
+import emitter from "./emit";
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
 
@@ -63,6 +63,8 @@ function getComponentConfig(model, remoteMethod, isRemote) {
 }
 const prefixCls = "spui-b-consultFilter";
 const UnionComponentSlot = {
+    name: "selectComponent",
+    mixins:[emitter],
     props: {
         model: {
             type: Object,
@@ -196,17 +198,17 @@ const UnionComponentSlot = {
     beforeDestroy() {
         if (this.model.sonSortValue) {
             //移除联动模块父组件值初始化是否为空事件
-            Emiter.$off(this.model.sortValue + "-union-empty-init", this.onDisableSon);
+            this.$parent.$parent.$off(this.model.sortValue + "-union-empty-init", this.onDisableSon);
         }
         if (!!this.model.parentSortValue) {
             //移除联动模块父组件change事件
-            Emiter.$off(this.model.parentSortValue + "-union-change", this.onParentChange);
+            this.$parent.$parent.$off(this.model.parentSortValue + "-union-change", this.onParentChange);
             //移除联动模块父组件值为空事件
-            Emiter.$off(this.model.parentSortValue + "-union-empty", this.onParentEmpty);
+            this.$parent.$parent.$off(this.model.parentSortValue + "-union-empty", this.onParentEmpty);
         }
 
         //移除父层筛选项修改事件
-        Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+        this.$off(this.model.sortValue + "-change", this.onFilterChange);
     },
     methods: {
         init() {
@@ -214,7 +216,7 @@ const UnionComponentSlot = {
             this.initDataChange();
 
             if (this.model.parentSortValue) {
-                Emiter.$emit(this.model.parentSortValue + "-union-empty-init", this.model);
+                this.$parent.$parent.$emit(this.model.parentSortValue + "-union-empty-init", this.model);
             }
         },
         initDataChange: function () {
@@ -245,17 +247,17 @@ const UnionComponentSlot = {
         observeEvent() {
             if (this.model.sonSortValue) {
                 //监听联动模块父组件值初始化是否为空事件
-                Emiter.$once(this.model.sortValue + "-union-empty-init", this.onDisableSon);
+                this.$parent.$parent.$once(this.model.sortValue + "-union-empty-init", this.onDisableSon);
             }
             if (!!this.model.parentSortValue) {
                 //监听联动模块父组件change事件
-                Emiter.$on(this.model.parentSortValue + "-union-change", this.onParentChange);
+                this.$parent.$parent.$on(this.model.parentSortValue + "-union-change", this.onParentChange);
                 //监听联动模块父组件值为空事件
-                Emiter.$on(this.model.parentSortValue + "-union-empty", this.onParentEmpty);
+                this.$parent.$parent.$on(this.model.parentSortValue + "-union-empty", this.onParentEmpty);
             }
 
             //监听父层筛选项修改事件
-            Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
+            this.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
         onParentChange(params) {
             var _this = this;
@@ -267,7 +269,7 @@ const UnionComponentSlot = {
             if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
                 this.model.componentConfig.disabled = true;
                 this.model.componentConfig.filterable = false;
-                Emiter.$emit(this.model.sortValue + "-union-empty");
+                this.$parent.$parent.$emit(this.model.sortValue + "-union-empty");
                 return;
             }
             else {
@@ -429,11 +431,11 @@ const UnionComponentSlot = {
                 _this.model.componentConfig.value = value.value
                 data.value = !value.value && !value.label ? [] : [value];
             }
-            Emiter.$emit("union-change-slot", data, this.type);
+            this.dispatch("consultFilterUnion","union-change-slot", data, this.type);
             this.type = "fromBottom";
 
             if (_this.model.sonSortValue) {
-                Emiter.$emit(_this.model.sortValue + "-union-change", {
+                this.$parent.$parent.$emit( _this.model.sortValue + "-union-change", {
                     onChangeUrl: _this.model.remoteUrl ? _this.model.remoteUrl["onChange"] : "",
                     selectModel: {
                         sortValue: _this.model.sortValue,
@@ -542,40 +544,8 @@ export default {
         }
     },
     mounted() {
-        this.init();
-    },
-    methods: {
-        init() {
-            this.commonGroupName = prefixCls + '-union-group';
-            this.groupName = prefixCls + '-union-group-' + this.model.length;
-            this.observeEvent();
-        },
-        observeEvent() {
-            // //监听联动模块子组件change事件
-            // Emiter.$on("union-change-slot", this.onChange);
-        },
-        onChange(params) {
-            // var _this = this;
-            // var data = {};
-            // if (params.componentType == "select") {
-            //     data = {
-            //         sortName: params.sortName,
-            //         sortValue: params.sortValue,
-            //         label: []
-            //     }
-            //     params.value.map(function (item, index) {
-            //         var model = {
-            //             value: item.value,
-            //             text: item.label
-            //         }
-            //         data.label.push(model);
-            //     })
-
-
-            // }
-            // Emiter.$emit("union-change", data);
-        }
-
+        this.commonGroupName = prefixCls + '-union-group';
+        this.groupName = prefixCls + '-union-group-' + this.model.length;
     }
 };
 

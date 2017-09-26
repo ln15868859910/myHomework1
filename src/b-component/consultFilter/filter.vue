@@ -57,7 +57,7 @@
 <script>
 
 const prefixCls = "spui-b-consultFilter";
-import Emiter from './emiter.vue';
+import emitter from "./emit";
 import iSelect from '../../components/select';
 import iInput from '../../components/input';
 import Tag from '../../components/tag';
@@ -71,6 +71,7 @@ import clickoutside from '../../directives/clickoutside';
 
 export default {
     name: 'consultFilter',
+    mixins: [ emitter ],
     components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti },
     directives: { clickoutside },
     props: {
@@ -234,11 +235,11 @@ export default {
     },
     beforeDestroy() {
         //移除二级联动模块change事件
-        Emiter.$off("union-change", this.onUnionChange);
+        this.$off("union-change", this.onUnionChange);
         //移除二级单选模块change事件
-        Emiter.$off("single-change", this.onSingleChange);
+        this.$off("single-change", this.onSingleChange);
         //移除二级多选模块change事件
-        Emiter.$off("multi-change", this.onUnionChange);
+        this.$off("multi-change", this.onUnionChange);
     },
     watch: {
 
@@ -411,7 +412,7 @@ export default {
 
             if (filterResult.length) {
                 filterResult.map(function (sortItem, itemIndex) {
-                    Emiter.$emit(sortItem.sortValue + "-change", [], [], "emptyOnly");
+                    this.broadcast("selectComponent",sortItem.sortValue + "-change", [], [], "emptyOnly");
                 })
             }
 
@@ -426,11 +427,10 @@ export default {
             sortItem.label.map(function (item) {
                 value.push(item.value);
                 label.push(item.text);
-            })
+            });
 
             //向基础组件发起数据变动通知
-            Emiter.$emit(sortItem.sortValue + "-change", value, label);
-
+            this.broadcast("selectComponent",sortItem.sortValue + "-change", value, label);
         },
         onUnionChange(data, type) {
 
@@ -560,11 +560,11 @@ export default {
         },
         observeEvent() {
             //监听二级联动模块change事件
-            Emiter.$on("union-change", this.onUnionChange);
+            this.$on("union-change", this.onUnionChange);
             //监听二级单选模块change事件
-            Emiter.$on("single-change", this.onSingleChange);
+            this.$on("single-change", this.onSingleChange);
             //监听二级多选模块change事件
-            Emiter.$on("multi-change", this.onUnionChange);
+            this.$on("multi-change", this.onUnionChange);
         },
 
         debounce(func, timeout, type) {

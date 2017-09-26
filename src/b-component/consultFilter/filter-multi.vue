@@ -7,7 +7,7 @@
 </template>
 <script>
 
-import Emiter from './emiter.vue';
+import emitter from "./emit";
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
 
@@ -50,6 +50,8 @@ function getComponentConfig(model, remoteMethod, isRemote) {
 }
 const prefixCls = "spui-b-consultFilter";
 const MultiFilterSlotComponent = {
+    name: "selectComponent",
+    mixins: [ emitter ],
     props: {
         model: {
             type: Object,
@@ -97,7 +99,7 @@ const MultiFilterSlotComponent = {
                             })
                             data.value = value;
                             _this.selectValue = data.value;
-                            Emiter.$emit("multi-change-slot", data, _this.type);
+                            _this.dispatch("consultFilterMulti","multi-change-slot", data, _this.type);
                             _this.type = "fromBottom";
 
                         }
@@ -153,10 +155,10 @@ const MultiFilterSlotComponent = {
     beforeDestroy() {
         if (this.model.parentSortValue) {
             //移除父层筛选项修改事件
-            Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+            this.$off(this.model.sortValue + "-change", this.onFilterChange);
         }
         //移除父层筛选项修改事件
-        Emiter.$off(this.model.sortValue + "-change", this.onFilterChange);
+        this.$off(this.model.sortValue + "-change", this.onFilterChange);
     },
     methods: {
         init() {
@@ -166,10 +168,10 @@ const MultiFilterSlotComponent = {
         observeEvent() {
             if (this.model.parentSortValue) {
                 //监听父层筛选项修改事件
-                Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
+                this.$on(this.model.sortValue + "-change", this.onFilterChange);
             }
             //监听父层筛选项修改事件
-            Emiter.$on(this.model.sortValue + "-change", this.onFilterChange);
+            this.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
         initDataChange: function () {
             var hasInitValue = false;
@@ -195,7 +197,7 @@ const MultiFilterSlotComponent = {
                 return;
             }
 
-            Emiter.$emit("union-change-slot", data, me.type);
+            this.dispatch("consultFilterMulti","multi-change-slot", data, me.type);
             this.type = "fromBottom";
 
         },
@@ -300,6 +302,7 @@ export default {
             require: true
         }
     },
+    mixins: [ emitter ],
     components: {
     },
     data() {
@@ -315,20 +318,18 @@ export default {
             return this.model.class ? this.model.class : `${prefixCls}-multiItemWrap`;
         }
     },
-    mounted() {
-        this.init();
+    created(){
+        this.observeEvent();
     },
+
     beforeDestroy() {
         //监听联动模块子组件change事件
-        Emiter.$off("multi-change-slot", this.onChange);
+        this.$off("multi-change-slot", this.onChange);
     },
     methods: {
-        init() {
-            this.observeEvent();
-        },
         observeEvent() {
             //监听联动模块子组件change事件
-            Emiter.$on("multi-change-slot", this.onChange);
+            this.$on("multi-change-slot", this.onChange);
 
         },
         onChange(params, type) {
@@ -348,7 +349,7 @@ export default {
                     data.label.push(model);
                 })
             }
-            Emiter.$emit("multi-change", data, type);
+            this.dispatch("consultFilter","multi-change", data, type);
 
         }
 
