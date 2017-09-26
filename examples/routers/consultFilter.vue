@@ -28,9 +28,6 @@ export default {
                     "defaultSearchKey": "", //默认搜索类型（iview only：搜索类型必须在下拉项中）
                     "defaultSearchValue": "", //搜索默认值
                     "isResetFilter": false //默认：false，搜索时结果是否与筛选项互斥
-                },
-                callback: function (obj) {
-                    console.log("我搜索了" + obj.key + "下的" + obj.value)
                 }
             },
 
