@@ -51,8 +51,7 @@ module.exports = {
             ]
         }, {
             test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-            loader: 'url-loader?limit=8192',
-            exclude: /assets\/xbicons/
+            loader: 'url-loader?limit=8192'
         }, {
             test: /\.(html|tpl)$/,
             loader: 'html-loader'
