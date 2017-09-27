@@ -122,7 +122,7 @@
             <Button type="ghost">Small</Button>
             <Button type="ghost">Small</Button>
         </Button-group>
-        <Xb-Icon type="owe"></Xb-Icon>
+        <Xb-Icon type="tag-balance" scale="5"></Xb-Icon>
     </div>
 </template>
 <script>
