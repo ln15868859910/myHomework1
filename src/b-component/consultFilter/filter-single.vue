@@ -166,7 +166,6 @@ var maker = {
         },
 
         setMaxSpan(date) {
-            console.log(this.parseDate(date).getTime())
             var startDate = new Date(this.parseDate(date).getTime() - parseInt(this.model.componentConfig.maxSpan - 1) * 24 * 3600 * 1000);
             return this.getMoment(startDate, "year") + "年" + this.getMoment(startDate, "month") + "月" + this.getMoment(startDate, "day") + "日";
         },
