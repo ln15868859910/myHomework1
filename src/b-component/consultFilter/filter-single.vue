@@ -152,12 +152,12 @@ var maker = {
             return toDate(this.dateFormat(date, "YYYY-MM-DD"));
         },
 
-        getMoment(date, format) {            
+        getMoment(date, format) {
             switch(format) {
                 case "day":
                     return date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
                 case "month":
-                    return date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+                    return (date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
                 case "year":
                     return date.getFullYear();
                 default:
@@ -165,11 +165,11 @@ var maker = {
             }
         },
 
-        setMaxspan(date) {
-            var endDate = this.parseDate(date);
-            endDate.setDate(endDate.getDate() - this.model.componentConfig.maxspan);
-            return this.getMoment(endDate, "year") + this.getMoment(endDate, "month") + this.getMoment(endDate, "day");
-        },        
+        setMaxSpan(date) {
+            console.log(this.parseDate(date).getTime())
+            var startDate = new Date(this.parseDate(date).getTime() - parseInt(this.model.componentConfig.maxSpan - 1) * 24 * 3600 * 1000);
+            return this.getMoment(startDate, "year") + "年" + this.getMoment(startDate, "month") + "月" + this.getMoment(startDate, "day") + "日";
+        },
 
         observeEvent() {
             //监听父层筛选项修改事件
@@ -434,10 +434,10 @@ var maker = {
                         "on-change": function (list) {
 
                             if (list[0]) {
-                                if (me.model.componentConfig.maxspan) {
-                                    if ((me.parseDate(list[1]) - me.parseDate(list[0]))/86400000 > me.model.componentConfig.maxspan) {
-                                        me.$set(list, 0, me.setMaxspan(list[1]));
-                                        me.$Message.error(`您已超出最长时间跨度${me.model.componentConfig.maxspan}天`);
+                                if (me.model.componentConfig.maxSpan) {
+                                    if ((me.parseDate(list[1]) - me.parseDate(list[0]))/86400000 > me.model.componentConfig.maxSpan) {
+                                        me.$set(list, 0, me.setMaxSpan(list[1]));
+                                        me.$Message.error(`您已超出最长时间跨度${me.model.componentConfig.maxSpan}天`);
                                     }
                                 }
 
