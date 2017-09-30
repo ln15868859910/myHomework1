@@ -3,6 +3,7 @@
         <div>
             <div>溢出:</div>
             <xb-overflow-tip :content="content1" innnerClass="themess"></xb-overflow-tip>
+            <button @click="change()"></button>
         </div>
         <br>
         <div>
@@ -20,6 +21,9 @@ export default {
         }
     },
     methods: {
+        change(){
+            this.content1="哈啊啊啊啊啊啊"
+        }
     }
 }
 </script>
