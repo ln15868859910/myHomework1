@@ -14,7 +14,7 @@
         </div>
         <transition name="fade">
        
-            <div :class="[prefixCls + '-popper']" :style="styles" ref="popper" v-show="show||visible">
+            <div :class="[prefixCls + '-popper',show?'poppershow':'']" :style="styles" ref="popper" v-show="show||visible">
                 <div :class="[prefixCls + '-content']">
 
                     <!--带有对话框的气泡-->
