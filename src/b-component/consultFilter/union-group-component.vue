@@ -162,6 +162,8 @@ const UnionComponentSlot = {
             this.isRemote = true;
             //动态添加loading属性，双向绑定
             this.$set(this.model.componentConfig, "loading", true);
+            //修复父层组件带搜索时无法初始化的问题 2017年10月11日18:51:05
+            this.$set(this.model.componentConfig, "loading", false);
         }
         //动态添加disabled属性，双向绑定
         this.$set(this.model.componentConfig, "disabled", false);
