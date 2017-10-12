@@ -454,7 +454,7 @@ const UnionComponentSlot = {
             }
             query = query.trim();
             var _this = this;
-            if (this.parentSelectValue.length == 0) {
+            if (this.model.parentSortValue && this.parentSelectValue.length == 0) {
                 return;
             }
             var req = {
