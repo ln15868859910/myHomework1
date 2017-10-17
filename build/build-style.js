@@ -18,6 +18,7 @@ gulp.task('sprites', function () {
             svg: {
                 sprite: 'svgSprite.svg'
             },
+            baseSize: 16,
             svgPath: './svgSprite.svg',
             common: 'xb-icon',
             selector: 'xb-icon-%f'

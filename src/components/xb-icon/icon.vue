@@ -4,7 +4,7 @@
 </template>
 <script>
 const prefixCls = 'xb-icon';
-const baseFontSize = 10;
+const baseFontSize = 16;
 export default {
     name: 'XbIcon',
     props: {
