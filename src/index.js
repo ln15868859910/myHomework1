@@ -59,6 +59,8 @@ import XbOverflowTip from './components/xb-overflow-tip';
 import XbSelect from './components/xb-select';
 import XbTransfer from './components/xb-transfer';
 
+import XbIcon from './components/xb-icon';
+
 //业务组件
 import consultFilter from './b-component/consultFilter';
 import infoBox from './b-component/infoBox';
@@ -149,7 +151,8 @@ const spui = {
     Upload,
     XbOverflowTip,
     XbTransfer,
-    XbSelect
+    XbSelect,
+    XbIcon
 };
 
 const install = function (Vue, opts = {}) {
