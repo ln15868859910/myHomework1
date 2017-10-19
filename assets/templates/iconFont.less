@@ -21,7 +21,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-<% _.each(glyphs, function(glyph) { %>@icon-<%= glyph.fileName %>: "\<%= glyph.codePoint %>";
+<% _.each(glyphs, function(glyph) { %>@icon-<%= glyph.fileName.replace(/[\d]{1,}([\-])/, "") %>: "\<%= glyph.codePoint %>";
 <% }); %>
 
 .<%= cssClass%>-char(@icon-variable) {
@@ -37,7 +37,7 @@
 }
 
 <% _.each(glyphs, function(glyph) { 
-    %>.<%= cssClass%>-<%= glyph.fileName %> {
-	.<%= cssClass%>-base-pseudo(<%= glyph.fileName %>);
+    %>.<%= cssClass%>-<%= glyph.fileName.replace(/[\d]{1,}([\-])/, "") %> {
+	.<%= cssClass%>-base-pseudo(<%= glyph.fileName.replace(/[\d]{1,}([\-])/, "") %>);
 }
 <% }); %>
