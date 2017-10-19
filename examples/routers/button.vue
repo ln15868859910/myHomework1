@@ -123,6 +123,7 @@
             <Button type="ghost">Small</Button>
         </Button-group>
         <Xb-Icon type="tag-balance"></Xb-Icon>
+        <Icon type="android-alert"></Icon>
     </div>
 </template>
 <script>
