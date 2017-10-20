@@ -124,6 +124,9 @@
         </Button-group>
         <Xb-Icon type="tag-balance"></Xb-Icon>
         <Icon type="android-alert"></Icon>
+        <Xb-Icon type="tag-waitpos"></Xb-Icon>
+        <Xb-Icon type="tag-notoption"></Xb-Icon>
+        <Xb-Icon type="tag-hook"></Xb-Icon>
     </div>
 </template>
 <script>
