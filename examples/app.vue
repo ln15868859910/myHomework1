@@ -180,6 +180,9 @@ li+li {
                 <li>
                     <router-link to="/infoBox">infoBox</router-link>
                 </li>
+                <li>
+                    <router-link to="/DropList">DropList</router-link>
+                </li>
             </ul>
         </nav>
         <router-view></router-view>

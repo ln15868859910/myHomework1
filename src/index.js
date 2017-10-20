@@ -61,6 +61,11 @@ import XbTransfer from './components/xb-transfer';
 import XbConfirm from './components/xb-confirm';
 import XbIcon from './components/xb-icon';
 
+import {
+    XbDroplist,
+    XbOption
+} from './components/xb-droplist';
+
 //业务组件
 import consultFilter from './b-component/consultFilter';
 import infoBox from './b-component/infoBox';
@@ -153,6 +158,8 @@ const spui = {
     XbTransfer,
     XbConfirm,
     XbIcon,
+    XbDroplist:XbDroplist,
+    XbOption,
     XbSelect
 };
 

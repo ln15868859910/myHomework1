@@ -6,18 +6,25 @@
         </div>
         <div :class="content">
             <ul :class="ul">
-                <li :class="li" v-for="(data,dataIndex) in infoData.dataList" :key="data">
+                <li :class="li" v-for="(data,dataIndex) in infoData.dataList" :key="dataIndex">
                     <div v-if="data.type==1">
                         <label :class="label">{{data.title}}</label>
-                        <Select v-if="data.isShowPhone" v-model="data.default" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value>
-                            <Option v-for="item in data.list" :value="item.value" :key="item" :label="item.label" :disabled="item.disabled">
+                        <!-- <Select v-if="data.isShowPhone" v-model="data.default" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value>
+                            <Option v-for="item in data.list" :value="item.value" :key="item.value" :label="item.label" :disabled="item.disabled">
                                 <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
                                 <span v-if="!item.disabled" :class="spanPhone">{{item.phone}}</span>
                                 <span v-if="item.disabled">{{item.label}}</span>
                             </Option>
-                        </Select>
-                        <Select v-else v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
-                            <Option v-for="item in data.list" :value="item.value" :key="item">{{ item.label }}</Option>
+                        </Select> -->
+                        <xb-droplist v-if="data.isShowPhone" v-model="data.model" :class="selectMan" ref="abc" :index="dataIndex" :placeholder="data.placeholder||'请选择'" remote :remote-fnc="remoteMethod" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled">
+                            <xb-option v-for="item in data.list" :key="item.value" :value="item" :disabled="item.disabled">
+                                <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
+                                <span v-if="!item.disabled" :class="spanPhone">{{item.phone}}</span>
+                                <span v-if="item.disabled">{{item.label}}</span>
+                            </xb-option>
+                        </xb-droplist>
+                        <Select v-if="!data.isShowPhone" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
+                            <Option v-for="item in data.list" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </div>
                     <div v-else-if="data.type==2">
@@ -204,9 +211,9 @@ export default {
             let param = {
                 Search: query
             };
-
+            
+            _this.search = true;
             this.debounce(function () {
-                _this.search = true;
                 let url = _this.infoData.dataList[index].url + "?search=";
                 Axios.get(url + query).then(function (res) {
                     var data = res;
