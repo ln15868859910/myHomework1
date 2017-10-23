@@ -5,11 +5,17 @@
         <h3>xb-Droplist</h3>
         <br/><br/> 
         <h1>键值字符绑定</h1>
-        <div style="width:100%;height:900px;"></div>
+        <div ></div>
         <xb-droplist :value='selectdata.value' :label='selectdata.name' valueKey='name' @change='selectdone' style='width: 200px;'>
             <xb-option  disabled>哈哈哈</xb-option>
             <xb-option v-for='item in listdata' :key='item.value' :value='item.value' :label='item.name'>{{item.name}}</xb-option>
         </xb-droplist>
+        <h1>只传Id</h1>
+        <xb-droplist :value='selectdata.value'  valueKey='value' @change='selectdone' style='width: 200px;'>
+            <xb-option  disabled>哈哈哈</xb-option>
+            <xb-option v-for='item in listdata' :key='item.value' :value='item.value' :label='item.name'>{{item.name}}</xb-option>
+        </xb-droplist>
+        <br/> 
         <h1>对象绑定</h1>
         <xb-droplist v-model='selectdata' valueKey='value' labelKey='name' style='width: 200px;' placeholder='DSD'>
             <xb-option v-for='item in listdata' :key='item.value' :value='item'>{{item.name}}</xb-option>
@@ -29,6 +35,9 @@
         </xb-droplist>
         
         <TimePicker :value="time" format="HH:mm" type="timerange" placement="bottom-end" placeholder="选择上课时段" style="width: 160px;display:inline-block;" @on-change="setPeriodTime"></TimePicker>
+
+        <!-- <Date-picker v-model="date" type="daterange" format="yyyy-MM-DD" confirm placeholder="选择上课时间" style="width: 220px;display:inline-block;" @on-change="setPeriodTime"></Date-picker> -->
+        <DatePicker :value="date" format="yyyy-MM-DD" type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></DatePicker>
 
         <i-Input v-model='selectdata.value'></i-Input>
         <i-Input v-model='selectdata.name'></i-Input>
@@ -70,6 +79,7 @@ export default {
                 label:''
             },
             time:[],
+            date:'',
             states: ['Alabama', 'Alaska', 'Arizona',
                 'Arkansas', 'California', 'Colorado',
                 'Connecticut', 'Delaware', 'Florida',
