@@ -1,11 +1,11 @@
 <template>
     <div :class="classes" v-clickoutside="hideMenu" style="position: relative;">
-        <div class="ivu-select-selection" @click="toggleMenu" :class="[prefixCls2 + '-selection']">
-            <span class="ivu-select-placeholder" v-if="!query">请选择</span>
-            <input class="ivu-select-input" type="text" v-model="query" style="width:100%;" v-show="filterable" @input="onchange" @on-enter="search" @blur="handleBlur">
-            <input class="ivu-select-input" type="text" v-model="query" readonly style="width:100%;" v-show="!filterable">
-            <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showdelete&&query" @click.native.stop="deleteSelect"></Icon>
-            <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-show="!remote"></Icon>
+        <div @click="toggleMenu" :class="[prefixCls2 + '-selection',prefixCls + '-selection']">
+            <span :class="[prefixCls + '-placeholder']" v-if="!query">请选择</span>
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;" v-show="filterable" @input="onchange" @on-enter="search" @blur="handleBlur">
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!filterable">
+            <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="deleteSelect"></Icon>
+            <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
         </div>
 
         <transition :name="transitionName">
@@ -118,7 +118,7 @@ export default {
             return 'slide-up';
         },
         showCloseIcon () {
-            return !this.multiple && this.showdelete;
+            return !this.multiple && this.showdelete && this. query;
         },
         currentLable(){
             if(this.value){
@@ -143,12 +143,6 @@ export default {
             this.visible = false;
             this.searching = false;
             this.updateQuery();
-        },
-        resetInputState() {
-            this.inputLength = this.$refs.input.value.length * 12 + 20;
-        },
-        handleInputDelete() {
-            
         },
         toggleMenu() {
             if (this.disabled) {
