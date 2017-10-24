@@ -7,7 +7,7 @@
                 {{day}}
             </span>
         </div>
-        <span :class="getCellCls(cell)" v-for="(cell, index) in readCells" :key="index"><em :index="index" @click="handleClick(cell)">{{ cell.text }}</em></span>
+        <span :class="getCellCls(cell)" v-for="(cell, index) in readCells"><em :index="index" @click="handleClick(cell)">{{ cell.text }}</em></span>
     </div>
 </template>
 <script>

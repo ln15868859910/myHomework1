@@ -2,17 +2,17 @@
     <div :class="classes">
         <div :class="[prefixCls+ '-list']" ref="hours">
             <ul :class="[prefixCls + '-ul']">
-                <li :class="getCellCls(item)" v-for="item in hoursList" v-show="!item.hide" @click="handleClick('hours', item)" :key="item">{{ formatTime(item.text) }}</li>
+                <li :class="getCellCls(item)" v-for="item in hoursList" v-show="!item.hide" @click="handleClick('hours', item)">{{ formatTime(item.text) }}</li>
             </ul>
         </div>
         <div :class="[prefixCls+ '-list']" ref="minutes">
             <ul :class="[prefixCls + '-ul']">
-                <li :class="getCellCls(item)" v-for="item in minutesList" v-show="!item.hide" @click="handleClick('minutes', item)" :key="item">{{ formatTime(item.text) }}</li>
+                <li :class="getCellCls(item)" v-for="item in minutesList" v-show="!item.hide" @click="handleClick('minutes', item)">{{ formatTime(item.text) }}</li>
             </ul>
         </div>
         <div :class="[prefixCls+ '-list']" v-show="showSeconds" ref="seconds">
             <ul :class="[prefixCls + '-ul']">
-                <li :class="getCellCls(item)" v-for="item in secondsList" v-show="!item.hide" @click="handleClick('seconds', item)" :key="item">{{ formatTime(item.text) }}</li>
+                <li :class="getCellCls(item)" v-for="item in secondsList" v-show="!item.hide" @click="handleClick('seconds', item)">{{ formatTime(item.text) }}</li>
             </ul>
         </div>
     </div>

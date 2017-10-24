@@ -1,25 +1,26 @@
 <template>
     <div :class="classes" v-clickoutside="hideMenu" style="position: relative;">
         <div @click="toggleMenu" :class="[prefixCls2 + '-selection',prefixCls + '-selection']">
-            <span :class="[prefixCls + '-placeholder']" v-if="!query">请选择</span>
-            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;" v-show="filterable" @input="onchange" @on-enter="search" @blur="handleBlur">
+            <span :class="[prefixCls + '-placeholder']" v-show="!query&&!filterable">{{placeholder}}</span>
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;" v-show="filterable" @input="onchange" @on-enter="search" @blur="handleBlur"  :placeholder="placeholder">
             <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!filterable">
             <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="deleteSelect"></Icon>
             <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
         </div>
 
         <transition :name="transitionName">
-            <div class="ivu-select-dropdown" x-placement="bottom" v-if="visible" style="width:100%;position: absolute;padding:10px;">
-                <ul class="ivu-select-not-found" v-if="listData.length==0||(searching&&!this.searchlistData.length)">
-                    <li>无匹配数据</li>
-                </ul>
-                <ul class="ivu-select-dropdown-list" v-show="!searching">
+            <div class="ivu-select-dropdown" x-placement="bottom" v-show="visible" style="width:100%;position: absolute;padding:10px;">
+                <ul v-if="!searching||remoteMethod" :class="listData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
+                    <li class="ivu-select-item" v-show="ifhasHead"><slot name='head'></slot></li>
+                    <li v-show="!listData.length">无匹配数据</li>
                     <li class="ivu-select-item" v-for="item in listData" :key="item[valueKey]" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
                     </li>
-                    <li class="ivu-select-item ivu-select-item-disabled" v-if="remote&&remoteMethod">【更多选项请搜索】</li>
+                    <li class="ivu-select-item ivu-select-item-disabled" v-show="remote&&remoteMethod&&listData.length">【更多选项请搜索】</li>
                 </ul>
-                <ul class="ivu-select-dropdown-list" v-show="searching">
+                <ul v-if="searching&&!remoteMethod" :class="searchlistData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
+                    <li class="ivu-select-item" v-show="ifhasHead"><slot name='head'></slot></li>
+                    <li v-show="!searchlistData.length">无匹配数据</li>
                     <li class="ivu-select-item" v-for="item in searchlistData" :key="item[valueKey]" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
                     </li>
@@ -83,6 +84,10 @@ export default {
         loading:{
             type:Boolean,
             default:false
+        },
+        placeholder:{
+            type:String,
+            default:'请选择'
         }
     },
     data() {
@@ -126,6 +131,9 @@ export default {
             }else{
                 return this.selectedData[this.labelKey];
             }
+        },
+        ifhasHead(){
+            return !!this.$slots.head;
         }
     },
     created: function() {
@@ -168,11 +176,8 @@ export default {
         },
         onchange(){
             this.searching = true;
-            //只有本地搜索时才会实时？？
-            if(this.remoteMethod){
-                return;
-            }
-            if(!this.remote){
+            
+            if(!this.filterable){
                 return;
             }
             this.search();
@@ -180,7 +185,7 @@ export default {
         search() {
             if (this.remoteMethod && typeof this.remoteMethod == 'function') {
                 this.remoteMethod(this.query);
-            } else if (this.remote) {
+            } else if (this.filterable||this.remote) {
                 if(this.filterMethod && typeof this.filterMethod == 'function'){
                     this.searchlistData = this.listData.filter(this.filterFnc);
                 }else{

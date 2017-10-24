@@ -4,7 +4,6 @@
             <div
                 :class="[prefixCls + '-shortcut']"
                 v-for="shortcut in shortcuts"
-                :key="shortcut"
                 @click="handleShortcutClick(shortcut)">{{ shortcut.text }}</div>
         </div>
         <div :class="[prefixCls + '-body']">
