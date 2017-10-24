@@ -165,12 +165,18 @@
         float: left;
         &-arrow-double{
             margin-left: 10px;
+            .ivu-icon-ios-arrow-left:before{
+                content:@icon-fast-backward;
+            }
         }
     }
     &-next-btn{
         float: right;
         &-arrow-double{
             margin-right: 10px;
+            .ivu-icon-ios-arrow-right:before{
+                content:@icon-fast-forward;
+            }
         }
     }
 
