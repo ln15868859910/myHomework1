@@ -1,9 +1,9 @@
 <template>
     <div :class="classes" v-clickoutside="hideMenu" style="position: relative;">
         <div @click="toggleMenu" :class="[prefixCls2 + '-selection',prefixCls + '-selection']">
-            <span :class="[prefixCls + '-placeholder']" v-show="!query&&!filterable">{{placeholder}}</span>
-            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;" v-show="filterable" @input="onchange" @on-enter="search" @blur="handleBlur"  :placeholder="placeholder">
-            <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!filterable">
+            <span :class="[prefixCls + '-placeholder']" v-show="!query&&!remote">{{placeholder}}</span>
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;" v-show="remote" @input="onchange" @on-enter="search" @blur="handleBlur"  :placeholder="placeholder">
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!remote">
             <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="deleteSelect"></Icon>
             <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
         </div>
@@ -55,7 +55,7 @@ export default {
             //选择的数据、默认数据
             type: Object
         },
-        filterable:{
+        remote:{
             type:Boolean,
             default:false
         },
@@ -64,10 +64,6 @@ export default {
         },
         filterMethod:{
             type: Function
-        },
-        remote: {
-            type: Boolean,
-            default: false
         },
         showdelete:{
             type: Boolean,
@@ -177,7 +173,7 @@ export default {
         onchange(){
             this.searching = true;
             
-            if(!this.filterable){
+            if(!this.remote){
                 return;
             }
             this.search();
@@ -185,7 +181,7 @@ export default {
         search() {
             if (this.remoteMethod && typeof this.remoteMethod == 'function') {
                 this.remoteMethod(this.query);
-            } else if (this.filterable||this.remote) {
+            } else if (this.remote) {
                 if(this.filterMethod && typeof this.filterMethod == 'function'){
                     this.searchlistData = this.listData.filter(this.filterFnc);
                 }else{
@@ -225,9 +221,13 @@ export default {
         selectedData(){
             this.updateQuery();
         },
-        value(val){
+        value(val,oldval){
             if(val!==''||val!==undefined){
                 this.updateQuery();
+            }
+            if(oldval&&!val){
+                this.query = '';
+                this.model = 0;
             }
         }
     }

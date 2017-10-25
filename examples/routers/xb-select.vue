@@ -6,7 +6,7 @@
         <br/><br/>
         <div>{{JSON.stringify(selectdata,null,4)}}</div>
          本地搜索
-        <Xb-Select :list-data="listdata" :selected-data="selectdata" @confirm="selectdone" remote filterable></Xb-Select>
+        <Xb-Select :list-data="listdata" :selected-data="selectdata" @confirm="selectdone" remote></Xb-Select>
 
         正常下拉 无搜索
         <Xb-Select :list-data="listdata" :selected-data="selectdata" @confirm="selectdone"></Xb-Select>
@@ -16,7 +16,7 @@ Model
 
 
         <h2>自定义</h2>
-        <Xb-Select :list-data="options4" :selected-data="selectdcity"  valueKey="value" labelKey="label" remote filterable :remoteMethod="remoteMethod" @confirm="selectthiscity">
+        <Xb-Select :list-data="options4" :selected-data="selectdcity"  valueKey="value" labelKey="label" remote :remoteMethod="remoteMethod" @confirm="selectthiscity">
             <template slot='head'>
                 <span style="display:inline-block;background:#aaa;">姓名</span>
                 <span style="display:inline-block;background:#bbb;">年龄</span>
