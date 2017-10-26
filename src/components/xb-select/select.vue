@@ -2,7 +2,7 @@
     <div :class="classes" v-clickoutside="hideMenu" style="position: relative;">
         <div @click="toggleMenu" :class="[prefixCls2 + '-selection',prefixCls + '-selection']">
             <span :class="[prefixCls + '-placeholder']" v-show="!query&&!remote">{{placeholder}}</span>
-            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;" v-show="remote" @input="onchange" @on-enter="search" @blur="handleBlur"  :placeholder="placeholder">
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;cursor: auto;" v-show="remote" @input="onchange" @on-enter="search" @blur="handleBlur"  @focus="search" :placeholder="placeholder">
             <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!remote">
             <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="deleteSelect"></Icon>
             <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
@@ -11,7 +11,7 @@
         <transition :name="transitionName">
             <div class="ivu-select-dropdown" x-placement="bottom" v-show="visible" style="width:100%;position: absolute;padding:10px;">
                 <ul v-if="!searching||remoteMethod" :class="listData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
-                    <li class="ivu-select-item" v-show="ifhasHead"><slot name='head'></slot></li>
+                    <li class="ivu-select-item ivu-select-item-disabled" v-show="ifhasHead"><slot name='head'></slot></li>
                     <li v-show="!listData.length">无匹配数据</li>
                     <li class="ivu-select-item" v-for="item in listData" :key="item[valueKey]" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
@@ -19,7 +19,7 @@
                     <li class="ivu-select-item ivu-select-item-disabled" v-show="remote&&remoteMethod&&listData.length">【更多选项请搜索】</li>
                 </ul>
                 <ul v-if="searching&&!remoteMethod" :class="searchlistData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
-                    <li class="ivu-select-item" v-show="ifhasHead"><slot name='head'></slot></li>
+                    <li class="ivu-select-item ivu-select-item-disabled" v-show="ifhasHead"><slot name='head'></slot></li>
                     <li v-show="!searchlistData.length">无匹配数据</li>
                     <li class="ivu-select-item" v-for="item in searchlistData" :key="item[valueKey]" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
@@ -37,6 +37,7 @@ import Emitter from '../../mixins/emitter';
 import Locale from '../../mixins/locale';
 const prefixCls = 'ivu-select';
 const prefixCls2 = 'ivu-xbselect';
+import { debounce } from '../../utils/throttle';
 
 export default {
     name: 'XbSelect',
@@ -134,6 +135,7 @@ export default {
     },
     created: function() {
         this.lastData = Object.assign({}, this.selectedData);
+        this.search = debounce(this.changesearch,300);
     },
     methods: {
         findValueLabel(){
@@ -178,7 +180,7 @@ export default {
             }
             this.search();
         },
-        search() {
+        changesearch() {
             if (this.remoteMethod && typeof this.remoteMethod == 'function') {
                 this.remoteMethod(this.query);
             } else if (this.remote) {
