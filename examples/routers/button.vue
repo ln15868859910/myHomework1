@@ -127,6 +127,7 @@
         <Xb-Icon type="tag-waitpos"></Xb-Icon>
         <Xb-Icon type="tag-notoption"></Xb-Icon>
         <Xb-Icon type="tag-hook"></Xb-Icon>
+        <Xb-Icon type="tag-sit"></Xb-Icon>
     </div>
 </template>
 <script>
