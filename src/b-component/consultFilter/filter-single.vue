@@ -136,9 +136,9 @@ var maker = {
                 return;
             }
 
-            var yearSeparate = hasFormat ? /YYYY([^]*)MM/i.exec(formatStr)[1] : "年",
-                monthSeparate = hasFormat ? /MM([^]*)DD/i.exec(formatStr)[1] : "月",
-                daySeparate = hasFormat ? /DD([^]*)/i.exec(formatStr)[1] : "日",
+            var yearSeparate = hasFormat ? /YYYY(.*)MM/i.exec(formatStr)[1] : "年",
+                monthSeparate = hasFormat ? /MM(.*)DD/i.exec(formatStr)[1] : "月",
+                daySeparate = hasFormat ? /DD(.*)/i.exec(formatStr)[1] : "日",
 
                 dateYear = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[1],
                 dateMonth = /(\d{4})[^\d]*(\d{1,2})[^\d]*(\d{1,2})/.exec(dateStr)[2],
