@@ -9,13 +9,17 @@ export default {
     name: 'XbIcon',
     props: {
         type: String,
-        scale: String
+        scale: String,
+        attachClass: String //支持传入自定义样式 add by tianyu.chen @2017年10月20日13:09:25
     },
     computed: {
         classes() {
             return [
                 `${prefixCls}`,
-                `${prefixCls}-${this.type}`
+                `${prefixCls}-${this.type}`,
+                {
+                    [this.attachClass]: !!this.attachClass
+                }
             ];
         },
         styles() {
