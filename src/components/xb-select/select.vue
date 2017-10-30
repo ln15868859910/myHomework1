@@ -2,7 +2,7 @@
     <div :class="classes" v-clickoutside="hideMenu" style="position: relative;">
         <div @click="toggleMenu" :class="[prefixCls2 + '-selection',prefixCls + '-selection']">
             <span :class="[prefixCls + '-placeholder']" v-show="!query&&!remote">{{placeholder}}</span>
-            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;cursor: auto;" v-show="remote" @input="onchange" @on-enter="search" @blur="handleBlur"  @focus="search" :placeholder="placeholder">
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;cursor: auto;" v-show="remote" @input="onchange" @on-enter="search" @blur="handleBlur" @focus="focusSearch" :placeholder="placeholder">
             <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!remote">
             <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="deleteSelect"></Icon>
             <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
@@ -123,7 +123,7 @@ export default {
             return !this.multiple && this.showdelete && this. query;
         },
         currentLable(){
-            if(this.value){
+            if(this.value!==undefined){
                 return this.findValueLabel();
             }else{
                 return this.selectedData[this.labelKey];
@@ -143,12 +143,23 @@ export default {
                 var id = this.model;
                 return item[this.valueKey] === id;
             });
-            return obj.length ? obj[0][this.labelKey] : '';
+            if(obj.length){
+                return obj[0][this.labelKey]
+            }else{
+                if(this.lastData[this.valueKey]!==undefined&&this.model === this.lastData[this.valueKey]){
+                    return this.lastData[this.labelKey];
+                }
+                return '';
+            }
+            
         },
         handleBlur() { 
             this.visible = false;
             this.searching = false;
             this.updateQuery();
+        },
+        focusSearch(){
+            this.changesearch('');
         },
         toggleMenu() {
             if (this.disabled) {
@@ -180,15 +191,18 @@ export default {
             }
             this.search();
         },
-        changesearch() {
+        changesearch(value) {
+            if(value==undefined){
+                value = this.query;
+            }
             if (this.remoteMethod && typeof this.remoteMethod == 'function') {
-                this.remoteMethod(this.query);
+                this.remoteMethod(value);
             } else if (this.remote) {
                 if(this.filterMethod && typeof this.filterMethod == 'function'){
                     this.searchlistData = this.listData.filter(this.filterFnc);
                 }else{
                     this.searchlistData = this.listData.filter((text) => {
-                        return text[this.labelKey].indexOf(this.query) > -1;
+                        return text[this.labelKey].indexOf(value) > -1;
                     });
                 }
 
@@ -198,10 +212,12 @@ export default {
             var obj = Object.assign({}, this.lastData);
             obj[this.labelKey] = '';
             obj[this.valueKey]= 0;
-
+            this.lastData = {};
             this.model = 0;
             this.updateQuery();
+            this.$emit('input', 0);
             this.$emit('confirm', obj);
+
         },
         updateQuery(){
             if((this.value===''||this.value===undefined)&&!this.selectedData){
@@ -211,7 +227,7 @@ export default {
             }
             if(this.value===0){
                 this.query = '';
-                this.model = 0;
+                // this.model = 0;
             }
             this.query =  (this.value!==''&&this.value!==undefined)? this.findValueLabel() : this.selectedData[this.labelKey];
         }
