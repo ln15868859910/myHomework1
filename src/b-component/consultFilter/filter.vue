@@ -364,7 +364,7 @@ export default {
 
             //找到内容溢出的tag
             for (let i = 0, len = labelInstances.length; i < len; i++) {
-                var labelSortNew = /sortLabel-([^]*)/.exec(labelInstances[i].$el.querySelector(`.${prefixCls}-label`).dataset.id)[1];
+                var labelSortNew = /sortLabel-(.*)/.exec($(labelInstances[i].$el.querySelector(`.${prefixCls}-label`)).attr("data-id"))[1];
                 var labelWidth = labelInstances[i].$el.querySelector('.ivu-tag-text').clientWidth;
 
                 //初始化时给labelSortOld赋新值,并记录当前的起始索引位置,切换分类后旧值和新值不同，重新记录起始位置
