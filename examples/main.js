@@ -5,6 +5,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './app.vue';
 import Spui from '../src/index';
+import Spui from '../src/index-theme-scp.js';
 // import locale from '../src/locale/lang/en-US';
 import locale from '../src/locale/lang/zh-CN';
 
