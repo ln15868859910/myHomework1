@@ -21,3 +21,4 @@ dist/
 yarn-error.log
 test/unit/coverage
 .vscode
+src/styles/common/iconfont/fonts/

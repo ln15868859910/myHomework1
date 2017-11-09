@@ -144,7 +144,7 @@ export default {
                 return item[this.valueKey] === id;
             });
             if(obj.length){
-                return obj[0][this.labelKey]
+                return obj[0][this.labelKey];
             }else{
                 if(this.lastData[this.valueKey]!==undefined&&this.model === this.lastData[this.valueKey]){
                     return this.lastData[this.labelKey];
@@ -241,6 +241,7 @@ export default {
         },
         value(val,oldval){
             if(val!==''||val!==undefined){
+                this.model = val;
                 this.updateQuery();
             }
             if(oldval&&!val){
