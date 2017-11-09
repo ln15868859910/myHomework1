@@ -58,6 +58,8 @@ import locale from './locale';
 import XbOverflowTip from './components/xb-overflow-tip';
 import XbSelect from './components/xb-select';
 import XbTransfer from './components/xb-transfer';
+import XbConfirm from './components/xb-confirm';
+import XbIcon from './components/xb-icon';
 
 //业务组件
 import consultFilter from './b-component/consultFilter';
@@ -149,6 +151,8 @@ const spui = {
     Upload,
     XbOverflowTip,
     XbTransfer,
+    XbConfirm,
+    XbIcon,
     XbSelect
 };
 
@@ -163,6 +167,7 @@ const install = function (Vue, opts = {}) {
     Vue.prototype.$Loading = LoadingBar;
     Vue.prototype.$Message = Message;
     Vue.prototype.$Modal = Modal;
+    Vue.prototype.$XbConfirm = XbConfirm;
     Vue.prototype.$Notice = Notice;
 };
 
