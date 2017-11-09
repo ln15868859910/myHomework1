@@ -7,3 +7,6 @@
 > 1.Select 组件 更新为 iView 2.5
 > 2.DatePicker 组件 更新为 iView 2.5
 > 3.新增 AutoComplete组件   来源为iView 2.5
+
+# *2017年11月9日14:31:42*
+> 1.input 组件更新至iView 2.5
