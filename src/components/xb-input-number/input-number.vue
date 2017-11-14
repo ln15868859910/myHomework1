@@ -216,7 +216,9 @@ export default {
             this.setValue(val);
         },
         setValue(val) {
-            if (!isNaN(this.fixed)) val = Number(Number(val).toFixed(this.fixed));
+            if (!isNaN(this.fixed)){
+                val = this.fiexdNumber(val);
+            }
 
             this.$nextTick(() => {
                 this.currentValue = val;
@@ -231,6 +233,7 @@ export default {
         blur() {
             this.focused = false;
             // this.$emit('on-blur');
+            this.setValue(this.currentValue);
         },
         keyDown(e) {
             if (e.keyCode === 38) {
@@ -243,12 +246,12 @@ export default {
         },
         fiexdNumber(val) {
             //小数点补足原则  整数或小数未超过指定小数位数长度 不管，超过后截取指定小数位数
-            var strarr = ('' + Number(val)).split('.');
+            var strarr = (val+'').split('.');
             if (strarr.length == 2 && strarr[1].length > this.fixed) {
                 this.setError('fixed');
             }
             if (strarr.length == 2 && this.fixed) {
-                return strarr[0] + '.' + strarr[1].substring(0, this.fixed);
+                return (strarr[0]||0) + '.' + (strarr[1]||"0").substring(0, this.fixed);
             } else {
                 return strarr[0];
             }
@@ -292,22 +295,22 @@ export default {
             const min = this.min;
 
             const isEmptyString = val.length === 0;
-            val = Number(val);
-            if (!isNaN(val) && !isEmptyString) {
+            // val = Number(val);
+            if (!isNaN(Number(val)) && !isEmptyString) {
                 this.currentValue = val;
 
-                if (val > max) {
+                if (Number(val) > max) {
                     this.setValue(max);
                     this.setError('max');
 
-                } else if (val < min) {
+                } else if (Number(val) < min) {
                     this.setValue(min);
                     this.setError('min');
                 } else {
                     this.setValue(val);
                 }
             } else {
-                if(isNaN(val)){
+                if(isNaN(Number(val))){
                     this.setError('nan');
                 }else{
                     if(this.required){
