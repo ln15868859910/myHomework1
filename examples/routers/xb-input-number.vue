@@ -9,7 +9,7 @@
         <Xb-Input-number :max="10" name="he" :min="-1" v-model="v2" :autofocus="autofocus" hidestep></Xb-Input-number>
 
         小数位数：
-        <Xb-Input-number name="he" v-model="v3" :autofocus="autofocus" :fixed="2"></Xb-Input-number>
+        <Xb-Input-number name="he" v-model="v3" :autofocus="autofocus" :fixed="2" :max="10"  :min="0.01"></Xb-Input-number>
 
         可为空：
         

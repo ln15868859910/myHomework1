@@ -233,7 +233,23 @@ export default {
         blur() {
             this.focused = false;
             // this.$emit('on-blur');
-            this.setValue(this.currentValue);
+            this.checkRange();
+        },
+        checkRange(){   //离焦之后的大小值校验
+            var val = this.currentValue;
+            const max = this.max;
+            const min = this.min;
+            if (Number(val) > max) {
+                this.setValue(max);
+                this.setError('max');
+
+            } else if (Number(val) < min) {
+                //离焦时 不用处理特殊分支
+                this.setValue(min);
+                this.setError('min');
+            } else {
+                this.setValue(val);
+            }
         },
         keyDown(e) {
             if (e.keyCode === 38) {
@@ -304,8 +320,14 @@ export default {
                     this.setError('max');
 
                 } else if (Number(val) < min) {
-                    this.setValue(min);
-                    this.setError('min');
+                    //处理一个特殊的分支  当最小为0.01 但 现在输入的值为0\0.\0.0时 应当允许继续输入
+
+                    if(val.split(".").length==1||val.split(".")[1].length<(''+this.min).split(".")[1].length){
+                        this.setValue(val);
+                    }else{
+                        this.setValue(min);
+                        this.setError('min');
+                    }
                 } else {
                     this.setValue(val);
                 }
