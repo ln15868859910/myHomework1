@@ -18,7 +18,7 @@
                                         <span :class="[prefixCls+'-spanName']" >{{data.name}}</span>
                                         <div slot="content">
                                             <ul :class="[prefixCls+'-book-ul']">
-                                                <li v-for="(item,jindex) in data.list" :key="item" v-if="!item.select" @click="selectThis(item)">{{item.Name}}</li>
+                                                <li v-for="(item,jindex) in data.list" :key="jindex" v-if="!item.select" @click="selectThis(item)">{{item.Name}}</li>
                                             </ul>
                                         </div>
                                     </Panel>
@@ -28,7 +28,7 @@
                                         <span :class="[prefixCls+'-spanName']" >{{data.name}}</span>
                                         <div slot="content">
                                             <ul :class="[prefixCls+'-book-ul']">
-                                                <li v-for="(item,jindex) in data.list" :key="item" v-if="!item.select" @click="selectThis(item)">{{item.Name}}</li>
+                                                <li v-for="(item,jindex) in data.list" :key="jindex" v-if="!item.select" @click="selectThis(item)">{{item.Name}}</li>
                                             </ul>
                                         </div>
                                     </Panel>
