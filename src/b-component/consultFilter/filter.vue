@@ -10,7 +10,7 @@
                 <!-- 搜索内容区域 -->
                 <div :class="search" v-if="searchData && status.isInitCompleted">
                     <Select v-show="!searchData.opts.isHideOptsList" :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
-                        <Option v-for="item in searchData.data" :value="item.value" :key="item">{{ item.text }}</Option>
+                        <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
                     </Select>
                     <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
                 </div>
@@ -43,9 +43,9 @@
         <transition name="slide-up">
             <div :class="fitlerResult" v-if="filterResult.length">
                 <ul>
-                    <li v-for="(data,dataIndex) in filterResult" :key="data">
+                    <li v-for="(data,dataIndex) in filterResult" :key="dataIndex">
                         <span :class="sortName">{{data.sortName}}：</span>
-                        <Tooltip v-for="(label, labelIndex) in data.label" :key="label" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
+                        <Tooltip v-for="(label, labelIndex) in data.label" :key="labelIndex" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
                             <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
                         </Tooltip>
                     </li>
