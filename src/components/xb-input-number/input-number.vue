@@ -269,7 +269,7 @@ export default {
             if (strarr.length == 2 && this.fixed) {
                 return (strarr[0]||0) + '.' + (strarr[1]||"0").substring(0, this.fixed);
             } else {
-                return strarr[0];
+                return Number(strarr[0]);
             }
 
         },
