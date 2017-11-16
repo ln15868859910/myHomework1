@@ -16,11 +16,16 @@
                                 <span v-if="item.disabled">{{item.label}}</span>
                             </Option>
                         </Select> -->
-                        <xb-droplist v-if="data.isShowPhone" v-model="data.model" :class="selectMan" ref="abc" :index="dataIndex" :placeholder="data.placeholder||'请选择'" remote :remote-fnc="remoteMethod" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled">
+                        <xb-droplist v-if="data.isShowPhone" v-model="data.model" :class="selectMan" ref="abc" :index="dataIndex" :placeholder="data.placeholder||'请选择'" remote :remote-fnc="{fn:remoteMethod,params:dataIndex}" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled">
                             <xb-option v-for="item in data.list" :key="item.value" :value="item" :disabled="item.disabled">
-                                <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
-                                <span v-if="!item.disabled" :class="spanPhone">{{item.phone}}</span>
-                                <span v-if="item.disabled">{{item.label}}</span>
+                                <!-- <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
+                                <span v-if="!item.disabled" :class="spanPhone">{{item.phone||""}}</span>
+                                <span v-if="item.disabled">{{item.label}}</span> -->
+                                <Row style="padding: 0;">
+                                    <Col span="12" v-if="!item.disabled" :class="spanName" :title="item.label" style="width: 50%;margin-right: 0;">{{ item.label }}</Col>
+                                    <Col span="12" v-if="!item.disabled" :class="spanPhone">{{item.phone||""}}</Col>
+                                    <Col span="24" v-if="item.disabled">{{item.label}}</Col>
+                                </Row>
                             </xb-option>
                         </xb-droplist>
                         <Select v-if="!data.isShowPhone" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
@@ -192,20 +197,22 @@ export default {
                 }
             }
         },
-        remoteMethod(query) {
-            let index;
-            if (!event) {
-                index = this.oldIndex;
-            } else {
-                index = event.target.parentElement.parentElement.getAttribute("index");
-                this.oldIndex = index;
-            }
+        remoteMethod() {
+            // console.log(arguments);
+            let index = arguments[1];
+            var query = arguments[0];
+            // if (!event) {
+            //     index = this.oldIndex;
+            // } else {
+            //     index = event.target.parentElement.parentElement.getAttribute("index");
+            //     this.oldIndex = index;
+            // }
             if (!index) {
                 return;
             }
-            if (query.trim() == "" && query.length > 0) {
-                return;
-            }
+            // if (query.trim() == "" && query.length > 0) {
+            //     return;
+            // }
             query = query.trim();
             var _this = this;
             let param = {

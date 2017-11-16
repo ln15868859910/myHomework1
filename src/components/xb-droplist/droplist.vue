@@ -71,7 +71,7 @@ export default {
         },
         clearable:Boolean,
         remote:Boolean,
-        remoteFnc:Function,
+        remoteFnc:Function|Object,
         placeholder:String,
         notFoundText:{
             default: '无匹配数据',
@@ -198,8 +198,16 @@ export default {
                 return;
             }
             
-            if(this.remote&typeof this.remoteFnc === 'function'){ 
-                this.remoteFnc(querytext);
+            if(this.remote){
+                if(typeof this.remoteFnc === 'function'){
+                    this.remoteFnc(querytext);
+                }else if(typeof this.remoteFnc === 'object'){
+                    var params = this.remoteFnc.params;
+                    this.remoteFnc.fn.call(this,querytext,params);
+                }else{
+                    this.optioncount = 0;
+                }
+                
             }else{
                 this.optioncount = 0;
             }
