@@ -19,7 +19,7 @@
                     <li class="ivu-select-item ivu-select-item-disabled" v-show="remote&&remoteMethod&&listData.length&&!searching">【更多选项请搜索】</li>
                 </ul>
                 <ul v-if="searching&&!remoteMethod" :class="searchlistData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
-                    <li class="ivu-select-item ivu-select-item-disabled 12323" v-show="ifhasHead"><slot name='head'></slot></li>
+                    <li class="ivu-select-item ivu-select-item-disabled" v-show="ifhasHead"><slot name='head'></slot></li>
                     <li v-show="!searchlistData.length">无匹配数据</li>
                     <li class="ivu-select-item" v-for="(item,index) in searchlistData" :key="index" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
