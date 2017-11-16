@@ -13,15 +13,15 @@
                 <ul v-if="!searching||remoteMethod" :class="listData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
                     <li class="ivu-select-item ivu-select-item-disabled" v-show="ifhasHead"><slot name='head'></slot></li>
                     <li v-show="!listData.length">无匹配数据</li>
-                    <li class="ivu-select-item" v-for="item in listData" :key="item[valueKey]" @click="selectThis(item)">
+                    <li class="ivu-select-item" v-for="(item,index) in listData" :key="index" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
                     </li>
                     <li class="ivu-select-item ivu-select-item-disabled" v-show="remote&&remoteMethod&&listData.length&&!searching">【更多选项请搜索】</li>
                 </ul>
                 <ul v-if="searching&&!remoteMethod" :class="searchlistData.length?'ivu-select-dropdown-list':'ivu-select-not-found'">
-                    <li class="ivu-select-item ivu-select-item-disabled" v-show="ifhasHead"><slot name='head'></slot></li>
+                    <li class="ivu-select-item ivu-select-item-disabled 12323" v-show="ifhasHead"><slot name='head'></slot></li>
                     <li v-show="!searchlistData.length">无匹配数据</li>
-                    <li class="ivu-select-item" v-for="item in searchlistData" :key="item[valueKey]" @click="selectThis(item)">
+                    <li class="ivu-select-item" v-for="(item,index) in searchlistData" :key="index" @click="selectThis(item)">
                         <slot :data="item" name="lislot">{{item[labelKey]}}</slot>
                     </li>
                 </ul>
@@ -142,6 +142,7 @@ export default {
     },
     methods: {
         findValueLabel(){
+            console.log(this.listData);
             var obj = this.listData.filter(item=>{
                 var id = this.model;
                 return item[this.valueKey] === id;
@@ -154,7 +155,6 @@ export default {
                 }
                 return '';
             }
-            
         },
         handleBlur() { 
             this.visible = false;
@@ -186,12 +186,11 @@ export default {
             }
             this.$emit('confirm', data);
         },
-        onchange(){
-            this.searching = true;
-            
+        onchange(){            
             if(!this.remote){
                 return;
             }
+            this.searching = true;
             this.search();
         },
         changesearch(value) {
