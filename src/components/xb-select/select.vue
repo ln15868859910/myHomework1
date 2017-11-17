@@ -142,7 +142,7 @@ export default {
     },
     methods: {
         findValueLabel(){
-            console.log(this.listData);
+            // console.log(this.listData);
             var obj = this.listData.filter(item=>{
                 var id = this.model;
                 return item[this.valueKey] === id;
