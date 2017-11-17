@@ -33,25 +33,29 @@ function getComponentConfig(model, remoteMethod, isRemote) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
-                data.label = [];
-                if (data.multiple && data.value.length > 0) {
-                    data.value.map(function (item, index) {
+                if(data.isFirst){
+                    var arr = [];
+                    if (data.multiple && data.value.length > 0) {
+                        data.value.map(function (item, index) {
+                            for (var i = 0, l = optionList.length; i < l; i++) {
+                                if (optionList[i].value == item) {
+                                    arr.push(optionList[i].label);
+                                    return;
+                                }
+                            }
+                        })
+                    }
+                    else {
                         for (var i = 0, l = optionList.length; i < l; i++) {
-                            if (optionList[i].value == item) {
-                                data.label.push(optionList[i].label);
+                            if (optionList[i].value == data.value) {
+                                arr = optionList[i].label;
                                 return;
                             }
                         }
-                    })
-                }
-                else {
-                    for (var i = 0, l = optionList.length; i < l; i++) {
-                        if (optionList[i].value == data.value) {
-                            data.label = optionList[i].label;
-                            return;
-                        }
                     }
+                    data.label = arr;
                 }
+                
                 data.loading = model.componentConfig.loading;
             }
             break;
@@ -88,6 +92,7 @@ const UnionComponentSlot = {
             selectValue: "",
             optionList: "",
             isInit: true,
+            isFirst: true,
             parentSelectValue: "",
             debounceObj: {
 
@@ -158,6 +163,7 @@ const UnionComponentSlot = {
 
             )
         }
+        this.isFirst = false;
     },
     created() {
         if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
