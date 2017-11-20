@@ -28,17 +28,21 @@ function getComponentConfig(model, remoteMethod, isRemote) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
-                data.label = [];
-                if (data.value.length > 0) {
-                    data.value.map(function (item, index) {
-                        for (var i = 0, l = optionList.length; i < l; i++) {
-                            if (optionList[i].value == item) {
-                                data.label.push(optionList[i].label);
-                                return;
+                if(data.isFirst){
+                    var arr = [];
+                    if (data.value.length > 0) {
+                        data.value.map(function (item, index) {
+                            for (var i = 0, l = optionList.length; i < l; i++) {
+                                if (optionList[i].value == item) {
+                                    arr.push(optionList[i].label);
+                                    return;
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                    data.label = arr;
                 }
+               
                 data.loading = model.componentConfig.loading;
             }
             break;
@@ -63,6 +67,7 @@ const MultiFilterSlotComponent = {
             },
             selectValue: [],
             isRemote: false,
+            isFirst:true,
             type: "fromBottom"
         }
     },
@@ -116,6 +121,7 @@ const MultiFilterSlotComponent = {
 
                 ])
         }
+        this.isFirst = false;
     },
     created() {
         if (this.model.remoteUrl && this.model.remoteUrl.onSearch) {
