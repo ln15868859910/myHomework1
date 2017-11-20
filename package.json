@@ -13,7 +13,7 @@
     "ui",
     "framework"
   ],
-  "main": "dist/iview.js",
+  "main": "dist/spui.js",
   "files": [
     "dist",
     "src"
