@@ -10,7 +10,7 @@
                     <div v-if="data.type==1">
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" v-if="showdetail">{{returnLabel(data)}}</span>
-                        <Select v-if="data.isShowPhone&&!showdetail" v-model="data.model.value" :label="data.model.label" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
+                        <Select v-if="data.isShowPhone&&!showdetail" v-model="data.default" :label="returnLabel(data)" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value" :label="item.label" :disabled="item.disabled">
                                 <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
                                 <span v-if="!item.disabled" :class="spanPhone">{{item.phone}}</span>
