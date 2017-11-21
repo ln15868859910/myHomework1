@@ -9,25 +9,22 @@
                 <li :class="li" v-for="(data,dataIndex) in infoData.dataList" :key="dataIndex">
                     <div v-if="data.type==1">
                         <label :class="label">{{data.title}}</label>
-                        <!-- <Select v-if="data.isShowPhone" v-model="data.default" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value>
+                        <Select v-if="data.isShowPhone" v-model="data.default" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value" :label="item.label" :disabled="item.disabled">
                                 <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
                                 <span v-if="!item.disabled" :class="spanPhone">{{item.phone}}</span>
                                 <span v-if="item.disabled">{{item.label}}</span>
                             </Option>
-                        </Select> -->
-                        <xb-droplist v-if="data.isShowPhone" v-model="data.model" :class="selectMan" ref="abc" :index="dataIndex" :placeholder="data.placeholder||'请选择'" remote :remote-fnc="{fn:remoteMethod,params:dataIndex}" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled">
+                        </Select>
+                        <!-- <xb-droplist v-if="data.isShowPhone" v-model="data.model" :class="selectMan" ref="abc" :index="dataIndex" :placeholder="data.placeholder||'请选择'" remote :remote-fnc="{fn:remoteMethod,params:dataIndex}" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled">
                             <xb-option v-for="item in data.list" :key="item.value" :value="item" :disabled="item.disabled">
-                                <!-- <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
-                                <span v-if="!item.disabled" :class="spanPhone">{{item.phone||""}}</span>
-                                <span v-if="item.disabled">{{item.label}}</span> -->
                                 <Row style="padding: 0;">
                                     <Col span="12" v-if="!item.disabled" :class="spanName" :title="item.label" style="width: 50%;margin-right: 0;">{{ item.label }}</Col>
                                     <Col span="12" v-if="!item.disabled" :class="spanPhone">{{item.phone||""}}</Col>
                                     <Col span="24" v-if="item.disabled">{{item.label}}</Col>
                                 </Row>
                             </xb-option>
-                        </xb-droplist>
+                        </xb-droplist> -->
                         <Select v-if="!data.isShowPhone" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
@@ -77,7 +74,9 @@ export default {
         return {
             search: false,
             debounceObj: {},
-            oldIndex: ""
+            oldIndex: "",
+            placementArr:[],
+            first:true
         };
     },
     computed: {
@@ -119,10 +118,15 @@ export default {
         this.init();
     },
     mounted() {
-
+        
     },
     updated() {
-
+        // console.log(this);
+        if(this.first){
+            // this.updateplacement();
+            this.first =false;
+        }
+        
     },
     beforeDestroy() {
 
@@ -132,6 +136,17 @@ export default {
 
     },
     methods: {
+        updateplacement(){
+            var selectDom = this.$el.querySelectorAll(".spui-b-infoBox-li");
+            var windowHeight = document.body.scrollHeight;
+            for(var i=0,len=selectDom.length;i<len;i++){
+                if(windowHeight-selectDom[i].offsetTop<240){
+                    this.placementArr.push("top")
+                }else{
+                    this.placementArr.push("bottom")
+                }
+            }
+        },
         setDataItem(data) {
             let _this = this;
             let obj = {};
@@ -197,10 +212,17 @@ export default {
                 }
             }
         },
-        remoteMethod() {
+        setCurrentIndex(index){
+            this.oldIndex = index;
+            if(!this.infoData.dataList.length){
+                this.remoteMethod("");
+            }
+        },
+        remoteMethod(query) {
             // console.log(arguments);
-            let index = arguments[1];
-            var query = arguments[0];
+            // let index = arguments[1];
+            // var query = arguments[0];
+            var index = this.oldIndex;;
             // if (!event) {
             //     index = this.oldIndex;
             // } else {
@@ -279,6 +301,9 @@ export default {
             this.$emit("datacallback", obj);
             //todo 多级联动选择未完成
             _this.toDataModel();
+        },
+        countHeight(index){
+            return this.placementArr[index];
         },
         loadData(item, callback) {
             item.loading = true;
