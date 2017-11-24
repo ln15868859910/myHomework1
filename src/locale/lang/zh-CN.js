@@ -1,5 +1,8 @@
-export default {
+import setLang from '../lang';
+
+const lang = {
     i: {
+        locale: 'zh-CN',
         select: {
             placeholder: '请选择',
             noMatch: '无匹配数据',
@@ -19,6 +22,7 @@ export default {
             endTime: '结束时间',
             clear: '清空',
             ok: '确定',
+            datePanelLabel: '[yyyy年] [m月]',
             month: '月',
             month1: '1 月',
             month2: '2 月',
@@ -95,3 +99,7 @@ export default {
         }
     }
 };
+
+setLang(lang);
+
+export default lang;
