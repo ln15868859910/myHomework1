@@ -55,6 +55,20 @@ gulp.task('css', ['sprites','Iconfont'], function () {
         .pipe(rename('spui.css'))
         .pipe(gulp.dest('../dist/styles'));
 });
+
+// 编译less
+gulp.task('css_theme_scp', ['sprites','Iconfont'], function () {
+    gulp.src('../src/themes/scp-theme/index.less')
+        .pipe(less())
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions', 'ie > 8']
+        }))
+        .pipe(cleanCSS())
+        .pipe(rename('scp_theme.css'))
+        .pipe(gulp.dest('../dist/styles'));
+});
+
+
 // 拷贝字体文件
 gulp.task('fonts', ['Iconfont'],function () {
     gulp.src('../src/styles/common/iconfont/fonts/*.*')
@@ -67,4 +81,4 @@ gulp.task('copySprite', ['sprites'], function () {
         .pipe(gulp.dest('../dist/styles'));
 });
 
-gulp.task('default', ['css', 'fonts', 'sprites','Iconfont', 'copySprite']);
+gulp.task('default', ['css','css_theme_scp','fonts', 'sprites','Iconfont', 'copySprite']);
