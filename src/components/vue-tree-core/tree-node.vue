@@ -77,16 +77,19 @@
 /*checkbox样式 结束*/
 /*拖拽样式 开始*/
 .drag-over {
-  background-color: #316ac5;
+  background-color: #5295E7;
   color: white;
-  border: 1px #316ac5 solid;
+  border: 1px #5295E7 solid;
   opacity: 0.8;
 }
 .drag-over-gap-top {
-  border-top: 2px blue solid;
+  border-top: 2px #5295E7 solid;
 }
 .drag-over-gap-bottom {
-  border-bottom: 2px blue solid;
+  border-bottom: 2px #5295E7 solid;
+}
+.drag-selected{
+  background:#DEEAF7;
 }
 /*拖拽样式 开始*/
 </style>
@@ -96,7 +99,9 @@
     <!-- <li ref="draggAbleEle" @mouseup="endDrag($event)" :class="draggingClass" v-bind:vue-tree-id="nodeData._hash" data-wrap> -->
         <!-- 拖动标题 -->
         <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
-        <div class="vue-tree-clearfix" :class="[nodeHandleClass,dragOverClass]" data-handle draggable='true' @dragstart='onDragStart' @dragover='onDragOver' @dragenter='onDragEnter' @dragleave='onDragLeave' @drop="onDrop" @dragend='onDragEnd'>
+          <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
+        <div @dragenter='onDragEnter' @dragover='onDragOver' @dragleave='onDragLeave' @drop="onDrop" @dragend='onDragEnd'>
+        <div class="vue-tree-clearfix" :class="[nodeHandleClass,dragOverClass]" data-handle draggable='true' @dragstart='onDragStart'>
             <span class="vue-tree-fl">
                 <span :class="treeTitleWrap">
                     <i v-show="nodeData.nodes.length" :class="collapseStatus" @click="toggleCollapseStatus"></i>
@@ -113,6 +118,7 @@
                 <span><a href="javascript:;" @click="editThisNode()">编辑</a></span>
                 <span><a v-if="isCurNodeStatus('delete')" href="javascript:;" @click="deleteThisNode()">删除</a></span>
             </span>
+        </div>
         </div>
         <!-- 子节点 -->
         <ol v-show="nodeData.nodes.length && nodeData.prop.isExpand">
@@ -241,6 +247,18 @@ export default {
             }
           : { "vue-node-expand": this.nodeData.prop.isExpand }
       ];
+    },
+    dragOverClass() {
+      var isDragOverMe = this.rootData.dragOverStatus.overNodeKey === this.nodeData._hash;
+      var pos = this.rootData.dragOverStatus.dropPosition;
+      return [
+              {
+                  ["drag-over"]: isDragOverMe && pos===0,
+                  ["drag-over-gap-top"]: isDragOverMe && pos===-1,
+                  ["drag-over-gap-bottom"]: isDragOverMe && pos===1,
+                  ["drag-selected"]: this.dragNodeHighlight
+              }
+       ];
     }
   },
   data() {
@@ -261,7 +279,7 @@ export default {
         },
         nodeData: null
       },
-      dragOverClass:""
+      dragNodeHighlight:false //拖拽元素是否高亮
     };
   },
   methods: {
@@ -557,20 +575,6 @@ export default {
         }
       },
     //拖拽处理-huijuan
-    getDragOverClass() {
-      var isDragOverMe = this.rootData.dragOverStatus.overNodeKey === this.nodeData._hash;
-      if (!isDragOverMe) {
-        return "";
-      }
-      if (this.rootData.dragOverStatus.dropPosition === 0) {
-        return "drag-over";
-      } else if (this.rootData.dragOverStatus.dropPosition === -1) {
-        return "drag-over-gap-top";
-      } else if (this.rootData.dragOverStatus.dropPosition === 1) {
-        return "drag-over-gap-bottom";
-      }
-      return ""
-    },
     //计算拖拽节点的放置方式0（作为目标节点的子节点），-1（放置在目标节点的前面）,1（放置在目标节点的后面）
     calDropPosition(e) {
       var offsetTop = e.target.offsetTop;
@@ -586,26 +590,35 @@ export default {
       //放在目标节点里面-作为子节点
       return 0;
     },
-    //获取位置以及计算样式
-    setDragOverClass: throttle(function (e) {
+    //获取放置位置
+    getDropPosition: throttle(function (e) {
       this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
-      this.dragOverClass = this.getDragOverClass();
-    }, 400),
+    }, 200),
+    //拖拽处理-huijuan
     //拖拽开始
     onDragStart(e) {
       e.stopPropagation();
       e.dataTransfer.effectAllowed = "move";
       this.nodeData.prop.isExpand = false;
       this.rootData.dragOverStatus.dragNode = this.nodeData;
+      this.dragNodeHighlight= true;
+      try {
+         e.dataTransfer.setData('text/plain', '');
+      } catch (error) {
+      }
       this.rootData.rootInstance.$emit('dragStart', { treeNode: this.nodeData, event: e });
     },
     //进入目标节点
     onDragEnter(e) {
       e.preventDefault();
       e.stopPropagation();
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return;
+      }
+      this.rootData.dragOverStatus.overNodeKey="";
+      this.rootData.dragOverStatus.dropPosition=null;
       //拖拽节点与目标节点是同一个，return掉
       if (this.nodeData._hash === this.rootData.dragOverStatus.dragNode._hash) {
-        this.rootData.dragOverStatus.overNodeKey="";
         return;
       }
       this.nodeData.prop.isExpand = true;
@@ -615,22 +628,19 @@ export default {
     onDragOver(e) {
       e.preventDefault();
       e.stopPropagation();
-      this.setDragOverClass(e);
+      this.getDropPosition(e);
       // this.dispatch('vueTree', 'dragOver', { treeNode: this.nodeData, event: e });
       this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData, event: e });
       return false;
     },
     onDragLeave(e) {
       e.stopPropagation();
-      this.rootData.dragOverStatus.overNodeKey = "";
-      this.dragOverClass = "";
       this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData, event: e });
     },
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
       this.rootData.dragOverStatus.overNodeKey = "";
-      this.dragOverClass = "";
       //拖拽节点与目标节点是同一个，不做任何操作
       if (this.rootData.dragOverStatus.dragNode._hash === this.nodeData._hash) {
         return;
@@ -646,6 +656,9 @@ export default {
     onDragEnd(e) {
       e.stopPropagation();
       e.preventDefault();
+      this.rootData.dragOverStatus.dragNode=null;
+      this.rootData.dragOverStatus.overNodeKey = "";
+      this.dragNodeHighlight= false;
       this.rootData.rootInstance.$emit('dragEnd', { treeNode: this.nodeData, event: e });
     },
 
