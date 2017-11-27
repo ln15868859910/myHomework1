@@ -68,8 +68,9 @@ export default {
     //在整个组件传递参数
     this.rootData.globalConfig = this.config;
 
-     //编辑回调
-    this.$on("editNode",this.editcallback)
+    //销毁整个删除树型组件
+    this.$on("destory",this.destory);
+
   },
   mounted() {
     this.$on('dragStart', (info) => {
@@ -93,12 +94,15 @@ export default {
   },
 
   methods: {
-    /**
-     * 编辑回调(对外)
-     * 输出：
-     * **/
-    editcallback(data) {
-      this.$emit("on-edit", {data, tree:this.rootData._UITreeMap});
+
+    destory(){
+      this.dataList.splice(0,1);
+      this.rootData._UITreeMap = null;
+      this.dragOverStatus = {
+        overNodeKey: "",
+        dropPosition: "",
+        dragNode:{}
+      }
     }
   }
 };

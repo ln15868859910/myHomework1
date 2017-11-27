@@ -7,7 +7,7 @@
     
     <h1>树型拖拽组件</h1>
     <vue-tree 
-      :data-list="treeData"
+      :data-list="treeData" 
       draggable 
       @on-edit="onEdit" 
       @on-add="onAdd" 
@@ -36,18 +36,35 @@ export default {
         {
           id: 1,
           title: "西湖区校宝教育机构",
-          prop: {
-            deletable: false,
-            isDragDisabled:false
-          },
+          handleList:[
+            {key:"common",isShow:true, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
+            {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
+            {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
+            {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+          ],
           nodes: [
             {
               id: 3,
-              title: "西湖校区",    
+              title: "西湖校区",
+              prop: {
+                isDragDisabled:true,
+              },
+               handleList:[
+                {key:"common",isShow:false, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
+                {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
+                {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
+                {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+              ],     
               nodes: [
                 {
                   id: 5,
                   title: "西zi校区",
+                   handleList:[
+                      {key:"common",isShow:false, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
+                      {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
+                      {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
+                      {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+                    ],
                   nodes: []
                 }
               ]
@@ -55,6 +72,12 @@ export default {
             {
               id: 4,
               title: "下沙校区",
+               handleList:[
+                {key:"common",isShow:true, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("回调")}},
+                {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
+                {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
+                {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+              ],
               nodes: []
             }
           ]

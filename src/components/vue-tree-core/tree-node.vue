@@ -118,14 +118,18 @@
             <span class="vue-tree-fl" ref="draggAbleDom" :class="dragClasses">
                 <span :class="treeTitleWrap">
                     <i v-show="nodeData.nodes.length" :class="collapseStatus" @click="toggleCollapseStatus"></i>
-                    <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show="!isCurNodeStatus('edit') && nodeData.prop.checkable"   @click="toggleChecbox"></i>
+                    <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
                     <span :class="treeTitleClass">{{nodeData.title}}</span>
                 </span>
             </span>
-            <span v-if="rootData.globalConfig.modification" class="vue-tree-fr">
-                <span><a href="javascript:;" @click="addNode()">添加子部门</a></span>
+            <span class="vue-tree-fr">
+                <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
+                  <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
+                  <i v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon" @click="key2FuncMap(dataList.key, dataList)"></i>
+                </span>
+                <!-- <span><a href="javascript:;" @click="addNode()">添加子部门</a></span>
                 <span><a href="javascript:;" @click="editThisNode()">编辑</a></span>
-                <span><a v-if="isCurNodeStatus('delete')" href="javascript:;" @click="deleteThisNode()">删除</a></span>
+                <span><a href="javascript:;" @click="deleteThisNode()">删除</a></span> -->
             </span>
         </div>
         <!-- 子节点 -->
@@ -324,12 +328,11 @@ export default {
         if (!("prop" in this.nodeData)) {
           this.$set(this.nodeData, "prop", {
             isExpand: true,
-            deletable: true,
             checkable: true,
             isDisabled: false,
             isChecked: false,
-            _isEdit: false,
-            isDragDisabled:false//此节点禁用拖拽
+            isDragDisabled:false,//此节点禁用拖拽
+            _isEdit: false
           });
           return;
         }
@@ -341,14 +344,15 @@ export default {
         //赋予可扩展属性和默认值
         //  是否展开this.nodeData.prop.isExpand
         this.checkAndSetInitValue("isExpand",this.nodeData.prop,"boolean", true);
-        //  是否可删除this.nodeData.prop.deletable
-        this.checkAndSetInitValue("deletable",this.nodeData.prop,"boolean",true);
         //  是否可选中this.nodeData.prop.checkable
         this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",true);
         //  是否禁用this.nodeData.prop.checkbox
         this.checkAndSetInitValue("isDisabled",this.nodeData.prop,"boolean",false);
         // 是否默认选中this.nodeData.prop.isChecked
         this.checkAndSetInitValue("isChecked",this.nodeData.prop,"boolean",false);
+        // 是否默认选中this.nodeData.prop.isDragDisabled
+        this.checkAndSetInitValue("isDragDisabled",this.nodeData.prop,"boolean",false);
+        
 
         //【赋予全局冲突逻辑校验】
         //开启了单选但是传入数据又勾选了多个的情况不予通过
@@ -395,53 +399,53 @@ export default {
         this.rootData._UITreeMap[this.nodeData._hash].getDepth = this.getDepth;
       },
 
-      startDrag(event) {
-        // console.log(this.rootData._UITreeMap[this.nodeData._hash].children);
-        // 只有元素是vue-tree-handle是才执行拖动
-        if (!("handle" in event.target.dataset)) return;
+      // startDrag(event) {
+      //   // console.log(this.rootData._UITreeMap[this.nodeData._hash].children);
+      //   // 只有元素是vue-tree-handle是才执行拖动
+      //   if (!("handle" in event.target.dataset)) return;
 
-        //拖动时计算placeholder区域宽高
-        var draggingAreaWidth = this.getCss(this.$refs.draggAbleEle, "width");
-        this.draggingData.placeholderSize.width = +draggingAreaWidth.slice(0, draggingAreaWidth.indexOf("px")) - 20 + "px";
-        this.draggingData.placeholderSize.height = this.getCss(this.$refs.draggAbleEle, "height");
-        //拿到正在拖拽区域的nodeData
-        this.draggingData.nodeData = $.extend(true, {}, this.nodeData);
-        this.params.flag = true;
+      //   //拖动时计算placeholder区域宽高
+      //   var draggingAreaWidth = this.getCss(this.$refs.draggAbleEle, "width");
+      //   this.draggingData.placeholderSize.width = +draggingAreaWidth.slice(0, draggingAreaWidth.indexOf("px")) - 20 + "px";
+      //   this.draggingData.placeholderSize.height = this.getCss(this.$refs.draggAbleEle, "height");
+      //   //拿到正在拖拽区域的nodeData
+      //   this.draggingData.nodeData = $.extend(true, {}, this.nodeData);
+      //   this.params.flag = true;
 
-        if (!event) {
-          event = window.event;
-          event.target.onselectstart = function () {
-            return false;
-          };
-        }
-        var e = event;
-        this.params.currentX = e.clientX;
-        this.params.currentY = e.clientY;
-        // console.log(`起始元素位置X:${e.clientX},Y:${e.clientY}`)
+      //   if (!event) {
+      //     event = window.event;
+      //     event.target.onselectstart = function () {
+      //       return false;
+      //     };
+      //   }
+      //   var e = event;
+      //   this.params.currentX = e.clientX;
+      //   this.params.currentY = e.clientY;
+      //   // console.log(`起始元素位置X:${e.clientX},Y:${e.clientY}`)
 
-        //执行拖拽交互
-        document.onmousemove = event => {
-          var e = event ? event : window.event;
-          if (this.params.flag) {
-            var nowX = e.clientX,
-                nowY = e.clientY;
-            var disX = nowX - this.params.currentX,
-                disY = nowY - this.params.currentY;
+      //   //执行拖拽交互
+      //   document.onmousemove = event => {
+      //     var e = event ? event : window.event;
+      //     if (this.params.flag) {
+      //       var nowX = e.clientX,
+      //           nowY = e.clientY;
+      //       var disX = nowX - this.params.currentX,
+      //           disY = nowY - this.params.currentY;
 
-            this.$refs.draggAbleEle.style.left = parseInt(this.params.left) + disX + "px";
-            this.$refs.draggAbleEle.style.top = parseInt(this.params.top) + disY + "px";
-            // console.log(`当前元素的值：left:${this.$refs.draggAbleEle.style.left},right:${this.$refs.draggAbleEle.style.top}`)
-            if (event.preventDefault) {event.preventDefault();}
-            return false;
-          }
-        };
-      },
+      //       this.$refs.draggAbleEle.style.left = parseInt(this.params.left) + disX + "px";
+      //       this.$refs.draggAbleEle.style.top = parseInt(this.params.top) + disY + "px";
+      //       // console.log(`当前元素的值：left:${this.$refs.draggAbleEle.style.left},right:${this.$refs.draggAbleEle.style.top}`)
+      //       if (event.preventDefault) {event.preventDefault();}
+      //       return false;
+      //     }
+      //   };
+      // },
 
-      endDrag() {
-        this.params.flag = false;
-        //拖拽结束，回复原先坐标
-        this.$refs.draggAbleEle.style = "";
-      },
+      // endDrag() {
+      //   this.params.flag = false;
+      //   //拖拽结束，回复原先坐标
+      //   this.$refs.draggAbleEle.style = "";
+      // },
       //切换勾选状态
       toggleChecbox() {
         
@@ -501,6 +505,13 @@ export default {
 
       //删除自身和子树,同时删除其数据模型
       remove(){
+        //如果是根节点，直接删除
+        if(!this.parentNodeData){
+          this.rootData.rootInstance.$emit("destory");
+          return;
+        }
+
+
          var i = this.parentNodeData.nodes.findIndex(item => {
            item._hash == this.nodeData._hash;
          });
@@ -526,44 +537,6 @@ export default {
       editThisNode() {
         this.rootData.rootInstance.$emit("on-edit",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
         this.nodeData.prop._isEdit = true;
-      },
-
-      // //确认修改
-      // commitThisEditing() {
-      //   //对比前后修改是否一致，一致则不作处理保存
-
-      //   this.nodeData.title = this.currentEditValue;
-      //   this.nodeData.prop._isEdit = false;
-      //   this.currentEditValue = "";
-      //   //发送数据给后端
-      // },
-
-      // //取消修改
-      // cancelThisEditing() {
-      //   this.nodeData.prop._isEdit = false;
-      //   this.currentEditValue = "";
-      // },
-
-      //获取当前节点的状态
-      isCurNodeStatus(type) {
-        //没有针对node的配置项，默认显示
-        if (!this.nodeData.prop) return true;
-
-        //传入了对象的情况下判断是否为对象
-        if (!this.checkThisType(this.nodeData.prop, "object")) {
-          throw new Error("请传入一个对象");
-          return;
-        }
-
-        //当前检查的属性是是否可以被删除
-        if (type == "delete") {
-          //该对象能删除，返回真，该对象不能删除，返回假
-          if (this.nodeData.prop.deletable) {
-            return true;
-          } else {
-            return false;
-          }
-        } 
       },
 
       //获取当前节点在父层的索引
@@ -714,9 +687,23 @@ export default {
           }
       },
 
-      getCss(o, key) {
-        return o.currentStyle ? o.currentStyle[key] : document.defaultView.getComputedStyle(o, false)[key];
+      key2FuncMap(key,dataList){
+ 
+        switch(key){
+          case "add":
+            return this.addNode();
+          case "edit":
+            return this.editThisNode();
+          case "delete":
+            return this.deleteThisNode();
+          case "common":
+            return dataList.callback? dataList.callback(): function(){console.log("未传入回调")}
+        }
+        
       },
+      // getCss(o, key) {
+      //   return o.currentStyle ? o.currentStyle[key] : document.defaultView.getComputedStyle(o, false)[key];
+      // },
       //检查当前值类型
       checkThisType(data, type) {
         //基本类型
