@@ -72,20 +72,20 @@ export default {
     this.$on("editNode",this.editcallback)
   },
   mounted() {
-    this.$on('dragStart', () => {
-      this.$emit('on-dragStart');
+    this.$on('dragStart', (info) => {
+      this.$emit('on-dragStart',info);
     });
-    this.$on('dragEnter', () => {
-      this.$emit('on-dragEnter');
+    this.$on('dragEnter', (info) => {
+      this.$emit('on-dragEnter',info);
     });
-    this.$on('dragOver', () => {
-      this.$emit('on-dragOver');
+    this.$on('dragOver', (info) => {
+      this.$emit('on-dragOver',info);
     });
-    this.$on('dragLeave', () => {
-      this.$emit('on-dragLeave');
+    this.$on('dragLeave', (info) => {
+      this.$emit('on-dragLeave',info);
     });
-    this.$on('dragEnd', () => {
-      this.$emit('on-dragEnd');
+    this.$on('dragEnd', (info) => {
+      this.$emit('on-dragEnd',info);
     });
     this.$on('drop', (dropInfo) => {
       this.$emit('on-drop',dropInfo);

@@ -6,7 +6,7 @@
   <div>
     
     <h1>树型拖拽组件</h1>
-    <vue-tree :data-list="treeData" @on-edit="onEdit" @on-drop="getDropData"></vue-tree>
+    <vue-tree :data-list="treeData" draggable @on-edit="onEdit" @on-drop="getDropData"></vue-tree>
     
     <h1>树型多选框组件</h1>
     <checkbox-tree :data-list="treeData2" :title="'XXXX英语培训班'"></checkbox-tree>
@@ -36,6 +36,9 @@ export default {
             {
               id: 3,
               title: "西湖校区",
+              prop: {
+                isDragDisabled:true,
+              },     
               nodes: [
                 {
                   id: 5,

@@ -24,6 +24,9 @@ export default {
   props: {
     dataList: {
       type: Array
+    },
+    draggable:{
+      type:Boolean
     }
   },
   created(){
@@ -33,7 +36,6 @@ export default {
       this.$refs.vueTreeCore.$on("on-edit",(obj)=>{
           this.$emit("on-edit",{data:obj.data,tree:obj.tree})
       });
-
       this.$refs.vueTreeCore.$on("on-drop",(obj)=>{
           this.$emit("on-drop",obj)
       });
@@ -43,6 +45,7 @@ export default {
       config: {
         singleSelect: false, //是否支持单选，默认false
         modification: true, //是否支持节点的增删改查，默认false
+        isDraggable:this.draggable,//是否支持拖拽
         styles: {
           //节点样式
           treeWrap: "vue-tree-default", //父层包裹层
