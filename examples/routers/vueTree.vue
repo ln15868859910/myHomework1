@@ -6,7 +6,13 @@
   <div>
     
     <h1>树型拖拽组件</h1>
-    <vue-tree :data-list="treeData" draggable @on-edit="onEdit" @on-drop="getDropData"></vue-tree>
+    <vue-tree 
+      :data-list="treeData" 
+      @on-edit="onEdit" 
+      @on-add="onAdd" 
+      @on-delete="onDelete"
+      @on-drop="getDropData"
+    ></vue-tree>
     
     <h1>树型多选框组件</h1>
     <checkbox-tree :data-list="treeData2" :title="'XXXX英语培训班'"></checkbox-tree>
@@ -126,8 +132,15 @@ export default {
   mounted() {},
 
   methods: {
-    onEdit(data, tree) {
-      console.log(data, tree);
+    onEdit(data, dataTree) {
+      console.log(data, dataTree);
+    },
+    onAdd(data,dataTree){
+      console.log(data, dataTree);
+    },
+    onDelete(dataCopy,promise){
+      console.log(dataCopy, promise);
+      promise.resolve();
     },
     getDropData(info) {
       console.log(info);

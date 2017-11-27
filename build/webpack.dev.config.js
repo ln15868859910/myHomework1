@@ -30,7 +30,7 @@ module.exports = merge(webpackBaseConfig, {
             vue: 'vue/dist/vue.js'
         }
     },
-    devtool: '#eval-source-map',
+    devtool: '#source-map',
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.bundle.js' }),
         new HtmlWebpackPlugin({
