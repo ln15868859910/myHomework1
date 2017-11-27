@@ -7,7 +7,8 @@
     
     <h1>树型拖拽组件</h1>
     <vue-tree 
-      :data-list="treeData" 
+      :data-list="treeData"
+      draggable 
       @on-edit="onEdit" 
       @on-add="onAdd" 
       @on-delete="onDelete"
@@ -36,15 +37,13 @@ export default {
           id: 1,
           title: "西湖区校宝教育机构",
           prop: {
-            deletable: false
+            deletable: false,
+            isDragDisabled:false
           },
           nodes: [
             {
               id: 3,
-              title: "西湖校区",
-              prop: {
-                isDragDisabled:true,
-              },     
+              title: "西湖校区",    
               nodes: [
                 {
                   id: 5,

@@ -1,6 +1,7 @@
 <style>
 .vue-tree-fl {
   float: left;
+  border:2px solid transparent;
 }
 .vue-tree-fr {
   float: right;
@@ -89,7 +90,7 @@
 .tree-drag-over {
   background-color: #5295E7;
   color: white;
-  border: 1px #5295E7 solid;
+  border: 2px #5295E7 solid;
   opacity: 0.8;
 }
 .tree-drag-over-top {
@@ -101,6 +102,9 @@
 .tree-drag-selected{
   background:#DEEAF7;
 }
+.tree-drag-disabled{
+  background:#ccc;
+}
 /*拖拽样式 开始*/
 </style>
 
@@ -110,9 +114,8 @@
         <!-- 拖动标题 -->
         <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-        <div ref="dropTarget">
-        <div class="vue-tree-clearfix" :class="[nodeHandleClass,dragClasses]" ref="draggAbleDom" data-handle>
-            <span class="vue-tree-fl">
+        <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
+            <span class="vue-tree-fl" ref="draggAbleDom" :class="dragClasses">
                 <span :class="treeTitleWrap">
                     <i v-show="nodeData.nodes.length" :class="collapseStatus" @click="toggleCollapseStatus"></i>
                     <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show="!isCurNodeStatus('edit') && nodeData.prop.checkable"   @click="toggleChecbox"></i>
@@ -124,7 +127,6 @@
                 <span><a href="javascript:;" @click="editThisNode()">编辑</a></span>
                 <span><a v-if="isCurNodeStatus('delete')" href="javascript:;" @click="deleteThisNode()">删除</a></span>
             </span>
-        </div>
         </div>
         <!-- 子节点 -->
         <ol v-show="nodeData.nodes.length && nodeData.prop.isExpand">
@@ -178,8 +180,11 @@ export default {
     this.setTreeNodeMap();
   },
   mounted() {
+    if(this.nodeData.prop.isDragDisabled){
+      this.setChildDragDisabled();
+    };
     //绑定拖拽事件
-    if(this.rootData.globalConfig.isDraggable){
+    if(this.rootData.globalConfig.isDraggable && !this.nodeData.prop.isDragDisabled){
       this.$refs.draggAbleDom.draggable=true;
       this.$refs.draggAbleDom.ondragstart=this.onDragStart;
 
@@ -275,7 +280,8 @@ export default {
                 ["tree-drag-over"]: isDragOverMe && pos===0,
                 ["tree-drag-over-top"]: isDragOverMe && pos===-1,
                 ["tree-drag-over-bottom"]: isDragOverMe && pos===1,
-                ["tree-drag-selected"]: this.dragNodeHighlight
+                ["tree-drag-selected"]: this.dragNodeHighlight,
+                ["tree-drag-disabled"]: this.nodeData.prop.isDragDisabled
             }
        ];
     }
@@ -596,6 +602,11 @@ export default {
         }
       },
     //拖拽处理-huijuan
+    setChildDragDisabled(){
+      this.nodeData.nodes.forEach(item=>{
+         item.prop.isDragDisabled=true;
+      });
+    },
     //计算拖拽节点的放置方式0（作为目标节点的子节点），-1（放置在目标节点的前面）,1（放置在目标节点的后面）
     calDropPosition(e) {
       var offsetTop = e.target.offsetTop;
@@ -716,6 +727,13 @@ export default {
         //引用类型:对象
         if (type === "object") {
           return (Object.prototype.toString.call(data).toLowerCase() == "[object object]");
+        }
+      }
+    },
+    watch:{
+      "nodeData.prop.isDragDisabled"(val){
+        if(val){
+          this.setChildDragDisabled();
         }
       }
     }
