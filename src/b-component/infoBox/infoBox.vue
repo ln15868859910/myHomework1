@@ -26,7 +26,7 @@
                                 </Row>
                             </xb-option>
                         </xb-droplist> -->
-                        <span :class="select" v-if="showdetail">{{data.default}}</span>
+                        <span :class="select" v-if="showdetail">{{findLable(data.list,data.default)}}</span>
                         <Select v-if="!data.isShowPhone&&!showdetail" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
@@ -146,6 +146,12 @@ export default {
 
     },
     methods: {
+        findLable(list,id){
+            var arr = list.filter(item=>{
+                return item.value == id;
+            })
+            return arr.length?arr[0].label:"";
+        },
         returnLabel(data){
             if(data&&data.model&&data.model.label){
                 return data.model.label
