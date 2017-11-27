@@ -108,10 +108,6 @@
                     <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show="!isCurNodeStatus('edit') && nodeData.prop.checkable"   @click="toggleChecbox"></i>
                     <span :class="treeTitleClass">{{nodeData.title}}</span>
                 </span>
-                    <!-- 编辑input -->
-                    <!-- <input type="text" class="vue-tree-editInput" v-model="currentEditValue" v-show="isCurNodeStatus('edit')">
-                    <span v-show="isCurNodeStatus('edit')"><a href="javascript:;" @click="commitThisEditing()">确定</a></span>
-                    <span v-show="isCurNodeStatus('edit')"><a href="javascript:;" @click="cancelThisEditing()">取消</a></span> -->
             </span>
             <span v-if="rootData.globalConfig.modification" class="vue-tree-fr">
                 <span><a href="javascript:;" @click="addNode()">添加子部门</a></span>
@@ -344,6 +340,12 @@ export default {
         var childHashKeyList = this.nodeData.nodes.map(item => (item._hash = this.generateHash()));
         childHashKeyList.map(eachHashKey => (this.rootData._UITreeMap[eachHashKey] = {}));
 
+        //针对添加节点操作，本身是没有hashkey的，这个时候在初始化的时候增加hashKey
+        if(this.nodeData._hash === undefined){
+          this.nodeData._hash = this.generateHash();
+          this.rootData._UITreeMap[this.nodeData._hash] = {};
+        }
+
         /**
          *  额外维护一份 hash值映射=>数据模型的表，方便后期做拖拽扩展，减少遍历性能开销
          * */
@@ -352,7 +354,7 @@ export default {
         //添加节点和数据
         this.rootData._UITreeMap[this.nodeData._hash].addNode = this.addNode;
         //删除当前节点和子节点，同时子节点的删除数据
-        this.rootData._UITreeMap[this.nodeData._hash].remove = this.deleteThisNode;
+        this.rootData._UITreeMap[this.nodeData._hash].remove = this.remove;
         //在兄弟节点中找到自己的索引
         this.rootData._UITreeMap[this.nodeData._hash].getIndexInSiblings = this.getIndexInSiblings;
         //父亲节点
@@ -453,51 +455,46 @@ export default {
       },
       //添加子节点
       addNode() {
-        var curNodeDepth = this.rootData._UITreeMap[this.nodeData._hash].getDepth();
-        console.log(`当前节点深度为${curNodeDepth}级`);
-        if (curNodeDepth == 7) {
-          alert("最高支持8级深度！");
-          return;
-        }
+        this.rootData.rootInstance.$emit("on-add",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
+      },
 
-        var hashKey = this.generateHash();
-        var currentIndex = this.nodeData.nodes.length;
-        this.nodeData.nodes.push({
-          id: 0,
-          title: "新节点" + (currentIndex + 1),
-          nodes: [],
-          _hash: hashKey
-        });
-        this.rootData._UITreeMap[hashKey] = {};
-        //TODO:发送数据
+      
+      deleteThisNode() {
+        var defer = this.defered();
+        //这里隔离数据，返回的数据和原有的数据不再有关联，防止操作数据引起的节点树未删除的情况
+        var data = JSON.parse(JSON.stringify(this.nodeData));
+        delete data.nodes;
+        delete data.prop;
+        this.rootData.rootInstance.$emit("on-delete",data,defer);
+        defer.promise.then(()=>{this.remove()})
       },
 
       //删除自身和子树,同时删除其数据模型
-      deleteThisNode() {
-        var i = this.parentNodeData.nodes.findIndex(item => {
-          item._hash == this.nodeData._hash;
-        });
+      remove(){
+         var i = this.parentNodeData.nodes.findIndex(item => {
+           item._hash == this.nodeData._hash;
+         });
 
-        //如果不存在子树
-        if (!this.nodeData.nodes.length) {
-          delete this.rootData._UITreeMap[this.nodeData._hash];
-        } else {
-          //找到树中删除所有建立的索引
-          this.nodeData.nodes.map(item => item._hash).map(hashKey => {
-            this.rootData._UITreeMap[hashKey].remove();
-            delete this.rootData._UITreeMap[hashKey];
-          });
+         //如果不存在子树
+         if (!this.nodeData.nodes.length) {
+           this.rootData._UITreeMap[this.nodeData._hash] = null;
+           delete this.rootData._UITreeMap[this.nodeData._hash];
+         } else {
+           //找到树中删除所有建立的索引
+           this.nodeData.nodes.map(item => item._hash).map(hashKey => {
+             this.rootData._UITreeMap[hashKey].remove();
+             this.rootData._UITreeMap[hashKey] = null;
+             delete this.rootData._UITreeMap[hashKey];
+           });
         }
 
         //最后删除数据
         this.parentNodeData.nodes.splice(i, 1);
-        // console.log(this.rootData._UITreeMap)
-        //TODO:发送数据给后端
       },
 
       //编辑当前节点
       editThisNode() {
-        this.rootData.rootInstance.$emit("editNode",this.nodeData)
+        this.rootData.rootInstance.$emit("on-edit",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
         this.nodeData.prop._isEdit = true;
       },
 
@@ -675,6 +672,15 @@ export default {
           i++;
         }
         return str;
+      },
+
+      defered(){
+        var resolve,reject;
+        return {
+          promise:new Promise(function(res,rej){resolve = res;reject = rej;}),
+          resolve:resolve,
+          reject:reject
+          }
       },
 
       getCss(o, key) {

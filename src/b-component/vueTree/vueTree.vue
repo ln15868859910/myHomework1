@@ -29,9 +29,22 @@ export default {
   created(){
   },
   mounted(){
-      //事件中继
-      this.$refs.vueTreeCore.$on("on-edit",(obj)=>{
-          this.$emit("on-edit",{data:obj.data,tree:obj.tree})
+      /**
+       * 事件中继
+       * **/
+      //编辑事件
+      this.$refs.vueTreeCore.$on("on-edit",(data, dataTree)=>{
+          this.$emit("on-edit", data, dataTree);
+      });
+
+      //添加事件
+      this.$refs.vueTreeCore.$on("on-add",(data, dataTree)=>{
+          this.$emit("on-add", data, dataTree);
+      });
+
+      //删除事件
+      this.$refs.vueTreeCore.$on("on-delete",(dataCopy, promise)=>{
+          this.$emit("on-delete", dataCopy, promise);
       });
 
       this.$refs.vueTreeCore.$on("on-drop",(obj)=>{
