@@ -1,12 +1,14 @@
 <style>
-
+    .vue-tree-default>ol ol{
+        padding-left:30px;
+    }
 </style>
 
 <template>
     <vue-tree-core 
         :data-list="dataList" 
         :config="config"
-        
+
     ref="vueTreeCore"></vue-tree-core>
 
 </template>
@@ -43,7 +45,7 @@ export default {
         modification: true, //是否支持节点的增删改查，默认false
         styles: {
           //节点样式
-          treeWrap: "", //父层包裹层
+          treeWrap: "vue-tree-default", //父层包裹层
           mainTitle:"",
           nodeHandle: "", //每一项节点样式名
           //勾选框样式
