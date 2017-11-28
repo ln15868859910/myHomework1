@@ -38,8 +38,11 @@ export default {
           id: 1,
           title: "西湖区校宝教育机构",
           isUseIcon:true,
-          iconPosition:"left",//默认left
-          iconClass:"",
+          isIconAtRight:false,
+          iconType:"home",
+          prop: {
+            isDragDisabled:true,
+          },
           handleList:[
             {key:"add",isShow:true, text:"添加", iconClass:"", isUseIcon:false},
           ],
@@ -47,9 +50,7 @@ export default {
             {
               id: 3,
               title: "西湖校区",
-              prop: {
-                isDragDisabled:true,
-              },
+              
                handleList:[
                 {key:"common",isShow:false, text:"合并", iconClass:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
                 {key:"add",isShow:true, text:"添加", iconClass:"", isUseIcon:false},

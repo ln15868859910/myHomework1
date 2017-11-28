@@ -1,7 +1,4 @@
 <style>
-.vue-tree-fl {
-  float: left;
-}
 .vue-tree-fr {
   float: right;
 }
@@ -26,9 +23,9 @@
 .vue-node-expand {
   cursor: pointer;
   display: inline-block;
-  height: 12px;
-  width: 12px;
-  margin-right:7px;
+  height: 30px;
+  width: 20px;
+  /* margin-right:12px; */
   position: relative;
   font-style: normal;
   vertical-align: middle;
@@ -40,8 +37,8 @@
   content: "";
   width: 0;
   height: 0;
-  top: 2.25px;
-  left: 2px;
+  top: 12px;
+  left: 6px;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 4.5px solid  #30404F;
@@ -52,6 +49,23 @@
   -ms-transform: rotate(-90deg) scale(1);
   transform: rotate(-90deg) scale(1);
 }
+.vue-tree-titleWrap{
+    letter-spacing: -3px;
+}
+.vue-tree-icon,
+.vue-tree-title{
+  font-size: 14px;
+  vertical-align: middle;
+  letter-spacing:0;
+}
+.vue-tree-title{
+    display: inline-block;
+    width:240px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 2px;
+}
+
 
 /*checkbox样式 开始*/
 .vue-tree-checkbox {
@@ -94,7 +108,7 @@
   background:#DEEAF7;
 }
 .tree-drag-disabled{
-   background-color:#ccc; 
+  /* background:#ccc; */
 }
 /*拖拽样式 开始*/
 </style>
@@ -106,18 +120,21 @@
         <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
         <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
-            <span class="vue-tree-fl">
-                <span :class="treeTitleWrap">
-                    <!-- 折叠图标 -->
-                    <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
-                    <Icon v-if="showLoading" type="loading" class="ivu-load-loop"></Icon>
-					          <!-- 模拟勾选框（单选或多选） -->
-                    <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
-                    <i v-if="nodeData.isUseIcon && nodeData.iconPosition != 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
-                    <span :class=[treeTitleClass,dragClasses] ref="draggAbleDom">{{nodeData.title}}</span>
-                    <i v-if="nodeData.isUseIcon && nodeData.iconPosition == 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
+
+            <span :class="treeTitleWrap">
+                <!-- 折叠图标 -->
+                <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                <Icon v-show="showLoading" type="loading" class="ivu-load-loop"></Icon>
+                <!-- 模拟勾选框（单选或多选） -->
+                <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
+                <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                <span :class=[treeTitleClass,dragClasses] ref="draggAbleDom">
+                  {{nodeData.title}}
+                  <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
                 </span>
+                
             </span>
+
             <span class="vue-tree-fr">
                 <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
                   <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
