@@ -184,7 +184,8 @@ export default {
     this.setTreeNodeMap();
   },
   mounted() {
-    if(this.nodeData.prop.isDragDisabled){
+    //isDraggable为全局可拖拽,this.nodeData.prop.isDragDisabled为全局可拖拽情况下禁用该节点的拖拽，设置disabled样式
+    if(this.rootData.globalConfig.isDraggable && this.nodeData.prop.isDragDisabled){
       this.setChildDragDisabled();
     };
     //绑定拖拽事件
@@ -280,7 +281,7 @@ export default {
       var pos = this.rootData.dragOverStatus.dropPosition;
       return [
               {
-                ["tree-draggable"]:this.rootData.globalConfig.isDraggable,
+                ["tree-draggable"]:this.rootData.globalConfig.isDraggable && !this.nodeData.prop.isDragDisabled,
                 ["tree-drag-over"]: isDragOverMe && pos===0,
                 ["tree-drag-over-top"]: isDragOverMe && pos===-1,
                 ["tree-drag-over-bottom"]: isDragOverMe && pos===1,
@@ -575,10 +576,19 @@ export default {
         }
       },
     //拖拽处理-huijuan
+    //设置该节点以及该子孙节点不可拖拽
     setChildDragDisabled(){
       this.nodeData.nodes.forEach(item=>{
          item.prop.isDragDisabled=true;
       });
+      this.$refs.draggAbleDom.draggable=false;
+      this.$refs.draggAbleDom.ondragstart=null;
+
+      this.$refs.dropTarget.ondragenter=null;
+      this.$refs.dropTarget.ondragover=null;
+      this.$refs.dropTarget.ondragleave=null;
+      this.$refs.dropTarget.ondrop=null;
+      this.$refs.dropTarget.ondragend=null;
     },
     //计算拖拽节点的放置方式0（作为目标节点的子节点），-1（放置在目标节点的前面）,1（放置在目标节点的后面）
     calDropPosition(e) {
@@ -599,6 +609,7 @@ export default {
     //拖拽开始
     onDragStart(e) {
       e.stopPropagation();
+      console.log("start");
       e.dataTransfer.effectAllowed = "move";
       this.nodeData.prop.isExpand = false;
       this.rootData.dragOverStatus.dragNode = this.nodeData;
@@ -629,17 +640,26 @@ export default {
     onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return;
+      }
       this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
       this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData, event: e });
       return false;
     },200),
     onDragLeave(e) {
       e.stopPropagation();
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return;
+      }
       this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData, event: e });
     },
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return;
+      }
       this.rootData.dragOverStatus.overNodeKey = "";
       //拖拽节点与目标节点是同一个，不做任何操作
       if (this.rootData.dragOverStatus.dragNode._hash === this.nodeData._hash) {
@@ -656,6 +676,9 @@ export default {
     onDragEnd(e) {
       e.stopPropagation();
       e.preventDefault();
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return;
+      }
       this.rootData.dragOverStatus.dragNode=null;
       this.rootData.dragOverStatus.overNodeKey = "";
       this.dragNodeHighlight= false;
