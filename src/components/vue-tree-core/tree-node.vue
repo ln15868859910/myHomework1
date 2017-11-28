@@ -94,7 +94,7 @@
   background:#DEEAF7;
 }
 .tree-drag-disabled{
-  /* background:#ccc; */
+   background-color:#ccc; 
 }
 /*拖拽样式 开始*/
 </style>
@@ -106,7 +106,7 @@
         <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
         <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
-            <span class="vue-tree-fl" ref="draggAbleDom" :class="dragClasses">
+            <span class="vue-tree-fl">
                 <span :class="treeTitleWrap">
                     <!-- 折叠图标 -->
                     <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
@@ -114,7 +114,7 @@
 					          <!-- 模拟勾选框（单选或多选） -->
                     <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
                     <i v-if="nodeData.isUseIcon && nodeData.iconPosition != 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
-                    <span :class="treeTitleClass">{{nodeData.title}}</span>
+                    <span :class=[treeTitleClass,dragClasses] ref="draggAbleDom">{{nodeData.title}}</span>
                     <i v-if="nodeData.isUseIcon && nodeData.iconPosition == 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
                 </span>
             </span>
@@ -180,7 +180,7 @@ export default {
       this.setChildDragDisabled();
     };
     //绑定拖拽事件
-    if(this.rootData.globalConfig.isDraggable && !this.nodeData.prop.isDragDisabled){
+    if(this.rootData.globalConfig.isDraggable){
       this.$refs.draggAbleDom.draggable=true;
       this.$refs.draggAbleDom.ondragstart=this.onDragStart;
 
@@ -599,12 +599,6 @@ export default {
       });
       this.$refs.draggAbleDom.draggable=false;
       this.$refs.draggAbleDom.ondragstart=null;
-
-      this.$refs.dropTarget.ondragenter=null;
-      this.$refs.dropTarget.ondragover=null;
-      this.$refs.dropTarget.ondragleave=null;
-      this.$refs.dropTarget.ondrop=null;
-      this.$refs.dropTarget.ondragend=null;
     },
     //计算拖拽节点的放置方式0（作为目标节点的子节点），-1（放置在目标节点的前面）,1（放置在目标节点的后面）
     calDropPosition(e) {
@@ -639,6 +633,9 @@ export default {
     onDragEnter(e) {
       e.preventDefault();
       e.stopPropagation();
+      if(this.nodeData.prop.isDragDisabled){
+        return;
+      }
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
       }
@@ -655,6 +652,9 @@ export default {
     onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
+      if(this.nodeData.prop.isDragDisabled){
+        return;
+      }
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
       }
@@ -664,6 +664,9 @@ export default {
     },200),
     onDragLeave(e) {
       e.stopPropagation();
+      if(this.nodeData.prop.isDragDisabled){
+        return;
+      }
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
       }
@@ -672,6 +675,9 @@ export default {
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
+      if(this.nodeData.prop.isDragDisabled){
+        return;
+      }
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
       }
@@ -691,6 +697,9 @@ export default {
     onDragEnd(e) {
       e.stopPropagation();
       e.preventDefault();
+      if(this.nodeData.prop.isDragDisabled){
+        return;
+      }
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
       }
