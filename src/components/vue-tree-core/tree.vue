@@ -3,6 +3,27 @@
 .vue-tree-root ol {
   list-style: none;
 }
+.vue-tree-root>ol>li>ol>li ol .vue-tree-handle {
+  padding-left:57px;/*从第三级开始缩进*/
+}
+
+.vue-tree-root{
+  border: 1px solid #B9BEC5;
+  border-radius: 4px;
+  min-height: 320px;
+}
+
+.vue-tree-root .vue-tree-handle {
+  padding:0 24px 0 19px;
+  font-size: 14px;
+  font-family: "MicrosoftYaHeiUI";
+  font-size: 14px;
+  color: #30404F;
+  line-height: 40px;
+  height:40px;
+  box-shadow: inset 0 -1px 0 0 #D4DFE5;
+}
+
 </style>
 
 <template>
