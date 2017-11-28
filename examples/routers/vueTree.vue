@@ -13,6 +13,7 @@
       @on-add="onAdd" 
       @on-delete="onDelete"
       @on-drop="getDropData"
+      :load-data="loadData"
     ></vue-tree>
     
     <h1>树型多选框组件</h1>
@@ -78,7 +79,11 @@ export default {
                 {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
                 {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
               ],
-              nodes: []
+              nodes: [],
+              prop:{
+                isExpand: false
+              },
+              loading: false
             }
           ]
         }
@@ -163,6 +168,24 @@ export default {
     onDelete(dataCopy,promise){
       console.log(dataCopy, promise);
       promise.resolve();
+    },
+    loadData(item, callback) {
+      setTimeout(() => {
+        const data = [
+                {
+                  id: 10,
+                  title: "异步加载",
+                   handleList:[
+                      {key:"common",isShow:false, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
+                      {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
+                      {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
+                      {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+                    ],
+                  nodes: []
+                }
+              ];
+        callback(data);
+      }, 1000);
     },
     getDropData(info) {
       console.log(info);

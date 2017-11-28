@@ -34,6 +34,9 @@ export default {
     },
     config: {
       type:Object
+    },
+    loadData: {
+      type: Function
     }
   },
   data() {

@@ -117,7 +117,8 @@
         <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
             <span class="vue-tree-fl" ref="draggAbleDom" :class="dragClasses">
                 <span :class="treeTitleWrap">
-                    <i v-show="nodeData.nodes.length" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                    <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                    <Icon v-if="showLoading" type="loading" class="ivu-load-loop"></Icon>
                     <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
                     <span :class="treeTitleClass">{{nodeData.title}}</span>
                 </span>
@@ -227,6 +228,12 @@ export default {
       return this.rootData.globalConfig.styles.nodeHandle
         ? this.rootData.globalConfig.styles.nodeHandle
         : "vue-tree-handle";
+    },
+    showArrow() {
+      return (this.nodeData.nodes && this.nodeData.nodes.length) || ("loading" in this.nodeData && !this.nodeData.loading);
+    },
+    showLoading () {
+      return "loading" in this.nodeData && this.nodeData.loading;
     },
     checkboxClass() {
 
@@ -486,7 +493,25 @@ export default {
 
       //切换折叠状态
       toggleCollapseStatus() {
-        this.nodeData.prop.isExpand = !this.nodeData.prop.isExpand;
+        var item = this.nodeData;
+        if (item.nodes.length === 0) {
+          //异步请求子节点数据
+          if (this.rootData.rootInstance.loadData) {
+            this.$set(this.nodeData, 'loading', true);
+            this.rootData.rootInstance.loadData(item, children => {
+              this.$set(this.nodeData, 'loading', false);
+              if (children.length) {
+                this.$set(this.nodeData, 'nodes', children);
+                this.$nextTick(() => this.toggleCollapseStatus());
+              }
+            });
+            return;
+          }
+        }
+        //展开节点
+        if (item.nodes && item.nodes.length) {
+          this.nodeData.prop.isExpand = !this.nodeData.prop.isExpand;
+        }
       },
       //添加子节点
       addNode() {

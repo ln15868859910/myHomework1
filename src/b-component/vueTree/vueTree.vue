@@ -8,6 +8,7 @@
     <vue-tree-core 
         :data-list="dataList" 
         :config="config"
+        :loadData="loadData"
 
     ref="vueTreeCore"></vue-tree-core>
 
@@ -27,6 +28,9 @@ export default {
     },
     draggable:{
       type:Boolean
+    },
+    loadData:{
+      type:Function
     }
   },
   created(){
