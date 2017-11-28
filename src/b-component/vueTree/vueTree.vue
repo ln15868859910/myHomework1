@@ -1,7 +1,5 @@
 <style>
-    .vue-tree-default>ol ol{
-        padding-left:30px;
-    }
+
 </style>
 
 <template>
@@ -18,7 +16,7 @@
 import vueTreeCore from "../../components/vue-tree-core";
 
 export default {
-  name:"checkboxTree",
+  name:"vueTree",
   components: {
     vueTreeCore
   },
@@ -65,7 +63,7 @@ export default {
         isDraggable:this.draggable,//是否支持拖拽
         styles: {
           //节点样式
-          treeWrap: "vue-tree-default", //父层包裹层
+          treeWrap: "", //父层包裹层
           mainTitle:"",
           nodeHandle: "", //每一项节点样式名
           //勾选框样式

@@ -1,7 +1,6 @@
 <style>
 .vue-tree-fl {
   float: left;
-  border:2px solid transparent;
 }
 .vue-tree-fr {
   float: right;
@@ -14,21 +13,7 @@
   display: table;
   clear: both;
 }
-.vue-tree-handle {
-  margin: 10px;
-  padding: 10px 10px;
-  border: 1px solid #dae2ea;
-  background: #f8faff;
-  color: #7c9eb2;
-}
-/* .vue-tree-handle:hover{
-        cursor:move;
-    } */
-.vue-tree-placeholder {
-  border: 1px dashed #bbb;
-  text-align: center;
-  background-color: #e5e5e5;
-}
+
 .vue-node-dragging {
   z-index: 9999;
   position: absolute;
@@ -41,27 +26,33 @@
 .vue-node-expand {
   cursor: pointer;
   display: inline-block;
-  height: 17px;
-  width: 20px;
+  height: 12px;
+  width: 12px;
+  margin-right:7px;
   position: relative;
   font-style: normal;
+  vertical-align: middle;
 }
-.vue-node-collapse:before {
-  position: absolute;
-  content: "▷";
-  transform: rotate(0deg);
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
+
+.vue-node-collapse:before,
 .vue-node-expand:before {
   position: absolute;
-  content: "▷";
-  transform: rotate(90deg);
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+  content: "";
+  width: 0;
+  height: 0;
+  top: 2.25px;
+  left: 2px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4.5px solid  #30404F;
+  transition: all 0.2s ease-in-out;
 }
+.vue-tree-titleWrap
+.vue-node-collapse:before {
+  -ms-transform: rotate(-90deg) scale(1);
+  transform: rotate(-90deg) scale(1);
+}
+
 /*checkbox样式 开始*/
 .vue-tree-checkbox {
   width: 12px;
@@ -103,7 +94,7 @@
   background:#DEEAF7;
 }
 .tree-drag-disabled{
-  background:#ccc;
+  /* background:#ccc; */
 }
 /*拖拽样式 开始*/
 </style>
@@ -117,33 +108,32 @@
         <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
             <span class="vue-tree-fl" ref="draggAbleDom" :class="dragClasses">
                 <span :class="treeTitleWrap">
+                    <!-- 折叠图标 -->
                     <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
                     <Icon v-if="showLoading" type="loading" class="ivu-load-loop"></Icon>
+					          <!-- 模拟勾选框（单选或多选） -->
                     <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
+                    <i v-if="nodeData.isUseIcon && nodeData.iconPosition != 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
                     <span :class="treeTitleClass">{{nodeData.title}}</span>
+                    <i v-if="nodeData.isUseIcon && nodeData.iconPosition == 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
                 </span>
             </span>
             <span class="vue-tree-fr">
                 <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
                   <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
-                  <i v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon" @click="key2FuncMap(dataList.key, dataList)"></i>
+                  <i v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon" :class="dataList.iconClass" @click="key2FuncMap(dataList.key, dataList)"></i>
                 </span>
-                <!-- <span><a href="javascript:;" @click="addNode()">添加子部门</a></span>
-                <span><a href="javascript:;" @click="editThisNode()">编辑</a></span>
-                <span><a href="javascript:;" @click="deleteThisNode()">删除</a></span> -->
             </span>
         </div>
         <!-- 子节点 -->
         <ol v-show="nodeData.nodes.length && nodeData.prop.isExpand">
             <vue-tree-node v-for="(node,index) in nodeData.nodes" 
-            :key="index" 
-            :node-data="node" 
-            :parent-node-data="nodeData"
-            :root-data="rootData"
+              :key="index" 
+              :node-data="node" 
+              :parent-node-data="nodeData"
+              :root-data="rootData"
             ></vue-tree-node>
         </ol>
-    <!-- 拖动释放展示区域 -->
-    <!-- <div class="vue-tree-placeholder" :style="placeholderStyle" v-show="params.flag">释放拖动</div> -->
 </li>
 
 </template>
@@ -336,7 +326,8 @@ export default {
         if (!("prop" in this.nodeData)) {
           this.$set(this.nodeData, "prop", {
             isExpand: true,
-            checkable: true,
+            checkable: false,
+            showCollapseIcon:false,
             isDisabled: false,
             isChecked: false,
             isDragDisabled:false,//此节点禁用拖拽
@@ -353,7 +344,7 @@ export default {
         //  是否展开this.nodeData.prop.isExpand
         this.checkAndSetInitValue("isExpand",this.nodeData.prop,"boolean", true);
         //  是否可选中this.nodeData.prop.checkable
-        this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",true);
+        this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",false);
         //  是否禁用this.nodeData.prop.checkbox
         this.checkAndSetInitValue("isDisabled",this.nodeData.prop,"boolean",false);
         // 是否默认选中this.nodeData.prop.isChecked

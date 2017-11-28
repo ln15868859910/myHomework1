@@ -37,11 +37,11 @@ export default {
         {
           id: 1,
           title: "西湖区校宝教育机构",
+          isUseIcon:true,
+          iconPosition:"left",//默认left
+          iconClass:"",
           handleList:[
-            {key:"common",isShow:true, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
-            {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
-            {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
-            {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+            {key:"add",isShow:true, text:"添加", iconClass:"", isUseIcon:false},
           ],
           nodes: [
             {
@@ -51,20 +51,20 @@ export default {
                 isDragDisabled:true,
               },
                handleList:[
-                {key:"common",isShow:false, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
-                {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
-                {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
-                {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+                {key:"common",isShow:false, text:"合并", iconClass:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
+                {key:"add",isShow:true, text:"添加", iconClass:"", isUseIcon:false},
+                {key:"edit",isShow:true, text:"编辑", iconClass:"", isUseIcon:false},
+                {key:"delete",isShow:true, text:"删除", iconClass:"", isUseIcon:false},
               ],     
               nodes: [
                 {
                   id: 5,
                   title: "西zi校区",
                    handleList:[
-                      {key:"common",isShow:false, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
-                      {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
-                      {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
-                      {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+                      {key:"common",isShow:false, text:"合并", iconClass:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
+                      {key:"add",isShow:true, text:"添加", iconClass:"", isUseIcon:false},
+                      {key:"edit",isShow:true, text:"编辑", iconClass:"", isUseIcon:false},
+                      {key:"delete",isShow:true, text:"删除", iconClass:"", isUseIcon:false},
                     ],
                   nodes: []
                 }
@@ -74,10 +74,10 @@ export default {
               id: 4,
               title: "下沙校区",
                handleList:[
-                {key:"common",isShow:true, text:"合并", iconStyle:"", isUseIcon:false,callback:function(){console.log("回调")}},
-                {key:"add",isShow:true, text:"添加", iconStyle:"", isUseIcon:false},
-                {key:"edit",isShow:true, text:"编辑", iconStyle:"", isUseIcon:false},
-                {key:"delete",isShow:true, text:"删除", iconStyle:"", isUseIcon:false},
+                {key:"common",isShow:true, text:"合并", iconClass:"", isUseIcon:false,callback:function(){console.log("回调")}},
+                {key:"add",isShow:true, text:"添加", iconClass:"", isUseIcon:false},
+                {key:"edit",isShow:true, text:"编辑", iconClass:"", isUseIcon:false},
+                {key:"delete",isShow:true, text:"删除", iconClass:"", isUseIcon:false},
               ],
               nodes: [],
               prop:{
