@@ -112,11 +112,22 @@
 .tree-drag-over-bottom {
   border-bottom: 2px #5295E7 solid;
 }
+.tree-drag-over.tree-drag-disabled {
+  background-color: #f6f6f6;
+  color: #ccc;
+  border: 2px #f6f6f6 solid;
+}
+.tree-drag-over-top.tree-drag-disabled {
+  border-top: 2px #f6f6f6 solid;
+}
+.tree-drag-over-bottom.tree-drag-disabled {
+  border-bottom: 2px #f6f6f6 solid;
+}
 .tree-drag-selected{
-  background:#DEEAF7;
+  background-color:#deeaf7;
 }
 .tree-drag-disabled{
-  /* background:#ccc; */
+   color:#ccc; 
 }
 /*拖拽样式 开始*/
 </style>
@@ -311,7 +322,7 @@ export default {
                 ["tree-drag-over-top"]: isDragOverMe && pos===-1,
                 ["tree-drag-over-bottom"]: isDragOverMe && pos===1,
                 ["tree-drag-selected"]: this.dragNodeHighlight,
-                ["tree-drag-disabled"]: this.nodeData.prop.isDragDisabled
+                ["tree-drag-disabled"]: this.nodeData.prop.isDragDisabled==="selfAndChild"
             }
        ];
     }
@@ -681,24 +692,24 @@ export default {
       e.stopPropagation();
       this.rootData.dragOverStatus.overNodeKey="";
       this.rootData.dragOverStatus.dropPosition=null;
-      if(this.forbiddenDragEvent()){
-        return;
-      }
       //拖拽节点与目标节点是同一个，return掉
       if (this.nodeData._hash === this.rootData.dragOverStatus.dragNode._hash) {
         return;
       }
-      this.nodeData.prop.isExpand = true;
       this.rootData.dragOverStatus.overNodeKey = this.nodeData._hash;//当前经过的可放置的节点的key
+      if(this.forbiddenDragEvent()){
+        return;
+      }
+      this.nodeData.prop.isExpand = true;
       this.rootData.rootInstance.$emit('dragEnter', { treeNode: this.nodeData, event: e });
     },
     onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
+      this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
       if(this.forbiddenDragEvent()){
         return;
       }
-      this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
       this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData, event: e });
       return false;
     },200),

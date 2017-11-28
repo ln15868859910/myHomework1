@@ -41,7 +41,7 @@ export default {
           isIconAtRight:false,
           iconType:"home",
           prop: {
-            isDragDisabled:true,
+            isDragDisabled:"self",//self(只禁用自己,给编辑状态的根节点禁用使用)，selfAndChild(禁用自己和子孙节点)
           },
           handleList:[
             {key:"add",isShow:true, text:"添加", iconType:"plus-circled", isUseIcon:true},
@@ -60,6 +60,9 @@ export default {
                 {
                   id: 5,
                   title: "西zi校区",
+                  prop: {
+                    isDragDisabled: "selfAndChild"
+                  },
                    handleList:[
                       {key:"common",isShow:false, text:"合并", iconType:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
                       {key:"add",isShow:true, text:"添加", iconType:"", isUseIcon:false},
