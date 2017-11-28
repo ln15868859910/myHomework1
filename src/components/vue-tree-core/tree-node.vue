@@ -494,7 +494,7 @@ export default {
       //切换折叠状态
       toggleCollapseStatus() {
         var item = this.nodeData;
-        if (item.nodes.length === 0) {
+        if (item.nodes.length === 0 && !this.nodeData.prop.isExpand) {
           //异步请求子节点数据
           if (this.rootData.rootInstance.loadData) {
             this.$set(this.nodeData, 'loading', true);
@@ -508,8 +508,8 @@ export default {
             return;
           }
         }
-        //展开节点
-        if (item.nodes && item.nodes.length) {
+        //展开或收起节点
+        if ((item.nodes && item.nodes.length) || !item.nodes.length && this.nodeData.prop.isExpand) {
           this.nodeData.prop.isExpand = !this.nodeData.prop.isExpand;
         }
       },
@@ -634,7 +634,6 @@ export default {
     //拖拽开始
     onDragStart(e) {
       e.stopPropagation();
-      console.log("start");
       e.dataTransfer.effectAllowed = "move";
       this.nodeData.prop.isExpand = false;
       this.rootData.dragOverStatus.dragNode = this.nodeData;
