@@ -109,9 +109,9 @@
             <span class="vue-tree-fl" ref="draggAbleDom" :class="dragClasses">
                 <span :class="treeTitleWrap">
                     <!-- 折叠图标 -->
-                    <i v-show="showArrow && nodeData.nodes.length" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                    <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
                     <Icon v-if="showLoading" type="loading" class="ivu-load-loop"></Icon>
-					<!-- 模拟勾选框（单选或多选） -->
+					          <!-- 模拟勾选框（单选或多选） -->
                     <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
                     <i v-if="nodeData.isUseIcon && nodeData.iconPosition != 'right'" class="vue-tree-icon" :class="nodeData.iconClass"></i>
                     <span :class="treeTitleClass">{{nodeData.title}}</span>
