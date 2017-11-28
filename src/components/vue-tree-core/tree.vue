@@ -19,7 +19,7 @@
   font-family: "MicrosoftYaHeiUI";
   font-size: 14px;
   color: #30404F;
-  line-height: 40px;
+  line-height: 39px;
   height:40px;
   box-shadow: inset 0 -1px 0 0 #D4DFE5;
 }
