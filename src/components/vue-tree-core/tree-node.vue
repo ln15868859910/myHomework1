@@ -65,6 +65,14 @@
     line-height: 30px;
     padding-left: 2px;
 }
+.vue-tree-btn{
+  cursor: pointer;
+  font-size: 16px;
+  margin:0 8px;
+}
+.vue-tree-btn:last-of-type{
+  margin-right:0;
+}
 
 
 /*checkbox样式 开始*/
@@ -138,7 +146,10 @@
             <span class="vue-tree-fr">
                 <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
                   <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
-                  <i v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon" :class="dataList.iconClass" @click="key2FuncMap(dataList.key, dataList)"></i>
+                  <span @click="key2FuncMap(dataList.key, dataList)">
+                    <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
+                  </span>
+
                 </span>
             </span>
         </div>
