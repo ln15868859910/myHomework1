@@ -175,10 +175,6 @@ export default {
     this.setTreeNodeMap();
   },
   mounted() {
-    //isDraggable为全局可拖拽,this.nodeData.prop.isDragDisabled为全局可拖拽情况下禁用该节点的拖拽，设置disabled样式
-    if(this.rootData.globalConfig.isDraggable && this.nodeData.prop.isDragDisabled){
-      this.setChildDragDisabled();
-    };
     //绑定拖拽事件
     if(this.rootData.globalConfig.isDraggable){
       this.$refs.draggAbleDom.draggable=true;
@@ -190,6 +186,10 @@ export default {
       this.$refs.dropTarget.ondrop=this.onDrop;
       this.$refs.dropTarget.ondragend=this.onDragEnd;
     }
+    //isDraggable为全局可拖拽,this.nodeData.prop.isDragDisabled为全局可拖拽情况下禁用该节点的拖拽，设置disabled样式
+    if(this.rootData.globalConfig.isDraggable && this.nodeData.prop.isDragDisabled){
+      this.setChildDragDisabled();
+    };
   },
   computed: {
     treeTitleWrap(){
@@ -330,7 +330,7 @@ export default {
             showCollapseIcon:false,
             isDisabled: false,
             isChecked: false,
-            isDragDisabled:false,//此节点禁用拖拽
+            isDragDisabled:"",//此节点禁用拖拽
             _isEdit: false
           });
           return;
@@ -350,7 +350,7 @@ export default {
         // 是否默认选中this.nodeData.prop.isChecked
         this.checkAndSetInitValue("isChecked",this.nodeData.prop,"boolean",false);
         // 是否默认选中this.nodeData.prop.isDragDisabled
-        this.checkAndSetInitValue("isDragDisabled",this.nodeData.prop,"boolean",false);
+        this.checkAndSetInitValue("isDragDisabled",this.nodeData.prop,"string","");
         
 
         //【赋予全局冲突逻辑校验】
@@ -585,7 +585,8 @@ export default {
           this.$set(Obj, prop, initValue);
         } else if (!this.checkThisType(Obj[prop], type)) {
           var typeMap = {
-            boolean: "布尔值"
+            boolean: "布尔值",
+            string:"字符串"
           };
 
           throw new Error(`树型组件传入prop.${prop}必须为${typeMap[type]}`);
@@ -594,11 +595,28 @@ export default {
     //拖拽处理-huijuan
     //设置该节点以及该子孙节点不可拖拽
     setChildDragDisabled(){
-      this.nodeData.nodes.forEach(item=>{
-         item.prop.isDragDisabled=true;
-      });
       this.$refs.draggAbleDom.draggable=false;
       this.$refs.draggAbleDom.ondragstart=null;
+      if(this.nodeData.prop.isDragDisabled==="self"){
+        return;
+      }
+      else if(this.nodeData.prop.isDragDisabled==="selfAndChild"){
+         this.nodeData.nodes.forEach(item=>{
+         item.prop.isDragDisabled="selfAndChild";
+      });
+      }  
+    },
+    //禁用目标节点事件
+    forbiddenDragEvent(){
+      //当前节点禁止拖拽，禁止作为目标节点
+      if(this.nodeData.prop.isDragDisabled){
+        return true;
+      }
+      //当没有设置拖拽节点时，禁止作为目标节点
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return true;
+      }
+      return false;
     },
     //计算拖拽节点的放置方式0（作为目标节点的子节点），-1（放置在目标节点的前面）,1（放置在目标节点的后面）
     calDropPosition(e) {
@@ -633,14 +651,11 @@ export default {
     onDragEnter(e) {
       e.preventDefault();
       e.stopPropagation();
-      if(this.nodeData.prop.isDragDisabled){
-        return;
-      }
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
-        return;
-      }
       this.rootData.dragOverStatus.overNodeKey="";
       this.rootData.dragOverStatus.dropPosition=null;
+      if(this.forbiddenDragEvent()){
+        return;
+      }
       //拖拽节点与目标节点是同一个，return掉
       if (this.nodeData._hash === this.rootData.dragOverStatus.dragNode._hash) {
         return;
@@ -652,10 +667,7 @@ export default {
     onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
-      if(this.nodeData.prop.isDragDisabled){
-        return;
-      }
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(this.forbiddenDragEvent()){
         return;
       }
       this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
@@ -664,10 +676,7 @@ export default {
     },200),
     onDragLeave(e) {
       e.stopPropagation();
-      if(this.nodeData.prop.isDragDisabled){
-        return;
-      }
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(this.forbiddenDragEvent()){
         return;
       }
       this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData, event: e });
@@ -675,13 +684,10 @@ export default {
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
-      if(this.nodeData.prop.isDragDisabled){
-        return;
-      }
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
-        return;
-      }
       this.rootData.dragOverStatus.overNodeKey = "";
+      if(this.forbiddenDragEvent()){
+        return;
+      }
       //拖拽节点与目标节点是同一个，不做任何操作
       if (this.rootData.dragOverStatus.dragNode._hash === this.nodeData._hash) {
         return;
@@ -697,10 +703,7 @@ export default {
     onDragEnd(e) {
       e.stopPropagation();
       e.preventDefault();
-      if(this.nodeData.prop.isDragDisabled){
-        return;
-      }
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(this.forbiddenDragEvent()){
         return;
       }
       this.rootData.dragOverStatus.dragNode=null;
@@ -757,7 +760,9 @@ export default {
         if (type === "boolean") {
           return typeof data == "boolean";
         }
-
+        if (type === "string") {
+          return typeof data == "string";
+        }
         //引用类型:对象
         if (type === "object") {
           return (Object.prototype.toString.call(data).toLowerCase() == "[object object]");

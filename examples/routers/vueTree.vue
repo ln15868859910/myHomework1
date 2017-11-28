@@ -48,7 +48,7 @@ export default {
               id: 3,
               title: "西湖校区",
               prop: {
-                isDragDisabled:true,
+                isDragDisabled:"self",//self(只禁用自己)，selfAndChild(禁用自己和子孙节点)
               },
                handleList:[
                 {key:"common",isShow:false, text:"合并", iconClass:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
