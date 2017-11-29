@@ -61,6 +61,8 @@ export default {
                 {
                   id: 5,
                   title: "西zi校区",
+                  isUseIcon:true,
+                  iconType:"document",
                   prop: {
                     isDragDisabled: "selfAndChild"
                   },

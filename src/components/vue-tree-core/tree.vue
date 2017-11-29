@@ -29,7 +29,7 @@
 
 .vue-tree-root .vue-tree-handle {
   position: relative;
-  padding:0 24px 0 19px;
+  padding:0 24px 0 20px;
   font-size: 14px;
   font-family: "MicrosoftYaHeiUI";
   font-size: 14px;

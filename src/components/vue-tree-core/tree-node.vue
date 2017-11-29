@@ -20,7 +20,8 @@
 }
 /*折叠框样式*/
 .vue-node-collapse,
-.vue-node-expand {
+.vue-node-expand,
+.vue-tree-invisible {
   cursor: pointer;
   display: inline-block;
   height: 30px;
@@ -129,7 +130,14 @@
 .tree-drag-disabled{
    color:#ccc; 
 }
-/*拖拽样式 开始*/
+/*拖拽样式 结束*/
+.vue-tree-invisible{
+  visibility: hidden;
+}
+.vue-tree-rootHandle{
+  display: none;
+}
+
 </style>
 
 <template>
@@ -139,20 +147,22 @@
         <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
         <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
-
-            <span :class="treeTitleWrap">
-                <!-- 折叠图标 -->
-                <i v-show="!nodeData.isHiddenCollapseIcon && showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
-                <Icon v-show="showLoading" type="loading" class="ivu-load-loop"></Icon>
-                <!-- 模拟勾选框（单选或多选） -->
-                <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
-                <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                <span :class="[treeTitleClass,dragClasses]" ref="draggAbleDom">
-                  {{nodeData.title}}
-                  <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                </span>
-                
-            </span>
+          
+          <span :class="treeTitleWrap">
+              <!-- 折叠图标 -->
+              <span :class="collapseWrapClass">
+                <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                <!-- 加载图标 -->
+                <Icon v-show="showLoading" type="loading" class="ivu-load-loop"></Icon>  
+              </span>
+              <!-- 模拟勾选框（单选或多选） -->
+              <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
+              <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+              <span :class="[treeTitleClass,dragClasses]" ref="draggAbleDom">
+                {{nodeData.title}}
+                <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+              </span>
+          </span>
 
             <span class="vue-tree-fr">
                 <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
@@ -230,6 +240,13 @@ export default {
     };
   },
   computed: {
+    collapseWrapClass(){
+      return {
+        "vue-tree-invisible": ("loading" in this.nodeData) ? false : (this.nodeData.isHiddenCollapseIcon || !this.nodeData.nodes.length),
+        "vue-tree-rootHandle": !this.parentNodeData
+      }
+    },
+
     treeTitleWrap(){
         typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
         
@@ -242,7 +259,7 @@ export default {
 
       return this.rootData.globalConfig.styles.titleText
         ? this.rootData.globalConfig.styles.titleText
-        : "vue-tree-title";
+        : "vue-tree-title";                                   
     },
     draggingClass() {
       return {
