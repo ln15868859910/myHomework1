@@ -37,9 +37,10 @@ export default {
         {
           id: 1,
           title: "西湖区校宝教育机构",
-          isUseIcon:true,
+          isUseIcon:false,
           isIconAtRight:false,
-          iconType:"home",
+          isHiddenCollapseIcon:true,
+          iconType:"",
           prop: {
             isDragDisabled:"self",//self(只禁用自己,给编辑状态的根节点禁用使用)，selfAndChild(禁用自己和子孙节点)
           },
@@ -52,7 +53,7 @@ export default {
               title: "西湖校区",
                handleList:[
                 {key:"common",isShow:true, text:"合并", iconType:"merge", isUseIcon:true,callback:function(){console.log("合并回调")}},
-                {key:"add",isShow:true, text:"添加", iconType:"plus-circled", isUseIcon:true},
+                {key:"add",isShow:true, text:"添加子节点", iconType:"plus-circled", isUseIcon:true},
                 {key:"edit",isShow:true, text:"编辑", iconType:"edit", isUseIcon:true},
                 {key:"delete",isShow:true, text:"删除", iconType:"minus-circled", isUseIcon:true},
               ],     
@@ -60,13 +61,15 @@ export default {
                 {
                   id: 5,
                   title: "西zi校区",
+                  isUseIcon:true,
+                  iconType:"document",
                   prop: {
                     isDragDisabled: "selfAndChild"
                   },
                    handleList:[
                       {key:"common",isShow:false, text:"合并", iconType:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
-                      {key:"add",isShow:true, text:"添加", iconType:"", isUseIcon:false},
-                      {key:"edit",isShow:true, text:"编辑", iconType:"", isUseIcon:false},
+                      {key:"add",isShow:true, text:"添加子节点", iconType:"", isUseIcon:false},
+                      {key:"edit",isShow:true, text:"重命名", iconType:"", isUseIcon:false},
                       {key:"delete",isShow:true, text:"删除", iconType:"", isUseIcon:false},
                     ],
                   nodes: []
@@ -164,6 +167,9 @@ export default {
   methods: {
     onEdit(data, dataTree) {
       console.log(data, dataTree);
+      data.nodes.push({
+
+      })
     },
     onAdd(data,dataTree){
       console.log(data, dataTree);
