@@ -212,12 +212,16 @@ export default {
     }
     this.setInitNodeValue();
     this.setTreeNodeMap();
+        //子节点根据父节点的禁用样式修改自身禁用状态
+    if(this.parentNodeData && this.parentNodeData.prop.isDragDisabled==="selfAndChild"){
+      this.$set(this.nodeData.prop,"isDragDisabled","selfAndChild");
+    };
   },
   mounted() {
     //绑定拖拽事件
     if(this.rootData.globalConfig.isDraggable){
-      this.$refs.draggAbleDom.draggable=true;
-      this.$refs.draggAbleDom.ondragstart=this.onDragStart;
+      this.$refs.draggAbleDom.draggable= this.nodeData.prop.isDragDisabled===""?true:false;
+      this.$refs.draggAbleDom.ondragstart= this.onDragStart;
 
       this.$refs.dropTarget.ondragenter=this.onDragEnter;
       this.$refs.dropTarget.ondragover=this.onDragOver;
@@ -225,10 +229,6 @@ export default {
       this.$refs.dropTarget.ondrop=this.onDrop;
       this.$refs.dropTarget.ondragend=this.onDragEnd;
     }
-    //isDraggable为全局可拖拽,this.nodeData.prop.isDragDisabled为全局可拖拽情况下禁用该节点的拖拽，设置disabled样式
-    if(this.rootData.globalConfig.isDraggable && this.nodeData.prop.isDragDisabled){
-      this.setChildDragDisabled();
-    };
   },
   computed: {
     treeTitleWrap(){
@@ -632,19 +632,6 @@ export default {
         }
       },
     //拖拽处理-huijuan
-    //设置该节点以及该子孙节点不可拖拽
-    setChildDragDisabled(){
-      this.$refs.draggAbleDom.draggable=false;
-      this.$refs.draggAbleDom.ondragstart=null;
-      if(this.nodeData.prop.isDragDisabled==="self"){
-        return;
-      }
-      else if(this.nodeData.prop.isDragDisabled==="selfAndChild"){
-         this.nodeData.nodes.forEach(item=>{
-         item.prop.isDragDisabled="selfAndChild";
-      });
-      }  
-    },
     //禁用目标节点事件
     forbiddenDragEvent(){
       //当前节点禁止拖拽，禁止作为目标节点
@@ -676,6 +663,9 @@ export default {
     //拖拽开始
     onDragStart(e) {
       e.stopPropagation();
+      if(this.nodeData.prop.isDragDisabled){
+        return;
+      }
       e.dataTransfer.effectAllowed = "move";
       this.nodeData.prop.isExpand = false;
       this.rootData.dragOverStatus.dragNode = this.nodeData;
@@ -697,10 +687,10 @@ export default {
         return;
       }
       this.rootData.dragOverStatus.overNodeKey = this.nodeData._hash;//当前经过的可放置的节点的key
+      this.nodeData.prop.isExpand = true;
       if(this.forbiddenDragEvent()){
         return;
       }
-      this.nodeData.prop.isExpand = true;
       this.rootData.rootInstance.$emit('dragEnter', { treeNode: this.nodeData, event: e });
     },
     onDragOver:throttle(function (e) {
@@ -809,11 +799,6 @@ export default {
       }
     },
     watch:{
-      "nodeData.prop.isDragDisabled"(val){
-        if(val){
-          this.setChildDragDisabled();
-        }
-      }
     }
     };
 </script>
