@@ -3,25 +3,49 @@
 .vue-tree-root ol {
   list-style: none;
 }
-.vue-tree-root>ol>li>ol>li ol .vue-tree-handle {
-  padding-left:57px;/*从第三级开始缩进*/
+
+.vue-tree-root>ol>li>ol,
+.vue-tree-root>ol {
+  padding-left:0px!important;/* 一级根节点和二级节点不缩进*/
+}
+.vue-tree-root>ol>li>ol>li>ol>li .vue-tree-handle{
+  padding-left: 0;
+}
+
+.vue-tree-root ol  {
+  padding-left:43px;
+}
+.vue-tree-root>ol>li>ol>li>ol>li ol  {
+  padding-left:23px;
 }
 
 .vue-tree-root{
+  min-width: 560px;
+  overflow: hidden;
   border: 1px solid #B9BEC5;
   border-radius: 4px;
   min-height: 320px;
 }
 
 .vue-tree-root .vue-tree-handle {
+  position: relative;
   padding:0 24px 0 19px;
   font-size: 14px;
   font-family: "MicrosoftYaHeiUI";
   font-size: 14px;
   color: #30404F;
-  line-height: 39px;
+  line-height: 40px;
   height:40px;
-  box-shadow: inset 0 -1px 0 0 #D4DFE5;
+  /* box-shadow: inset 0 -1px 0 0 #D4DFE5; */
+}
+.vue-tree-root .vue-tree-handle:after{
+    content: "";
+    position: absolute;
+    left: -100%;
+    bottom: 0;
+    width: 10000%;
+    box-shadow: inset 0 -1px 0 0 #D4DFE5;
+    height: 1px;
 }
 
 </style>

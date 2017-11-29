@@ -31,6 +31,9 @@ module.exports = merge(webpackBaseConfig, {
         }
     },
     devtool: '#source-map',
+    devServer: {
+        disableHostCheck: true
+    },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.bundle.js' }),
         new HtmlWebpackPlugin({
