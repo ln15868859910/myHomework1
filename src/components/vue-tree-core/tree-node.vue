@@ -63,8 +63,9 @@
     display: inline-block;
     width:240px;
     height: 30px;
-    line-height: 30px;
-    padding-left: 2px;
+    line-height: 26px;
+    border-radius:2px;
+    border: 2px solid transparent;
 }
 .vue-tree-btn{
   cursor: pointer;
@@ -648,21 +649,9 @@ export default {
         }
       },
     //拖拽处理-huijuan
-    //禁用目标节点事件
-    forbiddenDragEvent(){
-      //当前节点禁止拖拽，禁止作为目标节点
-      if(this.nodeData.prop.isDragDisabled){
-        return true;
-      }
-      //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
-        return true;
-      }
-      return false;
-    },
     //计算拖拽节点的放置方式0（作为目标节点的子节点），-1（放置在目标节点的前面）,1（放置在目标节点的后面）
     calDropPosition(e) {
-      var offsetTop = e.target.offsetTop;
+      var offsetTop = this.getOffset(e.target).top;
       var offsetHeight = e.target.offsetHeight;
       var pageY = e.pageY;
       var gapHeight = 0.2 * offsetHeight;
@@ -696,6 +685,10 @@ export default {
     onDragEnter(e) {
       e.preventDefault();
       e.stopPropagation();
+      //当没有设置拖拽节点时，禁止作为目标节点
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+        return;
+      }
       this.rootData.dragOverStatus.overNodeKey="";
       this.rootData.dragOverStatus.dropPosition=null;
       //拖拽节点与目标节点是同一个，return掉
@@ -704,34 +697,50 @@ export default {
       }
       this.rootData.dragOverStatus.overNodeKey = this.nodeData._hash;//当前经过的可放置的节点的key
       this.nodeData.prop.isExpand = true;
-      if(this.forbiddenDragEvent()){
-        return;
+      //当前节点禁止拖拽时
+      if(this.nodeData.prop.isDragDisabled){
+        return true;
       }
       this.rootData.rootInstance.$emit('dragEnter', { treeNode: this.nodeData, event: e });
     },
     onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
-      this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
-      if(this.forbiddenDragEvent()){
+      //当没有设置拖拽节点时，禁止作为目标节点
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
+      }
+      this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
+      //当前节点禁止拖拽时
+      if(this.nodeData.prop.isDragDisabled){
+        return true;
       }
       this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData, event: e });
       return false;
     },200),
     onDragLeave(e) {
       e.stopPropagation();
-      if(this.forbiddenDragEvent()){
+      //当没有设置拖拽节点时，禁止作为目标节点
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
+      }
+      //当前节点禁止拖拽时
+      if(this.nodeData.prop.isDragDisabled){
+        return true;
       }
       this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData, event: e });
     },
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
-      this.rootData.dragOverStatus.overNodeKey = "";
-      if(this.forbiddenDragEvent()){
+      //当没有设置拖拽节点时，禁止作为目标节点
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
+      }
+      this.rootData.dragOverStatus.overNodeKey = "";
+      //当前节点禁止拖拽时
+      if(this.nodeData.prop.isDragDisabled){
+        return true;
       }
       //拖拽节点与目标节点是同一个，不做任何操作
       if (this.rootData.dragOverStatus.dragNode._hash === this.nodeData._hash) {
@@ -748,8 +757,13 @@ export default {
     onDragEnd(e) {
       e.stopPropagation();
       e.preventDefault();
-      if(this.forbiddenDragEvent()){
+      //当没有设置拖拽节点时，禁止作为目标节点
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
         return;
+      }
+      //当前节点禁止拖拽时
+      if(this.nodeData.prop.isDragDisabled){
+        return true;
       }
       this.rootData.dragOverStatus.dragNode=null;
       this.rootData.dragOverStatus.overNodeKey = "";
@@ -812,6 +826,24 @@ export default {
         if (type === "object") {
           return (Object.prototype.toString.call(data).toLowerCase() == "[object object]");
         }
+      },
+      //获取元素到文档顶部和左边的距离
+      getOffset(ele) {
+        if (!ele.getClientRects().length) {
+          return { top: 0, left: 0 };
+        }
+        var rect = ele.getBoundingClientRect();
+        if (rect.width || rect.height) {
+          var doc = ele.ownerDocument;
+          var win = doc.defaultView;
+          var docElem = doc.documentElement;
+          return {
+            //元素距离视窗顶部距离，滚动高度，元素边框厚度
+            top: rect.top + win.pageYOffset - docElem.clientTop,
+            left: rect.left + win.pageXOffset - docElem.clientLeft
+          };
+        }
+        return rect;
       }
     },
     watch:{
