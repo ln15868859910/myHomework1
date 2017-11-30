@@ -53,10 +53,10 @@ export default {
               id: 3,
               title: "西湖校区",
                handleList:[
-                {key:"common",isShow:true, text:"合并", iconType:"merge", isUseIcon:true,callback:function(){console.log("合并回调")}},
-                {key:"add",isShow:true, text:"添加子节点", iconType:"plus-circled", isUseIcon:true},
-                {key:"edit",isShow:true, text:"编辑", iconType:"edit", isUseIcon:true},
-                {key:"delete",isShow:true, text:"删除", iconType:"minus-circled", isUseIcon:true},
+                {key:"common",isShow:true, toolTipDisable:false, toolTipText:"点击合并", text:"合并", iconType:"merge", isUseIcon:true,callback:function(){console.log("合并回调")}},
+                {key:"add",isShow:true, toolTipDisable:false, toolTipText:"点击添加", text:"添加子节点", iconType:"plus-circled", isUseIcon:true},
+                {key:"edit",isShow:true, toolTipDisable:false, toolTipText:"点击编辑", text:"编辑", iconType:"edit", isUseIcon:true},
+                {key:"delete",isShow:true, toolTipDisable:false, toolTipText:"点击删除", text:"删除", iconType:"minus-circled", isUseIcon:true},
               ],     
               nodes: [
                 {

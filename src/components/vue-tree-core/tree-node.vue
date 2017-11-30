@@ -67,14 +67,13 @@
     border-radius:2px;
     border: 2px solid transparent;
 }
+
+.vue-tree-btn-wrap{
+  margin-left:16px;
+}
 .vue-tree-btn{
   cursor: pointer;
   font-size: 16px;
-  margin-left:16px;
-}
-
-.vue-tree-btn-href{
-   margin-left:29px
 }
 
 /*checkbox样式 开始*/
@@ -139,6 +138,12 @@
 .vue-tree-rootHandle{
   display: none;
 }
+.ivu-tooltip-rel{
+  line-height: 1;
+}
+.ivu-tooltip-inner{
+  padding:6px 15px;
+}
 
 </style>
 
@@ -167,11 +172,13 @@
           </span>
 
             <span class="vue-tree-fr">
-                <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
-                  <a class="vue-tree-btn-href" v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
-                  <span @click="key2FuncMap(dataList.key, dataList)">
-                    <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
-                  </span>
+                <span class="vue-tree-btn-wrap" v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
+                  <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
+                  <Tooltip :content="dataList.toolTipText" :disabled="dataList.toolTipDisable" :delay="1000" placement="top" :transfer="true">
+                    <span @click="key2FuncMap(dataList.key, dataList)">
+                      <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
+                    </span>
+                  </Tooltip>
                 </span>
             </span>
         </div>
