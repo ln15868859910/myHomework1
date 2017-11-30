@@ -25,6 +25,7 @@
   border: 1px solid #B9BEC5;
   border-radius: 4px;
   min-height: 320px;
+  background:#fff;
 }
 
 .vue-tree-root .vue-tree-handle {

@@ -167,9 +167,6 @@ export default {
   methods: {
     onEdit(data, dataTree) {
       console.log(data, dataTree);
-      data.nodes.push({
-
-      })
     },
     onAdd(data,dataTree){
       console.log(data, dataTree);

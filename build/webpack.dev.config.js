@@ -32,7 +32,7 @@ module.exports = merge(webpackBaseConfig, {
     },
     devtool: '#source-map',
     devServer: {
-        disableHostCheck: true
+        disableHostCheck: true //开启局域网外部可访问
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.bundle.js' }),

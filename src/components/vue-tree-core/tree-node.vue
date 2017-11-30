@@ -160,7 +160,7 @@
               <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
               <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               <span :class="[treeTitleClass,dragClasses]" ref="draggAbleDom">
-                {{nodeData.title}}
+                <span style="vertical-align:middle">{{nodeData.title}}</span>
                 <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               </span>
           </span>
@@ -303,13 +303,6 @@ export default {
           : { "vue-tree-checkbox-disabled": this.nodeData.prop.isDisabled }
       ];
     },
-    // placeholderStyle() {
-    //   return {
-    //     width: this.draggingData.placeholderSize.width,
-    //     height: this.draggingData.placeholderSize.height,
-    //     margin: "10px"
-    //   };
-    // },
     collapseStatus() {
 
       typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
