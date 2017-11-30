@@ -188,7 +188,8 @@ export default {
             if (data.type == 2) {
                 setTimeout(function () {
                     let dateDate = data.default;
-                    data.default = obj.value = dateDate.getFullYear() + "-" + (dateDate.getMonth() + 1) + "-" + dateDate.getDate();
+                    obj.value = dateDate.getFullYear() + "-" + (dateDate.getMonth() + 1) + "-" + dateDate.getDate();
+                    data.default = obj.value;
                     _this.$emit("datacallback", obj);
                 }, 0);
             } else {
