@@ -4,7 +4,7 @@
 
 <template>
     <vue-tree-core 
-        :data-list="dataList" 
+        :data-list="treeData" 
         :config="config"
         :loadData="loadData"
 
@@ -22,13 +22,19 @@ export default {
   },
   props: {
     dataList: {
-      type: Array
+      type: Array,
+      default:[]
     },
     draggable:{
       type:Boolean
     },
     loadData:{
       type:Function
+    }
+  },
+  computed:{
+    treeData(){
+      return this.dataList;
     }
   },
   created(){
@@ -48,8 +54,8 @@ export default {
       });
 
       //删除事件
-      this.$refs.vueTreeCore.$on("on-delete",(dataCopy, promise)=>{
-          this.$emit("on-delete", dataCopy, promise);
+      this.$refs.vueTreeCore.$on("on-delete",(data, promise)=>{
+          this.$emit("on-delete", data, promise);
       });
       this.$refs.vueTreeCore.$on("on-drop",(obj)=>{
           this.$emit("on-drop",obj)

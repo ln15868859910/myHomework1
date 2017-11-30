@@ -166,14 +166,14 @@ export default {
   mounted() {},
 
   methods: {
-    onEdit(data, dataTree) {
-      console.log(data, dataTree);
+    onEdit(data) {
+      console.log(data);
     },
-    onAdd(data,dataTree){
-      console.log(data, dataTree);
+    onAdd(data){
+      console.log(data);
     },
-    onDelete(dataCopy,promise){
-      console.log(dataCopy, promise);
+    onDelete(data,promise){
+      console.log(data, promise);
       promise.resolve();
     },
     loadData(item, callback) {

@@ -149,12 +149,9 @@
 
 <template>
 <li ref="draggAbleEle" :class="draggingClass" data-wrap>
-    <!-- <li ref="draggAbleEle" @mouseup="endDrag($event)" :class="draggingClass" v-bind:vue-tree-id="nodeData._hash" data-wrap> -->
-        <!-- 拖动标题 -->
-        <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
+
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-        <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
-          
+          <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">  
           <span :class="treeTitleWrap">
               <!-- 折叠图标 -->
               <span :class="collapseWrapClass">
@@ -212,24 +209,17 @@ export default {
       default: null
     }
   },
-  created() {
-    /**
-         * 每次初始化实例时执行构建树的操作
-         * **/
-    //遍历第一层的的时候
-    if (!this.parentNodeData) {
-      this.nodeData._hash = this.generateHash();
-      this.rootData._UITreeMap = {};
-      this.rootData._UITreeMap[this.nodeData._hash] = {};
-
-      /**
-       * 给全局配置添加内部属性
-       * **/
-      //初始化是否有选中项
-      this.$set(this.rootData.globalConfig, "_hasSelected", false);
+  watch:{
+    nodeData:{
+      handler(newVal,oldVal){
+        if(!newVal._hash){
+          this.init();
+        }
+      }
     }
-    this.setInitNodeValue();
-    this.setNodeDataMap();
+  },
+  created() {
+    this.init();
   },
   mounted() {
     //绑定拖拽事件
@@ -365,6 +355,28 @@ export default {
   },
   methods: {
     /**
+     * 初始化函数
+     */
+    init(){
+      /**
+       * 每次初始化实例时执行构建树的操作
+       * **/
+      //遍历第一层的的时候
+      if (!this.parentNodeData) {
+        this.nodeData._hash = this.generateHash();
+        this.rootData._UITreeMap = {};
+        this.rootData._UITreeMap[this.nodeData._hash] = {};
+
+        /**
+         * 给全局配置添加内部属性
+         * **/
+        //初始化是否有选中项
+        this.$set(this.rootData.globalConfig, "_hasSelected", false);
+      }
+      this.setInitNodeValue();
+      this.setNodeDataMap();
+    },
+    /**
      * 给传入节点赋予默认值
      **/
     setInitNodeValue() {
@@ -375,9 +387,25 @@ export default {
         ) {
           throw new Error("传入prop的类型必须为对象");
         }
+        //【增加必要函数】
+        this.$set(this.nodeData,"fn",{});
+        this.$set(this.nodeData.fn,"getAllNodeData", () => this.rootData._UITreeMap);
+        this.$set(this.nodeData.fn, "remove", () => this.remove);
+        this.$set(this.nodeData.fn, "getParent", () => this.parentNodeData);
+        this.$set(this.nodeData.fn, "getChildren", () => this.nodeData.nodes);
+        this.$set(this.nodeData.fn, "getDepth", () => {
+          var depth = 1,
+          curParentNode = this.nodeData.getParent();
+          while (curParentNode) {
+            curParentNode = curParentNode.getParent();
+            depth++;
+          }
+          return depth;
+        });
 
         //【无传入prop对象时默认创建prop对象】
         if (!("prop" in this.nodeData)) {
+
           this.$set(this.nodeData, "prop", {
             isExpand: true,
             checkable: false,
@@ -388,50 +416,36 @@ export default {
             noDrop:false,//此节点禁用放置
             _isEdit: false
           });
-          return;
-        }
+          
+        }else{
+          //【有传入prop对象时检查默认值】
+          //赋予内部属性
+          this.$set(this.nodeData.prop, "_isEdit", false);
 
-        //【有传入prop对象时检查默认值】
-        //赋予内部属性
-        this.$set(this.nodeData.prop, "_isEdit", false);
-
-        //赋予可扩展属性和默认值
-        //  是否展开this.nodeData.prop.isExpand
-        this.checkAndSetInitValue("isExpand",this.nodeData.prop,"boolean", true);
-        //  是否可选中this.nodeData.prop.checkable
-        this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",false);
-        //  是否禁用this.nodeData.prop.checkbox
-        this.checkAndSetInitValue("isDisabled",this.nodeData.prop,"boolean",false);
-        // 是否默认选中this.nodeData.prop.isChecked
-        this.checkAndSetInitValue("isChecked",this.nodeData.prop,"boolean",false);
-        // 是否默认选中this.nodeData.prop.noDrag
-        this.checkAndSetInitValue("noDrag",this.nodeData.prop,"boolean",false);
-        // 是否默认选中this.nodeData.prop.noDrop
-        this.checkAndSetInitValue("noDrop",this.nodeData.prop,"boolean",false);
-        
-        //【增加必要函数】
-        this.$set(this.nodeData, "remove", () => this.remove);
-        this.$set(this.nodeData, "getParent", () => this.parentNodeData);
-        this.$set(this.nodeData, "getChildren", () => this.nodeData.nodes);
-        this.$set(this.nodeData, "getDepth", () => {
-          var depth = 1,
-          curParentNode = this.nodeData.getParent();
-          while (curParentNode) {
-            curParentNode = curParentNode.getParent();
-            depth++;
+          //赋予可扩展属性和默认值
+          //  是否展开this.nodeData.prop.isExpand
+          this.checkAndSetInitValue("isExpand",this.nodeData.prop,"boolean", true);
+          //  是否可选中this.nodeData.prop.checkable
+          this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",false);
+          //  是否禁用this.nodeData.prop.checkbox
+          this.checkAndSetInitValue("isDisabled",this.nodeData.prop,"boolean",false);
+          // 是否默认选中this.nodeData.prop.isChecked
+          this.checkAndSetInitValue("isChecked",this.nodeData.prop,"boolean",false);
+          // 是否默认选中this.nodeData.prop.noDrag
+          this.checkAndSetInitValue("noDrag",this.nodeData.prop,"boolean",false);
+          // 是否默认选中this.nodeData.prop.noDrop
+          this.checkAndSetInitValue("noDrop",this.nodeData.prop,"boolean",false);
+          
+          //【赋予全局冲突逻辑校验】
+          //开启了单选但是传入数据又勾选了多个的情况不予通过
+          if (this.rootData.globalConfig.singleSelect &&this.rootData.globalConfig._hasSelected &&this.nodeData.prop.isChecked) {
+            throw new Error("不能在开启单选配置的情况下又让勾选项大于1项");
           }
-          return depth;
-        });
-        
-        //【赋予全局冲突逻辑校验】
-        //开启了单选但是传入数据又勾选了多个的情况不予通过
-        if (this.rootData.globalConfig.singleSelect &&this.rootData.globalConfig._hasSelected &&this.nodeData.prop.isChecked) {
-          throw new Error("不能在开启单选配置的情况下又让勾选项大于1项");
-        }
 
-        //【赋予全局内部变量值】
-        if (this.nodeData.prop.isChecked === true) {
-          this.rootData.globalConfig._hasSelected = true;
+          //【赋予全局内部变量值】
+          if (this.nodeData.prop.isChecked === true) {
+            this.rootData.globalConfig._hasSelected = true;
+          }
         }
       },
 
@@ -528,7 +542,7 @@ export default {
       },
       //添加子节点
       addNode() {
-        this.rootData.rootInstance.$emit("on-add",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
+        this.rootData.rootInstance.$emit("on-add",this.nodeData)
       },
 
       
@@ -573,20 +587,20 @@ export default {
 
       //编辑当前节点
       editThisNode() {
-        this.rootData.rootInstance.$emit("on-edit",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
+        this.rootData.rootInstance.$emit("on-edit",this.nodeData)
         this.nodeData.prop._isEdit = true;
       },
 
       //获取当前节点在父层的索引
-      getIndexInSiblings() {
-        if (!this.parentNodeData) {
-          return -1;
-        } else {
-          return this.parentNodeData.nodes.findIndex(
-            item => item._hash == this.nodeData._hash
-          );
-        }
-      },
+      // getIndexInSiblings() {
+      //   if (!this.parentNodeData) {
+      //     return -1;
+      //   } else {
+      //     return this.parentNodeData.nodes.findIndex(
+      //       item => item._hash == this.nodeData._hash
+      //     );
+      //   }
+      // },
 
       //检查属性的类型并且设置默认值
       checkAndSetInitValue(prop, Obj, type, initValue) {
@@ -805,8 +819,6 @@ export default {
         return rect;
       }
     },
-    watch:{
-    }
     };
 </script>
 
