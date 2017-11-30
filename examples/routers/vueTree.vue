@@ -195,41 +195,22 @@ export default {
       }, 1000);
     },
     getDropData(info) {
-      console.log(info);
-      var dragKey = info.dragNode._hash;
-      var dropKey = info.dropNode._hash;
+      var dragData=info.dragNode.nodeData;
+      var dragParent=info.dragNode.parentNode;
+      var dropData=info.dropNode.nodeData;
+      var dropParent=info.dropNode.parentNode;
       var dropPosition = info.dropPosition; //0作为子级，-1放在目标节点前面，1放在目标节点后面
-      const loop = (data, key, callback) => {
-        data.forEach((item, index, arr) => {
-          if (item._hash === key) {
-            return callback(item, index, arr);
-          }
-          if (item.nodes) {
-            return loop(item.nodes, key, callback);
-          }
-        });
-      };
-      let dragObj;
-      loop(this.treeData, dragKey, (item, index, arr) => {
-        arr.splice(index, 1); //把拖拽元素从父节点中删除
-        dragObj = item;
-      });
-      if (dropPosition === 0) {
-        loop(this.treeData, dropKey, item => {
-          item.nodes = item.nodes || [];
-          item.nodes.push(dragObj);
-        });
-      } else {
-        let ar;
-        let i;
-        loop(this.treeData, dropKey, (item, index, arr) => {
-          ar = arr;
-          i = index;
-        });
+      //把拖拽元素从父节点中删除
+      dragParent.nodes.splice(dragParent.nodes.indexOf(dragData),1);
+      if(dropPosition === 0){
+        dropData.nodes.push(dragData);
+      }
+      else{
+        var index=dropParent.nodes.indexOf(dropData);
         if (dropPosition === -1) {
-          ar.splice(i, 0, dragObj);
+          dropParent.nodes.splice(index, 0, dragData);
         } else {
-          ar.splice(i + 1, 0, dragObj);
+          dropParent.nodes.splice(index + 1, 0, dragData);
         }
       }
     }

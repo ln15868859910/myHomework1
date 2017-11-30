@@ -667,26 +667,29 @@ export default {
       }
       e.dataTransfer.effectAllowed = "move";
       this.nodeData.prop.isExpand = false;
-      this.rootData.dragOverStatus.dragNode = this.nodeData;
+      this.rootData.dragOverStatus.dragNode = {
+        nodeData:this.nodeData,
+        parentNode:this.parentNodeData
+      };
       this.dragNodeHighlight= true;
       try {
          e.dataTransfer.setData('text/plain', '');
       } catch (error) {
       }
-      this.rootData.rootInstance.$emit('dragStart', { treeNode: this.nodeData, event: e });
+      this.rootData.rootInstance.$emit('dragStart', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
     },
     //进入目标节点
     onDragEnter(e) {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
       this.rootData.dragOverStatus.overNodeKey="";
       this.rootData.dragOverStatus.dropPosition=null;
       //拖拽节点与目标节点是同一个，return掉
-      if (this.nodeData._hash === this.rootData.dragOverStatus.dragNode._hash) {
+      if (this.nodeData._hash === this.rootData.dragOverStatus.dragNode.nodeData._hash) {
         return;
       }
       this.rootData.dragOverStatus.overNodeKey = this.nodeData._hash;//当前经过的可放置的节点的key
@@ -695,13 +698,13 @@ export default {
       if(this.nodeData.prop.noDrop){
         return true;
       }
-      this.rootData.rootInstance.$emit('dragEnter', { treeNode: this.nodeData, event: e });
+      this.rootData.rootInstance.$emit('dragEnter', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
     },
     onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
       this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
@@ -709,26 +712,26 @@ export default {
       if(this.nodeData.prop.noDrop){
         return true;
       }
-      this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData, event: e });
+      this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
       return false;
     },200),
     onDragLeave(e) {
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
       //当前节点禁止拖拽时
       if(this.nodeData.prop.noDrop){
         return true;
       }
-      this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData, event: e });
+      this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
     },
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
       this.rootData.dragOverStatus.overNodeKey = "";
@@ -737,13 +740,16 @@ export default {
         return true;
       }
       //拖拽节点与目标节点是同一个，不做任何操作
-      if (this.rootData.dragOverStatus.dragNode._hash === this.nodeData._hash) {
+      if (this.rootData.dragOverStatus.dragNode.nodeData._hash === this.nodeData._hash) {
         return;
       }
       var res = {
         event: e,
         dragNode: this.rootData.dragOverStatus.dragNode,
-        dropNode: this.nodeData,
+        dropNode: {
+          nodeData:this.nodeData,
+          parentNode:this.parentNodeData
+        },
         dropPosition: this.rootData.dragOverStatus.dropPosition
       };
       this.rootData.rootInstance.$emit('drop', res);
@@ -752,7 +758,7 @@ export default {
       e.stopPropagation();
       e.preventDefault();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode._hash){
+      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
       //当前节点禁止拖拽时
@@ -762,7 +768,7 @@ export default {
       this.rootData.dragOverStatus.dragNode=null;
       this.rootData.dragOverStatus.overNodeKey = "";
       this.dragNodeHighlight= false;
-      this.rootData.rootInstance.$emit('dragEnd', { treeNode: this.nodeData, event: e });
+      this.rootData.rootInstance.$emit('dragEnd', { treeNode: this.nodeData, parentNode:this.parentNodeData,event: e });
     },
     //拖拽处理结束-huijuan
 
