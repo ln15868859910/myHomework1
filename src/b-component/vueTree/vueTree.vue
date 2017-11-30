@@ -71,7 +71,7 @@ export default {
       config: {
         singleSelect: false, //是否支持单选，默认false
         // modification: true, //是否支持节点的增删改查，默认false
-        isDraggable:this.draggable,//是否支持拖拽
+        draggable:this.draggable,//是否支持拖拽
         styles: {
           //节点样式
           treeWrap: "", //父层包裹层

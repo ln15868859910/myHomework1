@@ -42,7 +42,8 @@ export default {
           isHiddenCollapseIcon:true,
           iconType:"",
           prop: {
-            isDragDisabled:"self",//self(只禁用自己,给编辑状态的根节点禁用使用)，selfAndChild(禁用自己和子孙节点)
+             noDrag: true,
+             noDrop:true
           },
           handleList:[
             {key:"add",isShow:true, text:"添加", iconType:"plus-circled", isUseIcon:true},
@@ -64,7 +65,7 @@ export default {
                   isUseIcon:true,
                   iconType:"document",
                   prop: {
-                    isDragDisabled: "selfAndChild"
+                    noDrag: true
                   },
                    handleList:[
                       {key:"common",isShow:false, text:"合并", iconType:"", isUseIcon:false,callback:function(){console.log("合并回调")}},
