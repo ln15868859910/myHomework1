@@ -163,6 +163,7 @@ export default {
     return {
       config: {
         title: "",
+        singleSelect: false, //是否支持单选，默认false
         styles: {
           //节点样式
           treeWrap: "checkboxTree-wrap", //父层包裹层
