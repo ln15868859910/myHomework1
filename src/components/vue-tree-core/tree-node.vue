@@ -395,9 +395,9 @@ export default {
         this.$set(this.nodeData.fn, "getChildren", () => this.nodeData.nodes);
         this.$set(this.nodeData.fn, "getDepth", () => {
           var depth = 1,
-          curParentNode = this.nodeData.getParent();
+          curParentNode = this.nodeData.fn.getParent();
           while (curParentNode) {
-            curParentNode = curParentNode.getParent();
+            curParentNode = curParentNode.fn.getParent();
             depth++;
           }
           return depth;
