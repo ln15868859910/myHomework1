@@ -34,7 +34,7 @@
                     <div v-else-if="data.type==2">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.default}}</span>
-                        <Date-picker type="date" v-if="!showdetail" v-model="data.default" :editable="false" :clearable="false" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
+                        <Date-picker type="date" v-if="!showdetail" v-model="data.default" :editable="false" :clearable="false" :readonly="data.isreadonly" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
                     </div>
                     <div v-else-if="data.type==3">
                         <label :class="label">{{data.title}}</label>
@@ -236,7 +236,7 @@ export default {
         },
         setCurrentIndex(index){
             this.oldIndex = index;
-            if(!this.infoData.dataList.length){
+            if(!this.infoData.dataList[index].list.length){
                 this.remoteMethod("");
             }
         },
@@ -244,7 +244,7 @@ export default {
             // console.log(arguments);
             // let index = arguments[1];
             // var query = arguments[0];
-            var index = this.oldIndex;;
+            var index = this.oldIndex;
             // if (!event) {
             //     index = this.oldIndex;
             // } else {
