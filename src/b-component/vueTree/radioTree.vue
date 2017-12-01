@@ -18,8 +18,8 @@
   overflow: auto;
   box-sizing: border-box;
 }
-.checkboxTree-checkbox,
-.checkboxTree-checkbox.checkboxSelected {
+.radioTree-radio,
+.radioTree-radio.radioSelected {
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -30,47 +30,44 @@
   top: 0;
   left: 0;
   border: 1px solid #b9bec5;
-  border-radius: 3px;
+  border-radius: 50%;
   background-color: #fff;
   box-sizing: border-box;
   cursor: pointer;
   transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
-.checkboxTree-checkbox:hover {
+.radioTree-radio:hover {
   border-color: #5295e7;
 }
-.checkboxTree-checkbox.checkboxSelected {
+.radioTree-radio.radioSelected {
   background-color: #5295e7;
   border-color: #5295e7;
 }
-.checkboxTree-checkbox:after,
-.checkboxTree-checkbox.checkboxSelected:after,
-.checkboxTree-checkbox.checkboxSelected.checkboxDisabled:after {
+.radioTree-radio:after,
+.radioTree-radio.radioSelected:after,
+.radioTree-radio.radioSelected.radioDisabled:after {
   content: "";
   display: table;
-  width: 4px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   position: absolute;
-  top: 1px;
-  left: 5px;
-  border: 2px solid #fff;
-  border-top: 0;
-  border-left: 0;
+  left: 4px;
+  top: 4px;
+  border-radius: 6px;
+  background-color:#fff;
   transition: all 0.2s ease-in-out;
   box-sizing: border-box;
 }
-.checkboxTree-checkbox:after {
+.radioTree-radio:after {
   -ms-transform: rotate(45deg) scale(0);
   transform: rotate(45deg) scale(0);
 }
-.checkboxTree-checkbox.checkboxSelected:after {
-  top: 2px;
+.radioTree-radio.radioSelected:after {
   -ms-transform: rotate(45deg) scale(1);
   transform: rotate(45deg) scale(1);
 }
-.checkboxTree-checkbox.checkboxSelected.checkboxDisabled:after {
-  top: 2px;
-  border-color: #ccc;
+.radioTree-radio.radioSelected.radioDisabled:after {
+  background-color: #ccc;
   -ms-transform: rotate(45deg) scale(1);
   transform: rotate(45deg) scale(1);
 }
@@ -117,12 +114,12 @@
   margin-bottom: 20px;
 }
 
-.checkboxTree-checkbox.checkboxDisabled {
+.radioTree-radio.radioDisabled {
   background: #f6f6f6;
   border-color: #ccc;
   cursor:no-drop;
 }
-.checkboxTree-checkbox.checkboxDisabled + .checkboxTree-title {
+.radioTree-radio.radioDisabled + .checkboxTree-title {
   color: #ccc;
   cursor:no-drop;
 }
@@ -144,7 +141,7 @@
 import vueTreeCore from "../../components/vue-tree-core";
 
 export default {
-  name:"checkboxTree",
+  name:"radioTree",
   components: {
     vueTreeCore
   },
@@ -163,27 +160,28 @@ export default {
     return {
       config: {
         title: "",
-        singleSelect: false, //是否支持单选，默认false
+        singleSelect: true, //是否支持单选，默认false
         styles: {
           //节点样式
           treeWrap: "checkboxTree-wrap", //父层包裹层
           mainTitle:"checkboxTree-mainTitle",
-          nodeHandle: "checkboxTree-handle", //每一项节点样式名
+          nodeHandle: "", //每一项节点样式名
           //勾选框样式
-          checkbox: "checkboxTree-checkbox", //勾选框样式（未勾选）
-          checkboxSelected: "checkboxSelected", //勾选框样式（已勾选）
-          checkDisabled: "checkboxDisabled", //单项禁用样式（勾选框父级）
+          checkbox: "radioTree-radio", //勾选框样式（未勾选）
+          checkboxSelected: "radioSelected", //勾选框样式（已勾选）
+          checkDisabled: "radioDisabled", //单项禁用样式（勾选框父级）
           titleWrap: "checkboxTree-titleWrap", //文字和checkbox包裹层
-          titleText: "checkboxTree-title", //文字样式
+          titleText: "", //文字样式
 
           //折叠图标样式
-          iconCollapse: "checkboxTree-icon-collapse", //图标折叠样式
-          iconExpanded: "checkboxTree-icon-expand" //图标展开样式
+          iconCollapse: "", //图标折叠样式
+          iconExpanded: "" //图标展开样式
         }
       }
     };
   },
   methods:{
+    //获得所有勾选数据，默认[]
     getSelectedNodeData(){
       return this.$refs.vueTreeCore.getSelectedNodeData();
     }

@@ -45,7 +45,7 @@
   border-top: 4.5px solid  #30404F;
   transition: all 0.2s ease-in-out;
 }
-.vue-tree-titleWrap
+/* .vue-tree-titleWrap */
 .vue-node-collapse:before {
   -ms-transform: rotate(-90deg) scale(1);
   transform: rotate(-90deg) scale(1);
@@ -213,7 +213,7 @@ export default {
   },
   watch:{
     nodeData:{
-      handler(newVal,oldVal){
+      handler(newVal, oldVal){
         if(!newVal._hash){
           this.init();
         }
@@ -372,8 +372,6 @@ export default {
         /**
          * 给全局配置添加内部属性
          * **/
-        //初始化是否有选中项
-        this.$set(this.rootData.globalConfig, "_hasSelected", false);
       }
       this.setInitNodeValue();
       this.setNodeDataMap();
@@ -438,16 +436,6 @@ export default {
           // 是否默认选中this.nodeData.prop.noDrop
           this.checkAndSetInitValue("noDrop",this.nodeData.prop,"boolean",false);
           
-          //【赋予全局冲突逻辑校验】
-          //开启了单选但是传入数据又勾选了多个的情况不予通过
-          if (this.rootData.globalConfig.singleSelect &&this.rootData.globalConfig._hasSelected &&this.nodeData.prop.isChecked) {
-            throw new Error("不能在开启单选配置的情况下又让勾选项大于1项");
-          }
-
-          //【赋予全局内部变量值】
-          if (this.nodeData.prop.isChecked === true) {
-            this.rootData.globalConfig._hasSelected = true;
-          }
         }
       },
 
@@ -471,16 +459,6 @@ export default {
          * */
         //保存当前节点的数据模型
         this.rootData._UITreeMap[this.nodeData._hash] = this.nodeData;
-        //删除当前节点和子节点，同时子节点的删除数据
-        // this.rootData._UITreeMap[this.nodeData._hash].remove = this.remove;
-        //在兄弟节点中找到自己的索引
-        // this.rootData._UITreeMap[this.nodeData._hash].getIndexInSiblings = this.getIndexInSiblings;
-        //父亲节点
-        // this.rootData._UITreeMap[this.nodeData._hash].parent = this.parentNodeData ?this.rootData._UITreeMap[this.parentNodeData._hash] :null;
-        //子节点，空指针（此时子节点还没生成）
-        // this.rootData._UITreeMap[this.nodeData._hash].children = childHashKeyList.length ? childHashKeyList.map(eachHashKey => this.rootData._UITreeMap[eachHashKey]) :null;
-        //获取当前节点的深度
-        // this.rootData._UITreeMap[this.nodeData._hash].getDepth = this.getDepth;
       },
 
       //切换勾选状态
@@ -489,35 +467,37 @@ export default {
         if (this.nodeData.prop.isDisabled) {
           return;
         }
-        //检查全局配置，是单选又有至少一项选中项，且当前选中项为假的不予通过
-        if (this.rootData.globalConfig.singleSelect && this.rootData.globalConfig._hasSelected && !this.nodeData.prop.isChecked ) {
-          return;
-        }
 
-        this.nodeData.prop.isChecked = !this.nodeData.prop.isChecked;
+        //如果是多选，正常选择功能
+        if(!this.rootData.globalConfig.singleSelect){
 
-        //在全局配置中标出选中项
-        if (this.nodeData.prop.isChecked === true) {
-          this.rootData.globalConfig._hasSelected = true;
-        } else {
-          //每次取消勾选都去判断是否已经取消勾选完并设置全局flag状态。
+          this.nodeData.prop.isChecked = !this.nodeData.prop.isChecked;
+        }else{
+          // 单选的话只能高亮一个勾选项
+          this.nodeData.prop.isChecked = true;
+          var currHash = this.nodeData._hash;
+          
           for (var p in this.rootData._UITreeMap) {
-            if (this.rootData._UITreeMap[p].prop.isChecked == true) {
-              this.rootData.globalConfig._hasSelected = true;
-              break;
-            } else {
-              this.rootData.globalConfig._hasSelected = false;
+            //反选调所有除本次勾选节点以外所有的节点的状态
+            var currentNode = this.rootData._UITreeMap[p];
+            if(currentNode.prop.isChecked == true && p !== currHash){
+              currentNode.prop.isChecked = false;
             }
           }
         }
-
+        //勾选输出单选和多选区别对待
         var arr = [];
-        for (var p in this.rootData._UITreeMap) {
-          if (this.rootData._UITreeMap[p].prop.isChecked) {
-            arr.push(this.rootData._UITreeMap[p]);
+        if(!this.rootData.globalConfig.singleSelect){
+          for (var p in this.rootData._UITreeMap) {
+            if (this.rootData._UITreeMap[p].prop.isChecked) {
+              arr.push(this.rootData._UITreeMap[p]);
+            }
           }
+        }else{
+          arr = [this.nodeData]
         }
-        console.log(arr);
+        //增加每次勾选的事件
+        this.rootData.rootInstance.$emit("on-selected",arr);
       },
 
       //切换折叠状态
@@ -550,10 +530,6 @@ export default {
       
       deleteThisNode() {
         var defer = this.defered();
-        //这里隔离数据，返回的数据和原有的数据不再有关联，防止操作数据引起的节点树未删除的情况
-        // var data = JSON.parse(JSON.stringify(this.nodeData));
-        // delete data.nodes;
-        // delete data.prop;
         this.rootData.rootInstance.$emit("on-delete",this.nodeData,defer);
         defer.promise.then(()=>{this.remove()})
       },
@@ -592,17 +568,6 @@ export default {
         this.rootData.rootInstance.$emit("on-edit",this.nodeData)
         this.nodeData.prop._isEdit = true;
       },
-
-      //获取当前节点在父层的索引
-      // getIndexInSiblings() {
-      //   if (!this.parentNodeData) {
-      //     return -1;
-      //   } else {
-      //     return this.parentNodeData.nodes.findIndex(
-      //       item => item._hash == this.nodeData._hash
-      //     );
-      //   }
-      // },
 
       //检查属性的类型并且设置默认值
       checkAndSetInitValue(prop, Obj, type, initValue) {
@@ -746,8 +711,6 @@ export default {
       this.rootData.rootInstance.$emit('dragEnd', { treeNode: this.nodeData, parentNode:this.parentNodeData,event: e });
     },
     //拖拽处理结束-huijuan
-
-      //统计选中项的数量
 
       /****************工具方法 ****************/
 

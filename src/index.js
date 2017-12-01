@@ -66,7 +66,8 @@ import consultFilter from './b-component/consultFilter';
 import infoBox from './b-component/infoBox';
 import { 
     vueTree, 
-    checkboxTree 
+    checkboxTree,
+    radioTree 
 } from './b-component/vueTree';
 
 const spui = {
@@ -105,6 +106,7 @@ const spui = {
     //树型组件
     vueTree,//默认预设的额树型组件
     checkboxTree,//带有复选框的树型组件
+    radioTree,//带有单选框的树型组件
 
     Col,
     iCol: Col,

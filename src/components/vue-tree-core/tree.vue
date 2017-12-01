@@ -59,6 +59,7 @@
           :key="index" 
           :node-data="node" 
           :root-data="rootData"
+          ref="vueTreeNode"
         >
         </vue-tree-node>
       </ol>
@@ -143,7 +144,20 @@ export default {
   },
 
   methods: {
+    //公共方法
 
+    // 获取所有勾选数据
+    getSelectedNodeData(){
+      var arr = [];
+      for (var p in this.rootData._UITreeMap) {
+          if (this.rootData._UITreeMap[p].prop.isChecked) {
+            arr.push(this.rootData._UITreeMap[p]);
+          }
+        }
+      return arr;
+    },
+
+    //从父节点销毁数据
     destory(){
       this.dataList.splice(0,1);
       this.rootData._UITreeMap = null;

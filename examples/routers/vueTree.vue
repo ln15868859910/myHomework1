@@ -7,7 +7,9 @@
   background-color:transparent;
   color:#30404F;
 }
-
+h1{
+  margin: 50px 0 10px 0
+}
 
 </style>
 
@@ -26,19 +28,24 @@
     ></vue-tree>
     
     <h1>树型多选框组件</h1>
-    <checkbox-tree :data-list="treeData2" :title="'XXXX英语培训班'"></checkbox-tree>
+    <checkbox-tree :data-list="treeData2" :title="'XXXX英语培训班'" ref="checkboxTree"></checkbox-tree>
+    <Button type="primary" @click="getSelectedData1">获取当前勾选数据（console.log）</Button>
 
+    <h1>单选组件</h1>
+    <radio-tree :data-list="treeData3" :title="'XXXX英语培训班'" ref="radioTree"></radio-tree>
+    <Button type="primary" @click="getSelectedData2">获取当前勾选数据（console.log）</Button>
   </div>
 </template>
 
 <script>
 
-import  { checkboxTree, vueTree }  from 'spui';
+import  { checkboxTree, vueTree, radioTree }  from 'spui';
 
 export default {
   components: {
     vueTree,
-    checkboxTree
+    checkboxTree,
+    radioTree
   },
   data() {
     return {
@@ -168,6 +175,71 @@ export default {
             }
           ]
         }
+      ],
+
+      treeData3: [
+        {
+          id: 1,
+          title: "禁用的样式",
+          prop: {
+            isDisabled: true,
+            isChecked: true,
+            checkable: true
+          },
+          nodes: [
+            {
+              id: 3,
+              title: "西湖校区",
+              prop: {
+                checkable: true
+              },
+              nodes: [
+                {
+                  id: 5,
+                  title: "西zi校区",
+                  prop: {
+                    checkable: true
+                  },
+                  nodes: [
+                    {
+                      id: 3,
+                      title: "西湖校区",
+                      prop: {
+                        checkable: true
+                      },
+                      nodes: [
+                        {
+                          id: 5,
+                          title: "西zi校区",
+                          prop: {
+                            checkable: true
+                          },
+                          nodes: []
+                        }
+                      ]
+                    },
+                    {
+                      id: 4,
+                      title: "下沙校区",
+                      prop: {
+                        checkable: true
+                      },
+                      nodes: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 4,
+              title: "下沙校区",
+              prop: {
+                checkable: true
+              },
+              nodes: []
+            }
+          ]
+        }
       ]
     };
   },
@@ -175,6 +247,12 @@ export default {
   mounted() {},
 
   methods: {
+    getSelectedData1(){
+      console.log(this.$refs.checkboxTree.getSelectedNodeData())
+    },
+    getSelectedData2(){
+      console.log(this.$refs.radioTree.getSelectedNodeData())
+    },
     onEdit(data) {
       console.log(data);
     },
