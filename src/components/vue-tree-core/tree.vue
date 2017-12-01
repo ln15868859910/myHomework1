@@ -144,9 +144,11 @@ export default {
   },
 
   methods: {
-    //公共方法
+    /**
+     * 公共方法
+     * **/
 
-    // 获取所有勾选数据
+    // （公有）获取所有勾选数据
     getSelectedNodeData(){
       var arr = [];
       for (var p in this.rootData._UITreeMap) {
@@ -157,6 +159,11 @@ export default {
       return arr;
     },
 
+    //（公有）获取所有带索引的节点数据
+    getAllNodeData(){
+      return this.rootData._UITreeMap;
+    },
+    
     //从父节点销毁数据
     destory(){
       this.dataList.splice(0,1);

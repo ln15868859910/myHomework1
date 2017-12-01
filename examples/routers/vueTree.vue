@@ -29,11 +29,11 @@ h1{
     
     <h1>树型多选框组件</h1>
     <checkbox-tree :data-list="treeData2" :title="'XXXX英语培训班'" ref="checkboxTree"></checkbox-tree>
-    <Button type="primary" @click="getSelectedData1">获取当前勾选数据（console.log）</Button>
+    <Button type="primary" @click="getSelectedData1">获取当前勾选数据</Button>
 
     <h1>单选组件</h1>
-    <radio-tree :data-list="treeData3" :title="'XXXX英语培训班'" ref="radioTree"></radio-tree>
-    <Button type="primary" @click="getSelectedData2">获取当前勾选数据（console.log）</Button>
+    <radio-tree :data-list="treeData3" ref="radioTree"></radio-tree>
+    <Button type="primary" @click="getSelectedData2">获取当前勾选数据</Button>
   </div>
 </template>
 

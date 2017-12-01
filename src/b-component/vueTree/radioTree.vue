@@ -1,15 +1,15 @@
 <style>
-.checkboxTree-wrap,
-.checkboxTree-wrap ol {
+.radioTree-wrap,
+.radioTree-wrap ol {
   list-style: none;
 }
-.checkboxTree-wrap ol {
+.radioTree-wrap ol {
   padding-left: 30px;
 }
-.checkboxTree-wrap>ol:first-of-type{
+.radioTree-wrap>ol:first-of-type{
     padding-left:0;
 }
-.checkboxTree-wrap {
+.radioTree-wrap {
   width: 320px;
   height: 308px;
   padding: 20px;
@@ -71,14 +71,17 @@
   -ms-transform: rotate(45deg) scale(1);
   transform: rotate(45deg) scale(1);
 }
-.checkboxTree-title {
+.radioTree-title {
   vertical-align: middle;
   font-family: "PingFangSC-Regular";
   font-size: 14px;
   color: #3d4c5a;
   cursor: default;
 }
-.checkboxTree-titleWrap {
+.radioTree-title>span{
+  vertical-align: initial;
+}
+.radioTree-titleWrap {
   font-size: 0;
   white-space: nowrap;
 }
@@ -109,9 +112,9 @@
   -ms-transform: rotate(-90deg) scale(1);
   transform: rotate(-90deg) scale(1);
 }
-.checkboxTree-handle {
+.radioTree-handle {
   line-height: 1;
-  margin-bottom: 20px;
+  margin-bottom: 13px;
 }
 
 .radioTree-radio.radioDisabled {
@@ -119,11 +122,11 @@
   border-color: #ccc;
   cursor:no-drop;
 }
-.radioTree-radio.radioDisabled + .checkboxTree-title {
+.radioTree-radio.radioDisabled + .radioTree-title {
   color: #ccc;
   cursor:no-drop;
 }
-.checkboxTree-mainTitle{
+.radioTree-mainTitle{
     font-weight:normal;
     font-family: "PingFangSC-Regular";
     font-size: 14px;
@@ -147,10 +150,8 @@ export default {
   },
   props: {
     dataList: {
-      type: Array
-    },
-    title: {
-      type: String
+      type: Array,
+      default:[]
     }
   },
   created(){
@@ -159,19 +160,18 @@ export default {
   data() {
     return {
       config: {
-        title: "",
         singleSelect: true, //是否支持单选，默认false
         styles: {
           //节点样式
-          treeWrap: "checkboxTree-wrap", //父层包裹层
-          mainTitle:"checkboxTree-mainTitle",
-          nodeHandle: "", //每一项节点样式名
+          treeWrap: "radioTree-wrap", //父层包裹层
+          mainTitle:"radioTree-mainTitle",
+          nodeHandle: "radioTree-handle", //每一项节点样式名
           //勾选框样式
           checkbox: "radioTree-radio", //勾选框样式（未勾选）
           checkboxSelected: "radioSelected", //勾选框样式（已勾选）
           checkDisabled: "radioDisabled", //单项禁用样式（勾选框父级）
-          titleWrap: "checkboxTree-titleWrap", //文字和checkbox包裹层
-          titleText: "", //文字样式
+          titleWrap: "radioTree-titleWrap", //文字和checkbox包裹层
+          titleText: "radioTree-title", //文字样式
 
           //折叠图标样式
           iconCollapse: "", //图标折叠样式
@@ -181,9 +181,15 @@ export default {
     };
   },
   methods:{
+    
     //获得所有勾选数据，默认[]
     getSelectedNodeData(){
       return this.$refs.vueTreeCore.getSelectedNodeData();
+    },
+
+    //获取所有节点数据（已通过索引优化）
+    getAllNodeData(){
+      return this.$refs.vueTreeCore.getAllNodeData();
     }
   }
 };

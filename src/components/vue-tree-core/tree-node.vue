@@ -67,6 +67,9 @@
     border-radius:2px;
     border: 2px solid transparent;
 }
+.vue-tree-title>span{
+  vertical-align: middle;
+}
 
 .vue-tree-btn-wrap{
   margin-left:16px;
@@ -162,10 +165,10 @@
                 <Icon v-show="showLoading" type="loading" class="ivu-load-loop"></Icon>  
               </span>
               <!-- 模拟勾选框（单选或多选） -->
-              <i v-if="nodeData.prop.checkable" :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
+              <i :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
               <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               <span :class="[treeTitleClass,dragClasses]" ref="draggAbleDom">
-                <span style="vertical-align:middle">{{nodeData.title}}</span>
+                <span>{{nodeData.title}}</span>
                 <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               </span>
           </span>
@@ -744,7 +747,7 @@ export default {
           case "delete":
             return this.deleteThisNode();
           case "common":
-            return dataList.callback? dataList.callback(): function(){console.log("未传入回调")}
+            return dataList.callback? dataList.callback(this.nodeData): function(){console.log("未传入回调")}
         }
         
       },
