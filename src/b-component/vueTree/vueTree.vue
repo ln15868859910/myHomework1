@@ -4,7 +4,7 @@
 
 <template>
     <vue-tree-core 
-        :data-list="dataList" 
+        :data-list="treeData" 
         :config="config"
         :loadData="loadData"
 
@@ -22,13 +22,19 @@ export default {
   },
   props: {
     dataList: {
-      type: Array
+      type: Array,
+      default:[]
     },
     draggable:{
       type:Boolean
     },
     loadData:{
       type:Function
+    }
+  },
+  computed:{
+    treeData(){
+      return this.dataList;
     }
   },
   created(){
@@ -45,22 +51,11 @@ export default {
       //添加事件
       this.$refs.vueTreeCore.$on("on-add",(data, dataTree)=>{
           this.$emit("on-add", data, dataTree);
-          data.nodes.push({
-              id: 3,
-              title: "新校区",
-              handleList:[
-                {key:"common",isShow:true, text:"合并", iconType:"merge", isUseIcon:true,callback:function(){console.log("合并回调")}},
-                {key:"add",isShow:true, text:"添加子节点", iconType:"plus-circled", isUseIcon:true},
-                {key:"edit",isShow:true, text:"编辑", iconType:"edit", isUseIcon:true},
-                {key:"delete",isShow:true, text:"删除", iconType:"minus-circled", isUseIcon:true},
-              ],
-              nodes: []
-          })
       });
 
       //删除事件
-      this.$refs.vueTreeCore.$on("on-delete",(dataCopy, promise)=>{
-          this.$emit("on-delete", dataCopy, promise);
+      this.$refs.vueTreeCore.$on("on-delete",(data, promise)=>{
+          this.$emit("on-delete", data, promise);
       });
       this.$refs.vueTreeCore.$on("on-drop",(obj)=>{
           this.$emit("on-drop",obj)

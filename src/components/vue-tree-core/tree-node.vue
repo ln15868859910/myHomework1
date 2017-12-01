@@ -67,14 +67,13 @@
     border-radius:2px;
     border: 2px solid transparent;
 }
+
+.vue-tree-btn-wrap{
+  margin-left:16px;
+}
 .vue-tree-btn{
   cursor: pointer;
   font-size: 16px;
-  margin-left:16px;
-}
-
-.vue-tree-btn-href{
-   margin-left:29px
 }
 
 /*checkbox样式 开始*/
@@ -141,17 +140,20 @@
 .vue-tree-rootHandle{
   display: none;
 }
+.ivu-tooltip-rel{
+  line-height: 1;
+}
+.ivu-tooltip-inner{
+  padding:6px 15px;
+}
 
 </style>
 
 <template>
 <li ref="draggAbleEle" :class="draggingClass" data-wrap>
-    <!-- <li ref="draggAbleEle" @mouseup="endDrag($event)" :class="draggingClass" v-bind:vue-tree-id="nodeData._hash" data-wrap> -->
-        <!-- 拖动标题 -->
-        <!-- <div class="vue-tree-handle clearfix" @mousedown="startDrag($event)" data-handle> -->
+
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-        <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">
-          
+          <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">  
           <span :class="treeTitleWrap">
               <!-- 折叠图标 -->
               <span :class="collapseWrapClass">
@@ -169,11 +171,13 @@
           </span>
 
             <span class="vue-tree-fr">
-                <span v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
-                  <a class="vue-tree-btn-href" v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
-                  <span @click="key2FuncMap(dataList.key, dataList)">
-                    <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
-                  </span>
+                <span class="vue-tree-btn-wrap" v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
+                  <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
+                  <Tooltip :content="dataList.toolTipText" :disabled="dataList.toolTipDisable" :delay="1000" placement="top" :transfer="true">
+                    <span @click="key2FuncMap(dataList.key, dataList)">
+                      <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
+                    </span>
+                  </Tooltip>
                 </span>
             </span>
         </div>
@@ -207,24 +211,17 @@ export default {
       default: null
     }
   },
-  created() {
-    /**
-         * 每次初始化实例时执行构建树的操作
-         * **/
-    //遍历第一层的的时候
-    if (!this.parentNodeData) {
-      this.nodeData._hash = this.generateHash();
-      this.rootData._UITreeMap = {};
-      this.rootData._UITreeMap[this.nodeData._hash] = {};
-
-      /**
-       * 给全局配置添加内部属性
-       * **/
-      //初始化是否有选中项
-      this.$set(this.rootData.globalConfig, "_hasSelected", false);
+  watch:{
+    nodeData:{
+      handler(newVal,oldVal){
+        if(!newVal._hash){
+          this.init();
+        }
+      }
     }
-    this.setInitNodeValue();
-    this.setTreeNodeMap();
+  },
+  created() {
+    this.init();
   },
   mounted() {
     //绑定拖拽事件
@@ -248,14 +245,14 @@ export default {
     },
 
     treeTitleWrap(){
-        typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
+        typeof this.rootData.globalConfig.styles === undefined ? this.rootData.globalConfig.styles = {}:false;
         
         return this.rootData.globalConfig.styles.titleWrap
         ? this.rootData.globalConfig.styles.titleWrap
         : "vue-tree-titleWrap";
     },
     treeTitleClass(){
-      typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
+      typeof this.rootData.globalConfig.styles === undefined ? this.rootData.globalConfig.styles = {}:false;
 
       return this.rootData.globalConfig.styles.titleText
         ? this.rootData.globalConfig.styles.titleText
@@ -268,7 +265,7 @@ export default {
     },
     nodeHandleClass() {
 
-      typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
+      typeof this.rootData.globalConfig.styles === undefined ? this.rootData.globalConfig.styles = {}:false;
 
       return this.rootData.globalConfig.styles.nodeHandle
         ? this.rootData.globalConfig.styles.nodeHandle
@@ -282,7 +279,7 @@ export default {
     },
     checkboxClass() {
 
-      typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
+      typeof this.rootData.globalConfig.styles === undefined ? this.rootData.globalConfig.styles = {}:false;
 
       return [
         this.rootData.globalConfig.styles.checkbox
@@ -304,7 +301,7 @@ export default {
     },
     collapseStatus() {
 
-      typeof this.rootData.globalConfig.styles === "undefined" ? this.rootData.globalConfig.styles = {}:false;
+      typeof this.rootData.globalConfig.styles === undefined ? this.rootData.globalConfig.styles = {}:false;
 
       return [
         this.rootData.globalConfig.styles.iconCollapse
@@ -360,6 +357,28 @@ export default {
   },
   methods: {
     /**
+     * 初始化函数
+     */
+    init(){
+      /**
+       * 每次初始化实例时执行构建树的操作
+       * **/
+      //遍历第一层的的时候
+      if (!this.parentNodeData) {
+        this.nodeData._hash = this.generateHash();
+        this.rootData._UITreeMap = {};
+        this.rootData._UITreeMap[this.nodeData._hash] = {};
+
+        /**
+         * 给全局配置添加内部属性
+         * **/
+        //初始化是否有选中项
+        this.$set(this.rootData.globalConfig, "_hasSelected", false);
+      }
+      this.setInitNodeValue();
+      this.setNodeDataMap();
+    },
+    /**
      * 给传入节点赋予默认值
      **/
     setInitNodeValue() {
@@ -370,9 +389,25 @@ export default {
         ) {
           throw new Error("传入prop的类型必须为对象");
         }
+        //【增加必要函数】
+        this.$set(this.nodeData,"fn",{});
+        this.$set(this.nodeData.fn,"getAllNodeData", () => this.rootData._UITreeMap);
+        this.$set(this.nodeData.fn, "remove", () => this.remove);
+        this.$set(this.nodeData.fn, "getParent", () => this.parentNodeData);
+        this.$set(this.nodeData.fn, "getChildren", () => this.nodeData.nodes);
+        this.$set(this.nodeData.fn, "getDepth", () => {
+          var depth = 1,
+          curParentNode = this.nodeData.fn.getParent();
+          while (curParentNode) {
+            curParentNode = curParentNode.fn.getParent();
+            depth++;
+          }
+          return depth;
+        });
 
         //【无传入prop对象时默认创建prop对象】
         if (!("prop" in this.nodeData)) {
+
           this.$set(this.nodeData, "prop", {
             isExpand: true,
             checkable: false,
@@ -383,47 +418,47 @@ export default {
             noDrop:false,//此节点禁用放置
             _isEdit: false
           });
-          return;
-        }
+          
+        }else{
+          //【有传入prop对象时检查默认值】
+          //赋予内部属性
+          this.$set(this.nodeData.prop, "_isEdit", false);
 
-        //【有传入prop对象时检查默认值】
-        //赋予内部属性
-        this.$set(this.nodeData.prop, "_isEdit", false);
+          //赋予可扩展属性和默认值
+          //  是否展开this.nodeData.prop.isExpand
+          this.checkAndSetInitValue("isExpand",this.nodeData.prop,"boolean", true);
+          //  是否可选中this.nodeData.prop.checkable
+          this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",false);
+          //  是否禁用this.nodeData.prop.checkbox
+          this.checkAndSetInitValue("isDisabled",this.nodeData.prop,"boolean",false);
+          // 是否默认选中this.nodeData.prop.isChecked
+          this.checkAndSetInitValue("isChecked",this.nodeData.prop,"boolean",false);
+          // 是否默认选中this.nodeData.prop.noDrag
+          this.checkAndSetInitValue("noDrag",this.nodeData.prop,"boolean",false);
+          // 是否默认选中this.nodeData.prop.noDrop
+          this.checkAndSetInitValue("noDrop",this.nodeData.prop,"boolean",false);
+          
+          //【赋予全局冲突逻辑校验】
+          //开启了单选但是传入数据又勾选了多个的情况不予通过
+          if (this.rootData.globalConfig.singleSelect &&this.rootData.globalConfig._hasSelected &&this.nodeData.prop.isChecked) {
+            throw new Error("不能在开启单选配置的情况下又让勾选项大于1项");
+          }
 
-        //赋予可扩展属性和默认值
-        //  是否展开this.nodeData.prop.isExpand
-        this.checkAndSetInitValue("isExpand",this.nodeData.prop,"boolean", true);
-        //  是否可选中this.nodeData.prop.checkable
-        this.checkAndSetInitValue("checkable",this.nodeData.prop,"boolean",false);
-        //  是否禁用this.nodeData.prop.checkbox
-        this.checkAndSetInitValue("isDisabled",this.nodeData.prop,"boolean",false);
-        // 是否默认选中this.nodeData.prop.isChecked
-        this.checkAndSetInitValue("isChecked",this.nodeData.prop,"boolean",false);
-        // 是否默认选中this.nodeData.prop.noDrag
-        this.checkAndSetInitValue("noDrag",this.nodeData.prop,"boolean",false);
-        // 是否默认选中this.nodeData.prop.noDrop
-        this.checkAndSetInitValue("noDrop",this.nodeData.prop,"boolean",false);
-        
-
-        //【赋予全局冲突逻辑校验】
-        //开启了单选但是传入数据又勾选了多个的情况不予通过
-        if (this.rootData.globalConfig.singleSelect &&this.rootData.globalConfig._hasSelected &&this.nodeData.prop.isChecked) {
-          throw new Error("不能在开启单选配置的情况下又让勾选项大于1项");
-        }
-
-        //【赋予全局内部变量值】
-        if (this.nodeData.prop.isChecked === true) {
-          this.rootData.globalConfig._hasSelected = true;
+          //【赋予全局内部变量值】
+          if (this.nodeData.prop.isChecked === true) {
+            this.rootData.globalConfig._hasSelected = true;
+          }
         }
       },
 
       /**
        * 给当前节点数据模型写入唯一hash标识，建立dom -> hash -> 数据 的标识
        * */
-      setTreeNodeMap() {
+      setNodeDataMap() {
+        
         //给当前节点的子节点生成一份hash,并保留内存空间
-        var childHashKeyList = this.nodeData.nodes.map(item => (item._hash = this.generateHash()));
-        childHashKeyList.map(eachHashKey => (this.rootData._UITreeMap[eachHashKey] = {}));
+        // var childHashKeyList = this.nodeData.nodes.map(item => (item._hash = this.generateHash()));
+        // childHashKeyList.map(eachHashKey => (this.rootData._UITreeMap[eachHashKey] = {}));
 
         //针对添加节点操作，本身是没有hashkey的，这个时候在初始化的时候增加hashKey
         if(this.nodeData._hash === undefined){
@@ -435,68 +470,19 @@ export default {
          *  额外维护一份 hash值映射=>数据模型的表，方便后期做拖拽扩展，减少遍历性能开销
          * */
         //保存当前节点的数据模型
-        this.rootData._UITreeMap[this.nodeData._hash].model = this.nodeData;
-        //添加节点和数据
-        this.rootData._UITreeMap[this.nodeData._hash].addNode = this.addNode;
+        this.rootData._UITreeMap[this.nodeData._hash] = this.nodeData;
         //删除当前节点和子节点，同时子节点的删除数据
-        this.rootData._UITreeMap[this.nodeData._hash].remove = this.remove;
+        // this.rootData._UITreeMap[this.nodeData._hash].remove = this.remove;
         //在兄弟节点中找到自己的索引
-        this.rootData._UITreeMap[this.nodeData._hash].getIndexInSiblings = this.getIndexInSiblings;
+        // this.rootData._UITreeMap[this.nodeData._hash].getIndexInSiblings = this.getIndexInSiblings;
         //父亲节点
-        this.rootData._UITreeMap[this.nodeData._hash].parent = this.parentNodeData ?this.rootData._UITreeMap[this.parentNodeData._hash] :null;
+        // this.rootData._UITreeMap[this.nodeData._hash].parent = this.parentNodeData ?this.rootData._UITreeMap[this.parentNodeData._hash] :null;
         //子节点，空指针（此时子节点还没生成）
-        this.rootData._UITreeMap[this.nodeData._hash].children = childHashKeyList.length ? childHashKeyList.map(eachHashKey => this.rootData._UITreeMap[eachHashKey]) :null;
+        // this.rootData._UITreeMap[this.nodeData._hash].children = childHashKeyList.length ? childHashKeyList.map(eachHashKey => this.rootData._UITreeMap[eachHashKey]) :null;
         //获取当前节点的深度
-        this.rootData._UITreeMap[this.nodeData._hash].getDepth = this.getDepth;
+        // this.rootData._UITreeMap[this.nodeData._hash].getDepth = this.getDepth;
       },
 
-      // startDrag(event) {
-      //   // console.log(this.rootData._UITreeMap[this.nodeData._hash].children);
-      //   // 只有元素是vue-tree-handle是才执行拖动
-      //   if (!("handle" in event.target.dataset)) return;
-
-      //   //拖动时计算placeholder区域宽高
-      //   var draggingAreaWidth = this.getCss(this.$refs.draggAbleEle, "width");
-      //   this.draggingData.placeholderSize.width = +draggingAreaWidth.slice(0, draggingAreaWidth.indexOf("px")) - 20 + "px";
-      //   this.draggingData.placeholderSize.height = this.getCss(this.$refs.draggAbleEle, "height");
-      //   //拿到正在拖拽区域的nodeData
-      //   this.draggingData.nodeData = $.extend(true, {}, this.nodeData);
-      //   this.params.flag = true;
-
-      //   if (!event) {
-      //     event = window.event;
-      //     event.target.onselectstart = function () {
-      //       return false;
-      //     };
-      //   }
-      //   var e = event;
-      //   this.params.currentX = e.clientX;
-      //   this.params.currentY = e.clientY;
-      //   // console.log(`起始元素位置X:${e.clientX},Y:${e.clientY}`)
-
-      //   //执行拖拽交互
-      //   document.onmousemove = event => {
-      //     var e = event ? event : window.event;
-      //     if (this.params.flag) {
-      //       var nowX = e.clientX,
-      //           nowY = e.clientY;
-      //       var disX = nowX - this.params.currentX,
-      //           disY = nowY - this.params.currentY;
-
-      //       this.$refs.draggAbleEle.style.left = parseInt(this.params.left) + disX + "px";
-      //       this.$refs.draggAbleEle.style.top = parseInt(this.params.top) + disY + "px";
-      //       // console.log(`当前元素的值：left:${this.$refs.draggAbleEle.style.left},right:${this.$refs.draggAbleEle.style.top}`)
-      //       if (event.preventDefault) {event.preventDefault();}
-      //       return false;
-      //     }
-      //   };
-      // },
-
-      // endDrag() {
-      //   this.params.flag = false;
-      //   //拖拽结束，回复原先坐标
-      //   this.$refs.draggAbleEle.style = "";
-      // },
       //切换勾选状态
       toggleChecbox() {
         
@@ -516,7 +502,7 @@ export default {
         } else {
           //每次取消勾选都去判断是否已经取消勾选完并设置全局flag状态。
           for (var p in this.rootData._UITreeMap) {
-            if (this.rootData._UITreeMap[p].model.prop.isChecked == true) {
+            if (this.rootData._UITreeMap[p].prop.isChecked == true) {
               this.rootData.globalConfig._hasSelected = true;
               break;
             } else {
@@ -527,8 +513,8 @@ export default {
 
         var arr = [];
         for (var p in this.rootData._UITreeMap) {
-          if (this.rootData._UITreeMap[p].model.prop.isChecked) {
-            arr.push(this.rootData._UITreeMap[p].model);
+          if (this.rootData._UITreeMap[p].prop.isChecked) {
+            arr.push(this.rootData._UITreeMap[p]);
           }
         }
         console.log(arr);
@@ -558,17 +544,17 @@ export default {
       },
       //添加子节点
       addNode() {
-        this.rootData.rootInstance.$emit("on-add",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
+        this.rootData.rootInstance.$emit("on-add",this.nodeData)
       },
 
       
       deleteThisNode() {
         var defer = this.defered();
         //这里隔离数据，返回的数据和原有的数据不再有关联，防止操作数据引起的节点树未删除的情况
-        var data = JSON.parse(JSON.stringify(this.nodeData));
-        delete data.nodes;
-        delete data.prop;
-        this.rootData.rootInstance.$emit("on-delete",data,defer);
+        // var data = JSON.parse(JSON.stringify(this.nodeData));
+        // delete data.nodes;
+        // delete data.prop;
+        this.rootData.rootInstance.$emit("on-delete",this.nodeData,defer);
         defer.promise.then(()=>{this.remove()})
       },
 
@@ -579,7 +565,6 @@ export default {
           this.rootData.rootInstance.$emit("destory");
           return;
         }
-
 
          var i = this.parentNodeData.nodes.findIndex(item => {
            item._hash == this.nodeData._hash;
@@ -604,32 +589,20 @@ export default {
 
       //编辑当前节点
       editThisNode() {
-        this.rootData.rootInstance.$emit("on-edit",this.nodeData, this.rootData._UITreeMap[this.nodeData._hash])
+        this.rootData.rootInstance.$emit("on-edit",this.nodeData)
         this.nodeData.prop._isEdit = true;
       },
 
       //获取当前节点在父层的索引
-      getIndexInSiblings() {
-        if (!this.parentNodeData) {
-          return -1;
-        } else {
-          return this.parentNodeData.nodes.findIndex(
-            item => item._hash == this.nodeData._hash
-          );
-        }
-      },
-
-      //vue树相关：递归获取当前节点的深度
-      getDepth() {
-        var depth = 1,
-          curParentNode = this.rootData._UITreeMap[this.nodeData._hash].parent;
-
-        while (curParentNode) {
-          curParentNode = curParentNode.parent;
-          depth++;
-        }
-        return depth;
-      },
+      // getIndexInSiblings() {
+      //   if (!this.parentNodeData) {
+      //     return -1;
+      //   } else {
+      //     return this.parentNodeData.nodes.findIndex(
+      //       item => item._hash == this.nodeData._hash
+      //     );
+      //   }
+      // },
 
       //检查属性的类型并且设置默认值
       checkAndSetInitValue(prop, Obj, type, initValue) {
@@ -848,8 +821,6 @@ export default {
         return rect;
       }
     },
-    watch:{
-    }
     };
 </script>
 
