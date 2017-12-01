@@ -101,13 +101,12 @@
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
-  cursor:pointer;
+  cursor:move;
 }
 .tree-drag-over {
   background-color: #5295E7;
   color: white;
   border: 2px #5295E7 solid;
-  opacity: 0.8;
 }
 .tree-drag-over-top {
   border-top: 2px #5295E7 solid;
@@ -130,7 +129,10 @@
   background-color:#deeaf7;
 }
 .tree-drag-disabled{
-   /*color:#ccc; */
+   cursor:default;
+}
+.tree-drag-disabled :hover{
+   color:#bbb; 
 }
 /*拖拽样式 结束*/
 .vue-tree-invisible{

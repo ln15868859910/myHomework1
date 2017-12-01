@@ -1,9 +1,18 @@
 <style>
+.markerWrap .vue-tree-root>ol>li>div.vue-tree-handle .tree-drag-disabled :hover{
+  color:#30404F;
+}
+.markerWrap .vue-tree-root>ol>li>div.vue-tree-handle .tree-drop-disabled{
+  border-color:transparent;
+  background-color:transparent;
+  color:#30404F;
+}
+
 
 </style>
 
 <template>
-  <div>
+  <div class="markerWrap">
     
     <h1>树型拖拽组件</h1>
     <vue-tree 
@@ -200,6 +209,7 @@ export default {
       var dropData=info.dropNode.nodeData;
       var dropParent=info.dropNode.parentNode;
       var dropPosition = info.dropPosition; //0作为子级，-1放在目标节点前面，1放在目标节点后面
+
       //把拖拽元素从父节点中删除
       dragParent.nodes.splice(dragParent.nodes.indexOf(dragData),1);
       if(dropPosition === 0){
