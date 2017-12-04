@@ -85,33 +85,7 @@
   font-size: 0;
   white-space: nowrap;
 }
-.checkboxTree-icon-collapse,
-.checkboxTree-icon-expand {
-  cursor: pointer;
-  display: inline-block;
-  height: 12px;
-  width: 12px;
-  position: relative;
-  font-style: normal;
-  vertical-align: middle;
-}
-.checkboxTree-icon-collapse:before,
-.checkboxTree-icon-expand:before {
-  position: absolute;
-  content: "";
-  width: 0;
-  height: 0;
-  top: 3px;
-  right: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 6px solid #aaa;
-  transition: all 0.2s ease-in-out;
-}
-.checkboxTree-icon-collapse:before {
-  -ms-transform: rotate(-90deg) scale(1);
-  transform: rotate(-90deg) scale(1);
-}
+
 .checkboxTree-handle {
   line-height: 1;
   margin-bottom: 20px;
@@ -177,15 +151,20 @@ export default {
           titleText: "checkboxTree-title", //文字样式
 
           //折叠图标样式
-          iconCollapse: "checkboxTree-icon-collapse", //图标折叠样式
-          iconExpanded: "checkboxTree-icon-expand" //图标展开样式
+          iconCollapse: "", //图标折叠样式
+          iconExpanded: "" //图标展开样式
         }
       }
     };
   },
   methods:{
+    //获得所有勾选数据，默认[]
     getSelectedNodeData(){
       return this.$refs.vueTreeCore.getSelectedNodeData();
+    },
+    //获取所有节点数据（已通过索引优化）
+    getAllNodeData(){
+      return this.$refs.vueTreeCore.getAllNodeData();
     }
   }
 };

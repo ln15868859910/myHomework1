@@ -85,33 +85,6 @@
   font-size: 0;
   white-space: nowrap;
 }
-.checkboxTree-icon-collapse,
-.checkboxTree-icon-expand {
-  cursor: pointer;
-  display: inline-block;
-  height: 12px;
-  width: 12px;
-  position: relative;
-  font-style: normal;
-  vertical-align: middle;
-}
-.checkboxTree-icon-collapse:before,
-.checkboxTree-icon-expand:before {
-  position: absolute;
-  content: "";
-  width: 0;
-  height: 0;
-  top: 3px;
-  right: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 6px solid #aaa;
-  transition: all 0.2s ease-in-out;
-}
-.checkboxTree-icon-collapse:before {
-  -ms-transform: rotate(-90deg) scale(1);
-  transform: rotate(-90deg) scale(1);
-}
 .radioTree-handle {
   line-height: 1;
   margin-bottom: 13px;
