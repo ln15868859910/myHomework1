@@ -19,7 +19,8 @@
             },
             theme: {
                 validator (value) {
-                    return oneOf(value, ['light', 'dark', 'primary']);
+                    return oneOf(value, ['light', 'dark', 'primary','scp']);
+
                 },
                 default: 'light'
             },

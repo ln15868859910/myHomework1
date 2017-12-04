@@ -4,16 +4,19 @@
             <Row type="flex" justify="center" align="middle">
                 <i-col span="12">
                     <Menu-item name="1">
-                        <Icon type="document"></Icon>
+                        <!-- <Icon type="document"></Icon> -->
+                         <div class="triangle"></div>
                         内容管理
                     </Menu-item>
                     <Menu-item name="2">
-                        <Icon type="user"></Icon>
+                        <!-- <Icon type="user"></Icon> -->
+                         <div class="triangle"></div>
                         用户管理
                     </Menu-item>
                     <Submenu name="3">
                         <template slot="title">
-                            <Icon type="sad"></Icon>
+                            <!-- <Icon type="sad"></Icon> -->
+                             <div class="triangle"></div>
                             统计分析
                         </template>
                         <Menu-group title="使用">
@@ -27,7 +30,8 @@
                         </Menu-group>
                     </Submenu>
                     <Menu-item name="4">
-                        <Icon type="settings"></Icon>
+                        <!-- <Icon type="settings"></Icon> -->
+                         <div class="triangle"></div>
                         综合设置
                     </Menu-item>
                 </i-col>
@@ -39,6 +43,7 @@
             <Radio label="light"></Radio>
             <Radio label="dark"></Radio>
             <Radio label="primary"></Radio>
+             <Radio label="scp"></Radio>
         </Radio-group>
     </div>
 </template>
