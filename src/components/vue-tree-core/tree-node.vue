@@ -53,6 +53,9 @@
 .vue-tree-titleWrap{
     letter-spacing: -3px;
 }
+.vue-tree-titleWrap .ivu-icon-loading{
+  letter-spacing: 0;
+}
 .vue-tree-icon,
 .vue-tree-title{
   font-size: 14px;
@@ -508,7 +511,7 @@ export default {
         var item = this.nodeData;
         if (item.nodes.length === 0 && !this.nodeData.prop.isExpand) {
           //异步请求子节点数据
-          if (this.rootData.rootInstance.loadData) {
+          if (this.rootData.rootInstance.loadData && !this.nodeData.loading) {
             this.$set(this.nodeData, 'loading', true);
             this.rootData.rootInstance.loadData(item, children => {
               this.$set(this.nodeData, 'loading', false);
@@ -625,6 +628,7 @@ export default {
     onDragEnter(e) {
       e.preventDefault();
       e.stopPropagation();
+      var that=this;
       //当没有设置拖拽节点时，禁止作为目标节点
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
@@ -636,12 +640,23 @@ export default {
         return;
       }
       this.rootData.dragOverStatus.overNodeKey = this.nodeData._hash;//当前经过的可放置的节点的key
-      this.nodeData.prop.isExpand = true;
       //当前节点禁止做为放置节点时
-      if(this.nodeData.prop.noDrop){
-        return true;
+      if (this.nodeData.prop.noDrop) {
+        return;
       }
-      this.rootData.rootInstance.$emit('dragEnter', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
+      //设置dragEnter定时器，停留400毫秒后触发事件
+      if (!this.rootData.delayedDragEnterLogic) {
+        this.rootData.delayedDragEnterLogic = {};
+      }
+      Object.keys(this.rootData.delayedDragEnterLogic).forEach(function (key) {
+        clearTimeout(that.rootData.delayedDragEnterLogic[key]);
+      });
+      this.rootData.delayedDragEnterLogic[this.nodeData._hash] = setTimeout(function () {
+        if (!that.nodeData.prop.isExpand) {
+          that.toggleCollapseStatus();
+        }
+        that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
+      }, 400);
     },
     onDragOver:throttle(function (e) {
       e.preventDefault();
@@ -684,6 +699,10 @@ export default {
       }
       //拖拽节点与目标节点是同一个，不做任何操作
       if (this.rootData.dragOverStatus.dragNode.nodeData._hash === this.nodeData._hash) {
+        return;
+      }
+      //当异步加载子节点时不允许放置
+      if(this.showLoading){
         return;
       }
       var res = {
