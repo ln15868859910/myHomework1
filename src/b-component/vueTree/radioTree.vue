@@ -163,6 +163,10 @@ export default {
     //获取所有节点数据（已通过索引优化）
     getAllNodeData(){
       return this.$refs.vueTreeCore.getAllNodeData();
+    },
+    //清楚所有勾选数据
+    clearAllCheckedData(){
+      return this.$refs.vueTreeCore.clearAllCheckedData();
     }
   }
 };

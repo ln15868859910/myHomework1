@@ -166,6 +166,7 @@ export default {
     getAllNodeData(){
       return this.$refs.vueTreeCore.getAllNodeData();
     },
+    //清楚所有勾选数据
     clearAllCheckedData(){
       return this.$refs.vueTreeCore.clearAllCheckedData();
     }
