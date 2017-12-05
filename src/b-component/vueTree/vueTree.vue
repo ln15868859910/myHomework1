@@ -8,7 +8,12 @@
         :config="config"
         :loadData="loadData"
 
-    ref="vueTreeCore"></vue-tree-core>
+    ref="vueTreeCore">
+    <!-- 无数据图片 -->
+      <div v-if="treeData.length && treeData[0].nodes.length===0" slot="noDataSlot">
+        <slot name='noData'></slot>
+      </div>
+    </vue-tree-core>
 
 </template>
 

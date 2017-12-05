@@ -63,6 +63,7 @@
         >
         </vue-tree-node>
       </ol>
+      <slot name='noDataSlot'></slot>
   </div>
 
 </template>

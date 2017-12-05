@@ -10,7 +10,16 @@
 h1{
   margin: 50px 0 10px 0
 }
-
+.noDataDiv{
+    font-size: 14px;
+    color: #adb4bc;
+    padding: 150px 0 0 0;
+    background: url('http://pro.schoolpal.cn/common/images_newui/page-icon91.png') no-repeat center top;
+    text-align: center;
+    margin: 30px auto;
+    line-height: 1;
+    margin-top: 55px;
+}
 </style>
 
 <template>
@@ -25,7 +34,11 @@ h1{
       @on-delete="onDelete"
       @on-drop="getDropData"
       :load-data="loadData"
-    ></vue-tree>
+    >
+    <div slot="noData">
+      <div class="noDataDiv">没有子节点</div>
+    </div>
+    </vue-tree>
     
     <h1>树型多选框组件</h1>
     <checkbox-tree :data-list="treeData2" :title="aa" ref="checkboxTree"></checkbox-tree>
