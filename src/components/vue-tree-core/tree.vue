@@ -163,7 +163,14 @@ export default {
     getAllNodeData(){
       return this.rootData._UITreeMap;
     },
-    
+
+    //清空所有勾选项
+    clearAllCheckedData(){
+      for (var p in this.rootData._UITreeMap) {
+          this.rootData._UITreeMap[p].prop.isChecked === true && (this.rootData._UITreeMap[p].prop.isChecked = false); 
+      }
+    },
+
     //从父节点销毁数据
     destory(){
       this.dataList.splice(0,1);
