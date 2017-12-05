@@ -72,6 +72,10 @@
     border-radius:2px;
     border: 2px solid transparent;
     cursor: default;
+    white-space:nowrap; 
+    text-overflow:ellipsis; 
+    -o-text-overflow:ellipsis; 
+    overflow:hidden;
 }
 .vue-tree-title>span{
   vertical-align: middle;
@@ -174,7 +178,7 @@
               <i :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
               <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom">
-                <span>{{nodeData.title}}</span>
+                <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
                 <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               </span>
           </span>
@@ -245,6 +249,7 @@ export default {
       this.$refs.dropTarget.ondrop=this.onDrop;
       this.$refs.dropTarget.ondragend=this.onDragEnd;
     }
+    this.calcTitleOverFlow();
     
   },
   computed: {
@@ -358,11 +363,17 @@ export default {
         },
         nodeData: null
       },
+      isTextOverFlow:false,
       dragOverClass:"",
       dragNodeHighlight:false //拖拽元素是否高亮
     };
   },
   methods: {
+    calcTitleOverFlow(){
+      if(this.$refs.nodeTitle.offsetWidth > this.$refs.draggAbleDom.offsetWidth){
+        this.isTextOverFlow = true;
+      }
+    },
     /**
      * 初始化函数
      */

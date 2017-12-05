@@ -65,7 +65,7 @@ export default {
       treeData: [
         {
           id: 1,
-          title: "西湖区校宝教育机构",
+          title: "西湖区校宝教育机构aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           isUseIcon:false,
           isIconAtRight:false,
           isHiddenCollapseIcon:true,
