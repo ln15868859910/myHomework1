@@ -705,10 +705,10 @@ export default {
           that.toggleCollapseStatus();
         }
         that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
-      }, 400);
-    }),
+      }, 300);
+    },100),
 
-    onDragOver:throttle(function (e) {
+    onDragOver(e) {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
@@ -725,7 +725,7 @@ export default {
          this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
       }
       return false;
-    },200),
+    },
 
     onDragLeave(e) {
       e.stopPropagation();
