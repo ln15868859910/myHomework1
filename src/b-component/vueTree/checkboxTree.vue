@@ -133,6 +133,13 @@ export default {
   created(){
       this.config.title = this.title;
   },
+  watch:{
+    title:{
+      handler(){
+        this.config.title = this.title;
+      }
+    }
+  },
   data() {
     return {
       config: {
