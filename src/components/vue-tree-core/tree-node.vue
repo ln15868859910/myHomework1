@@ -706,7 +706,7 @@ export default {
         }
         that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
       }, 400);
-    },
+    }),
 
     onDragOver:throttle(function (e) {
       e.preventDefault();
