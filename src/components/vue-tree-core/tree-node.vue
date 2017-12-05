@@ -510,7 +510,7 @@ export default {
         var item = this.nodeData;
         if (item.nodes.length === 0 && !this.nodeData.prop.isExpand) {
           //异步请求子节点数据
-          if (this.rootData.rootInstance.loadData && !this.nodeData.loading) {
+          if (this.rootData.rootInstance.loadData && ("loading" in this.nodeData) && !this.nodeData.loading) {
             this.$set(this.nodeData, 'loading', true);
             this.rootData.rootInstance.loadData(item, children => {
               this.$set(this.nodeData, 'loading', false);
