@@ -71,6 +71,7 @@
     line-height: 26px;
     border-radius:2px;
     border: 2px solid transparent;
+    cursor: default;
 }
 .vue-tree-title>span{
   vertical-align: middle;
@@ -244,6 +245,7 @@ export default {
       this.$refs.dropTarget.ondrop=this.onDrop;
       this.$refs.dropTarget.ondragend=this.onDragEnd;
     }
+    
   },
   computed: {
     collapseWrapClass(){
@@ -381,6 +383,7 @@ export default {
       this.setInitNodeValue();
       this.setNodeDataMap();
     },
+
     /**
      * 给传入节点赋予默认值
      **/
@@ -395,19 +398,11 @@ export default {
         //【增加必要函数】
         this.$set(this.nodeData,"fn",{});
         this.$set(this.nodeData.fn,"getAllNodeData", () => this.rootData._UITreeMap);
-        this.$set(this.nodeData.fn, "remove", () => this.remove);
+        this.$set(this.nodeData.fn, "remove", this.remove);
         this.$set(this.nodeData.fn, "getParent", () => this.parentNodeData);
         this.$set(this.nodeData.fn, "getChildren", () => this.nodeData.nodes);
-        this.$set(this.nodeData.fn, "getDepth", () => {
-          var depth = 1,
-          curParentNode = this.nodeData.fn.getParent();
-          while (curParentNode) {
-            curParentNode = curParentNode.fn.getParent();
-            depth++;
-          }
-          return depth;
-        });
-
+        this.$set(this.nodeData.fn, "getDepthInParent", this.getDepthInParent);
+        this.$set(this.nodeData.fn, "getDepthWithChildren", this.getDepthWithChildren)
         //【无传入prop对象时默认创建prop对象】
         if (!("prop" in this.nodeData)) {
 
@@ -449,10 +444,6 @@ export default {
        * */
       setNodeDataMap() {
         
-        //给当前节点的子节点生成一份hash,并保留内存空间
-        // var childHashKeyList = this.nodeData.nodes.map(item => (item._hash = this.generateHash()));
-        // childHashKeyList.map(eachHashKey => (this.rootData._UITreeMap[eachHashKey] = {}));
-
         //针对添加节点操作，本身是没有hashkey的，这个时候在初始化的时候增加hashKey
         if(this.nodeData._hash === undefined){
           this.nodeData._hash = this.generateHash();
@@ -539,6 +530,56 @@ export default {
         defer.promise.then(()=>{this.remove()})
       },
 
+      //获得当前节点在父节点的深度
+      getDepthInParent(limitNodeHashKey){
+        
+        var depth = 1,
+        curParentNode = this.nodeData.fn.getParent();
+        while (curParentNode) {
+          //当前父级是限定的父级，停止继续计算深度
+          if(curParentNode._hash == limitNodeHashKey){
+            depth++;
+            break;
+          }
+          curParentNode = curParentNode.fn.getParent();
+          depth++;
+        }
+        return depth;
+      },
+      //获得从当前节点到所有子节点的深度
+      getDepthWithChildren(){
+        var maxDepth = 1;
+
+        //递归遍历所有子节点的深度
+        var loopFindLastNodes = (dataList,callback)=>{
+          //已经是最后一层返回1
+          if(!dataList.length) {
+            callback(1);
+            return;
+          }
+          
+          dataList.map((item)=>{
+            if(item.nodes.length){
+              loopFindLastNodes(item.nodes,callback)
+            }else{
+              callback(item);
+            }
+          })
+
+        }
+        var depthArr =[];
+        //找到每个最底层的叶子节点，计算其到当前节点的深度
+        loopFindLastNodes(this.nodeData.nodes,(item)=>{
+          if(item == 1){
+            depthArr = [1];
+            return;
+          }
+          depthArr.push(item.fn.getDepthInParent(this.nodeData._hash));
+        })
+        // console.log("当前所有节点深度："+ JSON.stringify(depthArr))
+        return Math.max.apply(null,depthArr);
+      },
+
       //删除自身和子树,同时删除其数据模型
       remove(){
         //如果是根节点，直接删除
@@ -547,9 +588,7 @@ export default {
           return;
         }
 
-         var i = this.parentNodeData.nodes.findIndex(item => {
-           item._hash == this.nodeData._hash;
-         });
+         var i = this.parentNodeData.nodes.findIndex(item =>item._hash == this.nodeData._hash);
 
          //如果不存在子树
          if (!this.nodeData.nodes.length) {
@@ -558,16 +597,14 @@ export default {
          } else {
            //找到树中删除所有建立的索引
            this.nodeData.nodes.map(item => item._hash).map(hashKey => {
-             this.rootData._UITreeMap[hashKey].remove();
-             this.rootData._UITreeMap[hashKey] = null;
-             delete this.rootData._UITreeMap[hashKey];
+             this.rootData._UITreeMap[hashKey].fn.remove();
+             delete this.rootData._UITreeMap[this.nodeData._hash];
            });
         }
-
         //最后删除数据
         this.parentNodeData.nodes.splice(i, 1);
       },
-
+      
       //编辑当前节点
       editThisNode() {
         this.rootData.rootInstance.$emit("on-edit",this.nodeData)
@@ -668,9 +705,10 @@ export default {
           that.toggleCollapseStatus();
         }
         that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
-      }, 300);
-    },100),
-    onDragOver(e) {
+      }, 400);
+    },
+
+    onDragOver:throttle(function (e) {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
@@ -687,7 +725,8 @@ export default {
          this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
       }
       return false;
-    },
+    },200),
+
     onDragLeave(e) {
       e.stopPropagation();
       this.dragOverClass="";
@@ -701,6 +740,7 @@ export default {
       }
       this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
     },
+
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -733,6 +773,7 @@ export default {
       };
       this.rootData.rootInstance.$emit('drop', res);
     },
+
     onDragEnd(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -749,6 +790,9 @@ export default {
       this.dragNodeHighlight= false;
       this.rootData.rootInstance.$emit('dragEnd', { treeNode: this.nodeData, parentNode:this.parentNodeData,event: e });
     },
+
+
+
     //拖拽处理结束-huijuan
 
       /****************工具方法 ****************/
@@ -787,9 +831,7 @@ export default {
         }
         
       },
-      // getCss(o, key) {
-      //   return o.currentStyle ? o.currentStyle[key] : document.defaultView.getComputedStyle(o, false)[key];
-      // },
+
       //检查当前值类型
       checkThisType(data, type) {
         //基本类型
