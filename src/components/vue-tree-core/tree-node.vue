@@ -52,6 +52,8 @@
 }
 .vue-tree-titleWrap{
     letter-spacing: -3px;
+    display:inline-block;
+    height:40px;
 }
 .vue-tree-titleWrap .ivu-icon-loading{
   letter-spacing: 0;
@@ -159,8 +161,8 @@
 <li ref="draggAbleEle" :class="draggingClass" data-wrap>
 
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-          <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle ref="dropTarget">  
-          <span :class="treeTitleWrap">
+          <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle>  
+          <span :class="treeTitleWrap" ref="dropTarget">
               <!-- 折叠图标 -->
               <span :class="collapseWrapClass">
                 <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
@@ -170,7 +172,7 @@
               <!-- 模拟勾选框（单选或多选） -->
               <i :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
               <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-              <span :class="[treeTitleClass,dragClasses]" ref="draggAbleDom">
+              <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom">
                 <span>{{nodeData.title}}</span>
                 <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
               </span>
@@ -202,6 +204,7 @@
 
 <script>
 import { throttle, debounce } from '../../utils/throttle';
+let mouseOffsetY=0;//鼠标位置
 export default {
   name: "vueTreeNode",
   props: {
@@ -325,14 +328,9 @@ export default {
       ];
     },
     dragClasses() {
-      var isDragOverMe = this.rootData.dragOverStatus.overNodeKey === this.nodeData._hash;
-      var pos = this.rootData.dragOverStatus.dropPosition;
       return [
               {
                 ["tree-draggable"]:this.rootData.globalConfig.draggable && !this.nodeData.prop.noDrag,
-                ["tree-drag-over"]: isDragOverMe && pos===0,
-                ["tree-drag-over-top"]: isDragOverMe && pos===-1,
-                ["tree-drag-over-bottom"]: isDragOverMe && pos===1,
                 ["tree-drag-selected"]: this.dragNodeHighlight,
                 ["tree-drag-disabled"]: this.nodeData.prop.noDrag,//禁用该节点的拖拽
                 ["tree-drop-disabled"]: this.nodeData.prop.noDrop,//该节点禁用放置
@@ -358,6 +356,7 @@ export default {
         },
         nodeData: null
       },
+      dragOverClass:"",
       dragNodeHighlight:false //拖拽元素是否高亮
     };
   },
@@ -604,6 +603,19 @@ export default {
       //放在目标节点里面-作为子节点
       return 0;
     },
+    setDragOverClass(){
+      var pos = this.rootData.dragOverStatus.dropPosition;
+      if (pos === 0) {
+        return "tree-drag-over";
+      }
+      else if (pos === -1) {
+        return "tree-drag-over-top";
+      }
+      else if (pos === 1) {
+        return "tree-drag-over-bottom"
+      }
+      return ""
+    },
     //拖拽处理-huijuan
     //拖拽开始
     onDragStart(e) {
@@ -625,7 +637,7 @@ export default {
       this.rootData.rootInstance.$emit('dragStart', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
     },
     //进入目标节点
-    onDragEnter(e) {
+    onDragEnter:debounce(function (e) {
       e.preventDefault();
       e.stopPropagation();
       var that=this;
@@ -644,7 +656,7 @@ export default {
       if (this.nodeData.prop.noDrop) {
         return;
       }
-      //设置dragEnter定时器，停留400毫秒后触发事件
+      //设置dragEnter定时器，停留300毫秒后触发事件
       if (!this.rootData.delayedDragEnterLogic) {
         this.rootData.delayedDragEnterLogic = {};
       }
@@ -656,38 +668,43 @@ export default {
           that.toggleCollapseStatus();
         }
         that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
-      }, 400);
-    },
-    onDragOver:throttle(function (e) {
+      }, 300);
+    },100),
+    onDragOver(e) {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
-      this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
-      //当前节点禁止拖拽时
-      if(this.nodeData.prop.noDrop){
-        return true;
+      if(this.rootData.dragOverStatus.overNodeKey===this.nodeData._hash && mouseOffsetY!==e.pageY){
+        this.rootData.dragOverStatus.dropPosition = this.calDropPosition(e);//放置标识0，-1,1
+        this.dragOverClass=this.setDragOverClass();
+        mouseOffsetY=e.pageY;
       }
-      this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
+      //当前节点禁止拖拽时
+      if(!this.nodeData.prop.noDrop){
+         this.rootData.rootInstance.$emit('dragOver', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
+      }
       return false;
-    },200),
+    },
     onDragLeave(e) {
       e.stopPropagation();
+      this.dragOverClass="";
       //当没有设置拖拽节点时，禁止作为目标节点
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
       }
       //当前节点禁止拖拽时
       if(this.nodeData.prop.noDrop){
-        return true;
+        return;
       }
       this.rootData.rootInstance.$emit('dragLeave', { treeNode: this.nodeData,parentNode:this.parentNodeData, event: e });
     },
     onDrop(e) {
       e.preventDefault();
       e.stopPropagation();
+      this.dragOverClass="";
       //当没有设置拖拽节点时，禁止作为目标节点
       if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
         return;
@@ -695,7 +712,7 @@ export default {
       this.rootData.dragOverStatus.overNodeKey = "";
       //当前节点禁止拖拽时
       if(this.nodeData.prop.noDrop){
-        return true;
+        return;
       }
       //拖拽节点与目标节点是同一个，不做任何操作
       if (this.rootData.dragOverStatus.dragNode.nodeData._hash === this.nodeData._hash) {
