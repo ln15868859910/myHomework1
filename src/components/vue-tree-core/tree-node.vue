@@ -651,6 +651,7 @@ export default {
       //放在目标节点里面-作为子节点
       return 0;
     },
+    //设置hover样式
     setDragOverClass(){
       var pos = this.rootData.dragOverStatus.dropPosition;
       if (pos === 0) {
@@ -664,7 +665,10 @@ export default {
       }
       return ""
     },
-    //拖拽处理-huijuan
+    //是否有拖拽节点
+    hasDragNode(){
+      return this.rootData.dragOverStatus.dragNode && this.rootData.dragOverStatus.dragNode.nodeData;
+    },
     //拖拽开始
     onDragStart(e) {
       e.stopPropagation();
@@ -690,7 +694,7 @@ export default {
       e.stopPropagation();
       var that=this;
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
+      if(!this.hasDragNode()){
         return;
       }
       this.rootData.dragOverStatus.overNodeKey="";
@@ -722,7 +726,7 @@ export default {
       e.preventDefault();
       e.stopPropagation();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
+      if(!this.hasDragNode()){
         return;
       }
       if(this.rootData.dragOverStatus.overNodeKey===this.nodeData._hash && mouseOffsetY!==e.pageY){
@@ -741,7 +745,7 @@ export default {
       e.stopPropagation();
       this.dragOverClass="";
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
+      if(!this.hasDragNode()){
         return;
       }
       //当前节点禁止拖拽时
@@ -756,7 +760,7 @@ export default {
       e.stopPropagation();
       this.dragOverClass="";
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
+      if(!this.hasDragNode()){
         return;
       }
       this.rootData.dragOverStatus.overNodeKey = "";
@@ -788,7 +792,7 @@ export default {
       e.stopPropagation();
       e.preventDefault();
       //当没有设置拖拽节点时，禁止作为目标节点
-      if(!this.rootData.dragOverStatus.dragNode || !this.rootData.dragOverStatus.dragNode.nodeData._hash){
+      if(!this.hasDragNode()){
         return;
       }
       //当前节点禁止拖拽时
