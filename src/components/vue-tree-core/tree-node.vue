@@ -504,7 +504,7 @@ export default {
           arr = [this.nodeData]
         }
         //增加每次勾选的事件
-        this.rootData.rootInstance.$emit("on-selected",arr);
+        this.rootData.rootInstance.$emit("on-selected-change",arr);
       },
 
       //切换折叠状态

@@ -60,8 +60,14 @@ export default {
 
       //删除事件
       this.$refs.vueTreeCore.$on("on-delete",(data, promise)=>{
-          this.$emit("on-delete", data, promise);
+        this.$emit("on-delete", data, promise);
       });
+
+      //勾选事件
+      this.$refs.vueTreeCore.$on("on-selected-change",(arr)=>{
+        this.$emit("on-selected-change", arr);
+      })
+
       this.$refs.vueTreeCore.$on("on-drop",(obj)=>{
           this.$emit("on-drop",obj)
       });
