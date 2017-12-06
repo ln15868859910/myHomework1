@@ -153,6 +153,12 @@ export default {
       }
     };
   },
+  mounted(){
+      //勾选事件
+      this.$refs.vueTreeCore.$on("on-selected-change",(arr)=>{
+        this.$emit("on-selected-change", arr);
+      })
+  },
   methods:{
     
     //获得所有勾选数据，默认[]
