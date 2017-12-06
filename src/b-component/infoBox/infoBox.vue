@@ -10,7 +10,7 @@
                     <div v-if="data.type==1">
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" v-if="showdetail">{{returnLabel(data)}}</span>
-                        <Select v-if="data.isShowPhone&&!showdetail" v-model="data.default" :label="returnLabel(data)" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
+                        <Select v-if="data.isShowPhone&&!showdetail" v-model="data.default" :label="returnLabel(data)" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="catplace(data)" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value" :label="item.label" :disabled="item.disabled">
                                 <span v-if="!item.disabled" :class="spanName" :title="item.label">{{ item.label }}</span>
                                 <span v-if="!item.disabled" :class="spanPhone">{{item.phone}}</span>
@@ -27,24 +27,24 @@
                             </xb-option>
                         </xb-droplist> -->
                         <span :class="select" v-if="showdetail">{{findLable(data.list,data.default)}}</span>
-                        <Select v-if="!data.isShowPhone&&!showdetail" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="data.placeholder||'请选择'" @on-change="setDataItem(data)" label-in-value placement="top">
+                        <Select v-if="!data.isShowPhone&&!showdetail" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="catplace(data)"  @on-change="setDataItem(data)" label-in-value placement="top">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </div>
                     <div v-else-if="data.type==2">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.default}}</span>
-                        <Date-picker type="date" v-if="!showdetail" v-model="data.default" :editable="false" :clearable="false" :readonly="data.isreadonly" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
+                        <Date-picker type="date" v-if="!showdetail" v-model="data.default" :placeholder="catplace(data)" :editable="false" :clearable="false" :readonly="data.isreadonly" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
                     </div>
                     <div v-else-if="data.type==3">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.default}}</span>
-                        <Input v-model="data.default" v-if="!showdetail" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
+                        <Input v-model="data.default" v-if="!showdetail" :placeholder="catplace(data)" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
                     </div>
                     <div v-else-if="data.type==4">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.value}}</span>
-                        <Input v-model="data.value" v-if="!showdetail" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
+                        <Input v-model="data.value" v-if="!showdetail" :placeholder="catplace(data)" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
                     </div>
                     <!--todo 多级联动选择未完成-->
                     <div v-else :index="dataIndex">
@@ -146,6 +146,10 @@ export default {
 
     },
     methods: {
+        catplace(data){
+            var pretext = data.type==1?'请选择':'请输入';
+            return pretext +data.title;
+        },
         findLable(list,id){
             var arr = list.filter(item=>{
                 return item.value == id;
