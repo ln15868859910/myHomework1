@@ -694,7 +694,6 @@ export default {
         return;
       }
       this.rootData.dragOverStatus.overNodeKey="";
-      this.rootData.dragOverStatus.dropPosition=null;
       //拖拽节点与目标节点是同一个，return掉
       if (this.nodeData._hash === this.rootData.dragOverStatus.dragNode.nodeData._hash) {
         return;
@@ -715,9 +714,9 @@ export default {
         if (!that.nodeData.prop.isExpand) {
           that.toggleCollapseStatus();
         }
-        that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
-      }, 300);
-    },100),
+      }, 250);
+      that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
+    },150),
 
     onDragOver(e) {
       e.preventDefault();
