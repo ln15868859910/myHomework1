@@ -1,8 +1,10 @@
 <template>
     <div :class="classes" v-clickoutside="handleClose">
-        <div :class="[prefixCls + '-rel']" @click="toggleOpen">
+        <div :class="[prefixCls + '-rel']" @click="toggleOpen" ref="reference">
+            <input type="hidden" :name="name" :value="currentValue">
             <slot>
                 <i-input
+                    :element-id="elementId"
                     ref="input"
                     :readonly="!filterable"
                     :disabled="disabled"
@@ -14,12 +16,17 @@
                     :class="[prefixCls + '-label']"
                     v-show="filterable && query === ''"
                     @click="handleFocus">{{ displayRender }}</div>
-                <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSelect"></Icon>
-                <Icon type="arrow-down" :class="[prefixCls + '-arrow']"></Icon>
+                <Icon type="ios-close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSelect"></Icon>
+                <Icon type="arrow-down-b" :class="[prefixCls + '-arrow']"></Icon>
             </slot>
         </div>
         <transition name="slide-up">
-            <Drop v-show="visible">
+            <Drop
+                v-show="visible"
+                :class="{ [prefixCls + '-transfer']: transfer }"
+                ref="drop"
+                :data-transfer="transfer"
+                v-transfer-dom>
                 <div>
                     <Caspanel
                         v-show="!filterable || (filterable && query === '')"
@@ -51,6 +58,7 @@
     import Icon from '../icon/icon.vue';
     import Caspanel from './caspanel.vue';
     import clickoutside from '../../directives/clickoutside';
+    import TransferDom from '../../directives/transfer-dom';
     import { oneOf } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
     import Locale from '../../mixins/locale';
@@ -62,7 +70,7 @@
         name: 'Cascader',
         mixins: [ Emitter, Locale ],
         components: { iInput, Drop, Icon, Caspanel },
-        directives: { clickoutside },
+        directives: { clickoutside, TransferDom },
         props: {
             data: {
                 type: Array,
@@ -116,6 +124,19 @@
                 default: false
             },
             notFoundText: {
+                type: String
+            },
+            transfer: {
+                type: Boolean,
+                default: false
+            },
+            name: {
+                type: String
+            },
+            remoteFuc:{
+                type:Function
+            },
+            elementId: {
                 type: String
             }
         },
@@ -257,7 +278,11 @@
                 }
             },
             handleInput (event) {
-                this.query = event.target.value;
+                if(this.remoteFuc){
+                    this.remoteFuc(event.target.value);
+                }else{
+                    this.query = event.target.value;
+                }
             },
             handleSelectItem (index) {
                 const item = this.querySelections[index];
@@ -333,10 +358,16 @@
                     if (this.currentValue.length) {
                         this.updateSelected();
                     }
+                    if (this.transfer) {
+                        this.$refs.drop.update();
+                    }
                 } else {
                     if (this.filterable) {
                         this.query = '';
                         this.$refs.input.currentValue = '';
+                    }
+                    if (this.transfer) {
+                        this.$refs.drop.destroy();
                     }
                 }
                 this.$emit('on-visible-change', val);

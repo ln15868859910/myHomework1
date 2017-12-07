@@ -10,3 +10,8 @@
 
 # *2017年11月9日14:31:42*
 > 1.input 组件更新至iView 2.5
+
+> DatePicker 升级至2.7
+# *2017年12月7日17点03分*
+> 1.Cascader 升级至2.7
+> 2.Cascader 扩展 增加 remoteFuc

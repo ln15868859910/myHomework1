@@ -7,7 +7,7 @@
         <div :class="content">
             <ul :class="ul">
                 <li :class="li" v-for="(data,dataIndex) in infoData.dataList" :key="dataIndex">
-                    <div v-if="data.type==1||(data.type==5)">
+                    <div v-if="data.type==1||(data.type==5&&!newstudent)">
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" v-if="showdetail">{{returnLabel(data)}}</span>
                         <Select v-if="data.isShowPhone&&!showdetail" v-model="data.default" :label="returnLabel(data)" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="catplace(data)" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
@@ -50,7 +50,7 @@
                     <div v-else :index="dataIndex">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.value}}</span>
-                        <Cascader :data="data.list" v-if="!showdetail" :placeholder="catplace(data)" :load-data="remoteMethod" filterable v-model="data.value" @click.native="setCurrentIndex(dataIndex)" @on-change="getMultistepData"></Cascader>
+                        <Cascader :data="data.list" v-if="!showdetail" :placeholder="catplace(data)" :load-data="remoteMethod" filterable v-model="data.value" @click.native="setCurrentIndex(dataIndex)" @on-change="getMultistepData" :remote-fuc="remoteMethod"></Cascader>
                     </div>
                 </li>
             </ul>
@@ -283,7 +283,7 @@ export default {
                             tempList.push({
                                 value: "emptyData",
                                 label: "暂无数据",
-                                disabled: true
+                                disabled: true,
                             })
                         }
                         else {
@@ -292,7 +292,13 @@ export default {
                                     label: item.Name,
                                     value: item.Id,
                                     phone: item.Phone,
-                                    disabled: false
+                                    disabled: false,
+                                    children:item.UserName?item.UserName.split(",").map(item=>{
+                                        return {
+                                            value:item,
+                                            label:item
+                                        }
+                                    }):[]
                                 })
                             })
 
@@ -322,16 +328,19 @@ export default {
         //todo 多级联动选择未完成
         getMultistepData(data) {
             var _this = this;
-            // let index = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
-            let index = this.oldIndex;
-            let obj = {
-                dataType: _this.infoData.dataList[index].itemType,
-                value: data.length > 0 ? data[0] : "",
-                label: data.length > 0 ? data[1] : ""
-            }
-            this.$emit("datacallback", obj);
-            //todo 多级联动选择未完成
-            _this.toDataModel();
+            // // let index = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+            // let index = this.oldIndex;
+            // let obj = {
+            //     dataType: _this.infoData.dataList[index].itemType,
+            //     value: data.length > 0 ? data[0] : "",
+            //     label: data.length > 0 ? data[1] : ""
+            // }
+            // this.$emit("datacallback", obj);
+            // //todo 多级联动选择未完成
+            // _this.toDataModel();
+            let index = _this.oldIndex;
+            _this.infoData.dataList[index].default = data[0];
+            _this.infoData.dataList[index].default2 = data[1]||"";
         },
         countHeight(index){
             return this.placementArr[index];
