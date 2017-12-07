@@ -7,7 +7,7 @@
         <div :class="content">
             <ul :class="ul">
                 <li :class="li" v-for="(data,dataIndex) in infoData.dataList" :key="dataIndex">
-                    <div v-if="data.type==1">
+                    <div v-if="data.type==1||(data.type==5)">
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" v-if="showdetail">{{returnLabel(data)}}</span>
                         <Select v-if="data.isShowPhone&&!showdetail" v-model="data.default" :label="returnLabel(data)" ref="abc" :index="dataIndex" :class="selectMan" remote :remote-method="remoteMethod" @click.native="setCurrentIndex(dataIndex)" :loading="search" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="catplace(data)" @on-change="setDataItem(data)" label-in-value :placement="countHeight(dataIndex)">
@@ -34,7 +34,7 @@
                     <div v-else-if="data.type==2">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.default}}</span>
-                        <Date-picker type="date" v-if="!showdetail" v-model="data.default" :placeholder="catplace(data)" :editable="false" :clearable="false" :readonly="data.isreadonly" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
+                        <Date-picker type="date" v-if="!showdetail" v-model="data.default" :placeholder="catplace(data)" :editable="false" :clearable="false" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
                     </div>
                     <div v-else-if="data.type==3">
                         <label :class="label">{{data.title}}</label>
@@ -50,7 +50,7 @@
                     <div v-else :index="dataIndex">
                         <label :class="label">{{data.title}}</label>
                         <span style="width: 140px;display:inline-block;" v-if="showdetail">{{data.value}}</span>
-                        <Cascader :data="data.list" v-if="!showdetail" :load-data="loadData" filterable @on-change="getMultistepData"></Cascader>
+                        <Cascader :data="data.list" v-if="!showdetail" :placeholder="catplace(data)" :load-data="remoteMethod" filterable v-model="data.value" @click.native="setCurrentIndex(dataIndex)" @on-change="getMultistepData"></Cascader>
                     </div>
                 </li>
             </ul>
@@ -76,6 +76,10 @@ export default {
             default: null
         },
         showdetail:{
+            type: Boolean,
+            default: false
+        },
+        newstudent:{    //目前只有新建学生才会选择 多角色
             type: Boolean,
             default: false
         }
@@ -318,8 +322,8 @@ export default {
         //todo 多级联动选择未完成
         getMultistepData(data) {
             var _this = this;
-            let index = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
-
+            // let index = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+            let index = this.oldIndex;
             let obj = {
                 dataType: _this.infoData.dataList[index].itemType,
                 value: data.length > 0 ? data[0] : "",
