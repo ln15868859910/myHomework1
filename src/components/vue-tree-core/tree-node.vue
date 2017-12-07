@@ -718,8 +718,8 @@ export default {
         if (!that.nodeData.prop.isExpand) {
           that.toggleCollapseStatus();
         }
+        that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
       }, 250);
-      that.rootData.rootInstance.$emit('dragEnter', { treeNode: that.nodeData, parentNode: that.parentNodeData, event: e });
     },150),
 
     onDragOver(e) {
