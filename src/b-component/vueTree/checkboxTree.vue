@@ -168,9 +168,9 @@ export default {
     };
   },
   mounted(){
-    //勾选事件
-    this.$refs.vueTreeCore.$on("on-selected-change",(arr)=>{
-      this.$emit("on-selected-change", arr);
+    //勾选事件,返回所有已选中的节点，当前操作的节点
+    this.$refs.vueTreeCore.$on("on-selected-change",(arr,node)=>{
+      this.$emit("on-selected-change", arr,node);
     })
   },
   methods:{
