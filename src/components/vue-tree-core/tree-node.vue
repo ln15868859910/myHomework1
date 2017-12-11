@@ -55,9 +55,6 @@
     display:inline-block;
     height:40px;
 }
-.vue-tree-titleWrap .ivu-icon-loading{
-  letter-spacing: 0;
-}
 .vue-tree-icon,
 .vue-tree-title{
   font-size: 14px;
@@ -103,6 +100,15 @@
   background: rgba(0, 0, 0, 0.2);
 }
 /*checkbox样式 结束*/
+.vue-tree-loading{
+  font-size:14px;
+  height:20px;
+  width:20px;
+  line-height: 20px !important;
+  text-align: center;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
 /*拖拽样式 开始*/
 .tree-draggable{
   -moz-user-select: none;
@@ -172,7 +178,7 @@
               <span :class="collapseWrapClass">
                 <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
                 <!-- 加载图标 -->
-                <Icon v-show="showLoading" type="loading" class="ivu-load-loop"></Icon>  
+                <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
               </span>
               <!-- 模拟勾选框（单选或多选） -->
               <i :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>

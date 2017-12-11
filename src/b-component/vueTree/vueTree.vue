@@ -62,7 +62,15 @@ export default {
       this.$refs.vueTreeCore.$on("on-delete",(data, promise)=>{
         this.$emit("on-delete", data, promise);
       });
-
+      //拖拽start事件
+      this.$refs.vueTreeCore.$on("on-dragStart",(obj)=>{
+          this.$emit("on-dragStart",obj)
+      });
+      //拖拽enter事件
+      this.$refs.vueTreeCore.$on("on-dragEnter",(obj)=>{
+          this.$emit("on-dragEnter",obj)
+      });
+      //拖拽drop事件
       this.$refs.vueTreeCore.$on("on-drop",(obj)=>{
           this.$emit("on-drop",obj)
       });

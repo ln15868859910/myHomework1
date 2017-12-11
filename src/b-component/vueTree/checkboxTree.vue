@@ -111,7 +111,7 @@
 </style>
 
 <template>
-    <vue-tree-core :data-list="dataList" :config="config" ref="vueTreeCore"></vue-tree-core>
+    <vue-tree-core :data-list="dataList" :config="config" ref="vueTreeCore" :loadData="loadData"></vue-tree-core>
 </template>
 
 <script>
@@ -128,6 +128,9 @@ export default {
     },
     title: {
       type: String
+    },
+    loadData:{
+      type:Function
     }
   },
   created(){
