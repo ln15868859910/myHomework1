@@ -88,7 +88,7 @@
 
 .checkboxTree-handle {
   line-height: 1;
-  margin-bottom: 20px;
+  margin-bottom: 13px;
 }
 
 .checkboxTree-checkbox.checkboxDisabled {
