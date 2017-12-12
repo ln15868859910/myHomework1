@@ -289,11 +289,11 @@ export default {
                         else {
                             res.data.Data.List.map(function (item, index) {
                                 tempList.push({
-                                    label: item.Name,
+                                    label: item.Name||'',
                                     value: item.Id,
-                                    phone: item.Phone,
+                                    phone: item.Phone||'',
                                     disabled: false,
-                                    children:item.UserName?item.UserName.split(",").map(item=>{
+                                    children:item.UserName?item.UserName.split(',').map(item=>{
                                         return {
                                             value:item,
                                             label:item
