@@ -2,15 +2,15 @@
     <Xb-Poptip mistake title="提示标题" :content="errcontent" placement="top" :show="iferror">
         <div :class="wrapClasses" style="width:100%;">
             <div :class="handlerClasses" v-if="!hidestep">
-                <a @click="up" @mouse.down="preventDefault" :class="upClasses">
+                <a @click="up" @mousedown="preventDefault" :class="upClasses">
                     <span :class="innerUpClasses" @click="preventDefault"></span>
                 </a>
-                <a @click="down" @mouse.down="preventDefault" :class="downClasses">
+                <a @click="down" @mousedown="preventDefault" :class="downClasses">
                     <span :class="innerDownClasses" @click="preventDefault"></span>
                 </a>
             </div>
             <div :class="inputWrapClasses">
-                <input :class="inputClasses" :disabled="disabled" :placeholder="placeholder" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @change="change" :name="name" :value="currentValue" :style="this.hidestep?'text-align:right':'text-align:left'">
+                <input :class="inputClasses" :disabled="disabled" :placeholder="placeholder" autocomplete="off" :autofocus="autofocus" @focus="focus" @blur="blur" @keydown.stop="keyDown" @input="change" @change="change" :name="name" :value="precisionValue" :style="this.hidestep?'text-align:right':'text-align:left'">
             </div>
         </div>
     </Xb-Poptip>
@@ -22,9 +22,6 @@ import Emitter from '../../mixins/emitter';
 const prefixCls = 'ivu-input-number';
 const iconPrefixCls = 'ivu-icon';
 
-function isValueNumber(value) {
-    return (/(^-?[0-9]+\.{1}\d+$)|(^-?[1-9][0-9]*$)|(^-?0{1}$)/).test(value + '');
-}
 function addNum(num1, num2) {
     let sq1, sq2, m;
     try {
@@ -46,7 +43,7 @@ function addNum(num1, num2) {
     //            return (num1 * m + num2 * m) / m;
     //        }
     m = Math.pow(10, Math.max(sq1, sq2));
-    return (num1 * m + num2 * m) / m;
+    return (Math.round(num1 * m) + Math.round(num2 * m)) / m;
 }
 
 export default {
@@ -66,7 +63,7 @@ export default {
             default: 1
         },
         value: {
-            type: Number | String
+            type: Number|String
         },
         size: {
             validator(value) {
@@ -108,13 +105,17 @@ export default {
             upDisabled: false,
             downDisabled: false,
             iferror: false,
-            errcontent: ''
-            // currentValue: this.value
+            errcontent: '',
+            currentValue: this.value
         };
     },
     computed: {
-        currentValue() {
-            return this.value;
+        precisionValue () {
+            // can not display 1.0
+            if(this.currentValue===''){
+                return '';
+            }
+            return this.fixed ? this.fiexdNumber(this.currentValue) : this.currentValue;
         },
         wrapClasses() {
             return [
@@ -215,6 +216,10 @@ export default {
             this.setValue(val);
         },
         setValue(val) {
+            if (!isNaN(this.fixed)){
+                val = this.fiexdNumber(val);
+            }
+
             this.$nextTick(() => {
                 this.currentValue = val;
                 this.$emit('input', val);
@@ -227,7 +232,24 @@ export default {
         },
         blur() {
             this.focused = false;
-            this.$emit('on-blur');
+            // this.$emit('on-blur');
+            this.checkRange();
+        },
+        checkRange(){   //离焦之后的大小值校验
+            var val = this.currentValue;
+            const max = this.max;
+            const min = this.min;
+            if (Number(val) > max) {
+                this.setValue(max);
+                this.setError('max');
+
+            } else if (Number(val) < min) {
+                //离焦时 不用处理特殊分支
+                this.setValue(min);
+                this.setError('min');
+            } else {
+                this.setValue(val);
+            }
         },
         keyDown(e) {
             if (e.keyCode === 38) {
@@ -240,14 +262,14 @@ export default {
         },
         fiexdNumber(val) {
             //小数点补足原则  整数或小数未超过指定小数位数长度 不管，超过后截取指定小数位数
-            var strarr = ('' + Number(val)).split('.');
+            var strarr = (val+'').split('.');
             if (strarr.length == 2 && strarr[1].length > this.fixed) {
                 this.setError('fixed');
             }
             if (strarr.length == 2 && this.fixed) {
-                return strarr[0] + '.' + strarr[1].substring(0, this.fixed);
+                return (strarr[0]||0) + '.' + (strarr[1]||"0").substring(0, this.fixed);
             } else {
-                return strarr[0];
+                return Number(strarr[0]);
             }
 
         },
@@ -282,29 +304,35 @@ export default {
         },
         change(event) {
             let val = event.target.value.trim();
+            if (event.type == 'input' && val.match(/^\-?\.?$|\.$/)) return; // prevent fire early if decimal. If no more input the change event will fire later
+            if (event.type == 'change' && Number(val) === this.currentValue) return; // already fired change for input event
 
             const max = this.max;
             const min = this.min;
 
-            if (isValueNumber(val)) {
-                val = Number(val);
-                if (this.fixed > -1) {
-                    val = this.fiexdNumber(val);
-                }
+            const isEmptyString = val.length === 0;
+            // val = Number(val);
+            if (!isNaN(Number(val)) && !isEmptyString) {
                 this.currentValue = val;
 
-                if (val > max) {
+                if (Number(val) > max) {
                     this.setValue(max);
                     this.setError('max');
 
-                } else if (val < min) {
-                    this.setValue(min);
-                    this.setError('min');
+                } else if (Number(val) < min) {
+                    //处理一个特殊的分支  当最小为0.01 但 现在输入的值为0\0.\0.0时 应当允许继续输入
+
+                    if(val.split(".").length==1||val.split(".")[1].length<(''+this.min).split(".")[1].length){
+                        this.setValue(val);
+                    }else{
+                        this.setValue(min);
+                        this.setError('min');
+                    }
                 } else {
                     this.setValue(val);
                 }
             } else {
-                if(val!=""){
+                if(isNaN(Number(val))){
                     this.setError('nan');
                 }else{
                     if(this.required){
@@ -331,8 +359,8 @@ export default {
             if (this.hidestep) {
                 return;
             }
-            if (isValueNumber(val) || val === 0) {
-                val = Number(val);
+            val = Number(val);
+            if (!isNaN(val)) {
                 const step = this.step;
 
                 this.upDisabled = val + step > this.max;
@@ -347,8 +375,17 @@ export default {
         this.changeVal(this.currentValue);
     },
     watch: {
+        value (val) {
+            this.currentValue = val;
+        },
         currentValue(val) {
             this.changeVal(val);
+        },
+        min () {
+            this.changeVal(this.currentValue);
+        },
+        max () {
+            this.changeVal(this.currentValue);
         }
     }
 };
