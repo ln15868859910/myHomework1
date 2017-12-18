@@ -20,7 +20,7 @@ export default {
                     return createElement('li', 
                         {
                             style: {
-                                color: '#D9D9D9',
+                                color:item.disabled ?'#fff':'#111',
                                 backgroundColor:item.disabled ? '#aaa' : '#fff'
                             }
                         },
@@ -29,10 +29,10 @@ export default {
                                 attrs: {
                                     type: 'close-filled'
                                 },
+                                class:{
+                                    'ivu-xbtransfer-closefilled':true,
+                                },
                                 style: {
-                                    fontSize: '16px',
-                                    marginRight: '10px',
-                                    color: '#D9D9D9',
                                     backgroundColor:item.disabled ? '#aaa' : '#fff'
                                 },
                                 nativeOn: {
