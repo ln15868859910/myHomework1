@@ -64,6 +64,11 @@ import XbIcon from './components/xb-icon';
 //业务组件
 import consultFilter from './b-component/consultFilter';
 import infoBox from './b-component/infoBox';
+import { 
+    vueTree, 
+    checkboxTree,
+    radioTree 
+} from './b-component/vueTree';
 
 const spui = {
     Affix,
@@ -97,6 +102,11 @@ const spui = {
 
     //经办信息组件
     infoBox: infoBox,
+
+    //树型组件
+    vueTree,//默认预设的额树型组件
+    checkboxTree,//带有复选框的树型组件
+    radioTree,//带有单选框的树型组件
 
     Col,
     iCol: Col,

@@ -30,7 +30,10 @@ module.exports = merge(webpackBaseConfig, {
             vue: 'vue/dist/vue.js'
         }
     },
-    devtool: '#eval-source-map',
+    devtool: '#source-map',
+    devServer: {
+        disableHostCheck: true //开启局域网外部可访问
+    },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.bundle.js' }),
         new HtmlWebpackPlugin({
