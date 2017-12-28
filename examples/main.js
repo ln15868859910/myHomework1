@@ -214,6 +214,10 @@ const router = new VueRouter({
         {
             path: '/DropList',
             component: require('./routers/xb-droplist.vue')
+        },
+        {
+            path: '/vueTree',
+            component: require('./routers/vueTree.vue')
         }
     ]
 });

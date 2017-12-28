@@ -183,6 +183,9 @@ li+li {
                 <li>
                     <router-link to="/DropList">DropList</router-link>
                 </li>
+                <li>
+                    <router-link to="/vueTree">vueTree</router-link>
+                </li>
             </ul>
         </nav>
         <router-view></router-view>

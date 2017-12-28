@@ -243,6 +243,11 @@
         watch: {
             value (val) {
                 this.setCurrentValue(val);
+            },
+            icon(val){
+                if(val){
+                    this.setCurrentValue(this.value);
+                }
             }
         },
         mounted () {
