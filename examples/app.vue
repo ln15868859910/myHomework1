@@ -186,6 +186,9 @@ li+li {
                 <li>
                     <router-link to="/vueTree">vueTree</router-link>
                 </li>
+                <li>
+                    <router-link to="/xbTable">xbTable</router-link>
+                </li>
             </ul>
         </nav>
         <router-view></router-view>

@@ -66,6 +66,7 @@ import {
     XbDroplist,
     XbOption
 } from './components/xb-droplist';
+import XbTable from './components/xb-table';
 
 //业务组件
 import consultFilter from './b-component/consultFilter';
@@ -172,7 +173,8 @@ const spui = {
     XbIcon,
     XbDroplist:XbDroplist,
     XbOption,
-    XbSelect
+    XbSelect,
+    XbTable
 };
 
 const install = function (Vue, opts = {}) {

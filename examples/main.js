@@ -218,6 +218,10 @@ const router = new VueRouter({
         {
             path: '/vueTree',
             component: require('./routers/vueTree.vue')
+        },
+        {
+            path: '/xbTable',
+            component: require('./routers/xb-table.vue')
         }
     ]
 });
