@@ -6,7 +6,7 @@ export default {
     render(createElement) {
         var that = this;
         var dom = createElement(
-      'ul',
+        'ul',
             {
                 class: {
                     'ivu-xbtransfer-book-ul-r': true,
@@ -14,33 +14,44 @@ export default {
                     'ivu-xbtransfer-copyScroll': true
                 }
             },
-      this.allData.map(function(data) {
-          return data.list.map(function(item) {
-              if (item.select) {
-                  return createElement('li', [
-                      createElement('Icon', {
-                          attrs: {
-                              type: 'close-filled'
-                          },
-                          style: {
-                              fontSize: '16px',
-                              marginRight: '10px',
-                              color: '#D9D9D9'
-                          },
-                          nativeOn: {
-                              click: function() {
-                                  item.select = false;
-                                  var index = that.selectIds.indexOf(item.Id);
-                                  that.selectIds.splice(index, 1);
-                                  that.$emit('ondelete');
-                              }
-                          }
-                      }),
-                      item.Name
-                  ]);
-              }
-          });
-      })
+        this.allData.map(function(data) {
+            return data.list.map(function(item) {
+                if (item.select) {
+                    return createElement('li', 
+                        {
+                            style: {
+                                color:item.disabled ?'#fff':'#111',
+                                backgroundColor:item.disabled ? '#aaa' : '#fff'
+                            }
+                        },
+                        [
+                            createElement('Icon', {
+                                attrs: {
+                                    type: 'close-filled'
+                                },
+                                class:{
+                                    'ivu-xbtransfer-closefilled':true,
+                                },
+                                style: {
+                                    backgroundColor:item.disabled ? '#aaa' : '#fff'
+                                },
+                                nativeOn: {
+                                    click: function() {
+                                        if(item.disabled){
+                                            return;
+                                        }
+                                        item.select = false;
+                                        var index = that.selectIds.indexOf(item.Id);
+                                        that.selectIds.splice(index, 1);
+                                        that.$emit('ondelete');
+                                    }
+                                }
+                            }),
+                            item.Name
+                        ]);
+                }
+            });
+        })
     );
         return dom;
     },
