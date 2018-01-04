@@ -1,15 +1,16 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-        <Xb-Table :columns="tableHeader" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
-            <div slot="header">
-                <div style="height:60px;background:#fff;padding:15px 30px;">
-                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+            <Xb-Table :columns="tableHeader" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
+                <div slot="header">
+                    <div style="height:60px;background:#fff;padding:15px 30px;">
+                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                    </div>
+                    <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 30px">当前结果：沟通共计162条，咨询线索总计122条</div>
                 </div>
-                <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 30px;">当前结果：沟通共计162条，咨询线索总计122条</div>
-            </div>
-        </Xb-Table>
+                <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
+            </Xb-Table>
     </div>
 </template>
 <script>
@@ -19,11 +20,13 @@ export default {
             tableHeader: [
                 {
                     type: 'selection',
-                    width: 100,
-                    fixed: "left"
+                    width: 50,
+                    // fixed: "left",
+                    align:"left"
                 }, {
                     title: '星标',
                     key: 'UserCollectionId',
+                    align:'center',
                     width: 100,
                     // fixed:"left",
                     render: function (h, params) {
@@ -96,8 +99,8 @@ export default {
                 {
                     title: '咨询校区',
                     key: 'SchoolName',
-                    width: 100,
-                    fixed: "right"
+                    width: 80,
+                    fixed: "right",
                 }],
             listData: []
         }

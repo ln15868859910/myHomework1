@@ -5,7 +5,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(column, index) in columns" :class="alignCls(column)" @click="handleSort($event,index)">
+                <th v-for="(column, index) in columns" :class="alignCls(column)" :style="thStyle(column)">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
@@ -15,9 +15,9 @@
                         <template v-else>
                             <span v-if="!column.renderHeader">{{ column.title || '#' }}</span>
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
-                            <span :class="[prefixCls + '-sort']" v-if="column.sortable">
-                                <i class="ivu-icon ivu-icon-arrow-up-b" :class="{on: orderParam.sortKey === column.key && orderParam.sortOrder === 'asc'}" @click="handleSort($event,index, 'asc')"></i>
-                                <i class="ivu-icon ivu-icon-arrow-down-b" :class="{on: orderParam.sortKey === column.key && orderParam.sortOrder === 'desc'}" @click="handleSort($event,index, 'desc')"></i>
+                            <span :class="[prefixCls + '-sort']" v-if="column.sortable" @click="handleSort($event,index)">
+                                <i class="ivu-icon ivu-icon-arrow-up-b" :class="{on: orderParam.sortKey === column.key && orderParam.sortOrder === 'asc'}"></i>
+                                <i class="ivu-icon ivu-icon-arrow-down-b" :class="{on: orderParam.sortKey === column.key && orderParam.sortOrder === 'desc'}"></i>
                             </span>
                         </template>
                     </div>
@@ -85,6 +85,13 @@
                         [`${this.prefixCls}-hidden`]: !this.fixed && column.fixed && (column.fixed === 'left' || column.fixed === 'right')
                     }
                 ];
+            },
+            thStyle(column){
+                let style={};
+                if(column.type==="selection"){
+                    style.textAlign="left";
+                }
+                return style;
             },
             selectAll () {
                 const status = !this.isSelectAll;
