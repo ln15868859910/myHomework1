@@ -85,7 +85,8 @@
                         fixed="right" 
                         :styleObject="fixedRightBodyTableStyle" 
                         :columns="rightFixedColumns" 
-                        :data="rebuildData" 
+                        :data="rebuildData"
+                        :control="control"
                         :columns-width="columnsWidth">
                         </table-body>
                     </div>
@@ -171,6 +172,12 @@ export default {
             type: Function,
             default() {
                 return '';
+            }
+        },
+        control:{//操作列
+            type: Array,
+            default() {
+                return [];
             }
         },
         //默认排序参数
@@ -569,6 +576,17 @@ export default {
                     center.push(column);
                 }
             });
+            if(this.control.length){
+                right.push({
+                    title:'操作',
+                    key:'control',
+                    width:100,
+                    fixed:'right',
+                    _columnKey:columnKey++,
+                    _index:columns.length,
+                    _width:''
+                });
+            }
             return left.concat(center).concat(right);
         },
         makeCustomColumns(){
