@@ -135,8 +135,34 @@ export default {
             control:[{
                 key:'edit',
                 title:'编辑',
-                ifshow:function(cell,index){
+                ifshow:function(cell,index){//是否显示
                     return index%2;
+                },
+                ifdisabled:function(cell,index){//是否禁用
+                    return index%3;
+                },
+                func:function(cell){//具体处理方法
+                    console.log(cell);
+                },
+                render:function(h, params){//自定义渲染
+                    return h('span', {
+                        style: 'color:red'
+                    },'编辑');
+                },
+            },{
+                key:'edit',
+                title:'复制',
+                ifshow:function(cell,index){
+                    return 1==index%2;
+                },
+                func:function(cell){
+                    console.log(cell);
+                }
+            },{
+                key:'edit',
+                title:'删除',
+                ifshow:function(cell,index){
+                    return index%3;
                 },
                 func:function(cell){
                     console.log(cell);

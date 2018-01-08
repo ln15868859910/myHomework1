@@ -11,6 +11,13 @@
                 <Icon type="ios-arrow-right"></Icon>
             </div>
         </template>
+        <template v-if="renderType === 'control'">
+            <Control-cell
+                :row="row"
+                :column="column"
+                :index="index"
+                :render="column.render"></Control-cell>
+        </template>
         <Cell
             v-if="renderType === 'render'"
             :row="row"
@@ -21,12 +28,13 @@
 </template>
 <script>
     import Cell from './expand';
+    import ControlCell from './control-cell';
     import Icon from '../icon/icon.vue';
     import Checkbox from '../checkbox/checkbox.vue';
 
     export default {
         name: 'TableCell',
-        components: { Icon, Checkbox, Cell },
+        components: { Icon, Checkbox, Cell,ControlCell },
         props: {
             row: Object,
             column: Object,
@@ -91,6 +99,8 @@
                 this.renderType = 'html';
             } else if (this.column.type === 'expand') {
                 this.renderType = 'expand';
+            } else if (this.column.type === 'control') {//操作
+                this.renderType = 'control';
             } else if (this.column.render) {
                 this.renderType = 'render';
             } else {

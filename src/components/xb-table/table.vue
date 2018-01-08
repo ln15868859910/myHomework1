@@ -573,9 +573,10 @@ export default {
             if(this.control.length){
                 right.push({
                     title:'操作',
-                    key:'control',
-                    width:100,
+                    type:'control',
+                    width:this.control.length>1?140:80,
                     fixed:'right',
+                    handleArr:this.control,
                     _columnKey:columnKey++,
                     _index:columns.length,
                     _width:''
