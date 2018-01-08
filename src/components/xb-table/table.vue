@@ -5,7 +5,7 @@
                 <slot name="header"></slot>
             </div>
             <div style="padding:0 20px;">
-                <XbScrollbar :wrap-style="{}" @on-barScroll="handleBarScroll" ref="scrollBar" noresize>
+                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" noresize>
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
                 <div style="position:relative">
@@ -255,11 +255,6 @@ export default {
             }
             return style;
         },
-        scrollStyle(){
-            let style={};
-            style.height=this.scrollBarWidth+2+'px';
-            return style;
-        },
         leftFixedColumns() {
             let left = [];
             this.cloneColumns.forEach((col) => {
@@ -446,7 +441,6 @@ export default {
         },
         toggleExpand(_index) {
             let data = this.rebuildData[_index];
-            console.log(data);
             const status = !data._expanded;
             data._expanded = status;
             this.$emit('on-expand', JSON.parse(JSON.stringify(data)), status);
@@ -505,8 +499,6 @@ export default {
                 return data;
             }
             const key = this.cloneColumns[index].key;
-            this.sortKey = key;
-            this.sortOrder = type;
             data.sort((a, b) => {
                 if (this.cloneColumns[index].sortMethod) {
                     return this.cloneColumns[index].sortMethod(a[key], b[key], type);
@@ -522,6 +514,8 @@ export default {
         },
         handleSort(index, type) {
             const key = this.cloneColumns[index].key;
+            this.sortKey = key;
+            this.sortOrder = type;
             if (this.cloneColumns[index].sortable !== 'custom') {
                 this.rebuildData = this.sortData(this.rebuildData, type, index);
             }
