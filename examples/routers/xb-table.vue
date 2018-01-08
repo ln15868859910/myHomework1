@@ -46,7 +46,9 @@ export default {
                     key: 'StuName',
                     // fixed:"left",
                     sortable: true,
-                    width: 200
+                    width: 200,
+                    custom:true,
+                    show:true
                 },
                 {
                     title: '联系电话',
@@ -78,6 +80,8 @@ export default {
                     key: 'Interest',
                     sortable: true,
                     width: 120,
+                    custom:true,
+                    show:true
                 },
                 {
                     title: '意向课程',
@@ -88,24 +92,34 @@ export default {
                     title: '沟通记录',
                     key: 'LastCommuContent',
                     width: 120,
+                    custom:true,
+                    show:true
                 },
                 {
                     title: '标签',
                     key: 'StuinfoTagsName',
                     width: 120,
+                    custom:true,
+                    show:true
                 }, {
                     title: '关键词',
                     key: 'Marker',
                     width: 120,
+                    custom:true,
+                    show:true
                 }, {
                     title: '跟进状态',
                     key: 'FollowUpState',
                     width: 120,
+                    custom:true,
+                    show:true
                 },
                 {
                     title: '渠道',
                     key: 'ChannelName',
                     width: 120,
+                    custom:true,
+                    show:true
                 }, {
                     title: '最新跟进时间',
                     key: 'EditDate',
@@ -118,7 +132,7 @@ export default {
                     // fixed: "right",
                 }],
             listData: []
-        }
+        };
     },
     created() {
         this.fetchData();

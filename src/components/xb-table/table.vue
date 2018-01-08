@@ -15,6 +15,7 @@
                         :styleObject="tableStyle" 
                         :columns="cloneColumns" 
                         :columns-width="columnsWidth" 
+                        :hidecol="hidecolumn"
                         :data="rebuildData">
                         </table-head>
 
@@ -27,6 +28,7 @@
                             :styleObject="fixedTableStyle" 
                             :columns="leftFixedColumns" 
                             :columns-width="columnsWidth" 
+                            :hidecol="hidecolumn"
                             :data="rebuildData">
                             </table-head>
                         </div>
@@ -37,10 +39,14 @@
                             fixed="right" 
                             :styleObject="fixedRightTableStyle" 
                             :columns="rightFixedColumns" 
-                            :columns-width="columnsWidth" 
+                            :columns-width="columnsWidth"
+                            :hidecol="hidecolumn"
                             :data="rebuildData">
                             </table-head>
                         </div>
+                    </div>
+                    <div  style="position: absolute;right: -5px;top: 12px;z-index: 10;" v-if="custumcols.length">
+                        <Icon  type="more" style="font-size: 25px;transform: rotate(90deg);color: #5BABE9;"  @click.native="showmore()"></Icon>
                     </div>
                 </div>
             </div>
@@ -56,7 +62,8 @@
                     ref="tbody" 
                     :styleObject="tableStyle" 
                     :columns="cloneColumns" 
-                    :data="rebuildData" 
+                    :hidecol="hidecolumn"
+                    :data="rebuildData"
                     :columns-width="columnsWidth">
                     </table-body>
                 </div>
@@ -65,7 +72,8 @@
                         <table-body 
                         fixed="left" 
                         :styleObject="fixedTableStyle" 
-                        :columns="leftFixedColumns" 
+                        :columns="leftFixedColumns"
+                        :hidecol="hidecolumn" 
                         :data="rebuildData" 
                         :columns-width="columnsWidth">
                         </table-body>
@@ -87,11 +95,13 @@
         <div :class="[prefixCls + '-footer']" ref="footer">
             <slot name="footer"></slot>
         </div>
+        <custom-pop v-model="showmoretag" :data="custumcols" @showcol="confirmshowcol"></custom-pop>
     </div>
 </template>
 <script>
 import tableHead from './table-head.vue';
 import tableBody from './table-body.js';
+import customPop from './custom-pop.vue';
 import XbScrollbar from '../xb-scrollbar/main.js';
 import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
 import { on, off } from '../../utils/dom';
@@ -105,7 +115,7 @@ let columnKey = 1;
 export default {
     name: 'Table',
     mixins: [Locale],
-    components: { tableHead, tableBody },
+    components: { tableHead, tableBody, customPop },
     props: {
         data: {
             type: Array,
@@ -190,6 +200,9 @@ export default {
             scrollBarWidth: getScrollBarSize(),
             fixedColumnsBodyRowsHeight: [],
             selections: [],
+            showmoretag:false,
+            custumcols: this.makeCustomColumns(),
+            hidecolumn:[],  //隐藏的列
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || "desc"
         };
@@ -349,6 +362,14 @@ export default {
                 this.fixedColumnsBodyRowsHeight = fixedColumnsBodyRowsHeight;
             });
         },
+        showmore(){
+            this.showmoretag = true;
+        },
+        confirmshowcol(data){
+            // console.log(data);
+            this.hidecolumn = data;
+            this.handleResize();
+        },
         handleResize() {
             this.$nextTick(() => {
                 this.centerWidth = parseInt(getStyle(this.$refs.mainTable, 'width'));
@@ -356,7 +377,13 @@ export default {
                 console.log(this.containerWidth);
                 const allWidth = !this.columns.some(cell => !cell.width);    // 每一个列都设置宽度时，table宽度为总和
                 if (allWidth) {
-                    var allColumWidth = this.columns.map(cell => cell.width).reduce((a, b) => a + b);
+                    var allColumWidth = this.columns.map(cell => {
+                        if(this.hidecolumn.indexOf(cell.key)==-1){
+                            return cell.width;
+                        }else{
+                            return 0;
+                        }
+                    }).reduce((a, b) => a + b);
                     this.tableWidth = allColumWidth > this.centerWidth ? allColumWidth : this.centerWidth;
                 } else {
                     this.tableWidth = this.centerWidth;
@@ -543,6 +570,20 @@ export default {
                 }
             });
             return left.concat(center).concat(right);
+        },
+        makeCustomColumns(){
+            let columns = deepCopy(this.columns);
+            let custumcols = [];
+            columns.forEach((column)=>{
+                if(column.custom){
+                    custumcols.push({
+                        title:column.title,
+                        key:column.key,
+                        show:column.show
+                    });
+                }
+            });
+            return custumcols;
         }
     },
     created() {
