@@ -17,7 +17,8 @@
          fixed: {
              type: [Boolean, String],
              default: false
-         }
+         },
+         hidecol:Array
      },
      data() {
          return {
@@ -37,6 +38,7 @@
              h('colgroup', [
                  that.columns.map(function (column, columnIndex) {
                      return h('col', {
+                         style: that.hidecol.indexOf(column.key)>-1?'display:none':'display:table-column',
                          domProps: {
                              width: that.setCellWidth(column, columnIndex, false)
                          }
@@ -49,7 +51,7 @@
                  that.data.map(function (row, rowIndex) {
                      return [h('tr', {
                          class: that.rowClasses(rowIndex),
-                         style: that.trStyles(rowIndex),
+                         style: that.trStyles(row,rowIndex),
                          on: {
                              mouseenter: () => {
                                  that.handleMouseIn(rowIndex)
@@ -67,6 +69,7 @@
                              if (rowspan || colspan) {
                                  return h('td', {
                                      class: that.alignCls(column, row),
+                                     style: that.hidecol.indexOf(column.key)>-1?'display:none':'display:table-cell',
                                      domProps: {
                                          rowSpan: rowspan,
                                          colSpan: colspan
@@ -180,6 +183,9 @@
          },
          rowExpanded(_index) {
              return this.data[_index] && this.data[_index]._expanded;
+         },
+         checkifhide(column){
+             return this.hidecol.indexOf(column.key)==-1;
          },
          handleMouseIn(_index) {
              this.$parent.handleMouseIn(_index);

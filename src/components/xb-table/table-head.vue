@@ -1,11 +1,11 @@
 <template>
     <table cellspacing="0" cellpadding="0" border="0" :style="styles">
         <colgroup>
-            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, true)">
+            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, true)" v-show="checkifhide(column)">
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(column, index) in columns" :class="alignCls(column)" :style="thStyle(column)">
+                <th v-for="(column, index) in columns" :class="alignCls(column)" :style="thStyle(column)" v-show="checkifhide(column)">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
@@ -52,7 +52,8 @@ export default {
         fixed: {
             type: [Boolean, String],
             default: false
-        }
+        },
+        hidecol:Array
     },
     data() {
         return {
@@ -99,6 +100,9 @@ export default {
                 style.textAlign = "left";
             }
             return style;
+        },
+        checkifhide(column){
+            return this.hidecol.indexOf(column.key)==-1;
         },
         selectAll() {
             const status = !this.isSelectAll;

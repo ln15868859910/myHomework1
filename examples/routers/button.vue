@@ -32,7 +32,10 @@
     <br><br>
     <div>
     <span>小按钮</span>
+    <Button type="primary" :size="22">充值</Button>
     <Button type="primary" size="small">充值</Button>
+    <Button type="primary" :size="28">充值</Button>
+    <Button type="primary" :size="32">充值</Button>
     <Button type="primary" size="small" disabled>充值</Button>
     </div>
     <br><br>
