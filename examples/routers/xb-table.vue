@@ -1,13 +1,13 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
+            <Xb-Table :columns="tableHeader" :data="listData" :height="500" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
                 <div slot="header">
-                    <div style="height:60px;background:#fff;padding:15px 30px;">
+                    <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
                     </div>
-                    <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 30px">当前结果：沟通共计162条，咨询线索总计122条</div>
+                    <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
                 </div>
                 <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
             </Xb-Table>
@@ -46,22 +46,37 @@ export default {
                     key: 'StuName',
                     // fixed:"left",
                     sortable: true,
-                    width: 200,
+                    width: 200
                 },
                 {
                     title: '联系电话',
                     key: 'TelPhoneUi',
-                    sortable: true,
                     width: 100,
+                    tipContent:"联系电话可通过学员应用下的权限点进行全显/隐藏控制"
                 },
                 {
                     title: '校宝家关注',
                     key: 'SphHome',
                     width: 120,
+                    renderHeader: function (h, params) {
+                        return h('div', {
+                            class: 'spui-table-cell',
+                        },
+                            [h('Icon', {
+                                props: {
+                                    type: 'heart',
+                                    size: '22'
+                                }
+                            }),
+                            h('span', params.column.title)]
+                        )
+
+                    }
                 },
                 {
                     title: '意向度',
                     key: 'Interest',
+                    sortable: true,
                     width: 120,
                 },
                 {
@@ -100,7 +115,7 @@ export default {
                     title: '咨询校区',
                     key: 'SchoolName',
                     width: 80,
-                    fixed: "right",
+                    // fixed: "right",
                 }],
             listData: []
         }

@@ -5,7 +5,7 @@
     height: 100%;
     max-width: 100%;
     color: @text-color;
-    font-size: @font-size-small;
+    font-size: @font-size-base;
     background-color: #fff;
     box-sizing: border-box;
     position: relative;
@@ -15,32 +15,21 @@
     &-scrollBar {
         overflow: auto;
         background: @table-scrollBar-bg ;
-        &::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        &::-webkit-scrollbar-thumb {
-            -moz-border-radius: 3px;
-            -webkit-border-radius: 3px;
-            border-radius: 3px;
-            background-color: @primary-color;
-        }
-        &::-webkit-scrollbar-thumb:hover,
-        .copyScroll::-webkit-scrollbar-thumb:active {
-            background-color: @dark-primary-color;
-        }
-        &::-webkit-scrollbar-button {
-            width: 0;
-            height: 0;
-            display: none;
-        }
-        &::-webkit-scrollbar-corner {
-            background-color: transparent;
+        height:6px;
+    }
+    .spui-scrollbar-thumb{
+        background:@primary-color;
+        &:hover{
+            background:@dark-primary-color;
         }
     }
     &-headWrap {
         position: relative;
         z-index: 10;
+    }
+    &-head-tip{
+        vertical-align:middle;
+        display:inline-block
     }
     &-footer {
         height: 48px;
@@ -54,11 +43,12 @@
         width: 100%;
     }
     &-body {
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden; //position: relative;
     }
     &-bodywrap {
         position: relative;
+        padding:0 20px;
     }
     &-with-fixed-top&-with-footer {
         .@{table-prefix-cls2}-footer {
@@ -81,13 +71,17 @@
         white-space: nowrap;
         overflow: hidden;
         text-align: center;
+        font-weight:normal;
         background-color: @table-thead-bg;
+        padding:10px 0;
     }
     td {
         background-color: #fff;
         text-align: center;
         transition: background-color @transition-time @ease-in-out;
         text-overflow: ellipsis;
+        color:@table-font-color;
+        padding:6px 0;
     }
     td&-column {
         &-left {
@@ -114,6 +108,10 @@
         tr th:last-child .@{table-prefix-cls2}-cell {
             padding-right: 0;
         }
+        .ivu-tooltip-popper{
+            white-space: normal;
+            word-break:break-all;
+        }
     }
     &-border {
         th,
@@ -129,9 +127,9 @@
         white-space: nowrap;
         word-break: break-all;
         box-sizing: border-box;
-        &-ellipsis {
-            word-break: keep-all;
-            white-space: nowrap;
+        &-noEllipsis {
+            word-break: normal;
+            white-space: normal;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -244,6 +242,9 @@
         }
         i:last-child {
             bottom: 3px;
+        }
+        &:hover i{
+            color:@primary-color
         }
     }
     &-filter {

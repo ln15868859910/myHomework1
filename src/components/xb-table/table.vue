@@ -4,18 +4,20 @@
             <div :class="[prefixCls + '-title']" ref="title">
                 <slot name="header"></slot>
             </div>
-            <div style="padding:0 30px;">
-                <div @scroll="handleHorizontalScroll" :class="[prefixCls+'-scrollBar']">
-                    <div :style="tableStyle" style="height:1px"></div>
-                </div>
+            <div style="padding:0 20px;">
+                <XbScrollbar :wrap-style="{}" @on-barScroll="handleBarScroll" ref="scrollBar" noresize>
+                    <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
+                </XbScrollbar>
                 <div style="position:relative">
                     <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header">
+
                         <table-head 
                         :styleObject="tableStyle" 
                         :columns="cloneColumns" 
                         :columns-width="columnsWidth" 
                         :data="rebuildData">
                         </table-head>
+
                     </div>
     
                     <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="height:50px;">
@@ -43,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div :class="[prefixCls + '-bodywrap']" style="padding:0 30px;">
+        <div :class="[prefixCls + '-bodywrap']">
             <div style="position:relative" ref="mainTable">
                 <div :class="[prefixCls + '-tip']" v-show="(!rebuildData || rebuildData.length === 0)">
                     <!--无数据样式slot-->
@@ -90,6 +92,7 @@
 <script>
 import tableHead from './table-head.vue';
 import tableBody from './table-body.js';
+import XbScrollbar from '../xb-scrollbar/main.js';
 import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
 import { on, off } from '../../utils/dom';
 import Locale from '../../mixins/locale';
@@ -143,6 +146,10 @@ export default {
         showHeader: {
             type: Boolean,
             default: true
+        },
+        //列头问号tooltip提示
+        tipContent:{
+            type:String
         },
         rowClassName: {
             type: Function,
@@ -226,6 +233,11 @@ export default {
                 }
                 style.width = `${width}px`;
             }
+            return style;
+        },
+        scrollStyle(){
+            let style={};
+            style.height=this.scrollBarWidth+2+'px';
             return style;
         },
         leftFixedColumns() {
@@ -371,6 +383,7 @@ export default {
                         }
                         this.columnsWidth = columnsWidth;
                     }
+                                    this.$refs.scrollBar.update();
                 });
                 // 高度小于表格真实高度时显示纵向滚动条
                 this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
@@ -448,6 +461,10 @@ export default {
         handleHorizontalScroll(event) {
             if (this.showHeader) this.$refs.header.scrollLeft = event.target.scrollLeft;
             this.$refs.centerBody.scrollLeft = event.target.scrollLeft;
+        },
+        handleBarScroll(scrollObj){
+            if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
+            this.$refs.centerBody[scrollObj.scroll] = scrollObj.distance;
         },
         sortData(data, type, index) {
             if (!this.cloneColumns[index]) {
@@ -534,7 +551,9 @@ export default {
     mounted() {
         this.handleResize();
         this.fixedHeader();
-        this.$nextTick(() => this.ready = true);
+        this.$nextTick(() => {
+            this.ready = true
+        });
         if (this.fixHeader) {
             on(window, 'scroll', this.addScrollEffect);
         }

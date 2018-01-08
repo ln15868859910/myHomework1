@@ -67,6 +67,7 @@ import {
     XbOption
 } from './components/xb-droplist';
 import XbTable from './components/xb-table';
+import XbScrollbar from './components/xb-scrollbar';
 
 //业务组件
 import consultFilter from './b-component/consultFilter';
@@ -174,7 +175,8 @@ const spui = {
     XbDroplist:XbDroplist,
     XbOption,
     XbSelect,
-    XbTable
+    XbTable,
+    XbScrollbar
 };
 
 const install = function (Vue, opts = {}) {
