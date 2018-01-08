@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :data="listData" :height="500" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
+            <Xb-Table :columns="tableHeader" :data="listData" :control="control" :height="500" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -129,9 +129,19 @@ export default {
                     title: '咨询校区',
                     key: 'SchoolName',
                     width: 80,
-                    // fixed: "right",
+                    fixed: "right"
                 }],
-            listData: []
+            listData: [],
+            control:[{
+                key:'edit',
+                title:'编辑',
+                ifshow:function(cell,index){
+                    return index%2;
+                },
+                func:function(cell){
+                    console.log(cell);
+                }
+            }]
         };
     },
     created() {

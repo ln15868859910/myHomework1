@@ -18,7 +18,18 @@
              type: [Boolean, String],
              default: false
          },
-         hidecol:Array
+         control:{
+             type:Array,
+             default(){
+                 return [];
+             }
+         },
+         hidecol:{
+             type:Array,
+             default(){
+                 return [];
+             }
+         }
      },
      data() {
          return {
@@ -42,7 +53,7 @@
                          domProps: {
                              width: that.setCellWidth(column, columnIndex, false)
                          }
-                     })
+                     });
                  })
              ]),
              h('tbody', {
