@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :data="listData" :height="500" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
+            <Xb-Table :columns="tableHeader" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData" @on-sort-change="sortMethod" :default-sort="defaultSort">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -21,7 +21,7 @@ export default {
                 {
                     type: 'selection',
                     width: 50,
-                    // fixed: "left",
+                    fixed: "left",
                     align:"left"
                 }, {
                     title: '星标',
@@ -44,9 +44,27 @@ export default {
                 {
                     title: '姓名',
                     key: 'StuName',
-                    // fixed:"left",
+                    type:'link',
                     sortable: true,
-                    width: 200
+                    width: 200,
+                    fixed:"left",
+                    render: function (h, params) {
+                        return [h('Icon', {
+                                props: {
+                                    type: params.row.Sex==="男"?"male":"female",
+                                    color:params.row.Sex==="男"?"#5295E7":"#FA6363",
+                                    size: '18'
+                                }
+                            }),
+                            h('span', {
+                                domProps:{
+                                    innerText:params.row.StuName
+                                },
+                                style:{
+                                    cursor:"pointer"
+                                }
+                            })]
+                    }
                 },
                 {
                     title: '联系电话',
@@ -58,6 +76,7 @@ export default {
                     title: '校宝家关注',
                     key: 'SphHome',
                     width: 120,
+                    fixed:"right",
                     renderHeader: function (h, params) {
                         return h('div', {
                             class: 'spui-table-cell',
@@ -73,17 +92,17 @@ export default {
 
                     }
                 },
-                {
-                    title: '意向度',
-                    key: 'Interest',
-                    sortable: true,
-                    width: 120,
-                },
-                {
-                    title: '意向课程',
-                    key: 'InterestClassListUi',
-                    width: 120,
-                },
+                // {
+                //     title: '意向度',
+                //     key: 'Interest',
+                //     sortable: true,
+                //     width: 120,
+                // },
+                // {
+                //     title: '意向课程',
+                //     key: 'InterestClassListUi',
+                //     width: 120,
+                // },
                 {
                     title: '沟通记录',
                     key: 'LastCommuContent',
@@ -97,11 +116,13 @@ export default {
                     title: '关键词',
                     key: 'Marker',
                     width: 120,
-                }, {
-                    title: '跟进状态',
-                    key: 'FollowUpState',
-                    width: 120,
-                },
+                    sortable:true
+                }, 
+                // {
+                //     title: '跟进状态',
+                //     key: 'FollowUpState',
+                //     width: 120,
+                // },
                 {
                     title: '渠道',
                     key: 'ChannelName',
@@ -115,9 +136,13 @@ export default {
                     title: '咨询校区',
                     key: 'SchoolName',
                     width: 80,
-                    // fixed: "right",
+                    fixed: "right",
                 }],
-            listData: []
+            listData: [],
+            defaultSort:{
+                key: 'Interest',
+                order: 'asc'
+            }
         }
     },
     created() {
@@ -126,6 +151,9 @@ export default {
     methods: {
         getSelectedData: function (selection, data) {
             console.log();
+        },
+        sortMethod:function(orderObj){
+            console.log(orderObj);
         },
         objectSpanMethod: function (row, column, rowIndex, columnIndex) {
             if (columnIndex === 0) {
@@ -161,7 +189,7 @@ export default {
                     "HrdocName": null,
                     "Deleted": null,
                     "SalesManViewName": "未关联账号",
-                    "SphHome": false,
+                    "SphHome": "false",
                     "SalesManList": [
                         {
                             "StuInfoId": 0,
@@ -243,11 +271,6 @@ export default {
                     "AddDate": "\/Date(1513749130000+0800)\/",
                     "CreatedAt": "\/Date(1513749130000+0800)\/",
                     "SalesmanEditDate": "\/Date(-62135596800000)\/",
-                    "Cust1": null,
-                    "Cust2": null,
-                    "Cust3": null,
-                    "Cust4": null,
-                    "Cust5": null,
                     "HeadImgUrl156": "//cdn.schoolpal.cn/male-small.jpg",
                     "HeadImgUrl512": "//cdn.schoolpal.cn/male-small.jpg",
                     "Remain": 0.0,
@@ -265,7 +288,7 @@ export default {
                     "SalesManHrDocId": 0,
                     "Salesway": null,
                     "Interest": "？",
-                    "Marker": null,
+                    "Marker": i,
                     "AscriptionSchoolId": 251,
                     "HrDocId": 0,
                     "Method": null,
