@@ -5,7 +5,7 @@
                 <slot name="header"></slot>
             </div>
             <div style="padding:0 20px;">
-                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" noresize>
+                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" noresize v-show="showVerticalBar">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
                 <div style="position:relative">
@@ -211,6 +211,9 @@ export default {
         hasScrollBar() {
             return this.bodyHeight > 0 && this.bodyHeight < this.bodyRealHeight;
         },
+        showVerticalBar(){
+            return this.tableWidth >this.centerWidth;
+        },
         classes() {
             return [
                 `${prefixCls}`,
@@ -238,10 +241,10 @@ export default {
                 if (this.bodyHeight === 0) {
                     width = this.tableWidth;
                 } else {
-                    if (this.bodyHeight < this.bodyRealHeight && this.tableWidth > this.centerWidth) {
-                        width = this.tableWidth + this.scrollBarWidth;
-                    } else {
+                    if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
                         width = this.tableWidth;
+                    } else {
+                        width = this.tableWidth - this.scrollBarWidth;
                     }
                 }
                 style.width = `${width}px`;
@@ -369,7 +372,6 @@ export default {
             this.$nextTick(() => {
                 this.centerWidth = parseInt(getStyle(this.$refs.mainTable, 'width'));
                 this.containerWidth = parseInt(getStyle(this.$el, 'width'));
-                console.log(this.containerWidth);
                 const allWidth = !this.columns.some(cell => !cell.width);    // 每一个列都设置宽度时，table宽度为总和
                 if (allWidth) {
                     var allColumWidth = this.columns.map(cell => {
