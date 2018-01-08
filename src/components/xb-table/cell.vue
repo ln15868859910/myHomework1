@@ -2,7 +2,7 @@
     <div :class="classes" ref="cell" :title="isOverflow?row[column.key]:''">
         <template v-if="renderType === 'index'">{{naturalIndex + 1}}</template>
         <template v-if="renderType === 'selection'">
-            <Checkbox :value="checked" @click.native.stop="handleClick" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
+            <Checkbox :value="checked" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
         </template>
         <template v-if="renderType === 'html'"><span v-html="row[column.key]"></span></template>
         <template v-if="renderType === 'normal'"><span>{{row[column.key]}}</span></template>
@@ -82,11 +82,12 @@
             toggleExpand() {
                 this.$parent.$parent.toggleExpand(this.index);
             },
-            handleClick() {
-                // 放置 Checkbox 冒泡
-            },
             //判断是否溢出
             setToolTipVisible() {
+                if (this.column.hideOverflowTip) {
+                    this.isOverflow = false;
+                    return;
+                }
                 this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth;
             }
         },
@@ -111,7 +112,10 @@
             var that=this;
             setTimeout(function(){
                 that.setToolTipVisible();
-            },0)
+            },0);
+            that.$on('on-change-overflow', () => {
+                that.setToolTipVisible();
+            });
         },
         updated() {
            this.setToolTipVisible();

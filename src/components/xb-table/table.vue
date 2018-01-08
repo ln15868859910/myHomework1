@@ -5,12 +5,11 @@
                 <slot name="header"></slot>
             </div>
             <div style="padding:0 20px;">
-                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" noresize>
+                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" noresize v-show="showVerticalBar">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
                 <div style="position:relative">
                     <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header">
-
                         <table-head 
                         :styleObject="tableStyle" 
                         :columns="cloneColumns" 
@@ -18,9 +17,7 @@
                         :hidecol="hidecolumn"
                         :data="rebuildData">
                         </table-head>
-
                     </div>
-    
                     <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="height:50px;">
                         <div :class="[prefixCls + '-fixed-header']" v-if="showHeader">
                             <table-head 
@@ -68,7 +65,7 @@
                     </table-body>
                 </div>
                 <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" ref="fixedBody">
+                    <div :class="[prefixCls + '-fixed-body']" :style="bodyStyle" ref="fixedBody">
                         <table-body 
                         fixed="left" 
                         :styleObject="fixedTableStyle" 
@@ -80,7 +77,7 @@
                     </div>
                 </div>
                 <div :class="[prefixCls + '-fixed-right']" :style="fixedRightBodyTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" ref="fixedRightBody">
+                    <div :class="[prefixCls + '-fixed-body']" :style="bodyStyle" ref="fixedRightBody">
                         <table-body 
                         fixed="right" 
                         :styleObject="fixedRightBodyTableStyle" 
@@ -218,6 +215,9 @@ export default {
         hasScrollBar() {
             return this.bodyHeight > 0 && this.bodyHeight < this.bodyRealHeight;
         },
+        showVerticalBar(){
+            return this.tableWidth >this.centerWidth;
+        },
         classes() {
             return [
                 `${prefixCls}`,
@@ -231,10 +231,6 @@ export default {
         },
         styles() {
             let style = {};
-            if (this.height) {
-                const height = (this.isLeftFixed || this.isRightFixed) ? parseInt(this.height) + this.scrollBarWidth : parseInt(this.height);
-                style.height = `${height}px`;
-            }
             if (this.width) style.width = `${this.width}px`;
             return style;
         },
@@ -245,10 +241,10 @@ export default {
                 if (this.bodyHeight === 0) {
                     width = this.tableWidth;
                 } else {
-                    if (this.bodyHeight < this.bodyRealHeight && this.tableWidth > this.centerWidth) {
-                        width = this.tableWidth + this.scrollBarWidth;
-                    } else {
+                    if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
                         width = this.tableWidth;
+                    } else {
+                        width = this.tableWidth - this.scrollBarWidth;
                     }
                 }
                 style.width = `${width}px`;
@@ -309,24 +305,8 @@ export default {
         bodyStyle() {
             let style = {};
             if (this.bodyHeight !== 0) {
-                // add a height to resolve scroll bug when browser has a scrollBar in fixed type and height prop
-                const height = (this.isLeftFixed || this.isRightFixed) ? this.bodyHeight + this.scrollBarWidth : this.bodyHeight;
+                const height = this.bodyHeight;
                 style.height = `${height}px`;
-            }
-            return style;
-        },
-        fixedBodyStyle() {
-            let style = {};
-            if (this.bodyHeight !== 0) {
-                let height = this.bodyHeight + this.scrollBarWidth - 1;
-
-                // #2102 里，如果 Table 没有设置 width，而是集成父级的 width，固定列也应该不包含滚动条高度，所以这里直接计算表格宽度
-                const tableWidth = parseInt(getStyle(this.$refs.mainTable, 'width')) - 1;
-                if ((this.width && this.width < this.tableWidth) || tableWidth < this.tableWidth) {
-                    height = this.bodyHeight;
-                }
-                //                    style.height = this.scrollBarWidth > 0 ? `${this.bodyHeight}px` : `${this.bodyHeight - 1}px`;
-                style.height = this.scrollBarWidth > 0 ? `${height}px` : `${height - 1}px`;
             }
             return style;
         },
@@ -376,7 +356,6 @@ export default {
             this.$nextTick(() => {
                 this.centerWidth = parseInt(getStyle(this.$refs.mainTable, 'width'));
                 this.containerWidth = parseInt(getStyle(this.$el, 'width'));
-                console.log(this.containerWidth);
                 const allWidth = !this.columns.some(cell => !cell.width);    // 每一个列都设置宽度时，table宽度为总和
                 if (allWidth) {
                     var allColumWidth = this.columns.map(cell => {
@@ -395,24 +374,20 @@ export default {
                 if (!this.$refs.tbody) return;
                 this.$nextTick(() => {
                     let columnsWidth = {};
-
                     if (this.data.length) {
                         const $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
                         for (let i = 0; i < $td.length; i++) {    // can not use forEach in Firefox
                             const column = this.cloneColumns[i];
-
                             let width = parseInt(getStyle($td[i], 'width'));
                             if (column.width) width = column.width;
-
                             this.cloneColumns[i]._width = parseInt(getStyle($td[i], 'width'));
-
                             columnsWidth[column._index] = {
                                 width: width
                             };
                         }
                         this.columnsWidth = columnsWidth;
                     }
-                                    this.$refs.scrollBar.update();
+                    this.$refs.scrollBar.update();
                 });
                 // 高度小于表格真实高度时显示纵向滚动条
                 this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
@@ -485,11 +460,6 @@ export default {
             if (this.isLeftFixed) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
             if (this.isRightFixed) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
         },
-        //横向滚动条事件处理
-        handleHorizontalScroll(event) {
-            if (this.showHeader) this.$refs.header.scrollLeft = event.target.scrollLeft;
-            this.$refs.centerBody.scrollLeft = event.target.scrollLeft;
-        },
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
             this.$refs.centerBody[scrollObj.scroll] = scrollObj.distance;
@@ -560,7 +530,7 @@ export default {
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
-                column._width = column.width ? column.width : '';    // update in handleResize()
+                column._width = column.width ? column.width : ''; 
 
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
@@ -634,7 +604,6 @@ export default {
         columns: {
             handler() {
                 this.cloneColumns = this.makeColumns();
-                // this.rebuildData = this.makeDataWithSort();
                 this.handleResize();
             },
             deep: true
