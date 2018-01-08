@@ -1,5 +1,5 @@
 <template>
-    <div :class="classes" ref="cell">
+    <div :class="classes" ref="cell" :title="isOverflow?row[column.key]:''">
         <template v-if="renderType === 'index'">{{naturalIndex + 1}}</template>
         <template v-if="renderType === 'selection'">
             <Checkbox :value="checked" @click.native.stop="handleClick" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
@@ -43,7 +43,8 @@
         data () {
             return {
                 renderType: '',
-                prefixCls:'spui-table'
+                prefixCls:'spui-table',
+                isOverflow:false
             };
         },
         computed: {
@@ -67,17 +68,21 @@
             }
         },
         methods: {
-            toggleSelect () {
+            toggleSelect() {
                 this.$parent.$parent.toggleSelect(this.row);
             },
-            toggleExpand () {
+            toggleExpand() {
                 this.$parent.$parent.toggleExpand(this.index);
             },
-            handleClick () {
+            handleClick() {
                 // 放置 Checkbox 冒泡
+            },
+            //判断是否溢出
+            setToolTipVisible() {
+                this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth;
             }
         },
-        created () {
+        created() {
             if (this.column.type === 'index') {
                 this.renderType = 'index';
             } else if (this.column.type === 'selection') {
@@ -91,6 +96,15 @@
             } else {
                 this.renderType = 'normal';
             }
-        }
-    };
+        },
+        mounted() {
+            var that=this;
+            setTimeout(function(){
+                that.setToolTipVisible();
+            },0)
+        },
+        updated() {
+           this.setToolTipVisible();
+    }
+};
 </script>
