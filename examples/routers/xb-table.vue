@@ -47,6 +47,7 @@ export default {
                     // fixed:"left",
                     sortable: true,
                     width: 200,
+                    type:"link",
                     custom:true,
                     show:true,
                     showOverflowTip:true

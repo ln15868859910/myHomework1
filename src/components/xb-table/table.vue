@@ -38,8 +38,8 @@
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div  :class="[prefixCls + '-showmore']" v-if="custumcols.length">
-                        <Icon  type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
+                    <div :class="[prefixCls + '-showmore']" v-if="custumcols.length">
+                        <Icon type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
                 </div>
             </div>

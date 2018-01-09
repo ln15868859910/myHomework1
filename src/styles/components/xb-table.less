@@ -26,10 +26,6 @@
     .@{css-prefix-spui}scrollbar-bar.is-horizontal {
         height: 8px;
     }
-    &-link:hover{
-        color:@primary-color;
-        cursor: pointer;
-    }
     &-headWrap {
         position: relative;
         background:@table-thead-bg;
@@ -97,9 +93,6 @@
         &-right {
             text-align: right;
         }
-    }
-    td&-column-link:hover{
-        background-color:@table-link-td-hover-bg;
     }
     & table {
         width: auto;
@@ -177,6 +170,9 @@
     tr&-row-hover {
         td {
             background-color: @table-td-hover-bg;
+        }
+        td.@{table-prefix-cls2}-column-link{
+            background-color:@table-link-td-hover-bg;
         }
     }
     tr&-row-hover &-row-canedit>i {
