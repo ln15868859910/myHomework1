@@ -60,7 +60,8 @@
                     :columns-width="columnsWidth">
                     </table-body>
                 </div>
-                <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)" ref="fixedBody">
+                <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
+                    <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedBody">
                     <table-body 
                     fixed="left" 
                     :styleObject="fixedTableStyle" 
@@ -69,16 +70,19 @@
                     :data="rebuildData" 
                     :columns-width="columnsWidth">
                     </table-body>
+                    </div>
                 </div>
-                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightBodyTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)" ref="fixedRightBody">
+                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
+                    <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedRightBody">
                     <table-body 
                     fixed="right" 
-                    :styleObject="fixedRightBodyTableStyle" 
+                    :styleObject="fixedRightTableStyle" 
                     :columns="rightFixedColumns" 
                     :data="rebuildData"
                     :control="control"
                     :columns-width="columnsWidth">
                     </table-body>
+                    </div>
                 </div>
             </div>
         </div>
@@ -459,8 +463,9 @@ export default {
             }
         },
         handleBodyScroll(event) {
-            if (this.isLeftFixed) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
-            if (this.isRightFixed) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
+            if (this.isLeftFixed && event.target!==this.$refs.fixedBody) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
+            if (this.isRightFixed && event.target!==this.$refs.fixedRightBody) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
+            if (event.target!==this.$refs.centerBody) this.$refs.centerBody.scrollTop = event.target.scrollTop;
         },
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
