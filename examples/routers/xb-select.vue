@@ -21,7 +21,7 @@ Model
                 <span style="display:inline-block;background:#aaa;">姓名</span>
                 <span style="display:inline-block;background:#bbb;">年龄</span>
             </template>
-            <template slot="lislot" scope="item">
+            <template slot="lislot" slot-scope="item">
                     <span style="display:inline-block;background:#aaa;">{{item.data.label}}</span>
                     <span style="display:inline-block;background:#bbb;">{{item.data.value}}</span>
             </template>
