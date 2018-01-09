@@ -104,6 +104,7 @@ import XbScrollbar from '../xb-scrollbar/main.js';
 import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
 import { on, off } from '../../utils/dom';
 import Locale from '../../mixins/locale';
+import Emitter from '../../mixins/emitter';
 
 const prefixCls = 'spui-table';
 
@@ -112,7 +113,7 @@ let columnKey = 1;
 
 export default {
     name: 'Table',
-    mixins: [Locale],
+    mixins: [Locale,Emitter],
     components: { tableHead, tableBody, customPop },
     props: {
         data: {
@@ -216,7 +217,7 @@ export default {
             return this.bodyHeight > 0 && this.bodyHeight < this.bodyRealHeight;
         },
         showVerticalBar(){
-            return this.tableWidth >this.centerWidth;
+            return this.tableWidth > this.centerWidth;
         },
         classes() {
             return [
@@ -351,6 +352,9 @@ export default {
             // console.log(data);
             this.hidecolumn = data;
             this.handleResize();
+            this.$nextTick(() => {
+                this.broadcast('TableCell', 'on-change-overflow');
+            });
         },
         handleResize() {
             this.$nextTick(() => {
@@ -575,7 +579,7 @@ export default {
         this.handleResize();
         this.fixedHeader();
         this.$nextTick(() => {
-            this.ready = true
+            this.ready = true;
         });
         if (this.fixHeader) {
             on(window, 'scroll', this.addScrollEffect);
@@ -612,7 +616,7 @@ export default {
         },
         tableWidth() {
             this.syncFixedTableRowHeight();
-        }
+        }        
     }
 };
 </script>

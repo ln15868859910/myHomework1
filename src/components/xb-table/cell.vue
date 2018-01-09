@@ -76,10 +76,6 @@
             },
             //判断是否溢出
             setToolTipVisible() {
-                if (this.column.hideOverflowTip) {
-                    this.isOverflow = false;
-                    return;
-                }
                 this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth;
             }
         },
@@ -99,16 +95,20 @@
             }
         },
         mounted() {
-            var that=this;
-            setTimeout(function(){
-                that.setToolTipVisible();
-            },0);
-            that.$on('on-change-overflow', () => {
-                that.setToolTipVisible();
-            });
+            var that = this;
+            if (that.column.showOverflowTip) {
+                setTimeout(function () {
+                    that.setToolTipVisible();
+                }, 0)
+                that.$on('on-change-overflow', () => {
+                    that.setToolTipVisible();
+                });
+            }
         },
         updated() {
-           this.setToolTipVisible();
-    }
+            if (this.column.showOverflowTip) {
+                this.setToolTipVisible();
+            }
+        }
 };
 </script>

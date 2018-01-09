@@ -21,7 +21,7 @@ export default {
                 {
                     type: 'selection',
                     width: 50,
-                    // fixed: "left",
+                    fixed: "left",
                     align:"left"
                 }, {
                     title: '星标',
@@ -48,12 +48,13 @@ export default {
                     sortable: true,
                     width: 200,
                     custom:true,
-                    show:true
+                    show:true,
+                    showOverflowTip:true
                 },
                 {
                     title: '联系电话',
                     key: 'TelPhoneUi',
-                    width: 100,
+                    width: 120,
                     tipContent:"联系电话可通过学员应用下的权限点进行全显/隐藏控制"
                 },
                 {
@@ -81,7 +82,12 @@ export default {
                     sortable: true,
                     width: 120,
                     custom:true,
-                    show:true
+                    show:true,
+                    render: function (h, params) {
+                        return h('div', {
+                            class:params.row.Interest.interestClass
+                        })
+                    }
                 },
                 {
                     title: '意向课程',
@@ -93,7 +99,8 @@ export default {
                     key: 'LastCommuContent',
                     width: 120,
                     custom:true,
-                    show:true
+                    show:true,
+                    showOverflowTip:true
                 },
                 {
                     title: '标签',
