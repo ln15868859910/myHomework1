@@ -6,7 +6,7 @@
     max-width: 100%;
     color: @text-color;
     font-size: @font-size-base;
-    background-color: #fff;
+    background-color: @table-td-bg;
     box-sizing: border-box;
     position: relative;
     &-hide {
@@ -32,6 +32,7 @@
     }
     &-headWrap {
         position: relative;
+        background:@table-thead-bg;
         z-index: 10;
     }
     &-head-tip {
@@ -79,7 +80,7 @@
         padding: 10px 0;
     }
     td {
-        background-color: #fff;
+        background-color: @table-td-bg;
         text-align: center;
         transition: background-color @transition-time @ease-in-out;
         text-overflow: ellipsis;
@@ -190,17 +191,11 @@
     &-fixed-right {
         position: absolute;
         bottom: 0;
+        overflow:hidden;
         box-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
     }
     &-fixed {
         left: 0;
-        .@{table-prefix-cls2}-fixed-header {
-            left: 0;
-        }
-        .@{table-prefix-cls2}-fixed-body {
-            left: 0;
-        }
         tr td:last-child .@{table-prefix-cls2}-cell,
         tr th:last-child .@{table-prefix-cls2}-cell {
             padding-right: 10px!important;
@@ -209,27 +204,11 @@
     &-fixed-right {
         left: auto;
         right: 0;
-        .@{table-prefix-cls2}-fixed-header {
-            right: 0;
-        }
-        .@{table-prefix-cls2}-fixed-body {
-            right: 0;
-        }
         box-shadow: -2px 0 6px -2px rgba(0, 0, 0, 0.2);
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
             padding-left: 10px!important;
         }
-    }
-    &-fixed-header {
-        overflow: hidden;
-        position: absolute;
-        z-index: 5;
-    }
-    &-fixed-body {
-        overflow: hidden;
-        position: absolute;
-        z-index: 3;
     }
     &-fixed-shadow {
         width: 1px;

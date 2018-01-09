@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-if="controldata.length<3">
-            <i-button type="text" v-for="(btn,bindex) in controldata" :disabled="btn.disabled" @click="handlecontrolclick(btn)">
+            <i-button type="text" v-for="(btn,bindex) in controldata" :disabled="btn.disabled" @click="handlecontrolclick(btn)" :key="bindex">
                 <span v-if="!btn.render">{{btn.title}}</span>
                 <Cell
                      v-else

@@ -18,29 +18,25 @@
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="height:50px;">
-                        <div :class="[prefixCls + '-fixed-header']" v-if="showHeader">
-                            <table-head 
-                            fixed="left" 
-                            :styleObject="fixedTableStyle" 
-                            :columns="leftFixedColumns" 
-                            :columns-width="columnsWidth" 
-                            :hidecol="hidecolumn"
-                            :data="rebuildData">
-                            </table-head>
-                        </div>
+                    <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed && showHeader">
+                        <table-head 
+                        fixed="left" 
+                        :styleObject="fixedTableStyle" 
+                        :columns="leftFixedColumns" 
+                        :columns-width="columnsWidth" 
+                        :hidecol="hidecolumn"
+                        :data="rebuildData">
+                        </table-head>
                     </div>
-                    <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed" style="height:50px;">
-                        <div :class="[prefixCls + '-fixed-header']" v-if="showHeader">
-                            <table-head 
-                            fixed="right" 
-                            :styleObject="fixedRightTableStyle" 
-                            :columns="rightFixedColumns" 
-                            :columns-width="columnsWidth"
-                            :hidecol="hidecolumn"
-                            :data="rebuildData">
-                            </table-head>
-                        </div>
+                    <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed && showHeader">
+                        <table-head 
+                        fixed="right" 
+                        :styleObject="fixedRightTableStyle" 
+                        :columns="rightFixedColumns" 
+                        :columns-width="columnsWidth"
+                        :hidecol="hidecolumn"
+                        :data="rebuildData">
+                        </table-head>
                     </div>
                     <div  style="position: absolute;right: -5px;top: 12px;z-index: 10;" v-if="custumcols.length">
                         <Icon  type="more" style="font-size: 25px;transform: rotate(90deg);color: #5BABE9;"  @click.native="showmore()"></Icon>
@@ -48,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div :class="[prefixCls + '-bodywrap']">
+        <div :class="[prefixCls + '-bodywrap']" :style="bodyWrapStyle">
             <div style="position:relative" ref="mainTable">
                 <div :class="[prefixCls + '-tip']" v-show="(!rebuildData || rebuildData.length === 0)">
                     <!--无数据样式slot-->
@@ -64,29 +60,25 @@
                     :columns-width="columnsWidth">
                     </table-body>
                 </div>
-                <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body']" :style="bodyStyle" ref="fixedBody">
-                        <table-body 
-                        fixed="left" 
-                        :styleObject="fixedTableStyle" 
-                        :columns="leftFixedColumns"
-                        :hidecol="hidecolumn" 
-                        :data="rebuildData" 
-                        :columns-width="columnsWidth">
-                        </table-body>
-                    </div>
+                <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)" ref="fixedBody">
+                    <table-body 
+                    fixed="left" 
+                    :styleObject="fixedTableStyle" 
+                    :columns="leftFixedColumns"
+                    :hidecol="hidecolumn" 
+                    :data="rebuildData" 
+                    :columns-width="columnsWidth">
+                    </table-body>
                 </div>
-                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightBodyTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body']" :style="bodyStyle" ref="fixedRightBody">
-                        <table-body 
-                        fixed="right" 
-                        :styleObject="fixedRightBodyTableStyle" 
-                        :columns="rightFixedColumns" 
-                        :data="rebuildData"
-                        :control="control"
-                        :columns-width="columnsWidth">
-                        </table-body>
-                    </div>
+                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightBodyTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)" ref="fixedRightBody">
+                    <table-body 
+                    fixed="right" 
+                    :styleObject="fixedRightBodyTableStyle" 
+                    :columns="rightFixedColumns" 
+                    :data="rebuildData"
+                    :control="control"
+                    :columns-width="columnsWidth">
+                    </table-body>
                 </div>
             </div>
         </div>
@@ -327,6 +319,13 @@ export default {
             if (this.addFixedStyle) {
                 style.position = "fixed";
                 style.top = this.fixedTop + "px";
+            }
+            return style;
+        },
+        bodyWrapStyle(){
+            var style = {};
+            if (this.addFixedStyle) {
+                style.marginTop = this.$refs.fixedHeaderEle.getBoundingClientRect().height + "px";
             }
             return style;
         }
