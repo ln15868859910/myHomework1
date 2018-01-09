@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-if="controldata.length<3">
-            <i-button type="text" v-for="(btn,bindex) in controldata" :disabled="btn.disabled" @click="handlecontrolclick(btn)">
+            <i-button :class="[prefixCls+'-control-btn']"  type="text" v-for="(btn,bindex) in controldata" :disabled="btn.disabled" @click="handlecontrolclick(btn)">
                 <span v-if="!btn.render">{{btn.title}}</span>
                 <Cell
                      v-else
@@ -12,7 +12,7 @@
             </i-button>
         </template>
         <template v-if="controldata.length>2">
-            <i-button  type="text" :disabled="controldata[0].disabled" @click="handlecontrolclick(controldata[0])">
+            <i-button  :class="[prefixCls+'-control-btn']" type="text" :disabled="controldata[0].disabled" @click="handlecontrolclick(controldata[0])">
                 <span v-if="!controldata[0].render">{{controldata[0].title}}</span>
                 <Cell
                     v-else
@@ -21,9 +21,9 @@
                     :index="index"
                     :render="controldata[0].render"></Cell>
             </i-button>
-            <i-button  type="text" @click="dropshow" v-clickoutside="drophide" :icon="showdrop?'arrow-up':'arrow-down'">更多
-                <div  style="display: inline-block;position: absolute;" v-show="showdrop" >
-                    <div style="position: absolute;width: 100px;left: -96px;top:20px;" class="ivu-select-dropdown" >
+            <i-button :class="[prefixCls+'-control-btn']" type="text" @click="dropshow" v-clickoutside="drophide">更多
+                <div  :class="[prefixCls+'-control-drop']" style="" v-show="showdrop">
+                    <div :class="[prefixCls+'-control-dropdown','ivu-select-dropdown']" >
                         <ul class="ivu-select-dropdown-list">
                             <li class="ivu-select-item" v-for="(btn,bindex) in controldata" :key="bindex" @click="handlecontrolclick(btn)" v-show="bindex>0">
                                 <span v-if="!btn.render">{{btn.title}}</span>
@@ -37,6 +37,7 @@
                         </ul>
                     </div>
                 </div>
+                <Icon :type="showdrop?'arrow-up':'arrow-down'"></Icon>
             </i-button>
         </template>
     </div>
@@ -60,6 +61,7 @@ export default {
     },
     data(){
         return{
+            prefixCls:'spui-table',
             controldata:this.initcontrol(this.column,this.row,this.index),
             showdrop:false,
         };

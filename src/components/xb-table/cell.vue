@@ -11,6 +11,13 @@
                 <Icon type="ios-arrow-right"></Icon>
             </div>
         </template>
+        <template v-if="renderType === 'input'">
+             <Input-cell
+                :row="row"
+                :column="column"
+                :index="index"
+                :render="column.render"></Input-cell>
+        </template>
         <template v-if="renderType === 'control'">
             <Control-cell
                 :row="row"
@@ -29,12 +36,13 @@
 <script>
     import Cell from './expand';
     import ControlCell from './control-cell';
+    import InputCell from './input-cell';
     import Icon from '../icon/icon.vue';
     import Checkbox from '../checkbox/checkbox.vue';
 
     export default {
         name: 'TableCell',
-        components: { Icon, Checkbox, Cell,ControlCell },
+        components: { Icon, Checkbox, Cell,ControlCell,InputCell },
         props: {
             row: Object,
             column: Object,
@@ -98,6 +106,8 @@
                 this.renderType = 'expand';
             } else if (this.column.type === 'control') {//操作
                 this.renderType = 'control';
+            } else if (this.column.type === 'input') {//操作
+                this.renderType = 'input';
             } else if (this.column.render) {
                 this.renderType = 'render';
             } else {
@@ -109,7 +119,7 @@
             if (that.column.showOverflowTip) {
                 setTimeout(function () {
                     that.setToolTipVisible();
-                }, 0)
+                }, 0);
                 that.$on('on-change-overflow', () => {
                     that.setToolTipVisible();
                 });

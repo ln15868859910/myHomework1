@@ -63,74 +63,79 @@
 @icon-currency: "\E028";
 @icon-document: "\E029";
 @icon-download: "\E02A";
-@icon-email: "\E02B";
-@icon-eye-off: "\E02C";
-@icon-eye: "\E02D";
-@icon-fast-backward: "\E02E";
-@icon-fast-forward: "\E02F";
-@icon-female: "\E030";
-@icon-flash: "\E031";
-@icon-folder: "\E032";
-@icon-funnel: "\E033";
-@icon-happy: "\E034";
-@icon-headphone: "\E035";
-@icon-heart: "\E036";
-@icon-help-circled: "\E037";
-@icon-help-filled: "\E038";
-@icon-home: "\E039";
-@icon-image: "\E03A";
-@icon-inbox: "\E03B";
-@icon-information-circled: "\E03C";
-@icon-information-filled: "\E03D";
-@icon-layers: "\E03E";
-@icon-link: "\E03F";
-@icon-loading: "\E040";
-@icon-location: "\E041";
-@icon-locked: "\E042";
-@icon-male: "\E043";
-@icon-map: "\E044";
-@icon-maximize-b: "\E045";
-@icon-maximize: "\E046";
-@icon-microphone: "\E047";
-@icon-minimize-b: "\E048";
-@icon-minimize: "\E049";
-@icon-minus-circled: "\E04A";
-@icon-minus: "\E04B";
-@icon-monitor: "\E04C";
-@icon-moon: "\E04D";
-@icon-more: "\E04E";
-@icon-navigation: "\E04F";
-@icon-neutral: "\E050";
-@icon-pause: "\E051";
-@icon-phone: "\E052";
-@icon-play-circled: "\E053";
-@icon-play: "\E054";
-@icon-plus-circled: "\E055";
-@icon-plus: "\E056";
-@icon-printer: "\E057";
-@icon-refresh: "\E058";
-@icon-sad: "\E059";
-@icon-save: "\E05A";
-@icon-scan: "\E05B";
-@icon-search: "\E05C";
-@icon-settings: "\E05D";
-@icon-share: "\E05E";
-@icon-skip-back: "\E05F";
-@icon-skip-forward: "\E060";
-@icon-star-filled: "\E061";
-@icon-star: "\E062";
-@icon-stop-circled: "\E063";
-@icon-stop: "\E064";
-@icon-sun: "\E065";
-@icon-swap-horiz: "\E066";
-@icon-tag: "\E067";
-@icon-thumbs-down: "\E068";
-@icon-thumbs-up: "\E069";
-@icon-trash: "\E06A";
-@icon-upload: "\E06B";
-@icon-user: "\E06C";
-@icon-zoom-in: "\E06D";
-@icon-zoom-out: "\E06E";
+@icon-edit-pen: "\E02B";
+@icon-edit: "\E02C";
+@icon-email: "\E02D";
+@icon-eye-off: "\E02E";
+@icon-eye: "\E02F";
+@icon-fast-backward: "\E030";
+@icon-fast-forward: "\E031";
+@icon-female: "\E032";
+@icon-flash: "\E033";
+@icon-folder: "\E034";
+@icon-forbidden: "\E035";
+@icon-funnel: "\E036";
+@icon-happy: "\E037";
+@icon-headphone: "\E038";
+@icon-heart: "\E039";
+@icon-help-circled: "\E03A";
+@icon-help-filled: "\E03B";
+@icon-home: "\E03C";
+@icon-image: "\E03D";
+@icon-inbox: "\E03E";
+@icon-information-circled: "\E03F";
+@icon-information-filled: "\E040";
+@icon-layers: "\E041";
+@icon-link: "\E042";
+@icon-loading: "\E043";
+@icon-location: "\E044";
+@icon-locked: "\E045";
+@icon-male: "\E046";
+@icon-map: "\E047";
+@icon-maximize-b: "\E048";
+@icon-maximize: "\E049";
+@icon-merge: "\E04A";
+@icon-microphone: "\E04B";
+@icon-minimize-b: "\E04C";
+@icon-minimize: "\E04D";
+@icon-minus-circled: "\E04E";
+@icon-minus: "\E04F";
+@icon-monitor: "\E050";
+@icon-moon: "\E051";
+@icon-more: "\E052";
+@icon-navigation: "\E053";
+@icon-neutral: "\E054";
+@icon-pause: "\E055";
+@icon-phone: "\E056";
+@icon-play-circled: "\E057";
+@icon-play: "\E058";
+@icon-plus-circled: "\E059";
+@icon-plus: "\E05A";
+@icon-printer: "\E05B";
+@icon-refresh: "\E05C";
+@icon-sad: "\E05D";
+@icon-save: "\E05E";
+@icon-scan: "\E05F";
+@icon-search: "\E060";
+@icon-settings: "\E061";
+@icon-share: "\E062";
+@icon-skip-back: "\E063";
+@icon-skip-forward: "\E064";
+@icon-star-filled: "\E065";
+@icon-star: "\E066";
+@icon-stop-circled: "\E067";
+@icon-stop: "\E068";
+@icon-sun: "\E069";
+@icon-swap-horiz: "\E06A";
+@icon-swap-vert: "\E06B";
+@icon-tag: "\E06C";
+@icon-thumbs-down: "\E06D";
+@icon-thumbs-up: "\E06E";
+@icon-trash: "\E06F";
+@icon-upload: "\E070";
+@icon-user: "\E071";
+@icon-zoom-in: "\E072";
+@icon-zoom-out: "\E073";
 
 
 .ivu-icon-char(@icon-variable) {
@@ -271,6 +276,12 @@
 .ivu-icon-download {
 	.ivu-icon-base-pseudo(download);
 }
+.ivu-icon-edit-pen {
+	.ivu-icon-base-pseudo(edit-pen);
+}
+.ivu-icon-edit {
+	.ivu-icon-base-pseudo(edit);
+}
 .ivu-icon-email {
 	.ivu-icon-base-pseudo(email);
 }
@@ -294,6 +305,9 @@
 }
 .ivu-icon-folder {
 	.ivu-icon-base-pseudo(folder);
+}
+.ivu-icon-forbidden {
+	.ivu-icon-base-pseudo(forbidden);
 }
 .ivu-icon-funnel {
 	.ivu-icon-base-pseudo(funnel);
@@ -354,6 +368,9 @@
 }
 .ivu-icon-maximize {
 	.ivu-icon-base-pseudo(maximize);
+}
+.ivu-icon-merge {
+	.ivu-icon-base-pseudo(merge);
 }
 .ivu-icon-microphone {
 	.ivu-icon-base-pseudo(microphone);
@@ -450,6 +467,9 @@
 }
 .ivu-icon-swap-horiz {
 	.ivu-icon-base-pseudo(swap-horiz);
+}
+.ivu-icon-swap-vert {
+	.ivu-icon-base-pseudo(swap-vert);
 }
 .ivu-icon-tag {
 	.ivu-icon-base-pseudo(tag);

@@ -1,13 +1,13 @@
 <template>
-    <Modal v-model="value" :closable="false" class-name="vertical-center-modal" width="680" >
-        <p slot="header" style="text-align:center">
+    <Modal v-model="value" :closable="false" class-name="vertical-center-modal" width="680" :class="[prefixCls+'-custom-pop']">
+        <p slot="header"  style="text-align:center">
             <span style="color: #fff;">自定义选项</span>
         </p>
         <div>
-            <p style="text-align:left;font-weight:bold;">自定义选项</p>
-            <div style="text-align: left;">
+            <p :class="[prefixCls+'-custom-subtitle']">自定义选项</p>
+            <div :class="[prefixCls+'-custom-subcontent']">
                 <Checkbox-group v-model="showculumns">
-                    <Checkbox v-for="(column,index) in data" :key="index"  :label="column.key" style="width: 101px;padding: 5px 0;height: 20px;margin-left: 0px;margin-right:0px;">{{column.title}}</Checkbox>
+                    <Checkbox v-for="(column,index) in data" :key="index"  :label="column.key" :class="[prefixCls+'-custom-columns']">{{column.title}}</Checkbox>
                 </Checkbox-group>
             </div>
         </div>
@@ -34,6 +34,7 @@
         },
         data () {
             return {
+                prefixCls: 'spui-table',
                 culumns: false,
                 showculumns:this.getshowcol()
             };
@@ -62,5 +63,5 @@
                 });
             }
         }
-    }
+    };
 </script>
