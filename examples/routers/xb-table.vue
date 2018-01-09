@@ -55,7 +55,9 @@ export default {
                     title: '联系电话',
                     key: 'TelPhoneUi',
                     width: 120,
-                    tipContent:"联系电话可通过学员应用下的权限点进行全显/隐藏控制"
+                    tipContent:'联系电话可通过学员应用下的权限点进行全显/隐藏控制',
+                    canedit:true,
+                    type:'input'
                 },
                 {
                     title: '校宝家关注',

@@ -38,8 +38,8 @@
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div  style="position: absolute;right: -5px;top: 12px;z-index: 10;" v-if="custumcols.length">
-                        <Icon  type="more" style="font-size: 25px;transform: rotate(90deg);color: #5BABE9;"  @click.native="showmore()"></Icon>
+                    <div  :class="[prefixCls + '-showmore']" v-if="custumcols.length">
+                        <Icon  type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
                 </div>
             </div>
@@ -540,8 +540,7 @@ export default {
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
-                column._width = column.width ? column.width : ''; 
-
+                column._width = column.width ? column.width : '';
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
                 } else if (column.fixed && column.fixed === 'right') {
