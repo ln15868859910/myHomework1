@@ -360,9 +360,9 @@ export default {
             this.$nextTick(() => {
                 this.centerWidth = parseInt(getStyle(this.$refs.mainTable, 'width'));
                 this.containerWidth = parseInt(getStyle(this.$el, 'width'));
-                const allWidth = !this.columns.some(cell => !cell.width);    // 每一个列都设置宽度时，table宽度为总和
+                const allWidth = !this.cloneColumns.some(cell => !cell.width);    // 每一个列都设置宽度时，table宽度为总和
                 if (allWidth) {
-                    var allColumWidth = this.columns.map(cell => {
+                    var allColumWidth = this.cloneColumns.map(cell => {
                         if(this.hidecolumn.indexOf(cell.key)==-1){
                             return cell.width;
                         }else{
@@ -373,7 +373,6 @@ export default {
                 } else {
                     this.tableWidth = this.centerWidth;
                 }
-
                 this.columnsWidth = {};
                 if (!this.$refs.tbody) return;
                 this.$nextTick(() => {
@@ -530,7 +529,15 @@ export default {
             let left = [];
             let right = [];
             let center = [];
-
+            if(this.control.length){
+                columns.push({
+                    title:'操作',
+                    type:'control',
+                    width:this.control.length>1?140:80,
+                    fixed:'right',
+                    handleArr:this.control
+                });
+            }
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
@@ -544,18 +551,6 @@ export default {
                     center.push(column);
                 }
             });
-            if(this.control.length){
-                right.push({
-                    title:'操作',
-                    type:'control',
-                    width:this.control.length>1?140:80,
-                    fixed:'right',
-                    handleArr:this.control,
-                    _columnKey:columnKey++,
-                    _index:columns.length,
-                    _width:''
-                });
-            }
             return left.concat(center).concat(right);
         },
         makeCustomColumns(){

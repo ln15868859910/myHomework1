@@ -62,7 +62,7 @@
                  that.data.map(function (row, rowIndex) {
                      return [h('tr', {
                          class: that.rowClasses(rowIndex),
-                         style: that.trStyles(row,rowIndex),
+                         style: that.trStyles(rowIndex),
                          on: {
                              mouseenter: () => {
                                  that.handleMouseIn(rowIndex)
