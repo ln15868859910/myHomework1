@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :data="listData" :control="control" :height="500" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
+            <Xb-Table :columns="tableHeader" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -122,7 +122,8 @@ export default {
                     key: 'FollowUpState',
                     width: 120,
                     custom:true,
-                    show:true
+                    show:true,
+                    showOverflowTip:true
                 },
                 {
                     title: '渠道',

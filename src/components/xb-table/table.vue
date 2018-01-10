@@ -205,7 +205,8 @@ export default {
             custumcols: this.makeCustomColumns(),
             hidecolumn:[],  //隐藏的列
             sortKey: this.defaultSort.key,//排序参数
-            sortOrder: this.defaultSort.order || "desc"
+            sortOrder: this.defaultSort.order || "desc",
+            lastScrollTop:0
         };
     },
     computed: {
@@ -463,9 +464,12 @@ export default {
             }
         },
         handleBodyScroll(event) {
-            if (this.isLeftFixed && event.target!==this.$refs.fixedBody) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
-            if (this.isRightFixed && event.target!==this.$refs.fixedRightBody) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
-            if (event.target!==this.$refs.centerBody) this.$refs.centerBody.scrollTop = event.target.scrollTop;
+            if (this.lastScrollTop !== event.target.scrollTop) {
+                if (this.isLeftFixed && event.target !== this.$refs.fixedBody) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
+                if (this.isRightFixed && event.target !== this.$refs.fixedRightBody) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
+                if (event.target !== this.$refs.centerBody) this.$refs.centerBody.scrollTop = event.target.scrollTop;
+            }
+            this.lastScrollTop = event.target.scrollTop;
         },
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;

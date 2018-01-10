@@ -21,34 +21,35 @@
                     :index="index"
                     :render="controldata[0].render"></Cell>
             </i-button>
-            <i-button :class="[prefixCls+'-control-btn']" type="text" @click="dropshow" v-clickoutside="drophide">更多
-                <div  :class="[prefixCls+'-control-drop']" style="" v-show="showdrop">
-                    <div :class="[prefixCls+'-control-dropdown','ivu-select-dropdown']" >
-                        <ul class="ivu-select-dropdown-list">
-                            <li class="ivu-select-item" v-for="(btn,bindex) in controldata" :key="bindex" @click="handlecontrolclick(btn)" v-show="bindex>0">
-                                <span v-if="!btn.render">{{btn.title}}</span>
-                                <Cell
-                                    v-else
-                                    :row="row"
-                                    :column="column"
-                                    :index="index"
-                                    :render="btn.render"></Cell>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <Icon :type="showdrop?'arrow-up':'arrow-down'"></Icon>
-            </i-button>
+            <Poptip normal placement="bottom-end" v-model="showdrop">
+               <i-button :class="[prefixCls+'-control-btn']" type="text">更多
+                   <Icon :type="showdrop?'arrow-up':'arrow-down'"></Icon>
+               </i-button>
+               <div slot="content">
+                   <ul class="ivu-select-dropdown-list">
+                        <li class="ivu-select-item" v-for="(btn,bindex) in controldata" :key="bindex" @click="handlecontrolclick(btn)" v-show="bindex>0">
+                            <span v-if="!btn.render">{{btn.title}}</span>
+                            <Cell
+                                v-else
+                                :row="row"
+                                :column="column"
+                                :index="index"
+                                :render="btn.render"></Cell>
+                        </li>
+                    </ul>
+               </div>
+           </Poptip>
         </template>
     </div>
 </template>
 
 <script>
 import Cell from './expand';
+import Poptip from '../poptip/poptip.vue';
 import clickoutside from '../../directives/clickoutside';
 export default {
     name: 'ControlCell',
-    components: { Cell},
+    components: { Cell,Poptip},
     directives: { clickoutside },
     props: {
         row: Object,
@@ -85,12 +86,6 @@ export default {
             if(!btn.disabled){
                 btn.func(this.row,this.index);
             }
-        },
-        drophide(){
-            this.showdrop = false;
-        },
-        dropshow(){
-            this.showdrop = !this.showdrop;
         }
     }
 };
