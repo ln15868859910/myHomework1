@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-select="getSelectedData">
+            <Xb-Table :columns="tableHeader" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -191,8 +191,8 @@ export default {
         this.fetchData();
     },
     methods: {
-        getSelectedData: function (selection, data) {
-            console.log();
+        getSelectedData: function (selection) {
+            console.log(selection);
         },
         objectSpanMethod: function (row, column, rowIndex, columnIndex) {
             if (columnIndex === 0) {

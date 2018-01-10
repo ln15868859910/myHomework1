@@ -1,5 +1,5 @@
 <template>
-    <div :class="classes" :style="styles">
+    <div :class="classes">
         <div :class="[prefixCls + '-headWrap']" :style="[fixedHeaderStyle,centerTableStyle]" ref="fixedHeaderEle">
             <div :class="[prefixCls + '-title']" ref="title">
                 <slot name="header"></slot>
@@ -128,13 +128,12 @@ export default {
             type: Boolean,
             default: false
         },
+        //固定表头时到顶部的距离
         fixedTop: {
             type: [Number, String]
         },
+        //body滚动条到顶部的距离
         fixedScrollTop: {
-            type: [Number, String]
-        },
-        width: {
             type: [Number, String]
         },
         height: {
@@ -227,11 +226,6 @@ export default {
                 }
             ];
         },
-        styles() {
-            let style = {};
-            if (this.width) style.width = `${this.width}px`;
-            return style;
-        },
         tableStyle() {
             let style = {};
             if (this.tableWidth !== 0) {
@@ -284,18 +278,6 @@ export default {
             });
             if (this.hasScrollBar) {
                 width += this.scrollBarWidth;
-            }
-            style.width = `${width}px`;
-            return style;
-        },
-        fixedRightBodyTableStyle() {
-            let style = {};
-            let width = 0;
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right') width += col._width;
-            });
-            if (this.hasScrollBar) {
-                style.right = this.scrollBarWidth + "px";
             }
             style.width = `${width}px`;
             return style;
@@ -386,10 +368,9 @@ export default {
                         for (let i = 0; i < $td.length; i++) {    // can not use forEach in Firefox
                             const column = this.cloneColumns[i];
                             let width = parseInt(getStyle($td[i], 'width'));
-                            if (column.width) width = column.width;
-                            this.cloneColumns[i]._width = parseInt(getStyle($td[i], 'width'));
+                            this.cloneColumns[i]._width = width;
                             columnsWidth[column._index] = {
-                                width: width
+                                width: column.width ? column.width : width
                             };
                         }
                         this.columnsWidth = columnsWidth;
@@ -428,7 +409,8 @@ export default {
             this.$emit('on-expand', JSON.parse(JSON.stringify(data)), status);
         },
         selectAll(status) {
-            for (const data of this.rebuildData) {
+            for (let i = 0; i < this.rebuildData.length; i++) {
+                let data = this.rebuildData[i];
                 if (data._disabled) {
                     continue;
                 } else {
@@ -549,6 +531,7 @@ export default {
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
+                column.width= column.width || 80;
                 column._width = column.width ? column.width : '';
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
