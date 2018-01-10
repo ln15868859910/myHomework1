@@ -26,7 +26,7 @@
                     <Icon :type="showdrop?'arrow-up':'arrow-down'"></Icon>
                 </i-button>
                 <DropdownMenu slot="list">
-                    <DropdownItem v-for="(btn,bindex) in controldata" :key="bindex" v-show="bindex>0" :name="bindex">
+                    <DropdownItem v-for="(btn,bindex) in controldata" :key="bindex" v-show="bindex>0" :name="bindex" :disabled="btn.disabled">
                         <span v-if="!btn.render">{{btn.title}}</span>
                         <Cell 
                            v-else 
@@ -43,7 +43,7 @@
 
 <script>
 import Cell from './expand';
-import Dropdown from '../Dropdown/Dropdown.vue';
+import Dropdown from '../dropdown/dropdown.vue';
 import clickoutside from '../../directives/clickoutside';
 export default {
     name: 'ControlCell',

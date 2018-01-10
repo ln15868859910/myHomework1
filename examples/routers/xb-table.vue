@@ -171,6 +171,9 @@ export default {
                 },
                 func:function(cell){
                     console.log(cell);
+                },
+                disabled:function(){
+                    return true;
                 }
             },{
                 key:'edit',
