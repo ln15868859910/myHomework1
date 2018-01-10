@@ -58,7 +58,10 @@ export default {
                     width: 120,
                     tipContent:'联系电话可通过学员应用下的权限点进行全显/隐藏控制',
                     canedit:true,
-                    type:'input'
+                    type:'input',
+                    callback:function(data){
+                        console.log(data);
+                    }
                 },
                 {
                     title: '校宝家关注',

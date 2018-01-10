@@ -21,7 +21,7 @@
                     :index="index"
                     :render="controldata[0].render"></Cell>
             </i-button>
-            <Poptip normal placement="bottom-end" v-model="showdrop">
+            <Poptip normal placement="bottom-end" v-model="showdrop" trigger="hover">
                <i-button :class="[prefixCls+'-control-btn']" type="text">更多
                    <Icon :type="showdrop?'arrow-up':'arrow-down'"></Icon>
                </i-button>
@@ -84,6 +84,7 @@ export default {
         },
         handlecontrolclick(btn){
             if(!btn.disabled){
+                this.showdrop = false;
                 btn.func(this.row,this.index);
             }
         }

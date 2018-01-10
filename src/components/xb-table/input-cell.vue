@@ -1,5 +1,5 @@
 <template>
-    <div v-clickoutside="handleblur">
+    <div >
         <div :class="[prefixCls+'-row-canedit']" v-show="!edittag">
             <span v-if="!column.render">{{row[column.key]}}</span>
             <Cell
@@ -11,7 +11,7 @@
             <Icon type="edit-pen" style="visibility: hidden;" @click.native="handleinput"></Icon>
         </div>
         <div :class="[prefixCls+'-row-canedit']" v-show="edittag">
-            <i-input v-model="row[column.key]" @on-blur="handleblur()" ref="input" :autofocus="edittag"></i-input>
+            <i-input v-model="row[column.key]" @on-blur="handleblur()" ref="input"></i-input>
         </div>
     </div>
 </template>
@@ -42,19 +42,22 @@ export default {
     methods:{
         handleinput(){
             this.edittag = true;
-            this.$refs.input.focus();
+            //input元素所在Dom被edittag控制显示/隐藏。如果直接调用focus，该Dom并未立即显示导致聚焦失败。此处延迟调用。
+            this.$nextTick(()=>{
+                this.$refs.input.focus();
+            });
         },
         handleblur(){
             //是否允许批量编辑 允许则跳过  
             this.$refs.input.blur();
             if(this.column.validate){
-                // this.column.validate(this.editvalue);
+                this.column.validate(this.editvalue);
                 console.log(this.row[this.column.key]);
             }
             this.edittag = false;
             //离焦后是否立刻保存？ 
-            if(this.column.editendfunc){
-                this.column.editendfunc(this.column);
+            if(this.column.callback){
+                this.column.callback(this.row);
             }
         },
         geteidtvalue(){
