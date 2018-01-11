@@ -109,7 +109,7 @@ export default {
             this.callback['dosearch']();
         },
         focus(){
-           this.dropdown = true
+        //    this.dropdown = true
         },
         blur(){
             this.dropdown = false
