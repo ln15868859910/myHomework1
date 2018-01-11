@@ -1,5 +1,5 @@
 <template>
-    <Modal v-model="value" :closable="false" class-name="vertical-center-modal" width="680" :class="[prefixCls+'-custom-pop']">
+    <Modal v-model="value" :closable="false" :mask-closable="false" class-name="vertical-center-modal" width="680" :class="[prefixCls+'-custom-pop']">
         <p slot="header"  style="text-align:center">
             <span style="color: #fff;">自定义选项</span>
         </p>
