@@ -61,6 +61,7 @@ import XbSelect from './components/xb-select';
 import XbTransfer from './components/xb-transfer';
 import XbConfirm from './components/xb-confirm';
 import XbIcon from './components/xb-icon';
+import XbFuzzySelect from './components/xb-fuzzy-select';
 
 import {
     XbDroplist,
@@ -123,6 +124,7 @@ const spui = {
     iInput: Input,
     InputNumber,
     XbInputNumber,
+    XbFuzzySelect,
     LoadingBar,
     Menu,
     iMenu: Menu,

@@ -1,6 +1,6 @@
 <template>
     <div style="display: inline-block;margin-right: 20px;" v-if="searchData && isInitCompleted">
-        <Select v-show="!searchData.opts.isHideOptsList" :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
+        <Select v-show="!searchData.opts.isHideOptsList" v-model="searchArea.selectModel" @on-change="setSearchItem" label-in-value style="width:100px">
             <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
         </Select>
         <div style="display:inline-block;width:260px">
@@ -28,7 +28,9 @@
                     v-show="searchArea.arr.length ==0 && !loading">无匹配数据</li>
                 <li class="ivu-select-item" style="text-align: center;color: #ccc;" 
                     v-show="loading">加载中</li>
-                <li  v-show="searchArea.arr.length !=0 && !loading" class="ivu-select-item" v-for="(item,index) in searchArea.arr" :key="index" @click="clickItem(item)">{{ item }}</li>             
+                <li  v-show="searchArea.arr.length !=0 && !loading" 
+                class="ivu-select-item"
+                v-for="(item,index) in searchArea.arr" :key="index" @click="clickItem(item)">{{ item }}</li>             
             </ul>
             </transition>
         </div>
@@ -48,6 +50,10 @@ export default {
             type: [Boolean, Object],
             default: false
         },
+        isInitCompleted: {
+            type: Boolean,
+            default: true
+        },
         callback: {
             type: Object,
             default: null
@@ -61,6 +67,7 @@ export default {
                     "text": "",
                     "value": ""
                 },
+                selectModel:'',
                 arr:[],
                 searchInput: ""
             },
@@ -70,34 +77,6 @@ export default {
         };
     },
     computed: {
-        searchSelectInitVal() {
-            if (this.searchData.data.length) {
-
-                var defaultSearchKey = this.searchData.opts.defaultSearchKey,
-                    defaultSearchText;
-
-                if (defaultSearchKey) {
-                    //找到searchKey对应的文案
-                    this.searchData.data.map(function (item, index) {
-                        if (item.value == defaultSearchKey) {
-                            defaultSearchText = item.text;
-                        }
-                    })
-                    this.searchArea.selected = {
-                        "text": defaultSearchText,
-                        "value": defaultSearchKey
-                    }
-                    return defaultSearchKey;
-
-                } else {
-                    this.searchArea.selected = {
-                        "text": this.searchData.data[0].text,
-                        "value": this.searchData.data[0].value
-                    }
-                    return this.searchData.data[0].value;
-                }
-            }
-        },
         searchStatus(){
 
             return this.searchArea.selected.text == '学员姓名'
@@ -154,11 +133,43 @@ export default {
             },1000)    
         },
         getSearchObj(){
-            this.$emit('updateSearchRes',{value:this.searchArea.selected.value,input:this.searchArea.searchInput});
+            this.$emit('updateSearchRes',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
+        },
+        clear(){
+            this.searchArea.searchInput = '';
+            this.searchArea.selected = {
+                "text": this.searchData.data[0].text,
+                "value": this.searchData.data[0].value
+            }
+            this.searchArea.selectModel = this.searchData.data[0].value
         }
     },
     mounted(){
+        if (this.searchData.data.length) {
+            var defaultSearchKey = this.searchData.opts.defaultSearchKey,
+                defaultSearchText;
 
+            if (defaultSearchKey) {
+                //找到searchKey对应的文案
+                this.searchData.data.map(function (item, index) {
+                    if (item.value == defaultSearchKey) {
+                        defaultSearchText = item.text;
+                    }
+                })
+                this.searchArea.selected = {
+                    "text": defaultSearchText,
+                    "value": defaultSearchKey
+                }
+                this.searchArea.selectModel = defaultSearchKey;
+
+            } else {
+                this.searchArea.selected = {
+                    "text": this.searchData.data[0].text,
+                    "value": this.searchData.data[0].value
+                }
+                this.searchArea.selectModel = this.searchData.data[0].value;
+            }
+        }
     },
     watch: {
         "searchData": {
