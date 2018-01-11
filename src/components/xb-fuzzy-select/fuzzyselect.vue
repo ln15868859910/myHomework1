@@ -1,6 +1,6 @@
 <template>
     <div style="display: inline-block;margin-right: 20px;" v-if="searchData && isInitCompleted">
-        <Select v-show="!searchData.opts.isHideOptsList" v-model="searchArea.selectModel" @on-change="setSearchItem" label-in-value style="width:100px">
+        <Select v-model="searchArea.selectModel" @on-change="setSearchItem" label-in-value style="width:100px">
             <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
         </Select>
         <div style="display:inline-block;width:260px">
@@ -36,8 +36,11 @@
         </div>
     </div>
 </template>
+<style>
+    
+</style>   
 <script>
-
+import Axios from 'axios';
 import iSelect from '../select/select.vue';
 import iOption from '../select/option.vue';
 
@@ -61,7 +64,6 @@ export default {
     },
     data() {
         return {
-            isInitCompleted: true,
             searchArea: {
                 selected: {
                     "text": "",
@@ -124,13 +126,27 @@ export default {
             },300,'changeVal')
         },
         fetchData(){
-            var qurey = this.searchArea.searchInput;
+            var query = this.searchArea.searchInput;
             var _this = this;
-            this.loading = true
-            setTimeout(function(){
+            if(query == ""){
+                return
+            }
+            this.loading = true;            
+            Axios.get('/api/Reception/GetStuInfoPinyinList',{
+                params:{
+                    q:query,
+                    takeCount:10,
+                    time:+new Date()
+                }
+            }).then((res)=>{
+                var res = res.data;
+                if(res.Status && res.Data.List && res.Data.List.length>0){
+                     _this.searchArea.arr = res.Data.List
+                }else{
+                    _this.searchArea.arr = [];
+                }
                 _this.loading = false;
-                _this.searchArea.arr = [qurey,qurey + qurey,qurey + qurey + qurey + qurey]
-            },1000)    
+            }) 
         },
         getSearchObj(){
             this.$emit('updateSearchRes',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
@@ -145,43 +161,25 @@ export default {
         }
     },
     mounted(){
-        if (this.searchData.data.length) {
-            var defaultSearchKey = this.searchData.opts.defaultSearchKey,
-                defaultSearchText;
-
-            if (defaultSearchKey) {
-                //找到searchKey对应的文案
-                this.searchData.data.map(function (item, index) {
-                    if (item.value == defaultSearchKey) {
-                        defaultSearchText = item.text;
-                    }
-                })
-                this.searchArea.selected = {
-                    "text": defaultSearchText,
-                    "value": defaultSearchKey
-                }
-                this.searchArea.selectModel = defaultSearchKey;
-
-            } else {
-                this.searchArea.selected = {
-                    "text": this.searchData.data[0].text,
-                    "value": this.searchData.data[0].value
-                }
-                this.searchArea.selectModel = this.searchData.data[0].value;
+        if (this.searchData.data && this.searchData.data.length > 0) {
+            this.searchArea.selected = {
+                "text": this.searchData.data[0].text,
+                "value": this.searchData.data[0].value
             }
+            this.searchArea.selectModel = this.searchData.data[0].value;
         }
     },
-    watch: {
-        "searchData": {
-            deep: true,
-            handler: function (oldv, newv) {
-                if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
-                    console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
-                }
-                this.searchArea.selected.value = newv.opts.defaultSearchKey;
-                this.searchArea.searchInput = newv.opts.defaultSearchValue;
-            }
-        }
-    }
+    // watch: {
+    //     "searchData": {
+    //         deep: true,
+    //         handler: function (oldv, newv) {
+    //             if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
+    //                 console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
+    //             }
+    //             this.searchArea.selected.value = newv.opts.defaultSearchKey;
+    //             this.searchArea.searchInput = newv.opts.defaultSearchValue;
+    //         }
+    //     }
+    // }
 };
 </script>
