@@ -205,7 +205,8 @@ export default {
             hidecolumn:[],  //隐藏的列
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || "desc",
-            lastScrollTop:0
+            lastScrollTop:0,
+            currentHoverRow:-1
         };
     },
     computed: {
@@ -338,9 +339,6 @@ export default {
             // console.log(data);
             this.hidecolumn = data;
             this.handleResize();
-            this.$nextTick(() => {
-                this.broadcast('TableCell', 'on-change-overflow');
-            });
         },
         handleResize() {
             this.$nextTick(() => {
@@ -382,11 +380,10 @@ export default {
             });
         },
         handleMouseIn(_index) {
-            if (this.rebuildData[_index]._hover) return;
-            this.rebuildData[_index]._hover = true;
+            this.currentHoverRow=_index;
         },
         handleMouseOut(_index) {
-            this.rebuildData[_index]._hover = false;
+            this.currentHoverRow=-1;
         },
         toggleSelect(row) {
             row._checked = !row._checked;
@@ -602,7 +599,7 @@ export default {
         },
         tableWidth() {
             this.syncFixedTableRowHeight();
-        }        
+        }
     }
 };
 </script>

@@ -1,6 +1,7 @@
  import Cell from './cell.vue';
  import Expand from './expand.js';
  import Mixin from './mixin';
+ import { hasClass, addClass, removeClass } from '../../utils/dom';
 
  export default {
      name: 'TableBody',
@@ -178,9 +179,7 @@
          rowClasses(_index) {
              return [
                  `${this.prefixCls}-row`,
-                 this.rowClsName(_index), {
-                     [`${this.prefixCls}-row-hover`]: this.data[_index] && this.data[_index]._hover
-                 }
+                 this.rowClsName(_index)
              ];
          },
          rowClsName(_index) {
@@ -204,5 +203,21 @@
          handleMouseOut(_index) {
              this.$parent.handleMouseOut(_index);
          }
+     },
+     watch:{
+           "$parent.currentHoverRow"(newVal, oldVal) {
+            const el = this.$el;
+            if (!el) return;
+            const tr = el.querySelector('tbody').children;
+            const rows = [].filter.call(tr, row => hasClass(row, `${this.prefixCls}-row`));
+            const oldRow = rows[oldVal];
+            const newRow = rows[newVal];
+            if (oldRow) {
+                removeClass(oldRow, `${this.prefixCls}-row-hover`);
+            }
+            if (newRow) {
+                addClass(newRow, `${this.prefixCls}-row-hover`);
+            }
+        }
      }
  };

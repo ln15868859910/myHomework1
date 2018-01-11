@@ -1,11 +1,13 @@
 <template>
-    <div :class="classes" ref="cell" :title="isOverflow?row[column.key]:''">
+    <div :class="classes" ref="cell" :title="isOverflow?row[column.key]:''" @mouseenter="setToolTipVisible" @mouseleave="resetToolTipVisible">
         <template v-if="renderType === 'index'">{{naturalIndex + 1}}</template>
         <template v-if="renderType === 'selection'">
             <Checkbox :value="checked" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
         </template>
         <template v-if="renderType === 'html'"><span v-html="row[column.key]"></span></template>
-        <template v-if="renderType === 'normal'"><span>{{row[column.key]}}</span></template>
+        <template v-if="renderType === 'normal'">
+           <span>{{row[column.key]}}</span>
+        </template>
         <template v-if="renderType === 'expand' && !row._disableExpand">
             <div :class="expandCls" @click="toggleExpand">
                 <Icon type="ios-arrow-right"></Icon>
@@ -93,7 +95,12 @@
             },
             //判断是否溢出
             setToolTipVisible() {
-                this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth;
+                if(this.column.showOverflowTip){
+                    this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth;
+                }
+            },
+            resetToolTipVisible(){
+                this.isOverflow = false;
             }
         },
         created() {
@@ -113,22 +120,6 @@
                 this.renderType = 'render';
             } else {
                 this.renderType = 'normal';
-            }
-        },
-        mounted() {
-            var that = this;
-            if (that.column.showOverflowTip) {
-                setTimeout(function () {
-                    that.setToolTipVisible();
-                }, 0);
-                that.$on('on-change-overflow', () => {
-                    that.setToolTipVisible();
-                });
-            }
-        },
-        updated() {
-            if (this.column.showOverflowTip) {
-                this.setToolTipVisible();
             }
         }
 };
