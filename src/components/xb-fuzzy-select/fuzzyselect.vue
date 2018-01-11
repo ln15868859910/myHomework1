@@ -129,6 +129,8 @@ export default {
             var query = this.searchArea.searchInput;
             var _this = this;
             if(query == ""){
+                _this.searchArea.arr = [];
+                _this.dropdown = false;
                 return
             }
             this.loading = true;            
@@ -141,9 +143,11 @@ export default {
             }).then((res)=>{
                 var res = res.data;
                 if(res.Status && res.Data.List && res.Data.List.length>0){
-                     _this.searchArea.arr = res.Data.List
+                    _this.searchArea.arr = res.Data.List;
+                    _this.dropdown = true;                 
                 }else{
                     _this.searchArea.arr = [];
+                    _this.dropdown = false;
                 }
                 _this.loading = false;
             }) 
