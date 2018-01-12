@@ -59,8 +59,9 @@ export default {
                     tipContent:'联系电话可通过学员应用下的权限点进行全显/隐藏控制',
                     canedit:true,
                     type:'input',
-                    callback:function(data){
-                        console.log(data);
+                    callback:function(oldobj,newval){
+
+                        oldobj['TelPhoneUi'] = newval;
                     }
                 },
                 {

@@ -7,11 +7,11 @@
                 :row="row"
                 :column="column"
                 :index="index"
-                :render="controldata[0].render"></Cell>
+                :render="column.render"></Cell>
             <Icon type="edit-pen" style="visibility: hidden;" @click.native="handleinput"></Icon>
         </div>
         <div :class="[prefixCls+'-row-canedit']" v-show="edittag">
-            <i-input v-model="row[column.key]" @on-blur="handleblur()" ref="input"></i-input>
+            <i-input v-model="editvalue" @on-blur="handleblur()" ref="input"></i-input>
         </div>
     </div>
 </template>
@@ -34,7 +34,7 @@ export default {
         return{
             prefixCls:'spui-table',
             edittag:false,
-            // editvalue:this.geteidtvalue()
+            editvalue:this.geteidtvalue()
         };
     },
     methods:{
@@ -49,13 +49,12 @@ export default {
             //是否允许批量编辑 允许则跳过  
             this.$refs.input.blur();
             if(this.column.validate){
-                this.column.validate(this.editvalue);
-                console.log(this.row[this.column.key]);
+                this.column.validate(this.row,this.editvalue);
             }
             this.edittag = false;
             //离焦后是否立刻保存？ 
             if(this.column.callback){
-                this.column.callback(this.row);
+                this.column.callback(this.row,this.editvalue);
             }
         },
         geteidtvalue(){
