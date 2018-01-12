@@ -80,7 +80,7 @@
                              } = that.getSpan(row, column, rowIndex, columnIndex);
                              if (rowspan || colspan) {
                                  return h('td', {
-                                     class: that.alignCls(column, row),
+                                     class: that.alignCls(column, row,rowspan),
                                      style: that.hidecol.indexOf(column.key)>-1?'display:none':'display:table-cell',
                                      domProps: {
                                          rowSpan: rowspan,

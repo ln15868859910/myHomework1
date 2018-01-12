@@ -100,7 +100,6 @@ import XbScrollbar from '../xb-scrollbar/main.js';
 import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
 import { on, off } from '../../utils/dom';
 import Locale from '../../mixins/locale';
-import Emitter from '../../mixins/emitter';
 
 const prefixCls = 'spui-table';
 
@@ -109,7 +108,7 @@ let columnKey = 1;
 
 export default {
     name: 'Table',
-    mixins: [Locale,Emitter],
+    mixins: [Locale],
     components: { tableHead, tableBody, customPop },
     props: {
         data: {
@@ -150,10 +149,6 @@ export default {
         showHeader: {
             type: Boolean,
             default: true
-        },
-        //列头问号tooltip提示
-        tipContent:{
-            type:String
         },
         rowClassName: {
             type: Function,

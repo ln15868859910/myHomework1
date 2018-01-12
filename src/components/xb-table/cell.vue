@@ -72,7 +72,6 @@
                     {
                         [`${this.prefixCls}-hidden`]: !this.fixed && this.column.fixed && (this.column.fixed === 'left' || this.column.fixed === 'right'),
                         [`${this.prefixCls}-cell-noEllipsis`]: this.column.breakWord || false,
-                        [`${this.prefixCls}-cell-hideOverflow`]: this.column.showOverflowTip || false,
                         [`${this.prefixCls}-cell-with-expand`]: this.renderType === 'expand'
                     }
                 ];
