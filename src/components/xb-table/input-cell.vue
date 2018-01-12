@@ -19,7 +19,7 @@
 <script>
 import Cell from './expand';
 export default {
-    name: 'ControlCell',
+    name: 'InputCell',
     components: { Cell},
     props: {
         row: Object,
