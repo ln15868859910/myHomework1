@@ -7,7 +7,7 @@
                 :row="row"
                 :column="column"
                 :index="index"
-                :render="controldata[0].render"></Cell>
+                :render="column.render"></Cell>
             <Icon type="edit-pen" style="visibility: hidden;" @click.native="handleinput"></Icon>
         </div>
         <div :class="[prefixCls+'-row-canedit']" v-show="edittag">
