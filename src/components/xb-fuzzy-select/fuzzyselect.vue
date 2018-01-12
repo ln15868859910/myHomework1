@@ -4,7 +4,7 @@
             <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
         </Select>
         <div style="display:inline-block;width:260px">
-            <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" 
+            <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="vplaceholder" 
             @on-focus="focus" 
             @on-change="onChange" 
             @on-blur="blur" 
@@ -80,8 +80,14 @@ export default {
     },
     computed: {
         searchStatus(){
-
             return this.searchArea.selected.text == '学员姓名'
+        },
+        vplaceholder(){
+            var t = "请输入" + searchArea.selected.text;
+            if(this.searchArea.selected.text == '学员姓名'){
+                t  + "，支持拼音缩写"
+            }
+            return t
         }
     },
     created: function() {
