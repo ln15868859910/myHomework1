@@ -83,7 +83,7 @@ export default {
             return this.searchArea.selected.text == '学员姓名'
         },
         vplaceholder(){
-            var t = "请输入" + searchArea.selected.text;
+            var t = "请输入" + this.searchArea.selected.text;
             if(this.searchArea.selected.text == '学员姓名'){
                 t  + "，支持拼音缩写"
             }
