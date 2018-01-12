@@ -4,7 +4,7 @@
             <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
         </Select>
         <div style="display:inline-block;width:260px">
-            <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="vplaceholder" 
+            <Input type="text" icon="search" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
             @on-focus="focus" 
             @on-change="onChange" 
             @on-blur="blur" 
