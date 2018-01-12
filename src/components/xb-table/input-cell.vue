@@ -18,11 +18,9 @@
 
 <script>
 import Cell from './expand';
-import clickoutside from '../../directives/clickoutside';
 export default {
-    name: 'ControlCell',
+    name: 'InputCell',
     components: { Cell},
-    directives: { clickoutside },
     props: {
         row: Object,
         render: Function,
