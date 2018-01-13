@@ -24,12 +24,9 @@
                 z-index: 900;" 
                 class="ivu-select-dropdown-list"
                 v-show="dropdown && searchStatus">
-                <li class="ivu-select-item" style="padding: 7px 0;text-align: center;color: #ccc;" 
-                    v-show="searchArea.arr.length ==0 && !loading">无匹配数据</li>
-                <li class="ivu-select-item" style="text-align: center;color: #ccc;" 
-                    v-show="loading">加载中</li>
-                <li  v-show="searchArea.arr.length !=0 && !loading" 
-                class="ivu-select-item"
+                <li v-show="searchArea.arr.length ==0 && !loading" class="ivu-select-item" style="padding: 7px 0;text-align: center;color: #ccc;">无匹配数据</li>
+                <li v-show="loading" class="ivu-select-item" style="text-align: center;color: #ccc;">加载中</li>
+                <li v-show="searchArea.arr.length !=0 && !loading" class="ivu-select-item"
                 v-for="(item,index) in searchArea.arr" :key="index" @click="clickItem(item)">{{ item }}</li>             
             </ul>
             </transition>
@@ -43,6 +40,20 @@
 import Axios from 'axios';
 import iSelect from '../select/select.vue';
 import iOption from '../select/option.vue';
+
+//↓ searchData 搜索区域，传入null该对象则整块区域隐藏
+// searchData: {
+//     // ↓ searchData.data 必填，搜索下拉项，至少一项。其中的text会成为搜索框的placeholder，例： “请选择 + 学员姓名”
+//     data: [{"text": "学员姓名","value": "1"}, {"text": "学员电话","value": "2"}],
+//     // ↓ searchData.opts 必填，没有配置传入空对象{}，否则报错给你看 _(:з」∠)_
+//     opts: {
+//         "defaultSearchKey": "", //← 非必填，默认搜索类型（iview only：搜索类型必须在下拉项中），不填取默认第一项
+//         "defaultSearchValue": "", //← 非必填：搜索默认值，不填取默认第一项
+//         "isHideOptsList": false,//← 非必填：是否隐藏搜索栏边上的下拉列表，默认：false
+//         "isResetFilter": false //← 非必填：搜索时结果是否与筛选项互斥，默认：false
+//     },
+//     maxLen:999 //← 非必填，默认999
+// },
 
 export default {
     name: 'XbFuzzySelect',
@@ -134,12 +145,13 @@ export default {
         fetchData(){
             var query = this.searchArea.searchInput;
             var _this = this;
-            if(query == ""){
+            if(query == "" ||  !this.searchStatus){
                 _this.searchArea.arr = [];
                 _this.dropdown = false;
                 return
             }
-            this.loading = true;            
+            this.loading = true;
+            this.dropdown = true;          
             Axios.get('/api/Reception/GetStuInfoPinyinList',{
                 params:{
                     q:query,
@@ -150,10 +162,9 @@ export default {
                 var res = res.data;
                 if(res.Status && res.Data.List && res.Data.List.length>0){
                     _this.searchArea.arr = res.Data.List;
-                    _this.dropdown = true;                 
                 }else{
                     _this.searchArea.arr = [];
-                    _this.dropdown = false;
+                    // _this.dropdown = false;
                 }
                 _this.loading = false;
             }) 
@@ -163,33 +174,40 @@ export default {
         },
         clear(){
             this.searchArea.searchInput = '';
-            this.searchArea.selected = {
-                "text": this.searchData.data[0].text,
-                "value": this.searchData.data[0].value
+            // this.searchArea.selected = {
+            //     "text": this.searchData.data[0].text,
+            //     "value": this.searchData.data[0].value
+            // }
+            // this.searchArea.selectModel = this.searchData.data[0].value;
+            this.init();
+        },
+        init(){
+            if (this.searchData.data.length) {
+                var defaultSearchKey = this.searchData.opts.defaultSearchKey;
+                var defaultSearchText;
+                if (defaultSearchKey) {
+                    //找到searchKey对应的文案
+                    this.searchData.data.map(function (item, index) {
+                        if (item.value == defaultSearchKey) {
+                            defaultSearchText = item.text;
+                        }
+                    })
+                    this.searchArea.selected = {
+                        "text": defaultSearchText,
+                        "value": defaultSearchKey
+                    }
+                } else {
+                    this.searchArea.selected = {
+                        "text": this.searchData.data[0].text,
+                        "value": this.searchData.data[0].value
+                    }
+                }
+                this.searchArea.selectModel = this.searchData.data[0].value;
             }
-            this.searchArea.selectModel = this.searchData.data[0].value
         }
     },
     mounted(){
-        if (this.searchData.data && this.searchData.data.length > 0) {
-            this.searchArea.selected = {
-                "text": this.searchData.data[0].text,
-                "value": this.searchData.data[0].value
-            }
-            this.searchArea.selectModel = this.searchData.data[0].value;
-        }
-    },
-    // watch: {
-    //     "searchData": {
-    //         deep: true,
-    //         handler: function (oldv, newv) {
-    //             if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
-    //                 console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
-    //             }
-    //             this.searchArea.selected.value = newv.opts.defaultSearchKey;
-    //             this.searchArea.searchInput = newv.opts.defaultSearchValue;
-    //         }
-    //     }
-    // }
+        this.init();
+    }
 };
 </script>
