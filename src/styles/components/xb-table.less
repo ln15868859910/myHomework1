@@ -126,9 +126,12 @@
         td {
             border-right: 1px solid @border-color-split;
         }
-        table{
+        .@{table-prefix-cls2}-header table{
             border-left: 1px solid @border-color-split;
             border-top: 1px solid @border-color-split;
+        }
+        .@{table-prefix-cls2}-body table{
+            border-left: 1px solid @border-color-split;
         }
     }
     &-cell {
@@ -192,7 +195,7 @@
                 background-color: @table-td-stripe-bg;
             }
         }
-        tr&-row-hover {
+        tr.@{table-prefix-cls2}-row-hover {
             td {
                 background-color: @table-td-hover-bg;
             }
