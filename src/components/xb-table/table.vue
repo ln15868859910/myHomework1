@@ -5,7 +5,7 @@
                 <slot name="header"></slot>
             </div>
             <div style="padding:0 20px;">
-                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" noresize v-show="showVerticalBar">
+                <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" v-show="showVerticalBar" :view-style="{'float':'left'}">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
                 <div style="position:relative">
@@ -368,7 +368,6 @@ export default {
                         }
                         this.columnsWidth = columnsWidth;
                     }
-                    this.$refs.scrollBar.update();
                 });
                 // 高度小于表格真实高度时显示纵向滚动条
                 this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
