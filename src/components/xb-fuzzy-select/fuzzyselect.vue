@@ -115,6 +115,7 @@ export default {
                 "text": obj.label,
                 "value": obj.value,
             }
+            this.getSearchObj()
         },
         debounce(func, timeout, type) {
             this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
