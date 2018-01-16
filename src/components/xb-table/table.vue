@@ -456,7 +456,7 @@ export default {
             const key = this.cloneColumns[index].key;
             data.sort((a, b) => {
                 if (this.cloneColumns[index].sortMethod) {
-                    return this.cloneColumns[index].sortMethod(a[key], b[key], type);
+                    return this.cloneColumns[index].sortMethod(a, b, key,type);
                 } else {
                     if (type === 'asc') {
                         return a[key] > b[key] ? 1 : -1;
