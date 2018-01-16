@@ -494,15 +494,19 @@ export default {
         },
         makeDataWithSort() {
             let data = this.makeData();
-            let sortColumn = {};
+            let isCustom = false;
             let sortIndex = -1;
             if (this.sortKey) {
-                sortColumn = this.cloneColumns.filter((data, index) => data.key === this.sortKey);
+                for (let i = 0; i < this.cloneColumns.length; i++) {
+                    if (this.cloneColumns[i].key === this.sortKey) {
+                        sortIndex = i;
+                        isCustom = this.cloneColumns[i].sortable === 'custom';
+                        break;
+                    }
+                }
             }
-            if (sortColumn && sortColumn.sortable !== 'custom') {
-                sortIndex = this.cloneColumns.indexOf(sortColumn);
-
-                data = this.sortData(data, this.sortKey, sortIndex);
+            if (!isCustom) {
+                data = this.sortData(data, this.sortOrder, sortIndex);
             }
             return data;
         },
