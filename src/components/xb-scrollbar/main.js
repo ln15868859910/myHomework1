@@ -1,12 +1,6 @@
-import {
-  getScrollBarSize
-} from '../../utils/assist';
-import {
-  on,
-  off
-} from '../../utils/dom';
+import {getScrollBarSize} from '../../utils/assist';
 import Bar from './bar';
-
+import { addResizeListener, removeResizeListener } from '../../utils/resize-event';
 const prefixCls = 'spui-scrollbar';
 export default {
   name: 'XbScrollbar',
@@ -117,11 +111,11 @@ export default {
   mounted() {
     if (this.native) return;
     this.$nextTick(() => this.update());
-    !this.noresize && on(window, 'resize', this.update);
+    !this.noresize && addResizeListener(this.$refs.resize, this.update);
   },
 
   beforeDestroy() {
     if (this.native) return;
-    !this.noresize && off(window, 'resize', this.update);
+    !this.noresize && removeResizeListener(this.$refs.resize, this.update);
   }
 };
