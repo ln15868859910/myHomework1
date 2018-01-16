@@ -96,7 +96,7 @@ export default {
         vplaceholder(){
             var t = "请输入" + this.searchArea.selected.text;
             if(this.searchArea.selected.text == '学员姓名'){
-                t = t  + "，支持拼音缩写"
+                t = "请输入姓名，支持拼音缩写"
             }
             return t
         }
