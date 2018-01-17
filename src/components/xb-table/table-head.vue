@@ -71,7 +71,7 @@ export default {
             let isSelectAll = true;
             if (!this.data.length) isSelectAll = false;
             for (let i = 0; i < this.data.length; i++) {
-                if ((!this.data[i]._checked && !this.data[i]._disabled) || this.data[i]._disabled) {
+                if (!this.data[i]._checked && !this.data[i]._disabled) {
                     isSelectAll = false;
                     break;
                 }

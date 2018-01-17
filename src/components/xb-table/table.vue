@@ -109,7 +109,7 @@ let columnKey = 1;
 export default {
     name: 'Table',
     mixins: [Locale],
-    components: { tableHead, tableBody, customPop },
+    components: { tableHead, tableBody, customPop,XbScrollbar },
     props: {
         data: {
             type: Array,
@@ -379,6 +379,9 @@ export default {
         handleMouseOut(_index) {
             this.currentHoverRow=-1;
         },
+        getSelections(){
+            return this.selections;
+        },
         toggleSelect(row) {
             row._checked = !row._checked;
             var index = this.selections.indexOf(row);
@@ -408,7 +411,7 @@ export default {
                     data._checked = status;
                 }
             }
-            this.selections = status ? deepCopy(this.rebuildData) : [];
+            this.selections = status ? deepCopy(this.rebuildData).filter(row=>row._checked) : [];
             if (status) {
                 this.$emit('on-select-all', this.selections);
             }
@@ -487,7 +490,10 @@ export default {
                 row._hover = false;
                 row._checked = row._checked || false;
                 row._disabled = row._disabled || false;
-                row._expanded = row._expanded || false
+                row._expanded = row._expanded || false;
+                if(row._checked){
+                    this.selections.push(row);
+                }
             });
             return data;
         },
