@@ -56,11 +56,13 @@
                 this.$emit('input',false);
             },
             getshowcol(){
-                return this.data.map(col=>{
+                var arr = [];
+                this.data.forEach(col=>{
                     if(col.show){
-                        return col.key;
+                        arr.push(col.key);
                     }
                 });
+                return arr;
             }
         }
     };
