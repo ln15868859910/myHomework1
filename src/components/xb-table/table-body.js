@@ -64,6 +64,7 @@
                      return [h('tr', {
                          class: that.rowClasses(rowIndex),
                          style: that.trStyles(rowIndex),
+                         key: row._rowkey,
                          on: {
                              mouseenter: () => {
                                  that.handleMouseIn(rowIndex)
@@ -92,6 +93,7 @@
                                              fixed: that.fixed,
                                              row: row,
                                              column: column,
+                                             key: column._columnKey,
                                              naturalIndex: rowIndex,
                                              index: row._index,
                                              checked: that.rowChecked(rowIndex),
@@ -116,6 +118,7 @@
                                  class: that.prefixCls + '-expanded-cell'
                              }, [
                                  h(Expand, {
+                                     key:row._rowKey,
                                      props: {
                                          row: row,
                                          render: that.expandRender,

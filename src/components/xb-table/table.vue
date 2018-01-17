@@ -4,7 +4,7 @@
             <div :class="[prefixCls + '-title']" ref="title">
                 <slot name="header"></slot>
             </div>
-            <div style="padding:0 20px;">
+            <div :class="[prefixCls + '-tableWrap']">
                 <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" v-show="showVerticalBar" :view-style="{'float':'left'}">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
@@ -446,6 +446,7 @@ export default {
                 if (event.target !== this.$refs.centerBody) this.$refs.centerBody.scrollTop = event.target.scrollTop;
             }
             this.lastScrollTop = event.target.scrollTop;
+            this.$emit('on-scroll', event);
         },
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;

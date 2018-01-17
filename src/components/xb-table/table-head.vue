@@ -1,11 +1,11 @@
 <template>
     <table cellspacing="0" cellpadding="0" border="0" :style="styleObject">
         <colgroup>
-            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, true)" v-show="checkifhide(column)">
+            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, true)" v-show="checkifhide(column)" :key="index">
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(column, index) in columns" :class="alignCls(column)" :style="thStyle(column)" v-show="checkifhide(column)">
+                <th v-for="(column, index) in columns" :class="alignCls(column)" :style="thStyle(column)" v-show="checkifhide(column)" :key="index">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
