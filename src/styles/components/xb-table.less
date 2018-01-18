@@ -135,9 +135,13 @@
         .@{table-prefix-cls2}-body table{
             border-left: 1px solid @border-color-split;
         }
+        .@{table-prefix-cls2}-fixed table{
+            border-left: 1px solid @border-color-split;
+        }
     }
     &-cell {
-        padding: 4px 10px;
+        padding: 0px 10px;
+        margin:4px 0;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -148,8 +152,8 @@
             word-break: normal;
             white-space: normal;
             text-overflow: ellipsis;
-            padding:9px 0;
-            line-height:1.7;
+            margin:10px 0;
+            line-height:22px;
         }
         &-with-expand {
             padding: 0;
