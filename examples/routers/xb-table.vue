@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
+            <Xb-Table :columns="tableHeader" :outhidecol="singleCol" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -8,6 +8,9 @@
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
                     </div>
                     <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
+                    <div>
+                        <Checkbox v-model="singleCol[0].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
+                    </div>
                 </div>
                 <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
             </Xb-Table>
@@ -17,6 +20,12 @@
 export default {
     data() {
         return {
+            testcol:[],
+            singleCol:[{
+                key:'SphHome',
+                name:'是否显示校宝家关注',
+                show:true
+            }],   //外部控制的隐藏列Key值数组
             tableHeader: [
                 {
                     type: 'selection',
@@ -89,7 +98,7 @@ export default {
                     sortable: true,
                     width: 120,
                     custom:true,
-                    show:true,
+                    show:false,
                     render: function (h, params) {
                         return h('div', {
                             class:params.row.Interest.interestClass
@@ -147,51 +156,55 @@ export default {
                     fixed: "right"
                 }],
             listData: [],
-            control:[{
-                key:'edit',
-                title:'编辑',
-                ifshow:function(cell,index){//是否显示
-                    return index%2;
-                },
-                ifdisabled:function(cell,index){//是否禁用
-                    return index%3;
-                },
-                func:function(cell){//具体处理方法
-                    console.log(cell);
-                },
-                render:function(h, params){//自定义渲染
-                    return h('span', {
-                        style: 'color:red'
-                    },'编辑');
-                },
-            },{
-                key:'edit',
-                title:'复制',
-                ifshow:function(cell,index){
-                    return 1==index%2;
-                },
-                func:function(cell){
-                    console.log(cell);
-                },
-                disabled:function(){
-                    return true;
-                }
-            },{
-                key:'edit',
-                title:'删除',
-                ifshow:function(cell,index){
-                    return index%3;
-                },
-                func:function(cell){
-                    console.log(cell);
-                }
-            }]
+            control:[
+                {
+                    key:'edit',
+                    title:'编辑',
+                    ifshow:function(cell,index){//是否显示
+                        return index%2;
+                    },
+                    ifdisabled:function(cell,index){//是否禁用
+                        return index%3;
+                    },
+                    func:function(cell){//具体处理方法
+                        console.log(cell);
+                    },
+                    render:function(h, params){//自定义渲染
+                        return h('span', {
+                            style: 'color:red'
+                        },'编辑');
+                    },
+                },{
+                    key:'edit',
+                    title:'复制',
+                    ifshow:function(cell,index){
+                        return 1==index%2;
+                    },
+                    func:function(cell){
+                        console.log(cell);
+                    },
+                    disabled:function(){
+                        return true;
+                    }
+                },{
+                    key:'edit',
+                    title:'删除',
+                    ifshow:function(cell,index){
+                        return index%3;
+                    },
+                    func:function(cell){
+                        console.log(cell);
+                    }
+                }]
         };
     },
     created() {
         this.fetchData();
     },
     methods: {
+        changeSingel(data){
+
+        },
         getSelectedData: function (selection) {
             console.log(selection);
         },

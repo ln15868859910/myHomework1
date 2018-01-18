@@ -25,6 +25,7 @@
                  return [];
              }
          },
+         outhidecol:Array,
          hidecol:{
              type:Array,
              default(){
@@ -50,7 +51,7 @@
              h('colgroup', [
                  that.columns.map(function (column, columnIndex) {
                      return h('col', {
-                         style: that.hidecol.indexOf(column.key)>-1?'display:none':'display:table-column',
+                         style: !that.checkifhide(column)?'display:none':'display:table-column',
                          domProps: {
                              width: that.setCellWidth(column, columnIndex, false)
                          }
@@ -82,7 +83,7 @@
                              if (rowspan || colspan) {
                                  return h('td', {
                                      class: that.alignCls(column, row,rowspan),
-                                     style: that.hidecol.indexOf(column.key)>-1?'display:none':'display:table-cell',
+                                     style: !that.checkifhide(column)?'display:none':'display:table-cell',
                                      domProps: {
                                          rowSpan: rowspan,
                                          colSpan: colspan
@@ -198,7 +199,7 @@
              return this.data[_index] && this.data[_index]._expanded;
          },
          checkifhide(column){
-             return this.hidecol.indexOf(column.key)==-1;
+             return this.outhidecol.indexOf(column.key)==-1&&this.hidecol.indexOf(column.key)==-1;
          },
          handleMouseIn(_index) {
              this.$parent.handleMouseIn(_index);

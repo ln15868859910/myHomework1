@@ -53,6 +53,7 @@ export default {
             type: [Boolean, String],
             default: false
         },
+        outhidecol:Array,
         hidecol:Array
     },
     data() {
@@ -96,7 +97,7 @@ export default {
             return style;
         },
         checkifhide(column){
-            return this.hidecol.indexOf(column.key)==-1;
+            return this.outhidecol.indexOf(column.key)==-1&&this.hidecol.indexOf(column.key)==-1;
         },
         selectAll() {
             const status = !this.isSelectAll;
