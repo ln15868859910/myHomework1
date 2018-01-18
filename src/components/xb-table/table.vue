@@ -439,7 +439,7 @@ export default {
                 this.addFixedStyle = false;
             }
         },
-        handleBodyScroll(event) {
+        handleBodyScroll:throttle(function(event) {
             if (this.lastScrollTop !== event.target.scrollTop) {
                 if (this.isLeftFixed && event.target !== this.$refs.fixedBody) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
                 if (this.isRightFixed && event.target !== this.$refs.fixedRightBody) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
@@ -447,7 +447,7 @@ export default {
             }
             this.lastScrollTop = event.target.scrollTop;
             this.$emit('on-scroll', event);
-        },
+        },20),
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
             this.$refs.centerBody[scrollObj.scroll] = scrollObj.distance;
