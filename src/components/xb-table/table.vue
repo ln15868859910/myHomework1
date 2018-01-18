@@ -15,6 +15,7 @@
                         :columns="cloneColumns" 
                         :columns-width="columnsWidth" 
                         :hidecol="hidecolumn"
+                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
@@ -25,6 +26,7 @@
                         :columns="leftFixedColumns" 
                         :columns-width="columnsWidth" 
                         :hidecol="hidecolumn"
+                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
@@ -35,6 +37,7 @@
                         :columns="rightFixedColumns" 
                         :columns-width="columnsWidth"
                         :hidecol="hidecolumn"
+                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
@@ -56,6 +59,7 @@
                     :styleObject="tableStyle" 
                     :columns="cloneColumns" 
                     :hidecol="hidecolumn"
+                    :outhidecol="outhidecolumn"
                     :data="rebuildData"
                     :columns-width="columnsWidth">
                     </table-body>
@@ -66,7 +70,8 @@
                     fixed="left" 
                     :styleObject="fixedTableStyle" 
                     :columns="leftFixedColumns"
-                    :hidecol="hidecolumn" 
+                    :hidecol="hidecolumn"
+                    :outhidecol="outhidecolumn"
                     :data="rebuildData" 
                     :columns-width="columnsWidth">
                     </table-body>
@@ -78,6 +83,8 @@
                     fixed="right" 
                     :styleObject="fixedRightTableStyle" 
                     :columns="rightFixedColumns" 
+                    :hidecol="hidecolumn"
+                    :outhidecol="outhidecolumn"
                     :data="rebuildData"
                     :control="control"
                     :columns-width="columnsWidth">
@@ -97,8 +104,8 @@ import tableHead from './table-head.vue';
 import tableBody from './table-body.js';
 import customPop from './custom-pop.vue';
 import XbScrollbar from '../xb-scrollbar/main.js';
-import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
-import { throttle, debounce } from '../../utils/throttle';
+import { getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
+import { throttle } from '../../utils/throttle';
 import { on, off } from '../../utils/dom';
 import Locale from '../../mixins/locale';
 
@@ -119,6 +126,12 @@ export default {
             }
         },
         columns: {
+            type: Array,
+            default() {
+                return [];
+            }
+        },
+        outhidecol:{//外部独立自定义控制显示列
             type: Array,
             default() {
                 return [];
@@ -200,7 +213,7 @@ export default {
             custumcols: this.makeCustomColumns(),
             hidecolumn:[],  //隐藏的列
             sortKey: this.defaultSort.key,//排序参数
-            sortOrder: this.defaultSort.order || "desc",
+            sortOrder: this.defaultSort.order || 'desc',
             lastScrollTop:0,
             currentHoverRow:-1
         };
@@ -295,21 +308,30 @@ export default {
         },
         centerTableStyle() {
             var style = {};
-            style.width = this.containerWidth + "px";
+            style.width = this.containerWidth + 'px';
             return style;
         },
         fixedHeaderStyle() {
             var style = {};
             if (this.addFixedStyle) {
-                style.position = "fixed";
-                style.top = this.fixedTop + "px";
+                style.position = 'fixed';
+                style.top = this.fixedTop + 'px';
             }
             return style;
+        },
+        outhidecolumn(){
+            var arr = [];
+            this.outhidecol.forEach((col)=>{
+                if(!col.show){
+                    arr.push(col.key);
+                }
+            });
+            return arr;
         },
         bodyWrapStyle(){
             var style = {};
             if (this.addFixedStyle) {
-                style.marginTop = this.$refs.fixedHeaderEle.getBoundingClientRect().height + "px";
+                style.marginTop = this.$refs.fixedHeaderEle.getBoundingClientRect().height + 'px';
             }
             return style;
         }
@@ -332,7 +354,6 @@ export default {
             this.showmoretag = true;
         },
         confirmshowcol(data){
-            // console.log(data);
             this.hidecolumn = data;
             this.handleResize();
         },
@@ -548,6 +569,7 @@ export default {
         makeCustomColumns(){
             let columns = deepCopy(this.columns);
             let custumcols = [];
+            let hidecolumn = [];
             columns.forEach((column)=>{
                 if(column.custom){
                     custumcols.push({
@@ -556,7 +578,11 @@ export default {
                         show:column.show
                     });
                 }
+                if(column.show===false){
+                    hidecolumn.push(column.key);
+                }
             });
+            this.hidecolumn = hidecolumn;
             return custumcols;
         }
     },

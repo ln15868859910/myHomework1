@@ -1,12 +1,11 @@
 <template>
-    <div :class="classes" ref="cell" :title="isOverflow?row[column.key]:''" @mouseenter="setToolTipVisible" @mouseleave="resetToolTipVisible">
+    <div :class="classes" ref="cell" :title="isOverflow?row[column.key]:''" @mouseenter="setToolTipVisible" @mouseleave="resetToolTipVisible" :style="ellipsisStyle">
         <template v-if="renderType === 'index'">{{naturalIndex + 1}}</template>
         <template v-if="renderType === 'selection'">
             <Checkbox :value="checked" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
         </template>
         <template v-if="renderType === 'html'"><span v-html="row[column.key]"></span></template>
-        <template v-if="renderType === 'normal'">
-           <span>{{row[column.key]}}</span>
+        <template v-if="renderType === 'normal'">{{row[column.key]}}
         </template>
         <template v-if="renderType === 'expand' && !row._disableExpand">
             <div :class="expandCls" @click="toggleExpand">
@@ -83,6 +82,16 @@
                         [`${this.prefixCls}-cell-expand-expanded`]: this.expanded
                     }
                 ];
+            },
+            ellipsisStyle() {
+                let style = {};
+                if (this.column.breakWord && this.column.lineClamp) {
+                    style.display = "-webkit-box";
+                    style.webkitBoxOrient = "vertical";
+                    style.webkitLineClamp = this.column.lineClamp;
+                    style.maxHeight = 22 * this.column.lineClamp + "px";
+                }
+                return style;
             }
         },
         methods: {
@@ -95,7 +104,7 @@
             //判断是否溢出
             setToolTipVisible() {
                 if(this.column.showOverflowTip){
-                    this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth;
+                    this.isOverflow = this.$el.offsetWidth < this.$el.scrollWidth || this.$el.offsetHeight < this.$el.scrollHeight;
                 }
             },
             resetToolTipVisible(){
