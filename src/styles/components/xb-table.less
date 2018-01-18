@@ -68,6 +68,7 @@
         box-sizing: border-box;
         vertical-align: middle;
         border-bottom: 1px solid @border-color-split;
+        position:static;
     }
     th {
         height: 50px;
@@ -76,14 +77,12 @@
         text-align: center;
         font-weight: normal;
         background-color: @table-thead-bg;
-        padding: 10px 0;
     }
     td {
         background-color: @table-td-bg;
         text-align: center; // transition: background-color @transition-time @ease-in-out;
         text-overflow: ellipsis;
         color: @table-font-color;
-        padding: 4px 0;
         .spui-table-cell {
             .ivu-dropdown-item:hover {
                 background: @primary-color;
@@ -138,8 +137,7 @@
         }
     }
     &-cell {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 4px 10px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -150,7 +148,7 @@
             word-break: normal;
             white-space: normal;
             text-overflow: ellipsis;
-            padding:5px 0;
+            padding:9px 0;
             line-height:1.7;
         }
         &-with-expand {

@@ -98,6 +98,7 @@ import tableBody from './table-body.js';
 import customPop from './custom-pop.vue';
 import XbScrollbar from '../xb-scrollbar/main.js';
 import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
+import { throttle, debounce } from '../../utils/throttle';
 import { on, off } from '../../utils/dom';
 import Locale from '../../mixins/locale';
 
@@ -335,42 +336,41 @@ export default {
             this.hidecolumn = data;
             this.handleResize();
         },
+        doLayout() {
+            var allColumWidth = this.cloneColumns.map(cell => {
+                if (this.hidecolumn.indexOf(cell.key) == -1) {
+                    return cell.width;
+                } else {
+                    return 0;
+                }
+            }).reduce((a, b) => a + b);
+            this.tableWidth = allColumWidth > this.centerWidth ? allColumWidth : this.centerWidth;
+            this.columnsWidth = {};
+            if (!this.$refs.tbody) return;
+            this.$nextTick(() => {
+                let columnsWidth = {};
+                if (this.data.length) {
+                    const $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
+                    for (let i = 0; i < $td.length; i++) {
+                        const column = this.cloneColumns[i];
+                        let width = parseInt(getStyle($td[i], 'width'));
+                        this.cloneColumns[i]._width = width;
+                        columnsWidth[column._index] = {
+                            width: column.width ? column.width : width
+                        };
+                    }
+                    this.columnsWidth = columnsWidth;
+                }
+            });
+            // 高度小于表格真实高度时显示纵向滚动条
+            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
+            this.syncFixedTableRowHeight();
+        },
         handleResize() {
             this.$nextTick(() => {
                 this.centerWidth = parseInt(getStyle(this.$refs.mainTable, 'width'));
                 this.containerWidth = parseInt(getStyle(this.$el, 'width'));
-                const allWidth = !this.cloneColumns.some(cell => !cell.width);    // 每一个列都设置宽度时，table宽度为总和
-                if (allWidth) {
-                    var allColumWidth = this.cloneColumns.map(cell => {
-                        if(this.hidecolumn.indexOf(cell.key)==-1){
-                            return cell.width;
-                        }else{
-                            return 0;
-                        }
-                    }).reduce((a, b) => a + b);
-                    this.tableWidth = allColumWidth > this.centerWidth ? allColumWidth : this.centerWidth;
-                } else {
-                    this.tableWidth = this.centerWidth;
-                }
-                this.columnsWidth = {};
-                if (!this.$refs.tbody) return;
-                this.$nextTick(() => {
-                    let columnsWidth = {};
-                    if (this.data.length) {
-                        const $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
-                        for (let i = 0; i < $td.length; i++) {    // can not use forEach in Firefox
-                            const column = this.cloneColumns[i];
-                            let width = parseInt(getStyle($td[i], 'width'));
-                            this.cloneColumns[i]._width = width;
-                            columnsWidth[column._index] = {
-                                width: column.width ? column.width : width
-                            };
-                        }
-                        this.columnsWidth = columnsWidth;
-                    }
-                });
-                // 高度小于表格真实高度时显示纵向滚动条
-                this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
+                this.throttleLayout();
             });
         },
         handleMouseIn(_index) {
@@ -439,7 +439,7 @@ export default {
                 this.addFixedStyle = false;
             }
         },
-        handleBodyScroll(event) {
+        handleBodyScroll:throttle(function(event) {
             if (this.lastScrollTop !== event.target.scrollTop) {
                 if (this.isLeftFixed && event.target !== this.$refs.fixedBody) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
                 if (this.isRightFixed && event.target !== this.$refs.fixedRightBody) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
@@ -447,7 +447,7 @@ export default {
             }
             this.lastScrollTop = event.target.scrollTop;
             this.$emit('on-scroll', event);
-        },
+        },20),
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
             this.$refs.centerBody[scrollObj.scroll] = scrollObj.distance;
@@ -562,6 +562,7 @@ export default {
     },
     created() {
         this.rebuildData = this.makeDataWithSort();
+        this.throttleLayout=this.doLayout;
     },
     mounted() {
         this.handleResize();
@@ -601,9 +602,6 @@ export default {
         },
         height() {
             this.fixedHeader();
-        },
-        tableWidth() {
-            this.syncFixedTableRowHeight();
         }
     }
 };
