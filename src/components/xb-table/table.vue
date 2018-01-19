@@ -125,6 +125,7 @@ export default {
                 return [];
             }
         },
+        name:String,
         columns: {
             type: Array,
             default() {
@@ -355,6 +356,7 @@ export default {
         },
         confirmshowcol(data){
             this.hidecolumn = data;
+            this.setLocalData(data);
             this.handleResize();
         },
         doLayout() {
@@ -571,6 +573,14 @@ export default {
             let custumcols = [];
             let hidecolumn = [];
             columns.forEach((column)=>{
+                 //取持久化自定义隐藏数据 并重置现有数据
+                let storgedata = this.getLocalData().split(',');
+                if(storgedata.length){
+                    if(storgedata.indexOf(column.key)>-1){
+                        column.show = false;
+                    }
+                }
+
                 if(column.custom){
                     custumcols.push({
                         title:column.title,
@@ -582,8 +592,22 @@ export default {
                     hidecolumn.push(column.key);
                 }
             });
-            this.hidecolumn = hidecolumn;
+            this.$nextTick(()=>{
+                this.hidecolumn = hidecolumn;
+            });
             return custumcols;
+        },
+        setLocalData(data){
+            if(this.name){
+                localStorage.setItem('table'+this.name,data);
+            }
+        },
+        getLocalData(){
+            let data;
+            if(this.name){
+                data = localStorage.getItem('table'+this.name);
+            }
+            return data||'';
         }
     },
     created() {

@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :outhidecol="singleCol" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
+            <Xb-Table name="testtable" :columns="tableHeader" :outhidecol="singleCol" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -24,7 +24,7 @@ export default {
             singleCol:[{
                 key:'SphHome',
                 name:'是否显示校宝家关注',
-                show:true
+                show:false
             }],   //外部控制的隐藏列Key值数组
             tableHeader: [
                 {
