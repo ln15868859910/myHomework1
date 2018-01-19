@@ -11,7 +11,7 @@
             @on-click="doSearch" 
             @on-enter="doSearch"></Input>
             <transition name="slide-up">
-                <div class="ivu-select-dropdown" style="max-height: 400px;" v-show="dropdown && searchStatus">
+                <div class="ivu-select-dropdown" style="max-height: 400px;text-align:left" v-show="dropdown && searchStatus">
                     <ul class="ivu-select-dropdown-list">
                         <li v-show="searchArea.arr.length ==0 && !loading" class="ivu-select-item" style="padding: 7px 0;text-align: center;color: #ccc;">无匹配数据</li>
                         <li v-show="loading" class="ivu-select-item" style="text-align: center;color: #ccc;">加载中</li>
