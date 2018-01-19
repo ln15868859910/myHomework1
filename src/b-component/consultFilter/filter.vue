@@ -9,7 +9,7 @@
             <li :class="flortRight">
                 <!-- 搜索内容区域  -->
 
-                <xb-fuzzy-select ref="fuzzySearch" :search-data="searchData" :callback="{'dosearch':doSearch}" @updateSearchRes="updateSearchRes"></xb-fuzzy-select>
+                <xb-fuzzy-select ref="fuzzySearch" v-if="searchData && status.isInitCompleted" :search-data="searchData" :callback="{'dosearch':doSearch}" @updateSearchRes="updateSearchRes"></xb-fuzzy-select>
                 
                 <!-- 筛选组件按钮区域 -->
                 
@@ -361,6 +361,7 @@ export default {
         clearAllData() {
             //清空已选择的数据
             this.filterResult = [];
+            this.status.isInitCompleted = false;
             this.$refs.fuzzySearch.clear();
         },
         // 清空所有标签
