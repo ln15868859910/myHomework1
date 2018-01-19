@@ -11,24 +11,14 @@
             @on-click="doSearch" 
             @on-enter="doSearch"></Input>
             <transition name="slide-up">
-            <ul style="
-                position: absolute;
-                width: 260px;
-                overflow: auto;
-                margin: 5px 0;
-                padding: 10px 0;
-                background-color: #fff;
-                box-sizing: border-box;
-                border-radius: 4px;
-                box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-                z-index: 900;" 
-                class="ivu-select-dropdown-list"
-                v-show="dropdown && searchStatus">
-                <li v-show="searchArea.arr.length ==0 && !loading" class="ivu-select-item" style="padding: 7px 0;text-align: center;color: #ccc;">无匹配数据</li>
-                <li v-show="loading" class="ivu-select-item" style="text-align: center;color: #ccc;">加载中</li>
-                <li v-show="searchArea.arr.length !=0 && !loading" class="ivu-select-item"
-                v-for="(item,index) in searchArea.arr" :key="index" @click="clickItem(item)">{{ item }}</li>             
-            </ul>
+                <div class="ivu-select-dropdown" style="max-height: 400px;" v-show="dropdown && searchStatus">
+                    <ul class="ivu-select-dropdown-list">
+                        <li v-show="searchArea.arr.length ==0 && !loading" class="ivu-select-item" style="padding: 7px 0;text-align: center;color: #ccc;">无匹配数据</li>
+                        <li v-show="loading" class="ivu-select-item" style="text-align: center;color: #ccc;">加载中</li>
+                        <li v-show="searchArea.arr.length !=0 && !loading" class="ivu-select-item"
+                        v-for="(item,index) in searchArea.arr" :key="index" @click="clickItem(item)">{{ item }}</li>             
+                    </ul>
+                </div>
             </transition>
         </div>
     </div>
@@ -165,7 +155,6 @@ export default {
                     _this.searchArea.arr = res.Data.List;
                 }else{
                     _this.searchArea.arr = [];
-                    // _this.dropdown = false;
                 }
                 _this.loading = false;
             }) 
@@ -175,11 +164,6 @@ export default {
         },
         clear(){
             this.searchArea.searchInput = '';
-            // this.searchArea.selected = {
-            //     "text": this.searchData.data[0].text,
-            //     "value": this.searchData.data[0].value
-            // }
-            // this.searchArea.selectModel = this.searchData.data[0].value;
             this.init();
         },
         init(){
