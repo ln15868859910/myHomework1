@@ -85,9 +85,9 @@ export default {
         },
         vplaceholder(){
             var t = "请输入" + this.searchArea.selected.text;
-            if(this.searchArea.selected.text == '学员姓名'){
-                t = "请输入姓名，支持拼音缩写"
-            }
+            // if(this.searchArea.selected.text == '学员姓名'){
+            //     t = "请输入姓名，支持拼音缩写"
+            // }
             return t
         }
     },
@@ -117,7 +117,7 @@ export default {
             this.callback['dosearch']();
         },
         focus(){
-        //    this.dropdown = true
+            
         },
         blur(){
             this.dropdown = false
@@ -129,9 +129,9 @@ export default {
         },
         onChange(){
             this.getSearchObj()
-            this.debounce(()=>{
-                this.fetchData()
-            },300,'changeVal')
+            // this.debounce(()=>{
+            //     this.fetchData()
+            // },300,'changeVal')
         },
         fetchData(){
             var query = this.searchArea.searchInput;
