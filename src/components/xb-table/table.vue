@@ -399,11 +399,13 @@ export default {
                 this.throttleLayout();
             });
         },
-        handleMouseIn(_index) {
-            this.currentHoverRow=_index;
+        handleMouseIn(_index, event) {
+            this.currentHoverRow = _index;
+            this.$emit('row-mouse-enter', this.rebuildData[_index], event);
         },
-        handleMouseOut(_index) {
-            this.currentHoverRow=-1;
+        handleMouseOut(_index, event) {
+            this.currentHoverRow = -1;
+            this.$emit('row-mouse-out', this.rebuildData[_index], event);
         },
         getSelections(){
             return this.selections;

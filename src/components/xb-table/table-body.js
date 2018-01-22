@@ -67,11 +67,11 @@
                          style: that.trStyles(rowIndex),
                          key: row._rowkey,
                          on: {
-                             mouseenter: () => {
-                                 that.handleMouseIn(rowIndex)
+                             mouseenter: ($event) => {
+                                 that.handleMouseIn(rowIndex,$event)
                              },
-                             mouseleave: () => {
-                                 that.handleMouseOut(rowIndex)
+                             mouseleave: ($event) => {
+                                 that.handleMouseOut(rowIndex,$event)
                              }
                          }
                      }, [
@@ -201,11 +201,11 @@
          checkifhide(column){
              return this.outhidecol.indexOf(column.key)==-1&&this.hidecol.indexOf(column.key)==-1;
          },
-         handleMouseIn(_index) {
-             this.$parent.handleMouseIn(_index);
+         handleMouseIn(_index,event) {
+             this.$parent.handleMouseIn(_index,event);
          },
-         handleMouseOut(_index) {
-             this.$parent.handleMouseOut(_index);
+         handleMouseOut(_index,event) {
+             this.$parent.handleMouseOut(_index,event);
          }
      },
      watch:{
