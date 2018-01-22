@@ -473,7 +473,7 @@ export default {
             }
             this.lastScrollTop = event.target.scrollTop;
             this.$emit('on-scroll', event);
-        },20),
+        },10),
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
             this.$refs.centerBody[scrollObj.scroll] = scrollObj.distance;
