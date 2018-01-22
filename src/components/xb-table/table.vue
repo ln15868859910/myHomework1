@@ -276,7 +276,7 @@ export default {
             let style = {};
             let width = 0;
             this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'left') width += col._width;
+                if (col.fixed && col.fixed === 'left' && this.hidecolumn.indexOf(col.key) == -1) width += col._width;
             });
             style.width = `${width}px`;
             return style;
@@ -285,7 +285,7 @@ export default {
             let style = {};
             let width = 0;
             this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right') width += col._width;
+                if (col.fixed && col.fixed === 'right' && this.hidecolumn.indexOf(col.key) == -1) width += col._width;
             });
             if (this.hasScrollBar) {
                 width += this.scrollBarWidth;
@@ -343,6 +343,9 @@ export default {
         },
         //计算表格内容单元格高度，处理fixed列单元格高度和表格内容单元格高度一致
         syncFixedTableRowHeight() {
+            if(!this.isLeftFixed && !this.isRightFixed){
+                return;
+            }
             this.$nextTick(() => {
                 var bodyRows = this.$refs.centerBody.querySelectorAll('tbody tr') || [];
                 var fixedColumnsBodyRowsHeight = [].map.call(bodyRows, function (row) {
@@ -612,13 +615,13 @@ export default {
     },
     created() {
         this.rebuildData = this.makeDataWithSort();
-        this.throttleLayout=this.doLayout;
+        this.throttleLayout= throttle(this.doLayout,200);
     },
     mounted() {
-        this.handleResize();
         this.fixedHeader();
         this.$nextTick(() => {
             this.ready = true;
+            this.handleResize();
         });
         if (this.fixHeader) {
             on(window, 'scroll', this.addScrollEffect);
