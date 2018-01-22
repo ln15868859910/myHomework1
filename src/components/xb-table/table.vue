@@ -14,8 +14,6 @@
                         :styleObject="tableStyle" 
                         :columns="cloneColumns" 
                         :columns-width="columnsWidth" 
-                        :hidecol="hidecolumn"
-                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
@@ -25,8 +23,6 @@
                         :styleObject="fixedTableStyle" 
                         :columns="leftFixedColumns" 
                         :columns-width="columnsWidth" 
-                        :hidecol="hidecolumn"
-                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
@@ -36,12 +32,10 @@
                         :styleObject="fixedRightTableStyle" 
                         :columns="rightFixedColumns" 
                         :columns-width="columnsWidth"
-                        :hidecol="hidecolumn"
-                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div :class="[prefixCls + '-showmore']" v-if="custumcols.length">
+                    <div :class="[prefixCls + '-showmore']" v-show="custumcols.length">
                         <Icon type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
                 </div>
@@ -58,8 +52,6 @@
                     ref="tbody" 
                     :styleObject="tableStyle" 
                     :columns="cloneColumns" 
-                    :hidecol="hidecolumn"
-                    :outhidecol="outhidecolumn"
                     :data="rebuildData"
                     :columns-width="columnsWidth">
                     </table-body>
@@ -70,8 +62,6 @@
                     fixed="left" 
                     :styleObject="fixedTableStyle" 
                     :columns="leftFixedColumns"
-                    :hidecol="hidecolumn"
-                    :outhidecol="outhidecolumn"
                     :data="rebuildData" 
                     :columns-width="columnsWidth">
                     </table-body>
@@ -83,8 +73,6 @@
                     fixed="right" 
                     :styleObject="fixedRightTableStyle" 
                     :columns="rightFixedColumns" 
-                    :hidecol="hidecolumn"
-                    :outhidecol="outhidecolumn"
                     :data="rebuildData"
                     :control="control"
                     :columns-width="columnsWidth">
@@ -211,8 +199,6 @@ export default {
             fixedColumnsBodyRowsHeight: [],
             selections: [],
             showmoretag:false,
-            custumcols: this.makeCustomColumns(),
-            hidecolumn:[],  //隐藏的列
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || 'desc',
             lastScrollTop:0,
@@ -254,6 +240,19 @@ export default {
             }
             return style;
         },
+        custumcols(){
+            let custom = [];
+            this.cloneColumns.forEach((col) => {
+                if (col.custom) {
+                    custom.push({
+                        key:col.key,
+                        title:col.title,
+                        show:col.show
+                    });
+                }
+            });
+            return custom;
+        }, 
         leftFixedColumns() {
             let left = [];
             this.cloneColumns.forEach((col) => {
@@ -276,7 +275,7 @@ export default {
             let style = {};
             let width = 0;
             this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'left' && this.hidecolumn.indexOf(col.key) == -1) width += col._width;
+                if (col.fixed && col.fixed === 'left' && col.show) width += col._width;
             });
             style.width = `${width}px`;
             return style;
@@ -285,7 +284,7 @@ export default {
             let style = {};
             let width = 0;
             this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right' && this.hidecolumn.indexOf(col.key) == -1) width += col._width;
+                if (col.fixed && col.fixed === 'right' && col.show) width += col._width;
             });
             if (this.hasScrollBar) {
                 width += this.scrollBarWidth;
@@ -320,15 +319,6 @@ export default {
             }
             return style;
         },
-        outhidecolumn(){
-            var arr = [];
-            this.outhidecol.forEach((col)=>{
-                if(!col.show){
-                    arr.push(col.key);
-                }
-            });
-            return arr;
-        },
         bodyWrapStyle(){
             var style = {};
             if (this.addFixedStyle) {
@@ -358,13 +348,24 @@ export default {
             this.showmoretag = true;
         },
         confirmshowcol(data){
-            this.hidecolumn = data;
+            this.resetCustomShow(data);
             this.setLocalData(data);
             this.handleResize();
+            this.$emit('on-custom-change', data);
+        },
+        resetCustomShow(data){
+            this.cloneColumns.forEach((column, index) => {
+                if(column.custom){
+                    column.show = true;
+                    if(data.indexOf(column.key)>-1){
+                        column.show = false;
+                    }
+                }
+            });
         },
         doLayout() {
             var allColumWidth = this.cloneColumns.map(cell => {
-                if (this.hidecolumn.indexOf(cell.key) == -1) {
+                if (cell.show) {
                     return cell.width;
                 } else {
                     return 0;
@@ -558,11 +559,19 @@ export default {
                     handleArr:this.control
                 });
             }
+            //取持久化自定义隐藏数据 并重置现有数据
+            let storgedata = this.getLocalData().split(',');
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
                 column.width= column.width || 80;
                 column._width = column.width ? column.width : '';
+                column.show = ("show" in column) ? column.show : true;
+                if(column.custom){
+                    if(storgedata.indexOf(column.key)>-1){
+                        column.show = false;
+                    }
+                }
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
                 } else if (column.fixed && column.fixed === 'right') {
@@ -572,35 +581,6 @@ export default {
                 }
             });
             return left.concat(center).concat(right);
-        },
-        makeCustomColumns(){
-            let columns = deepCopy(this.columns);
-            let custumcols = [];
-            let hidecolumn = [];
-            columns.forEach((column)=>{
-                 //取持久化自定义隐藏数据 并重置现有数据
-                let storgedata = this.getLocalData().split(',');
-                if(storgedata.length){
-                    if(storgedata.indexOf(column.key)>-1){
-                        column.show = false;
-                    }
-                }
-
-                if(column.custom){
-                    custumcols.push({
-                        title:column.title,
-                        key:column.key,
-                        show:column.show
-                    });
-                }
-                if(column.show===false){
-                    hidecolumn.push(column.key);
-                }
-            });
-            this.$nextTick(()=>{
-                this.hidecolumn = hidecolumn;
-            });
-            return custumcols;
         },
         setLocalData(data){
             if(this.name){

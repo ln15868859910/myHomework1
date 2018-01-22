@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table name="testtable" :columns="tableHeader" :outhidecol="singleCol" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
+            <Xb-Table name="testtable" :columns="tableHeader" :data="listData" :height="600" :control="control" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -9,7 +9,7 @@
                     </div>
                     <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
                     <div>
-                        <Checkbox v-model="singleCol[0].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
+                        <Checkbox v-model="tableHeader[4].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
                     </div>
                 </div>
                 <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
@@ -21,11 +21,6 @@ export default {
     data() {
         return {
             testcol:[],
-            singleCol:[{
-                key:'SphHome',
-                name:'是否显示校宝家关注',
-                show:false
-            }],   //外部控制的隐藏列Key值数组
             tableHeader: [
                 {
                     type: 'selection',
@@ -37,6 +32,7 @@ export default {
                     key: 'UserCollectionId',
                     align:'center',
                     width: 100,
+                    custom:true,
                     // fixed:"left",
                     render: function (h, params) {
                         return h('div', [
@@ -53,7 +49,6 @@ export default {
                 {
                     title: '姓名',
                     key: 'StuName',
-                    // fixed:"left",
                     sortable: true,
                     width: 200,
                     type:"link",
@@ -77,6 +72,7 @@ export default {
                     title: '校宝家关注',
                     key: 'SphHome',
                     width: 120,
+                    show:false,
                     renderHeader: function (h, params) {
                         return h('div', {
                             class: 'spui-table-cell',
@@ -129,6 +125,7 @@ export default {
                     key: 'Marker',
                     width: 120,
                     custom:true,
+                                        fixed:"right",
                     show:true
                 }, {
                     title: '跟进状态',

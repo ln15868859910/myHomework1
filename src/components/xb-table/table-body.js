@@ -24,13 +24,6 @@
              default(){
                  return [];
              }
-         },
-         outhidecol:Array,
-         hidecol:{
-             type:Array,
-             default(){
-                 return [];
-             }
          }
      },
      data() {
@@ -51,7 +44,7 @@
              h('colgroup', [
                  that.columns.map(function (column, columnIndex) {
                      return h('col', {
-                         style: !that.checkifhide(column)?'display:none':'display:table-column',
+                         style: !column.show?'display:none':'display:table-column',
                          domProps: {
                              width: that.setCellWidth(column, columnIndex, false)
                          }
@@ -83,7 +76,7 @@
                              if (rowspan || colspan) {
                                  return h('td', {
                                      class: that.alignCls(column, row,rowspan),
-                                     style: !that.checkifhide(column)?'display:none':'display:table-cell',
+                                     style: !column.show?'display:none':'display:table-cell',
                                      domProps: {
                                          rowSpan: rowspan,
                                          colSpan: colspan
@@ -197,9 +190,6 @@
          },
          rowExpanded(_index) {
              return this.data[_index] && this.data[_index]._expanded;
-         },
-         checkifhide(column){
-             return this.outhidecol.indexOf(column.key)==-1&&this.hidecol.indexOf(column.key)==-1;
          },
          handleMouseIn(_index,event) {
              this.$parent.handleMouseIn(_index,event);
