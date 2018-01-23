@@ -6,6 +6,7 @@
         <i-button @click.native="error">显示错误提示</i-button>
         <i-button @click.native="loading">显示加载提示</i-button>
         <i-button @click.native="time">延时10秒</i-button>
+        <i-button @click.native="custom">自定义</i-button>
         <i-button @click.native="destroy">销毁提示</i-button>
     </div>
 </template>
@@ -29,6 +30,9 @@
             },
             time () {
                 this.$Message.info('我将在10秒后消失', 10);
+            },
+            custom(){
+                this.$Message.info('123',10);
             },
             destroy () {
                 this.$Message.destroy();
