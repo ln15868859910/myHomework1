@@ -1,6 +1,6 @@
 import {getScrollBarSize} from '../../utils/assist';
 import Bar from './bar';
-import { addResizeListener, removeResizeListener } from '../../utils/resize-event';
+import elementResizeDetectorMaker from 'element-resize-detector';
 const prefixCls = 'spui-scrollbar';
 export default {
   name: 'XbScrollbar',
@@ -10,7 +10,6 @@ export default {
   },
 
   props: {
-    native: Boolean,
     wrapStyle: {},
     wrapClass: {},
     viewClass: {},
@@ -109,15 +108,18 @@ export default {
   },
 
   mounted() {
-    if (this.native) return;
     this.$nextTick(() => this.update());
-    !this.noresize && addResizeListener(this.$refs.resize, this.update);
-    !this.noresize && addResizeListener(this.$refs.wrap, this.update);
+    if(!this.noresize){
+      this.observer = elementResizeDetectorMaker();
+      this.observer.listenTo(this.$refs.resize, this.update);
+      this.observer.listenTo(this.$refs.wrap, this.update);
+    }
   },
 
   beforeDestroy() {
-    if (this.native) return;
-    !this.noresize && removeResizeListener(this.$refs.resize, this.update);
-    !this.noresize && removeResizeListener(this.$refs.wrap, this.update);
+    if(!this.noresize){
+     this.observer.removeListener(this.$refs.resize, this.update);
+     this.observer.removeListener(this.$refs.wrap, this.update);
+    }
   }
 };
