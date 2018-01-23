@@ -105,7 +105,7 @@ let columnKey = 1;
 export default {
     name: 'Table',
     mixins: [Locale],
-    components: { tableHead, tableBody, customPop,XbScrollbar },
+    components: { tableHead, tableBody, customPop, XbScrollbar },
     props: {
         data: {
             type: Array,
@@ -115,12 +115,6 @@ export default {
         },
         name:String,
         columns: {
-            type: Array,
-            default() {
-                return [];
-            }
-        },
-        outhidecol:{//外部独立自定义控制显示列
             type: Array,
             default() {
                 return [];

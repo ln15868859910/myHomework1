@@ -64,6 +64,14 @@
                 });
                 return arr;
             }
+        },
+        watch: {
+            data: {
+                handler() {
+                    this.showculumns=this.getshowcol();
+                },
+                deep: true
+            }
         }
     };
 </script>
