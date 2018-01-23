@@ -192,7 +192,10 @@ export default {
             columnsWidth: {},
             prefixCls: prefixCls,
             rebuildData: [],
-            cloneColumns: this.makeColumns(),
+            custumcols:[],
+            cloneColumns: [],
+            leftFixedColumns:[],
+            rightFixedColumns:[],
             bodyHeight: 0,
             bodyRealHeight: 0,
             scrollBarWidth: getScrollBarSize(),
@@ -240,42 +243,11 @@ export default {
             }
             return style;
         },
-        custumcols(){
-            let custom = [];
-            this.cloneColumns.forEach((col) => {
-                if (col.custom) {
-                    custom.push({
-                        key:col.key,
-                        title:col.title,
-                        show:col.show
-                    });
-                }
-            });
-            return custom;
-        }, 
-        leftFixedColumns() {
-            let left = [];
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'left') {
-                    left.push(col);
-                }
-            });
-            return left;
-        },
-        rightFixedColumns() {
-            let right = [];
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right') {
-                    right.push(col);
-                }
-            });
-            return right;
-        },
         fixedTableStyle() {
             let style = {};
             let width = 0;
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'left' && col.show) width += col._width;
+            this.leftFixedColumns.forEach((col) => {
+                if(col.show) width += col._width;
             });
             style.width = `${width}px`;
             return style;
@@ -283,8 +255,8 @@ export default {
         fixedRightTableStyle() {
             let style = {};
             let width = 0;
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right' && col.show) width += col._width;
+            this.rightFixedColumns.forEach((col) => {
+                if(col.show) width += col._width;
             });
             if (this.hasScrollBar) {
                 width += this.scrollBarWidth;
@@ -301,10 +273,10 @@ export default {
             return style;
         },
         isLeftFixed() {
-            return this.leftFixedColumns.length;
+            return this.leftFixedColumns.filter(col=>col.show).length;
         },
         isRightFixed() {
-            return this.rightFixedColumns.length;
+            return this.rightFixedColumns.filter(col=>col.show).length;
         },
         centerTableStyle() {
             var style = {};
@@ -381,7 +353,7 @@ export default {
                     for (let i = 0; i < $td.length; i++) {
                         const column = this.cloneColumns[i];
                         let width = parseInt(getStyle($td[i], 'width'));
-                        this.cloneColumns[i]._width = width;
+                        this.cloneColumns[i]._width = width || 0;
                         columnsWidth[column._index] = {
                             width: column.width ? column.width : width
                         };
@@ -547,6 +519,7 @@ export default {
         },
         makeColumns() {
             let columns = deepCopy(this.columns);
+            let custumcols=[];
             let left = [];
             let right = [];
             let center = [];
@@ -571,6 +544,11 @@ export default {
                     if(storgedata.indexOf(column.key)>-1){
                         column.show = false;
                     }
+                    custumcols.push({
+                        key:column.key,
+                        title:column.title,
+                        show:column.show
+                    });
                 }
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
@@ -580,7 +558,10 @@ export default {
                     center.push(column);
                 }
             });
-            return left.concat(center).concat(right);
+            this.custumcols = custumcols;
+            this.leftFixedColumns = left;
+            this.rightFixedColumns = right;
+            this.cloneColumns = left.concat(center).concat(right);
         },
         setLocalData(data){
             if(this.name){
@@ -596,6 +577,7 @@ export default {
         }
     },
     created() {
+        this.makeColumns();
         this.rebuildData = this.makeDataWithSort();
         this.throttleLayout= throttle(this.doLayout,200);
     },
@@ -630,7 +612,7 @@ export default {
         },
         columns: {
             handler() {
-                this.cloneColumns = this.makeColumns();
+                this.makeColumns();
                 this.handleResize();
             },
             deep: true
