@@ -46,7 +46,7 @@
                      return h('col', {
                          style: !column.show?'display:none':'display:table-column',
                          domProps: {
-                             width: that.setCellWidth(column, columnIndex, false)
+                             width: that.setCellWidth(column)
                          }
                      });
                  })

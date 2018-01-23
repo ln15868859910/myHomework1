@@ -223,16 +223,7 @@ export default {
         tableStyle() {
             let style = {};
             if (this.tableWidth !== 0) {
-                let width = '';
-                if (this.bodyHeight === 0) {
-                    width = this.tableWidth;
-                } else {
-                    if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
-                        width = this.tableWidth;
-                    } else {
-                        width = this.tableWidth - this.scrollBarWidth;
-                    }
-                }
+                let width = this.tableWidth;
                 style.width = `${width}px`;
             }
             return style;
@@ -252,9 +243,6 @@ export default {
             this.rightFixedColumns.forEach((col) => {
                 if(col.show) width += col._width;
             });
-            if (this.hasScrollBar) {
-                width += this.scrollBarWidth;
-            }
             style.width = `${width}px`;
             return style;
         },
@@ -263,6 +251,9 @@ export default {
             if (this.bodyHeight !== 0) {
                 const height = this.bodyHeight;
                 style.height = `${height}px`;
+            }
+            if (this.hasScrollBar) {
+                style.marginRight = -this.scrollBarWidth + "px";
             }
             return style;
         },

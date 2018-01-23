@@ -1,7 +1,7 @@
 <template>
     <table cellspacing="0" cellpadding="0" border="0" :style="styleObject">
         <colgroup>
-            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, true)" v-show="column.show" :key="index">
+            <col v-for="(column, index) in columns" :width="setCellWidth(column)" v-show="column.show" :key="index">
         </colgroup>
         <thead>
             <tr>

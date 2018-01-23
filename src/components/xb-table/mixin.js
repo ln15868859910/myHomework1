@@ -15,16 +15,12 @@ export default {
                 }
             ];
         },
-        setCellWidth (column, index, top) {
+        setCellWidth (column) {
             let width = '';
             if (column.width) {
                 width = column.width;
             } else if (this.columnsWidth[column._index]) {
                 width = this.columnsWidth[column._index].width;
-            }
-            // when browser has scrollBar,set a width to resolve scroll position bug
-            if (column.fixed!=="left" && this.columns.length === index + 1 && top && this.$parent.hasScrollBar) {
-                width += this.$parent.scrollBarWidth;
             }
             if (width === '0') width = '';
             return width;
