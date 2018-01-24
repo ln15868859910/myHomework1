@@ -552,6 +552,7 @@ export default {
                     type:'control',
                     width:this.control.width || 60,
                     fixed:'right',
+                    align:'center',
                     handleArr:this.control.options
                 });
             }
