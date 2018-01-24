@@ -9,7 +9,7 @@
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
                 <div style="position:relative">
-                    <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header">
+                    <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" :style="centerHeaderStyle">
                         <table-head 
                         :styleObject="tableStyle" 
                         :columns="cloneColumns" 
@@ -26,7 +26,7 @@
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed && showHeader">
+                    <div :class="[prefixCls + '-fixed-right']" :style="fixedRightWrapStyle" v-if="isRightFixed && showHeader">
                         <table-head 
                         fixed="right" 
                         :styleObject="fixedRightTableStyle" 
@@ -38,6 +38,7 @@
                     <div :class="[prefixCls + '-showmore']" v-show="custumcols.length">
                         <Icon type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
+                    <div :class="[prefixCls + '-gutter']" :style="{width:scrollBarWidth+'px'}" v-if="hasScrollBar"></div>
                 </div>
             </div>
         </div>
@@ -67,7 +68,7 @@
                     </table-body>
                     </div>
                 </div>
-                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
+                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightWrapStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
                     <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedRightBody">
                     <table-body 
                     fixed="right" 
@@ -223,7 +224,16 @@ export default {
         tableStyle() {
             let style = {};
             if (this.tableWidth !== 0) {
-                let width = this.tableWidth;
+                let width = '';
+                if (this.bodyHeight === 0) {
+                    width = this.tableWidth;
+                } else {
+                    if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
+                        width = this.tableWidth;
+                    } else {
+                        width = this.tableWidth - this.scrollBarWidth;
+                    }
+                }
                 style.width = `${width}px`;
             }
             return style;
@@ -237,11 +247,31 @@ export default {
             style.width = `${width}px`;
             return style;
         },
+        centerHeaderStyle() {
+            let style = {};
+            if (this.hasScrollBar) {
+                let width = this.centerWidth - this.scrollBarWidth;
+                style.width = `${width}px`;
+            }
+            return style;
+        },
+        fixedRightWrapStyle() {
+            let style = {};
+            let width = 0;
+            this.rightFixedColumns.forEach((col) => {
+                if (col.show) width += col._width;
+            });
+            if (this.hasScrollBar) {
+                width += this.scrollBarWidth;
+            }
+            style.width = `${width}px`;
+            return style;
+        },
         fixedRightTableStyle() {
             let style = {};
             let width = 0;
             this.rightFixedColumns.forEach((col) => {
-                if(col.show) width += col._width;
+                if (col.show) width += col._width;
             });
             style.width = `${width}px`;
             return style;
@@ -251,9 +281,6 @@ export default {
             if (this.bodyHeight !== 0) {
                 const height = this.bodyHeight;
                 style.height = `${height}px`;
-            }
-            if (this.hasScrollBar) {
-                style.marginRight = -this.scrollBarWidth + "px";
             }
             return style;
         },
@@ -522,7 +549,7 @@ export default {
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
-                column.width= column.width || 80;
+                column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
                 column.show = ("show" in column) ? column.show : true;
                 if(column.custom){

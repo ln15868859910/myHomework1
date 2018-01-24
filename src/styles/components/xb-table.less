@@ -29,7 +29,7 @@
     &-headWrap {
         position: relative;
         background: @table-thead-bg;
-        z-index: 10;
+        z-index: 1000;
     }
     &-tableWrap{
         padding:0 20px;
@@ -132,12 +132,17 @@
             border-left: 1px solid @border-color-split;
             border-top: 1px solid @border-color-split;
         }
+        .@{table-prefix-cls2}-gutter{
+            border-top: 1px solid @border-color-split;
+            border-right: 1px solid @border-color-split;
+        }
         .@{table-prefix-cls2}-body table{
             border-left: 1px solid @border-color-split;
         }
         .@{table-prefix-cls2}-fixed table{
             border-left: 1px solid @border-color-split;
         }
+
     }
     &-cell {
         padding: 0px 10px;
@@ -168,26 +173,18 @@
             &-expanded {
                 transform: rotate(90deg);
             }
-        } // .@{table-prefix-cls2}-overflow-tip{
-        //     width:100%;
-        //     .ivu-tooltip-rel{
-        //         width:100%;
-        //         span{
-        //             display:inline-block;
-        //             vertical-align: middle;
-        //             width:100%;
-        //             overflow:hidden;
-        //             text-overflow: ellipsis;
-        //             white-space: nowrap;
-        //             word-break: break-all;
-        //             box-sizing: border-box;
-        //             line-height: 1;
-        //         }
-        //     }
-        // }
+        }
     }
     &-hidden {
         visibility: hidden;
+    }
+    &-gutter{
+        position:absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        border-bottom:1px solid @border-color-split;
+        background-color: @table-thead-bg;
     }
     th &-cell {
         display: inline-block; //position: relative;
@@ -233,6 +230,9 @@
     }
     &-fixed {
         overflow: hidden;
+        .@{table-prefix-cls2}-fixed-body-inner{
+            margin-right:-20px;
+        }
     }
     &-fixed,
     &-fixed-right {
@@ -242,7 +242,7 @@
     }
     &-showmore {
         position: absolute;
-        right: -5px;
+        right: 0;
         top: 12px;
         z-index: 10;
         background: @table-td-bg;
