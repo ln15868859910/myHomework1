@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table name="testtable" :columns="tableHeader" :data="listData" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
+            <Xb-Table name="testtable" :columns="tableHeader" :height="600" :control="control" :data="listData" border fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -119,13 +119,14 @@ export default {
                     key: 'StuinfoTagsName',
                     width: 120,
                     custom:true,
-                    show:true
+                    show:true,
+                    //  fixed: "right"
                 }, {
                     title: '关键词',
                     key: 'Marker',
                     width: 120,
                     custom:true,
-                                        fixed:"right",
+                                        // fixed:"right",
                     show:true
                 }, {
                     title: '跟进状态',
@@ -150,11 +151,15 @@ export default {
                     title: '咨询校区',
                     key: 'SchoolName',
                     width: 80,
-                    // fixed: "right"
+                    custom:true,
+                    show:true,
+                    fixed: "right"
                 }],
             listData: [],
-            control:[
-                {
+            control:{
+                isDrop:true,
+                width:100,
+                options:[{
                     key:'edit',
                     title:'编辑',
                     ifshow:function(cell,index){//是否显示
@@ -193,6 +198,7 @@ export default {
                         console.log(cell);
                     }
                 }]
+            }
         };
     },
     created() {

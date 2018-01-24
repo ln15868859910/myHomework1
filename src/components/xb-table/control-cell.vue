@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <template v-if="controldata.length<3">
+    <div :class="[prefixCls+'-control-body']">
+        <template v-if="!table.isControlDrop">
             <i-button :class="[prefixCls+'-control-btn']" type="text" v-for="(btn,bindex) in controldata" :key="bindex" :disabled="btn.disabled" @click="handlecontrolclick(btn)">
                 <span v-if="!btn.render">{{btn.title}}</span>
                 <Cell 
@@ -11,22 +11,13 @@
                    :render="btn.render"></Cell>
             </i-button>
         </template>
-        <template v-if="controldata.length>2">
-            <i-button :class="[prefixCls+'-control-btn']" type="text" :disabled="controldata[0].disabled" @click="handlecontrolclick(controldata[0])">
-                <span v-if="!controldata[0].render">{{controldata[0].title}}</span>
-                <Cell 
-                   v-else 
-                   :row="row" 
-                   :column="column" 
-                   :index="index" 
-                   :render="controldata[0].render"></Cell>
-            </i-button>
+        <template v-if="table.isControlDrop && controldata.length">
             <Dropdown @on-click="getDropData" @on-visible-change="dropVisibleChange" placement="bottom-end">
-                <i-button :class="[prefixCls+'-control-btn']" type="text">更多
+                <i-button :class="[prefixCls+'-control-btn']" type="text">操作
                     <Icon :type="showdrop?'arrow-up':'arrow-down'"></Icon>
                 </i-button>
                 <DropdownMenu slot="list">
-                    <DropdownItem v-for="(btn,bindex) in controldata" :key="bindex" v-show="bindex>0" :name="bindex" :disabled="btn.disabled">
+                    <DropdownItem v-for="(btn,bindex) in controldata" :key="bindex" :name="bindex" :disabled="btn.disabled">
                         <span v-if="!btn.render">{{btn.title}}</span>
                         <Cell 
                            v-else 
@@ -44,6 +35,7 @@
 <script>
 import Cell from './expand';
 import Dropdown from '../dropdown/dropdown.vue';
+import { findComponentUpward } from '../../utils/assist';
 export default {
     name: 'ControlCell',
     components: { Cell, Dropdown },
@@ -61,6 +53,7 @@ export default {
             prefixCls: 'spui-table',
             controldata: this.initcontrol(this.column, this.row, this.index),
             showdrop: false,
+            table: findComponentUpward(this, 'XbTable')
         };
     },
     methods: {

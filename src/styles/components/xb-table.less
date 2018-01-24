@@ -61,6 +61,14 @@
             border-bottom: none;
         }
     }
+    &-with-gutter{
+        .@{table-prefix-cls2}-header table th:last-child{
+            border-right:none;
+        }
+        .@{table-prefix-cls2}-fixed-right table th:last-child{
+            border-right:none
+        }
+    }
     th,
     td {
         min-width: 0;
@@ -142,7 +150,6 @@
         .@{table-prefix-cls2}-fixed table{
             border-left: 1px solid @border-color-split;
         }
-
     }
     &-cell {
         padding: 0px 10px;
@@ -274,8 +281,14 @@
         margin-left: 0px;
         margin-right: 0px;
     }
+    &-control-body button:first-child{
+        padding-left:0;
+    }
+    &-control-body button:last-child{
+        padding-left:0;
+    }
     &-control-btn {
-        padding: 0 10px;
+        padding: 0 5px;
         position: relative;
         background-color: transparent !important;
         &:hover {

@@ -104,7 +104,7 @@ let rowKey = 1;
 let columnKey = 1;
 
 export default {
-    name: 'Table',
+    name: 'XbTable',
     mixins: [Locale],
     components: { tableHead, tableBody, customPop, XbScrollbar },
     props: {
@@ -160,10 +160,14 @@ export default {
                 return '';
             }
         },
-        control:{//操作列
-            type: Array,
+        control: {//操作列
+            type: Object,
             default() {
-                return [];
+                return {
+                    isDrop: true,
+                    width: 60,
+                    options: []
+                }
             }
         },
         //默认排序参数
@@ -204,6 +208,12 @@ export default {
         };
     },
     computed: {
+        isControlDrop(){
+            if("isDrop" in this.control){
+                return this.control.isDrop;
+            }
+            return true;
+        },
         hasScrollBar() {
             return this.bodyHeight > 0 && this.bodyHeight < this.bodyRealHeight;
         },
@@ -217,7 +227,8 @@ export default {
                     [`${prefixCls}-border`]: this.border,
                     [`${prefixCls}-stripe`]: this.stripe,
                     [`${prefixCls}-hide`]: !this.ready,
-                    [`${prefixCls}-with-fixed-top`]: !!this.height
+                    [`${prefixCls}-with-fixed-top`]: !!this.height,
+                    [`${prefixCls}-with-gutter`]: this.hasScrollBar
                 }
             ];
         },
@@ -535,13 +546,13 @@ export default {
             let left = [];
             let right = [];
             let center = [];
-            if(this.control.length){
+            if(this.control.options.length){
                 columns.push({
                     title:'操作',
                     type:'control',
-                    width:this.control.length>1?140:80,
+                    width:this.control.width || 60,
                     fixed:'right',
-                    handleArr:this.control
+                    handleArr:this.control.options
                 });
             }
             //取持久化自定义隐藏数据 并重置现有数据

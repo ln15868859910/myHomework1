@@ -19,12 +19,7 @@
              type: [Boolean, String],
              default: false
          },
-         control:{
-             type:Array,
-             default(){
-                 return [];
-             }
-         }
+         control:Object
      },
      data() {
          return {
