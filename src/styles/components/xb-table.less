@@ -31,8 +31,8 @@
         background: @table-thead-bg;
         z-index: 1000;
     }
-    &-tableWrap{
-        padding:0 20px;
+    &-tableWrap {
+        padding: 0 20px;
     }
     &-head-tip {
         vertical-align: middle;
@@ -61,12 +61,12 @@
             border-bottom: none;
         }
     }
-    &-with-gutter{
-        .@{table-prefix-cls2}-header table th:last-child{
-            border-right:none;
+    &-with-gutter {
+        .@{table-prefix-cls2}-header table th:last-child {
+            border-right: none;
         }
-        .@{table-prefix-cls2}-fixed-right table th:last-child{
-            border-right:none
+        .@{table-prefix-cls2}-fixed-right table th:last-child {
+            border-right: none
         }
     }
     th,
@@ -76,7 +76,7 @@
         box-sizing: border-box;
         vertical-align: middle;
         border-bottom: 1px solid @border-color-split;
-        position:static;
+        position: static;
     }
     th {
         height: 50px;
@@ -85,6 +85,9 @@
         text-align: center;
         font-weight: normal;
         background-color: @table-thead-bg;
+    }
+    &-in-modal th{
+        background-color: @modal-table-thead-bg;
     }
     td {
         background-color: @table-td-bg;
@@ -109,9 +112,15 @@
             text-align: right;
         }
     }
-    & table {
+    table{
         width: auto;
         table-layout: fixed;
+        .ivu-tooltip-popper {
+            white-space: normal;
+            word-break: break-all;
+        }
+    }
+    &-not-modal table {
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
             .ivu-checkbox-wrapper {
@@ -123,12 +132,8 @@
         tr th:last-child .@{table-prefix-cls2}-cell {
             padding-right: 0;
         }
-        .ivu-tooltip-popper {
-            white-space: normal;
-            word-break: break-all;
-        }
     }
-    &-border-right{
+    &-border-right {
         border-right: 1px solid @border-color-split;
     }
     &-border {
@@ -136,24 +141,32 @@
         td {
             border-right: 1px solid @border-color-split;
         }
-        .@{table-prefix-cls2}-header table{
+        .@{table-prefix-cls2}-header table {
             border-left: 1px solid @border-color-split;
             border-top: 1px solid @border-color-split;
         }
-        .@{table-prefix-cls2}-gutter{
+        .@{table-prefix-cls2}-gutter {
             border-top: 1px solid @border-color-split;
             border-right: 1px solid @border-color-split;
         }
-        .@{table-prefix-cls2}-body table{
+        .@{table-prefix-cls2}-body table {
             border-left: 1px solid @border-color-split;
         }
-        .@{table-prefix-cls2}-fixed table{
+        .@{table-prefix-cls2}-fixed table {
             border-left: 1px solid @border-color-split;
         }
     }
+    &-in-modal{
+        .@{table-prefix-cls2}-body,.@{table-prefix-cls2}-tableHead,.@{table-prefix-cls2}-fixed,.@{table-prefix-cls2}-fixed-right {
+            border: 1px solid @border-color-split;
+        }
+        .@{table-prefix-cls2}-tableHead{
+            border-bottom:none;
+        }
+    }
     &-cell {
-        padding: 0px 10px;
-        margin:4px 0;
+        padding: 0px 5px;
+        margin: 4px 0;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -164,8 +177,8 @@
             word-break: normal;
             white-space: normal;
             text-overflow: ellipsis;
-            margin:10px 0;
-            line-height:22px;
+            margin: 10px 0;
+            line-height: 22px;
         }
         &-with-expand {
             padding: 0;
@@ -185,13 +198,16 @@
     &-hidden {
         visibility: hidden;
     }
-    &-gutter{
-        position:absolute;
-        top:0;
-        bottom:0;
-        right:0;
-        border-bottom:1px solid @border-color-split;
+    &-gutter {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        border-bottom: 1px solid @border-color-split;
         background-color: @table-thead-bg;
+    }
+    &-in-modal .@{table-prefix-cls2}-gutter{
+        background-color: @modal-table-thead-bg;
     }
     th &-cell {
         display: inline-block; //position: relative;
@@ -237,8 +253,8 @@
     }
     &-fixed {
         overflow: hidden;
-        .@{table-prefix-cls2}-fixed-body-inner{
-            margin-right:-20px;
+        .@{table-prefix-cls2}-fixed-body-inner {
+            margin-right: -20px;
         }
     }
     &-fixed,
@@ -281,11 +297,11 @@
         margin-left: 0px;
         margin-right: 0px;
     }
-    &-control-body button:first-child{
-        padding-left:0;
+    &-control-body button:first-child {
+        padding-left: 0;
     }
-    &-control-body button:last-child{
-        padding-left:0;
+    &-control-body button:last-child {
+        padding-right: 0;
     }
     &-control-btn {
         padding: 0 5px;
@@ -303,18 +319,22 @@
     }
     &-fixed {
         left: 0;
-        tr td:last-child .@{table-prefix-cls2}-cell,
-        tr th:last-child .@{table-prefix-cls2}-cell {
-            padding-right: 10px!important;
-        }
     }
     &-fixed-right {
         left: auto;
         right: 0;
         box-shadow: -2px 0 6px -2px rgba(0, 0, 0, 0.2);
+    }
+    &-not-modal .@{table-prefix-cls2}-fixed {
+        tr td:last-child .@{table-prefix-cls2}-cell,
+        tr th:last-child .@{table-prefix-cls2}-cell {
+            padding-right: 5px!important;
+        }
+    }
+    &-not-modal .@{table-prefix-cls2}-fixed-right {
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
-            padding-left: 10px!important;
+            padding-left: 5px!important;
         }
     }
     &-fixed-shadow {

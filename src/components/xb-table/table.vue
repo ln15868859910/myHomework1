@@ -8,7 +8,7 @@
                 <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" v-show="showVerticalBar" :view-style="{'float':'left'}">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
-                <div style="position:relative">
+                <div style="position:relative" :class="[prefixCls + '-tableHead']">
                     <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" :style="centerHeaderStyle">
                         <table-head 
                         :styleObject="tableStyle" 
@@ -179,7 +179,12 @@ export default {
                     order: ''
                 };
             }
-        }
+        },
+        //是否在弹窗中使用
+        modal: {
+            type: Boolean,
+            default: false
+        },
     },
     data() {
         return {
@@ -228,7 +233,9 @@ export default {
                     [`${prefixCls}-stripe`]: this.stripe,
                     [`${prefixCls}-hide`]: !this.ready,
                     [`${prefixCls}-with-fixed-top`]: !!this.height,
-                    [`${prefixCls}-with-gutter`]: this.hasScrollBar
+                    [`${prefixCls}-with-gutter`]: this.hasScrollBar,
+                    [`${prefixCls}-in-modal`]: this.modal,
+                    [`${prefixCls}-not-modal`]: !this.modal
                 }
             ];
         },
