@@ -437,13 +437,13 @@ export default {
                 this.pkey.split(',').forEach((k)=>{
                     keyarr.push(row[k]);
                 });
-                return keyarr.join('_');
+                return keyarr.join('_')||rowKey++;
             }else{
-                return row[this.pkey];
+                return row[this.pkey]||rowKey++;
             }
         },
         toggleSelect(row) {
-            var pky = this.getPkey(row);
+            var pky = row._pkey;
             var index = this.selectionPkeys.indexOf(pky);
             if (index === -1) {
                 this.selections.push(row);
@@ -467,7 +467,7 @@ export default {
                 if (data._disabled) {
                     continue;
                 } else {
-                    let pk = this.getPkey(data);
+                    let pk = data._pkey;
                     let index = this.selectionPkeys.indexOf(pk);
                     if(status){
                         if(index===-1){

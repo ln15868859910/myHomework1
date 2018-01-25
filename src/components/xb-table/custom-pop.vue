@@ -1,10 +1,12 @@
 <template>
     <Modal v-model="value" :closable="false" :mask-closable="false" class-name="vertical-center-modal" width="680" :class="[prefixCls+'-custom-pop']">
         <p slot="header"  style="text-align:center">
-            <span style="color: #fff;">自定义选项</span>
+            自定义选项
         </p>
         <div>
-            <p :class="[prefixCls+'-custom-subtitle']">自定义选项</p>
+            <p :class="[prefixCls+'-custom-subtitle']">
+                <Checkbox label="全选" @on-change="selectAll()" :class="[prefixCls+'-custom-select-all']">全选</Checkbox>
+            </p>
             <div :class="[prefixCls+'-custom-subcontent']">
                 <Checkbox-group v-model="showculumns">
                     <Checkbox v-for="(column,index) in data" :key="index"  :label="column.key" :class="[prefixCls+'-custom-columns']">{{column.title}}</Checkbox>
@@ -51,6 +53,11 @@
                 });
                 this.$emit('showcol',hidecol);
                 this.$emit('input',false);
+            },
+            selectAll(){
+                this.showculumns = this.data.map(col=>{
+                    return col.key;
+                });
             },
             cancel () {
                 this.$emit('input',false);
