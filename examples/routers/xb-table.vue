@@ -17,7 +17,7 @@
             </Xb-Table>
             <Modal v-model="table1" title="表格" width="860" :closable="false" :mask-closable="false" class-name="vertical-center-modal">
                 <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
-                    <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal></Xb-Table>
+                    <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow"></Xb-Table>
                 </div>
         </Modal>
     </div>
@@ -30,10 +30,9 @@ export default {
             table1:false,
             tableColumns1:[
                 {
-                    type: 'selection',
+                    type: 'radio',
                     width: 50,
-                    align:"left",
-                    triggerType:"row"
+                    align:"left"
                 }, {
                     title: '星标',
                     key: 'UserCollectionId',
@@ -253,6 +252,9 @@ export default {
         this.fetchData();
     },
     methods: {
+        getClickRow(data){
+            console.log(data);
+        },
         changeSingel(data){
 
         },

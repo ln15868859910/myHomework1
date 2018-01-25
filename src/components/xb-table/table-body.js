@@ -23,7 +23,8 @@
      },
      data() {
          return {
-             prefixCls: 'spui-table'
+             prefixCls: 'spui-table',
+             currentClickRow:-1
          }
      },
      render(h) {
@@ -60,6 +61,9 @@
                              },
                              mouseleave: ($event) => {
                                  that.handleMouseOut(rowIndex,$event)
+                             },
+                             click:($event)=>{
+                                 that.clickCurrentRow(rowIndex)
                              }
                          }
                      }, [
@@ -191,7 +195,11 @@
          },
          handleMouseOut(_index,event) {
              this.$parent.handleMouseOut(_index,event);
-         }
+         },
+         clickCurrentRow (_index) {
+            this.currentClickRow = _index;
+            this.$parent.clickCurrentRow(_index);
+        }
      },
      watch:{
            "$parent.currentHoverRow"(newVal, oldVal) {
@@ -206,6 +214,20 @@
             }
             if (newRow) {
                 addClass(newRow, `${this.prefixCls}-row-hover`);
+            }
+        },
+        currentClickRow(newVal, oldVal) {
+            const el = this.$el;
+            if (!el) return;
+            const tr = el.querySelector('tbody').children;
+            const rows = [].filter.call(tr, row => hasClass(row, `${this.prefixCls}-row`));
+            const oldRow = rows[oldVal];
+            const newRow = rows[newVal];
+            if (oldRow) {
+                removeClass(oldRow, `${this.prefixCls}-row-checked`);
+            }
+            if (newRow) {
+                addClass(newRow, `${this.prefixCls}-row-checked`);
             }
         }
      }

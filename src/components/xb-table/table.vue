@@ -209,7 +209,8 @@ export default {
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || 'desc',
             lastScrollTop:0,
-            currentHoverRow:-1
+            currentHoverRow:-1,
+            selectTriggerByRow:false
         };
     },
     computed: {
@@ -410,6 +411,13 @@ export default {
             this.currentHoverRow = -1;
             this.$emit('row-mouse-out', this.rebuildData[_index], event);
         },
+        clickCurrentRow(_index){
+            if(this.selectTriggerByRow){
+                var data=this.rebuildData[_index];
+                this.toggleSelect(data);
+            }
+            this.$emit('on-row-click', this.rebuildData[_index], _index);
+        },
         getSelections(){
             return this.selections;
         },
@@ -571,6 +579,9 @@ export default {
                 column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
                 column.show = ("show" in column) ? column.show : true;
+                if(column.type==="selection"){
+                    this.selectTriggerByRow=column.triggerType==="row";
+                }
                 if(column.custom){
                     if(storgedata.indexOf(column.key)>-1){
                         column.show = false;

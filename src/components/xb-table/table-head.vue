@@ -15,7 +15,7 @@
                             <Checkbox :value="isSelectAll" @on-change="selectAll"></Checkbox>
                         </template>
                         <template v-else>
-                            <span v-if="!column.renderHeader">{{ column.title || '#' }}</span>
+                            <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
                             <span :class="[prefixCls+'-head-tip']" v-if="column.tipContent">
                                 <Tooltip placement="top" :content="column.tipContent">
