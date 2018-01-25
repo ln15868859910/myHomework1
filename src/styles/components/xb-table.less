@@ -80,12 +80,11 @@
         vertical-align: middle;
         border-bottom: 1px solid @border-color-split;
         position: static;
+        text-align: left; 
     }
     th {
         height: 50px;
         white-space: nowrap;
-        overflow: hidden;
-        text-align: center;
         font-weight: normal;
         background-color: @table-thead-bg;
     }
@@ -94,7 +93,6 @@
     }
     td {
         background-color: @table-td-bg;
-        text-align: left; // transition: background-color @transition-time @ease-in-out;
         text-overflow: ellipsis;
         color: @table-font-color;
         .spui-table-cell {
@@ -104,6 +102,7 @@
             }
         }
     }
+    th&-column,
     td&-column {
         &-left {
             text-align: left;
@@ -123,6 +122,7 @@
             word-break: break-all;
         }
     }
+    table th + th:before{content: "";display: inline-block;border-left: 1px solid @border-color-split;width: 0;height:15px;vertical-align: middle;}
     &-not-modal table {
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
@@ -171,7 +171,7 @@
         }
     }
     &-cell {
-        padding: 0px 5px;
+        padding: 0px 10px;
         margin: 4px 0;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -345,13 +345,13 @@
     &-not-modal .@{table-prefix-cls2}-fixed {
         tr td:last-child .@{table-prefix-cls2}-cell,
         tr th:last-child .@{table-prefix-cls2}-cell {
-            padding-right: 5px!important;
+            padding-right: 10px!important;
         }
     }
     &-not-modal .@{table-prefix-cls2}-fixed-right {
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
-            padding-left: 5px!important;
+            padding-left: 10px!important;
         }
     }
     &-fixed-shadow {
