@@ -43,12 +43,12 @@
             </div>
         </div>
         <div :class="[prefixCls + '-bodywrap']" :style="bodyWrapStyle">
-            <div style="position:relative" ref="mainTable">
+            <div style="position:relative" ref="mainTable" :style="bodyStyle">
                 <div :class="[prefixCls + '-tip']" v-show="(!rebuildData || rebuildData.length === 0)">
                     <!--无数据样式slot-->
                     <slot name="emptyData"></slot>
                 </div>
-                <div :class="[prefixCls + '-body']" :style="bodyStyle" ref="centerBody" @scroll="handleBodyScroll" v-show="(rebuildData && rebuildData.length >0)">
+                <div :class="[prefixCls + '-body']" ref="centerBody" @scroll="handleBodyScroll" v-show="(rebuildData && rebuildData.length >0)">
                     <table-body 
                     ref="tbody" 
                     :styleObject="tableStyle" 
@@ -58,7 +58,7 @@
                     </table-body>
                 </div>
                 <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedBody">
+                    <div :class="[prefixCls + '-fixed-body-inner']" @scroll="handleBodyScroll" ref="fixedBody">
                     <table-body 
                     fixed="left" 
                     :styleObject="fixedTableStyle" 
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div :class="[prefixCls + '-fixed-right']" :style="fixedRightWrapStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedRightBody">
+                    <div :class="[prefixCls + '-fixed-body-inner']" @scroll="handleBodyScroll" ref="fixedRightBody">
                     <table-body 
                     fixed="right" 
                     :styleObject="fixedRightTableStyle" 

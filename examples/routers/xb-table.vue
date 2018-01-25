@@ -1,6 +1,7 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table name="testtable" :columns="tableHeader" :height="600" :control="control" :data="listData" border fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
+        <i-button type="primary" size="large" @click="table1 = true">弹窗</i-button>
+            <Xb-Table name="testtable" :columns="tableHeader" :height="600" :control="control" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
                 <div slot="header">
                     <div style="height:60px;background:#fff;padding:15px 20px;">
                         <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
@@ -14,6 +15,11 @@
                 </div>
                 <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
             </Xb-Table>
+            <Modal v-model="table1" title="表格" width="860" :closable="false" :mask-closable="false" class-name="vertical-center-modal">
+                <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
+                    <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal></Xb-Table>
+                </div>
+        </Modal>
     </div>
 </template>
 <script>
@@ -21,6 +27,48 @@ export default {
     data() {
         return {
             testcol:[],
+            table1:false,
+            tableColumns1:[
+                {
+                    type: 'selection',
+                    width: 50,
+                    align:"left",
+                    triggerType:"row"
+                }, {
+                    title: '星标',
+                    key: 'UserCollectionId',
+                    align:'center',
+                    width: 100,
+                    // fixed:"left",
+                    render: function (h, params) {
+                        return h('div', [
+                            h('Icon', {
+                                props: {
+                                    type: params.row.UserCollectionId === 0 ? 'star' : 'star-filled',
+                                    size: '20',
+                                    color: params.row.UserCollectionId === 0 ? "#eee" : "#f5a623"
+                                }
+                            })
+                        ]);
+                    }
+                },
+                {
+                    title: '姓名',
+                    key: 'StuName',
+                    width: 120,
+                    showOverflowTip:true
+                },
+                {
+                    title: '关键词',
+                    key: 'Marker',
+                    width: 120
+                },
+                {
+                    title: '意向课程',
+                    key: 'InterestClassListUi',
+                    width: 80,
+                }
+            ],
             tableHeader: [
                 {
                     type: 'selection',
@@ -434,9 +482,7 @@ export default {
                     id: bizModel.ThirdLessonClassId
                 });
             }
-            model.InterestClassListUi = _.map(model.InterestClassList, function (item) {
-                return item.name
-            }).join("/");
+            model.InterestClassListUi = "udhfuih";
             model.LastCommuContent = bizModel.LastCommuContent;
             model.StuinfoTags = bizModel.StuinfoTags;
             model.StuinfoTagsName = _.map(model.StuinfoTags, function (item) {

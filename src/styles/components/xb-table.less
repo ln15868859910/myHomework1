@@ -31,9 +31,6 @@
         background: @table-thead-bg;
         z-index: 1000;
     }
-    &-tableWrap {
-        padding: 0 20px;
-    }
     &-head-tip {
         vertical-align: middle;
         display: inline-block
@@ -46,11 +43,17 @@
         width: 100%;
     }
     &-body {
+        height:100%;
         overflow-y: auto;
         overflow-x: hidden; //position: relative;
     }
     &-bodywrap {
         position: relative;
+    }
+    &-not-modal .@{table-prefix-cls2}-tableWrap {
+        padding: 0 20px;
+    }
+    &-not-modal .@{table-prefix-cls2}-bodywrap{
         padding: 0 20px 20px 20px;
     }
     &-with-fixed-top&-with-footer {
@@ -247,6 +250,7 @@
         color: @dark-primary-color;
     }
     &-fixed-body-inner {
+        height:100%;
         overflow-y: auto;
         overflow-x: hidden;
         background-color: @table-td-bg;
