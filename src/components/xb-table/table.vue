@@ -440,9 +440,6 @@ export default {
             this.$emit('row-mouse-out', this.rebuildData[_index], event);
         },
         setCurrentRow(_index,data){
-            if(this.modal){
-                this.selectTriggerByRow = true; 
-            }
             this.currentClickRow = _index;
             this.clickCurrentRow(data);
         },
