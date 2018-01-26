@@ -554,12 +554,11 @@ export default {
             });
         },
         makeData() {
-            let data = deepCopy(this.data);
+            let data = this.data.slice(0);
             data.forEach((row, index) => {
                 row._index = index;
                 row._rowKey = rowKey++;
                 row._pkey = this.getPkey(row);   //数据唯一k
-                row._hover = false;
                 row._disabled = row._disabled || false;
                 row._expanded = row._expanded || false;
                 if(this.selectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1){//默认值处理
