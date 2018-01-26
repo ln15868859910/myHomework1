@@ -80,7 +80,7 @@
         vertical-align: middle;
         border-bottom: 1px solid @border-color-split;
         position: static;
-        text-align: left; 
+        text-align: left;
     }
     th {
         height: 50px;
@@ -90,6 +90,7 @@
     }
     &-in-modal th {
         background-color: @modal-table-thead-bg;
+        height: 40px;
     }
     td {
         background-color: @table-td-bg;
@@ -122,7 +123,14 @@
             word-break: break-all;
         }
     }
-    table th + th:before{content: "";display: inline-block;border-left: 1px solid @border-color-split;width: 0;height:15px;vertical-align: middle;}
+    table th+th:before {
+        content: "";
+        display: inline-block;
+        border-left: 1px solid @border-color-split;
+        width: 0;
+        height: 15px;
+        vertical-align: middle;
+    }
     &-not-modal table {
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
@@ -205,11 +213,11 @@
         .ivu-icon-checkmark {
             color: @primary-color;
             margin-left: 10px;
-            display:none;
+            display: none;
         }
     }
-    &-row-checked .@{table-prefix-cls2}-radio-box .ivu-icon-checkmark{
-        display:inline-block;
+    &-row-checked .@{table-prefix-cls2}-radio-box .ivu-icon-checkmark {
+        display: inline-block;
     }
     &-hidden {
         visibility: hidden;
@@ -299,12 +307,12 @@
         .ivu-modal-body {
             padding: 20px;
         }
-        .ivu-modal-footer{
+        .ivu-modal-footer {
             padding: 0 20px;
         }
     }
-    &-custom-select-all{
-        margin:0;
+    &-custom-select-all {
+        margin: 0;
     }
     &-custom-subtitle {
         text-align: left;
