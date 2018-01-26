@@ -592,7 +592,7 @@ export default {
             });
         },
         makeData() {
-            let data = this.data.slice(0);
+            let data = deepCopy(this.data);
             data.forEach((row, index) => {
                 row._index = index;
                 row._rowKey = rowKey++;
@@ -640,7 +640,7 @@ export default {
                     type:'control',
                     width:this.control.width || 60,
                     fixed:'right',
-                    align:'center',
+                    align:'left',
                     handleArr:this.control.options
                 });
             }
