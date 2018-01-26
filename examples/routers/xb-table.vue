@@ -39,7 +39,7 @@ export default {
             table1:false,
             tableColumns1:[
                 {
-                    type: 'radio',
+                    type: 'selection',
                     width: 50,
                     align:"left"
                 }, {

@@ -222,6 +222,10 @@ const router = new VueRouter({
         {
             path: '/xbTable',
             component: require('./routers/xb-table.vue')
+        },
+        {
+            path: '/xbScroll',
+            component: require('./routers/xb-scroll.vue')
         }
     ]
 });
