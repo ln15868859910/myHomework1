@@ -1,49 +1,7 @@
 /**
  * 滚动锚点定位
  */
-function countHeight(el) {
-    var height = getscrollTop();
-    var totalHeigth = getContentHeight(document.body);
-    var screenHeight = getViewportHeight(document.body);
-
-    var current = -1;
-    var scrollH = totalHeigth - screenHeight;
-    var offsettop = el.offsetTop;
-    var offsetheight = el.offsetHeight;
-
-    if (height >= scrollH * offsettop / totalHeigth &&height <= scrollH * (offsettop+offsetheight) / totalHeigth){
-            return true;
-    }
-    return false;
-}
-function scrollTop(offsetTop) {
-    document.documentElement.scrollTop = offsetTop;
-    document.body.scrollTop = offsetTop;
-}
-function getViewportHeight(element) {
-    if (element === document.body) {
-        return window.innerHeight || document.documentElement.clientHeight;
-    } else {
-        return element.clientHeight;
-    }
-}
-
-function getContentHeight(element) {
-    if (element === document.body) {
-        return Math.max(
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.offsetHeight,
-        document.documentElement.clientHeight
-        );
-    } else {
-        return element.scrollHeight;
-    }
-}
-function getscrollTop() {
-    return window.pageYOffset || document.documentElement.scrollTop;
-}
+import { countHeight } from './../utils/scroll';
 
 export default {
     bind (el, binding, vnode) {

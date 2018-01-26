@@ -2,22 +2,22 @@
  * 滚动锚点定位
  */
 
-function scrollTop(offsetTop) {
-    document.documentElement.scrollTop = offsetTop;
-    document.body.scrollTop = offsetTop;
-}
+import { scrollto } from './../utils/scroll';
 export default {
     bind (el, binding, vnode) {
         el.setAttribute("spui-anchor","anchor");
         el.setAttribute("spui-anchor-value",binding.value);
         function clickHandler (e) {
             //获取目标节点
+            if(el.classList.contains("current")){
+                return;
+            }
             document.querySelectorAll("[spui-anchor='anchor']").forEach(dom=>{
                 dom.classList.remove("current");
             })
             el.classList.add("current");
             var targetNode = document.querySelectorAll("[spui-target='"+binding.value+"']")[0];
-            scrollTop(targetNode.offsetTop);
+            scrollto(targetNode.offsetTop);
         }
         el.__vueClickOutside__ = clickHandler;
         el.addEventListener('click', clickHandler);
