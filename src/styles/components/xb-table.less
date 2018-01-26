@@ -104,12 +104,6 @@
         background-color: @table-td-bg;
         text-overflow: ellipsis;
         color: @table-font-color;
-        .spui-table-cell {
-            .ivu-dropdown-item:hover {
-                background: @primary-color;
-                color: #fff;
-            }
-        }
     }
     th&-column,
     td&-column {
@@ -345,6 +339,10 @@
     }
     &-control-body button:last-child {
         padding-right: 0;
+    }
+    &-control-body .ivu-dropdown-item:hover {
+        background: @primary-color;
+        color: #fff;
     }
     &-control-btn {
         padding: 0 5px;
