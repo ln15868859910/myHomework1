@@ -71,6 +71,9 @@
         .@{table-prefix-cls2}-fixed-right table th:last-child {
             border-right: none
         }
+        .@{table-prefix-cls2}-bodywrap .@{table-prefix-cls2}-fixed{
+        overflow: hidden;
+        }
     }
     th,
     td {
@@ -284,7 +287,6 @@
         background-color: @table-td-bg;
     }
     &-fixed {
-        overflow: hidden;
         .@{table-prefix-cls2}-fixed-body-inner {
             margin-right: -20px;
         }
