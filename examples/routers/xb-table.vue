@@ -119,6 +119,18 @@ export default {
                     tipContent:'联系电话可通过学员应用下的权限点进行全显/隐藏控制',
                     canedit:true,
                     type:'input',
+                    validate:function(oldobj,newval){
+                        if(newval.length>11){
+                            alert("最长只能输入11位");
+                            oldobj['TelPhoneUi'] = oldobj['TelPhoneUi'];
+                            return false;
+                        }else if(newval.length<8){
+                            alert("至少输入8位");
+                            oldobj['TelPhoneUi'] = oldobj['TelPhoneUi'];
+                            return false;
+                        }
+                        return true;
+                    },
                     callback:function(oldobj,newval){
 
                         oldobj['TelPhoneUi'] = newval;

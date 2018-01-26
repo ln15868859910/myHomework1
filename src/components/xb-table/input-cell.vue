@@ -47,10 +47,13 @@ export default {
         },
         handleblur(){
             //是否允许批量编辑 允许则跳过  
-            this.$refs.input.blur();
             if(this.column.validate){
-                this.column.validate(this.row,this.editvalue);
+                if(!this.column.validate(this.row,this.editvalue)){
+                    this.handleinput();
+                    return;
+                }
             }
+            this.$refs.input.blur();
             this.edittag = false;
             //离焦后是否立刻保存？ 
             if(this.column.callback){
