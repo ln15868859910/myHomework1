@@ -2,6 +2,7 @@
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
         <i-button type="primary" size="large" @click="table1 = true">弹窗</i-button>
         <i-button type="primary" size="large" @click="fetchnextData()">请求数据</i-button>
+        <i-button type="primary" size="large" @click="deleteall()">清空已选</i-button>
         <div>
             <div v-for="(item) in selection">{{item._pkey}}  <i-button type="primary" size="large" @click="deletethis(item)">删除</i-button> </div>
         </div>
@@ -601,11 +602,14 @@ export default {
             }
             return interest;
         },
-        deletethis: function(item) {
-            this.$refs.table.selectTriggerByRow = true;
-            //只能处理单页数据
-            this.$refs.table.clickCurrentRow(item._index);
-            this.$refs.table.selectTriggerByRow = false;
+        deletethis: function(item) {//外部删除某一项 用唯一数据
+            this.$refs.table.changeByitem(item);
+        },
+        deletethisbykey: function(item) {//外部删除某一项 用唯一ID
+            this.$refs.table.changeBypKey(item);
+        },
+        deleteall: function() { //清空选项
+            this.$refs.table.clearSelection();
         },
         formatTel: function (tel, isHide) { //*电话号码
             if (!tel) {

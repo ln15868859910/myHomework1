@@ -365,7 +365,17 @@ export default {
             this.resetCustomShow(data);
             this.setLocalData(data);
             this.handleResize();
+            this.changeCustomdata(data);
             this.$emit('on-custom-change', data);
+        },
+        changeCustomdata(data){
+            this.custumcols.forEach((item)=>{
+                if(data.indexOf(item.key)>-1){
+                    item.show = false;
+                }else{
+                    item.show = true;
+                }
+            });
         },
         resetCustomShow(data){
             this.cloneColumns.forEach((column, index) => {
@@ -427,6 +437,21 @@ export default {
                 this.toggleSelect(data);
             }
             this.$emit('on-row-click', data);
+        },
+        changeByitem(data){
+            this.selectTriggerByRow = true;
+            this.clickCurrentRow(data);
+            this.selectTriggerByRow = false;
+        },
+        changeBypKey(pkey){
+            this.selectTriggerByRow = true;
+            this.clickCurrentRow({_pkey:pkey});
+            this.selectTriggerByRow = false;
+        },
+        clearSelection(){
+            this.selectionPkeys = [];
+            this.selections = [];
+            this.$emit('on-selection-change', this.selections);
         },
         getSelections(){
             return this.selections;
