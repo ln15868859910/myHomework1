@@ -5,7 +5,7 @@
         </p>
         <div>
             <p :class="[prefixCls+'-custom-subtitle']">
-                <Checkbox label="全选" @on-change="selectAll()" :class="[prefixCls+'-custom-select-all']">全选</Checkbox>
+                <Checkbox label="全选" v-model="selectalltag" @on-change="selectAll()" :class="[prefixCls+'-custom-select-all']">全选</Checkbox>
             </p>
             <div :class="[prefixCls+'-custom-subcontent']">
                 <Checkbox-group v-model="showculumns">
@@ -38,6 +38,7 @@
             return {
                 prefixCls: 'spui-table',
                 culumns: false,
+                selectalltag:false,
                 showculumns:this.getshowcol()
             };
         },
@@ -55,9 +56,14 @@
                 this.$emit('input',false);
             },
             selectAll(){
-                this.showculumns = this.data.map(col=>{
-                    return col.key;
-                });
+                if(this.selectalltag){
+                    this.showculumns = this.data.map(col=>{
+                        return col.key;
+                    });
+                }else{
+                    this.showculumns = [];
+                }
+               
             },
             cancel () {
                 this.$emit('input',false);
@@ -76,6 +82,17 @@
             data: {
                 handler() {
                     this.showculumns=this.getshowcol();
+                },
+                deep: true
+            },
+            value(val){
+                if(val){
+                    this.showculumns=this.getshowcol();
+                }
+            },
+            showculumns:{
+                handler() {
+                    this.selectalltag = this.showculumns.length === this.data.length;
                 },
                 deep: true
             }
