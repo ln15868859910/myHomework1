@@ -258,7 +258,7 @@ export default {
                 if (this.bodyHeight === 0) {
                     width = this.tableWidth;
                 } else {
-                    if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
+                    if (this.hasScrollBar) {
                         width = this.tableWidth - this.scrollBarWidth;
                     } else {
                         width = this.tableWidth;

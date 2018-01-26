@@ -131,6 +131,9 @@
         height: 15px;
         vertical-align: middle;
     }
+    &-in-modal table th+th:before {
+        border-left: 1px solid @border-color-base;
+    }
     &-not-modal table {
         tr td:first-child .@{table-prefix-cls2}-cell,
         tr th:first-child .@{table-prefix-cls2}-cell {
@@ -168,14 +171,13 @@
         }
     }
     &-in-modal {
-        .@{table-prefix-cls2}-body,
-        .@{table-prefix-cls2}-tableHead,
-        .@{table-prefix-cls2}-fixed,
-        .@{table-prefix-cls2}-fixed-right {
+        .@{table-prefix-cls2}-tableHead{
             border: 1px solid @border-color-split;
+            border-bottom:none;
         }
-        .@{table-prefix-cls2}-tableHead {
-            border-bottom: none;
+        .@{table-prefix-cls2}-bodywrap {
+            border: 1px solid @border-color-split;
+            border-top:none;
         }
     }
     &-cell {
@@ -218,6 +220,9 @@
     }
     &-row-checked .@{table-prefix-cls2}-radio-box .ivu-icon-checkmark {
         display: inline-block;
+    }
+    &-row-checked td {
+        background-color: @table-td-hover-bg;
     }
     &-hidden {
         visibility: hidden;
