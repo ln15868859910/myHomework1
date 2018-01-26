@@ -1,25 +1,32 @@
 /**
  * 滚动锚点定位
  */
+
+function scrollTop(offsetTop) {
+    document.documentElement.scrollTop = offsetTop;
+    document.body.scrollTop = offsetTop;
+}
 export default {
     bind (el, binding, vnode) {
-        function scrollHandler (e) {
-            if (el.contains(e.target)) {
-                return false;
-            }
-            if (binding.expression) {
-                // binding.value(e);
-                console.log(binding.expression);
-            }
+        el.setAttribute("spui-anchor","anchor");
+        el.setAttribute("spui-anchor-value",binding.value);
+        function clickHandler (e) {
+            //获取目标节点
+            document.querySelectorAll("[spui-anchor='anchor']").forEach(dom=>{
+                dom.classList.remove("current");
+            })
+            el.classList.add("current");
+            var targetNode = document.querySelectorAll("[spui-target='"+binding.value+"']")[0];
+            scrollTop(targetNode.offsetTop);
         }
-        el.__vueClickOutside__ = scrollHandler;
-        document.addEventListener('scroll', scrollHandler);
+        el.__vueClickOutside__ = clickHandler;
+        el.addEventListener('click', clickHandler);
     },
     update () {
 
     },
     unbind (el, binding) {
-        document.removeEventListener('click', el.__vueClickOutside__);
+        document.removeEventListener('click', el.__vueClickOutside__);  
         delete el.__vueClickOutside__;
     }
 };

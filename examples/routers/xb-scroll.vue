@@ -3,51 +3,63 @@
 <template>
     <div style="margin-left:150px;">
         <h3>xb-TransFer</h3>
-        <anchorscroll>
-            <button v-scrollanchor="{type:'anchor',target:'last'}" >最后一个</button>
-            <div slot="sidetab">
-
+        <div  style="flex:1;-webkit-box-flex: 1;htight:100;">
+            <div class="scroll">
+                <ul>
+                    <li v-for="(item,index) in menus2" :class="current==item?'current':''" v-scrollanchor="item" class="scrolltab" >
+                        {{item}}
+                        <Icon type="arrow-right" class="scrollicon"></Icon>
+                    </li>
+                </ul>
             </div>
-            <section class="cate-list" slot="content">
-                <div  class="cate-item">
-                    <div  :style="getClass()"> AAAAA</div>
-                </div>
-                <div  class="cate-item">
-                    <div  :style="getClass()"> AAAAA</div>
-                </div>
-                <div  class="cate-item">
-                    <div  :style="getClass()"> AAAAA</div>
-                </div>
-                <div  class="cate-item">
-                    <div  :style="getClass()"> AAAAA</div>
-                </div>
-                <div  class="cate-item">
-                    <div  :style="getClass()"> AAAAA</div>
-                </div>
-                <div  class="cate-item" v-scrollanchor="" name="last">
-                    <div  :style="getClass()"> AAAAA</div>
-                </div>
-            </section>
-        </anchorscroll>
+        </div>
+        
+        <section class="cate-list" slot="content">
+            <div  class="cate-item" v-scrolltarget="menus2[0]">
+                <div  :style="getClass()"> AAAAA</div>
+            </div>
+            <div  class="cate-item" v-scrolltarget="menus2[1]">
+                <div  :style="getClass()"> AAAAA</div>
+            </div>
+            <div  class="cate-item" v-scrolltarget="menus2[2]">
+                <div  :style="getClass()"> AAAAA</div>
+            </div>
+            <div  class="cate-item" v-scrolltarget="menus2[3]">
+                <div  :style="getClass()"> AAAAA</div>
+            </div>
+            <div  class="cate-item" v-scrolltarget="menus2[4]">
+                <div  :style="getClass()"> AAAAA</div>
+            </div>
+            <div class="cate-item" v-scrolltarget="menus2[5]">
+                <div  :style="getClass()"> AAAAA</div>
+            </div>
+        </section>
     </div>
 </template>
 <script>
-import anchorscroll from './../../src/b-component/anchorscroll/anchorscroll';
+// import anchorscroll from './../../src/b-component/anchorscroll/anchorscroll';
 import scrollanchor from './../../src/directives/scrollanchor';
+import scrolltarget from './../../src/directives/scrolltarget';
 export default {
     components:{
-        anchorscroll
+        // anchorscroll
     },
-    directives:{scrollanchor},
+    directives:{scrollanchor,scrolltarget},
     data() {
         return {
-            message:''
+            menus2: ['name1', 'name2', 'name3', 'name4', 'name5', 'name6'],
+            message:'',
+            current:'name1',
+            scrollname:'last'
         };
     },
     created() {
         
     },
     methods: {
+        setCurrent(name){
+            this.current = name;
+        },
         getClass() {
             var h = Math.random(10) * 400;
             return {
@@ -64,5 +76,37 @@ export default {
 <style>
 body{
     background:#dfe3ed;
+}
+.scroll {
+  width: 152px;
+  height: 800px;
+  padding: 10px;
+  top: 50px;
+  left: 10px;
+  position: fixed;
+  background: #fff;
+}
+.scrolltab{
+    height: 40px;
+    width: 130px;
+    font-size: 14px;
+    line-height: 40px;
+    text-align: center;
+    color:#000;
+    position: relative;
+}
+.scrollicon{
+    display: none;
+}
+.scrolltab.current{
+    background: #4A90E2;
+    border-radius: 20px;
+    color:#fff;
+}
+.scrolltab.current .scrollicon{
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 13px;
 }
 </style>
