@@ -102,7 +102,7 @@
                 this.$parent.$parent.toggleSelect(this.row);
             },
             toggleExpand() {
-                this.$parent.$parent.toggleExpand(this.naturalIndex);
+                this.$parent.$parent.toggleExpand(this.index);
             },
             //判断是否溢出
             setToolTipVisible() {

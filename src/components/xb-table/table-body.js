@@ -90,14 +90,14 @@
                                              index: row._index,
                                              checked: that.rowChecked(rowIndex),
                                              disabled: that.rowDisabled(rowIndex),
-                                             expanded: that.rowExpanded(rowIndex),
+                                             expanded: that.rowExpanded(row._index),
                                          }
                                      })
                                  ])
                              }
                          })
                      ]),
-                     that.rowExpanded(rowIndex)?
+                     that.rowExpanded(row._index)?
                          h('tr', {
                              class: {
                                  [that.prefixCls + '-expanded-hidden']: that.fixed
@@ -188,7 +188,7 @@
              return this.data[_index]._disabled;
          },
          rowExpanded(_index) {
-             return this.data[_index] && this.data[_index]._expanded;
+             return this.$parent.expandArr[_index] && this.$parent.expandArr[_index].expanded;
          },
          handleMouseIn(_index,event) {
              this.$parent.handleMouseIn(_index,event);
