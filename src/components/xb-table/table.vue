@@ -216,6 +216,7 @@ export default {
             fixedColumnsBodyRowsHeight: [],
             selections: [],
             selectionPkeys: [],
+            propselectedPkeys:[],
             showmoretag:false,
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || 'desc',
@@ -456,6 +457,9 @@ export default {
         getSelections(){
             return this.selections;
         },
+        getpropSelectedData(){
+            return this.selectedPkeys.slice(0);
+        },
         getPkey(row){
             if(Array.isArray(this.pkey)){
                 let keyarr = [];
@@ -586,11 +590,12 @@ export default {
                 row._pkey = this.getPkey(row);   //数据唯一k
                 row._disabled = row._disabled || false;
                 row._expanded = row._expanded || false;
-                if(this.selectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1){//默认值处理
+                if(this.propselectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1){//默认值处理
                     this.selections.push(row);
                     this.selectionPkeys.push(row._pkey);
                 }
             });
+            this.propselectedPkeys = [];
             return data;
         },
         makeDataWithSort() {
@@ -678,6 +683,7 @@ export default {
         }
     },
     created() {
+        this.propselectedPkeys = this.getpropSelectedData();
         this.makeColumns();
         this.rebuildData = this.makeDataWithSort();
         this.throttleLayout= throttle(this.doLayout,200);
