@@ -125,11 +125,13 @@
     }
     table th+th:before {
         content: "";
-        display: inline-block;
+        display: block;
         border-left: 1px solid @border-color-split;
         width: 0;
         height: 15px;
-        vertical-align: middle;
+        float:left;
+        transform: translate(0, 50%);
+        -webkit-transform: translate(0, 50%);
     }
     &-in-modal table th+th:before {
         border-left: 1px solid @border-color-base;
@@ -171,13 +173,13 @@
         }
     }
     &-in-modal {
-        .@{table-prefix-cls2}-tableHead{
+        .@{table-prefix-cls2}-tableHead {
             border: 1px solid @border-color-split;
-            border-bottom:none;
+            border-bottom: none;
         }
         .@{table-prefix-cls2}-bodywrap {
             border: 1px solid @border-color-split;
-            border-top:none;
+            border-top: none;
         }
     }
     &-cell {
