@@ -342,6 +342,9 @@ export default {
             if (this.addFixedStyle) {
                 style.marginTop = this.$refs.fixedHeaderEle.getBoundingClientRect().height + 'px';
             }
+            if (!this.rebuildData.length) {
+                style.paddingBottom = 0;
+            }
             return style;
         }
     },
@@ -741,6 +744,9 @@ export default {
         },
         height() {
             this.fixedHeader();
+        },
+        addFixedStyle(val) {
+            this.$emit('on-fixed-change', val);
         }
     }
 };
