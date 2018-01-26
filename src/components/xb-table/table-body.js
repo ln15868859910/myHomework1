@@ -73,7 +73,7 @@
                              } = that.getSpan(row, column, rowIndex, columnIndex);
                              if (rowspan || colspan) {
                                  return h('td', {
-                                     class: that.alignCls(column, row,rowspan),
+                                     class: that.alignCls(column, false,row),
                                      style: !column.show?'display:none':'display:table-cell',
                                      domProps: {
                                          rowSpan: rowspan,
