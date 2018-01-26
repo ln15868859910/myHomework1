@@ -224,7 +224,8 @@ export default {
             currentHoverRow:-1,
             currentClickRow:-1,
             selectTriggerByRow:false,
-            isRadio:false
+            isRadio:false,
+            expandArr:[]
         };
     },
     computed: {
@@ -490,10 +491,11 @@ export default {
             this.$emit('on-select', this.selections, row);
             this.$emit('on-selection-change', this.selections);
         },
-        toggleExpand(_index) {
-            let data = this.rebuildData[_index];
-            const status = !data._expanded;
-            data._expanded = status;
+        toggleExpand(index) {
+            let data = this.data[index];
+            let expandData = this.expandArr[index];
+            const status = !expandData.expanded;
+            expandData.expanded = status;
             this.$emit('on-expand', JSON.parse(JSON.stringify(data)), status);
         },
         selectAll(status) {
@@ -589,7 +591,8 @@ export default {
             });
         },
         makeData() {
-            let data = deepCopy(this.data);
+            let data = this.data.slice(0);
+            this.expandArr=[];
             data.forEach((row, index) => {
                 row._index = index;
                 row._rowKey = rowKey++;
@@ -600,6 +603,9 @@ export default {
                     this.selections.push(row);
                     this.selectionPkeys.push(row._pkey);
                 }
+                this.expandArr.push({
+                    expanded: row._expanded
+                });
             });
             this.propselectedPkeys = [];
             return data;
