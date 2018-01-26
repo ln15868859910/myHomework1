@@ -222,7 +222,9 @@ export default {
             sortOrder: this.defaultSort.order || 'desc',
             lastScrollTop:0,
             currentHoverRow:-1,
-            selectTriggerByRow:false
+            currentClickRow:-1,
+            selectTriggerByRow:false,
+            isRadio:false
         };
     },
     computed: {
@@ -432,6 +434,10 @@ export default {
         handleMouseOut(_index, event) {
             this.currentHoverRow = -1;
             this.$emit('row-mouse-out', this.rebuildData[_index], event);
+        },
+        setCurrentRow(_index,data){
+            this.currentClickRow = _index;
+            this.clickCurrentRow(data);
         },
         clickCurrentRow(data){
             if(this.selectTriggerByRow){
@@ -643,8 +649,11 @@ export default {
                 column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
                 column.show = ("show" in column) ? column.show : true;
-                if(column.type==="selection"){
-                    this.selectTriggerByRow=column.triggerType==="row";
+                if (column.type === "selection") {
+                    this.selectTriggerByRow = column.triggerType === "row";
+                }
+                if (column.type === "radio") {
+                    this.isRadio = true;
                 }
                 if(column.custom){
                     if(storgedata.indexOf(column.key)>-1){

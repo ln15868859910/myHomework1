@@ -23,8 +23,7 @@
      },
      data() {
          return {
-             prefixCls: 'spui-table',
-             currentClickRow:-1
+             prefixCls: 'spui-table'
          }
      },
      render(h) {
@@ -198,8 +197,7 @@
              this.$parent.handleMouseOut(_index,event);
          },
          clickCurrentRow (_index,row) {
-             this.currentClickRow = _index;
-             this.$parent.clickCurrentRow(row);
+             this.$parent.setCurrentRow(_index,row);
         }
      },
      watch:{
@@ -217,7 +215,10 @@
                 addClass(newRow, `${this.prefixCls}-row-hover`);
             }
         },
-        currentClickRow(newVal, oldVal) {
+        "$parent.currentClickRow"(newVal, oldVal) {
+            if(!this.$parent.isRadio){
+                return;
+            }
             const el = this.$el;
             if (!el) return;
             const tr = el.querySelector('tbody').children;
