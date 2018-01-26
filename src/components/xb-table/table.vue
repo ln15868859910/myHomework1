@@ -114,6 +114,16 @@ export default {
                 return [];
             }
         },
+        pkey:{
+            type:String|Array,
+            default:'Id'
+        },
+        selectedPkeys:{
+            type:Array,
+            default() {
+                return [];
+            }
+        },
         name:String,
         columns: {
             type: Array,
@@ -205,6 +215,7 @@ export default {
             scrollBarWidth: getScrollBarSize(),
             fixedColumnsBodyRowsHeight: [],
             selections: [],
+            selectionPkeys: [],
             showmoretag:false,
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || 'desc',
@@ -411,26 +422,35 @@ export default {
             this.currentHoverRow = -1;
             this.$emit('row-mouse-out', this.rebuildData[_index], event);
         },
-        clickCurrentRow(_index){
+        clickCurrentRow(data){
             if(this.selectTriggerByRow){
-                var data=this.rebuildData[_index];
                 this.toggleSelect(data);
             }
-            this.$emit('on-row-click', this.rebuildData[_index], _index);
+            this.$emit('on-row-click', data);
         },
         getSelections(){
             return this.selections;
         },
-        toggleSelect(row) {
-            row._checked = !row._checked;
-            var index = this.selections.indexOf(row);
-            if (row._checked) {
-                if (index === -1) {
-                    this.selections.push(row);
-                }
+        getPkey(row){
+            if(Array.isArray(this.pkey)){
+                let keyarr = [];
+                this.pkey.split(',').forEach((k)=>{
+                    keyarr.push(row[k]);
+                });
+                return keyarr.join('_')||rowKey++;
+            }else{
+                return row[this.pkey]||rowKey++;
             }
-            else {
+        },
+        toggleSelect(row) {
+            var pky = row._pkey;
+            var index = this.selectionPkeys.indexOf(pky);
+            if (index === -1) {
+                this.selections.push(row);
+                this.selectionPkeys.push(pky);
+            }else {
                 this.selections.splice(index, 1);
+                this.selectionPkeys.splice(index, 1);
             }
             this.$emit('on-select', this.selections, row);
             this.$emit('on-selection-change', this.selections);
@@ -447,10 +467,21 @@ export default {
                 if (data._disabled) {
                     continue;
                 } else {
-                    data._checked = status;
+                    let pk = data._pkey;
+                    let index = this.selectionPkeys.indexOf(pk);
+                    if(status){
+                        if(index===-1){
+                            this.selectionPkeys.push(pk);
+                            this.selections.push(data);
+                        }
+                    }else{
+                        if(index!==-1){
+                            this.selectionPkeys.splice(index,1);
+                            this.selections.splice(index,1);
+                        }
+                    }
                 }
             }
-            this.selections = status ? deepCopy(this.rebuildData).filter(row=>row._checked) : [];
             if (status) {
                 this.$emit('on-select-all', this.selections);
             }
@@ -527,12 +558,13 @@ export default {
             data.forEach((row, index) => {
                 row._index = index;
                 row._rowKey = rowKey++;
+                row._pkey = this.getPkey(row);   //数据唯一k
                 row._hover = false;
-                row._checked = row._checked || false;
                 row._disabled = row._disabled || false;
                 row._expanded = row._expanded || false;
-                if(row._checked){
+                if(this.selectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1){//默认值处理
                     this.selections.push(row);
+                    this.selectionPkeys.push(row._pkey);
                 }
             });
             return data;
@@ -552,6 +584,9 @@ export default {
             }
             if (!isCustom) {
                 data = this.sortData(data, this.sortOrder, sortIndex);
+            }
+            if(this.selectedPkeys.length){
+                this.$emit('on-selection-change', this.selections);
             }
             return data;
         },

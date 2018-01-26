@@ -63,7 +63,7 @@
                                  that.handleMouseOut(rowIndex,$event)
                              },
                              click:($event)=>{
-                                 that.clickCurrentRow(rowIndex)
+                                 that.clickCurrentRow(rowIndex,row)
                              }
                          }
                      }, [
@@ -182,7 +182,8 @@
              return this.$parent.rowClassName(this.data[_index], _index);
          },
          rowChecked(_index) {
-             return this.data[_index]._checked;
+            //  return this.data[_index]._checked;
+             return this.$parent.selectionPkeys.indexOf(this.data[_index]._pkey)>-1 ;
          },
          rowDisabled(_index) {
              return this.data[_index]._disabled;
@@ -196,9 +197,9 @@
          handleMouseOut(_index,event) {
              this.$parent.handleMouseOut(_index,event);
          },
-         clickCurrentRow (_index) {
-            this.currentClickRow = _index;
-            this.$parent.clickCurrentRow(_index);
+         clickCurrentRow (_index,row) {
+             this.currentClickRow = _index;
+             this.$parent.clickCurrentRow(row);
         }
      },
      watch:{

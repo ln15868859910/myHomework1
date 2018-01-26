@@ -1,24 +1,31 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
         <i-button type="primary" size="large" @click="table1 = true">弹窗</i-button>
-            <Xb-Table name="testtable" :columns="tableHeader" :height="600" :control="control" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
-                <div slot="header">
-                    <div style="height:60px;background:#fff;padding:15px 20px;">
-                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                    </div>
-                    <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
-                    <div>
-                        <Checkbox v-model="tableHeader[4].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
-                    </div>
+        <i-button type="primary" size="large" @click="fetchnextData()">请求数据</i-button>
+        <div>
+            <div v-for="(item) in selection">{{item._pkey}}  <i-button type="primary" size="large" @click="deletethis(item)">删除</i-button> </div>
+        </div>
+        <Xb-Table name="testtable" :columns="tableHeader" :height="600" :control="control" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData" ref="table" :selected-pkeys="selectedArr">
+            <div slot="header">
+                <div style="height:60px;background:#fff;padding:15px 20px;">
+                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
                 </div>
-                <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
-            </Xb-Table>
-            <Modal v-model="table1" title="表格" width="860" :closable="false" :mask-closable="false" class-name="vertical-center-modal">
-                <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
-                    <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow"></Xb-Table>
+                <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
+                <div>
+                    <Checkbox v-model="tableHeader[4].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
                 </div>
+            </div>
+            <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
+        </Xb-Table>
+        <Modal v-model="table1"  width="860" :closable="false" :mask-closable="false" class-name="vertical-center-modal">
+            <p slot="header" style="text-align:center">
+                <span style="color: #fff;">弹出表格</span>
+            </p>
+            <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
+                <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow"></Xb-Table>
+            </div>
         </Modal>
     </div>
 </template>
@@ -27,6 +34,7 @@ export default {
     data() {
         return {
             testcol:[],
+            selection:[],
             table1:false,
             tableColumns1:[
                 {
@@ -145,7 +153,7 @@ export default {
                     render: function (h, params) {
                         return h('div', {
                             class:params.row.Interest.interestClass
-                        })
+                        },params.row._pkey)
                     }
                 },
                 {
@@ -203,6 +211,8 @@ export default {
                     fixed: "right"
                 }],
             listData: [],
+            defaultId:584027,
+            selectedArr:[584027,584028,584029,584030,584031],
             control:{
                 isDrop:true,
                 width:100,
@@ -260,6 +270,7 @@ export default {
         },
         getSelectedData: function (selection) {
             console.log(selection);
+            this.selection = selection;
         },
         objectSpanMethod: function (row, column, rowIndex, columnIndex) {
             if (columnIndex === 0) {
@@ -280,7 +291,8 @@ export default {
         fetchData: function () {
             var that = this;
             var resultList = [];
-            for (var i = 0; i < 50; i++) {
+
+            for (var i = 0; i < 5; i++) {
                 resultList.push({
                     "LessonClassName": "",
                     "SecondLessonClassName": "",
@@ -360,7 +372,7 @@ export default {
                     "Profession": null,
                     "CompanyName": null,
                     "HighestEducation": "",
-                    "Id": 584027,
+                    "Id": this.defaultId++,
                     "OrgId": 1,
                     "StuName": "开会完啦啦啦啦啦啦啦啦啦啦了绿绿绿绿绿绿绿绿绿绿绿绿绿绿绿绿阿拉啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦",
                     "Sex": "男",
@@ -524,6 +536,10 @@ export default {
             _.sortBy(model.SalesManList, "FollowUpPeopleId");
             return model;
         },
+        fetchnextData: function (){
+            this.defaultId = this.defaultId-2;
+            this.fetchData();
+        },
         //跟进状态通用方法
         filterFollowStatus: function (followUpStatus) {
             var followUp = {
@@ -585,8 +601,13 @@ export default {
             }
             return interest;
         },
-        //*电话号码
-        formatTel: function (tel, isHide) {
+        deletethis: function(item) {
+            this.$refs.table.selectTriggerByRow = true;
+            //只能处理单页数据
+            this.$refs.table.clickCurrentRow(item._index);
+            this.$refs.table.selectTriggerByRow = false;
+        },
+        formatTel: function (tel, isHide) { //*电话号码
             if (!tel) {
                 return "";
             }
