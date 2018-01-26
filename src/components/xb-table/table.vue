@@ -260,9 +260,9 @@ export default {
                     width = this.tableWidth;
                 } else {
                     if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
-                        width = this.tableWidth;
-                    } else {
                         width = this.tableWidth - this.scrollBarWidth;
+                    } else {
+                        width = this.tableWidth;
                     }
                 }
                 style.width = `${width}px`;
