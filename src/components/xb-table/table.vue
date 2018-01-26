@@ -744,6 +744,9 @@ export default {
         },
         height() {
             this.fixedHeader();
+        },
+        addFixedStyle(val) {
+            this.$emit('on-fixed-change', val);
         }
     }
 };
