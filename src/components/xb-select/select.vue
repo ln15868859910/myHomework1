@@ -50,7 +50,10 @@ export default {
         },
         listData: {
             //下拉列表
-            type: Array
+            type: Array,
+            default:function(){
+                return [];
+            }
         },
         selectedData: {
             //选择的数据、默认数据
