@@ -407,18 +407,22 @@ export default {
             if (!this.$refs.tbody) return;
             this.$nextTick(() => {
                 let columnsWidth = {};
+                let $td = [];
                 if (this.data.length) {
-                    const $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
-                    for (let i = 0; i < $td.length; i++) {
-                        const column = this.cloneColumns[i];
-                        let width = parseInt(getStyle($td[i], 'width'));
-                        this.cloneColumns[i]._width = width || 0;
-                        columnsWidth[column._index] = {
-                            width: column.width ? column.width : width
-                        };
-                    }
-                    this.columnsWidth = columnsWidth;
+                    $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
                 }
+                else {
+                    $td = this.$refs.header.querySelectorAll('thead tr')[0].children;
+                }
+                for (let i = 0; i < $td.length; i++) {
+                    const column = this.cloneColumns[i];
+                    let width = parseInt(getStyle($td[i], 'width'));
+                    this.cloneColumns[i]._width = width || 0;
+                    columnsWidth[column._index] = {
+                        width: column.width ? column.width : width
+                    };
+                }
+                this.columnsWidth = columnsWidth;
             });
             // 高度小于表格真实高度时显示纵向滚动条
             this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
