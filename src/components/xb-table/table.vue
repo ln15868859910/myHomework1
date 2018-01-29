@@ -665,7 +665,9 @@ export default {
                     this.isRadio = true;
                 }
                 if(column.custom){
-                    column.show = storgedata[column.key];
+                    if(column.key in storgedata){
+                        column.show = storgedata[column.key];
+                    }
                     custumcols.push({
                         key:column.key,
                         title:column.title,
@@ -693,13 +695,7 @@ export default {
         getLocalData(){
             let data;
             if(this.name){
-                let tempdata = localStorage.getItem('table'+this.name);
-                if(typeof tempdata=='string'){
-                    data = {};
-                    localStorage.setItem('table'+this.name,JSON.stringify({}));
-                }else{
-                    data = JSON.parse(tempdata);
-                }
+                data = JSON.parse(localStorage.getItem('table'+this.name));
             }
             return data||{};
         }
