@@ -1,19 +1,33 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-            <Xb-Table :columns="tableHeader" :outhidecol="singleCol" :data="listData" :control="control" :height="600" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData">
-                <div slot="header">
-                    <div style="height:60px;background:#fff;padding:15px 20px;">
-                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                        <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
-                    </div>
-                    <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
-                    <div>
-                        <Checkbox v-model="singleCol[0].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
-                    </div>
+        <i-button type="primary" size="large" @click="table1 = true">弹窗</i-button>
+        <i-button type="primary" size="large" @click="fetchnextData()">请求数据</i-button>
+        <i-button type="primary" size="large" @click="deleteall()">清空已选</i-button>
+        <div>
+            <div v-for="(item) in selection">{{item._pkey}}  <i-button type="primary" size="large" @click="deletethis(item)">删除</i-button> </div>
+        </div>
+        <Xb-Table name="testtable" :columns="tableHeader" :height="600" :control="control" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData" ref="table" :selected-pkeys="selectedArr">
+            <div slot="header">
+                <div style="height:60px;background:#fff;padding:15px 20px;">
+                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
+                    <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>
                 </div>
-                <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
-            </Xb-Table>
+                <div style="height:40px;line-height:40px;background:#F7FAFC;padding:0 20px">当前结果：沟通共计162条，咨询线索总计122条</div>
+                <div>
+                    <Checkbox v-model="tableHeader[4].show" label="SphHome" @on-change="changeSingel">是否显示校宝家关注</Checkbox>
+                </div>
+            </div>
+            <div slot="emptyData" style="height:300px;text-align:center;line-height:300px;">无数据</div>
+        </Xb-Table>
+        <Modal v-model="table1"  width="860" :closable="false" :mask-closable="false" class-name="vertical-center-modal">
+            <p slot="header" style="text-align:center">
+                <span style="color: #fff;">弹出表格</span>
+            </p>
+            <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
+                <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow"></Xb-Table>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
@@ -21,16 +35,12 @@ export default {
     data() {
         return {
             testcol:[],
-            singleCol:[{
-                key:'SphHome',
-                name:'是否显示校宝家关注',
-                show:true
-            }],   //外部控制的隐藏列Key值数组
-            tableHeader: [
+            selection:[],
+            table1:false,
+            tableColumns1:[
                 {
                     type: 'selection',
                     width: 50,
-                    fixed: "left",
                     align:"left"
                 }, {
                     title: '星标',
@@ -53,7 +63,48 @@ export default {
                 {
                     title: '姓名',
                     key: 'StuName',
+                    width: 120,
+                    showOverflowTip:true
+                },
+                {
+                    title: '关键词',
+                    key: 'Marker',
+                    width: 120
+                },
+                {
+                    title: '意向课程',
+                    key: 'InterestClassListUi',
+                    width: 80,
+                }
+            ],
+            tableHeader: [
+                {
+                    type: 'selection',
+                    width: 50,
+                    fixed: "left",
+                    align:"left"
+                }, {
+                    title: '星标',
+                    key: 'UserCollectionId',
+                    align:'center',
+                    width: 100,
+                    custom:true,
                     // fixed:"left",
+                    render: function (h, params) {
+                        return h('div', [
+                            h('Icon', {
+                                props: {
+                                    type: params.row.UserCollectionId === 0 ? 'star' : 'star-filled',
+                                    size: '20',
+                                    color: params.row.UserCollectionId === 0 ? "#eee" : "#f5a623"
+                                }
+                            })
+                        ]);
+                    }
+                },
+                {
+                    title: '姓名',
+                    key: 'StuName',
                     sortable: true,
                     width: 200,
                     type:"link",
@@ -68,6 +119,18 @@ export default {
                     tipContent:'联系电话可通过学员应用下的权限点进行全显/隐藏控制',
                     canedit:true,
                     type:'input',
+                    validate:function(oldobj,newval){
+                        if(newval.length>11){
+                            alert("最长只能输入11位");
+                            oldobj['TelPhoneUi'] = oldobj['TelPhoneUi'];
+                            return false;
+                        }else if(newval.length<8){
+                            alert("至少输入8位");
+                            oldobj['TelPhoneUi'] = oldobj['TelPhoneUi'];
+                            return false;
+                        }
+                        return true;
+                    },
                     callback:function(oldobj,newval){
 
                         oldobj['TelPhoneUi'] = newval;
@@ -77,6 +140,7 @@ export default {
                     title: '校宝家关注',
                     key: 'SphHome',
                     width: 120,
+                    show:false,
                     renderHeader: function (h, params) {
                         return h('div', {
                             class: 'spui-table-cell',
@@ -102,7 +166,7 @@ export default {
                     render: function (h, params) {
                         return h('div', {
                             class:params.row.Interest.interestClass
-                        })
+                        },params.row._pkey)
                     }
                 },
                 {
@@ -123,12 +187,14 @@ export default {
                     key: 'StuinfoTagsName',
                     width: 120,
                     custom:true,
-                    show:true
+                    show:true,
+                    //  fixed: "right"
                 }, {
                     title: '关键词',
                     key: 'Marker',
                     width: 120,
                     custom:true,
+                                        // fixed:"right",
                     show:true
                 }, {
                     title: '跟进状态',
@@ -153,18 +219,24 @@ export default {
                     title: '咨询校区',
                     key: 'SchoolName',
                     width: 80,
+                    custom:true,
+                    show:true,
                     fixed: "right"
                 }],
             listData: [],
-            control:[
-                {
+            defaultId:584027,
+            selectedArr:[584027,584028,584029,584030,584031],
+            control:{
+                isDrop:true,
+                width:100,
+                options:[{
                     key:'edit',
                     title:'编辑',
                     ifshow:function(cell,index){//是否显示
-                        return index%2;
+                        return cell._pkey%2;
                     },
                     ifdisabled:function(cell,index){//是否禁用
-                        return index%3;
+                        return cell._pkey%3;
                     },
                     func:function(cell){//具体处理方法
                         console.log(cell);
@@ -178,7 +250,7 @@ export default {
                     key:'edit',
                     title:'复制',
                     ifshow:function(cell,index){
-                        return 1==index%2;
+                        return 1==cell._pkey%2;
                     },
                     func:function(cell){
                         console.log(cell);
@@ -190,23 +262,28 @@ export default {
                     key:'edit',
                     title:'删除',
                     ifshow:function(cell,index){
-                        return index%3;
+                        return cell._pkey%3;
                     },
                     func:function(cell){
                         console.log(cell);
                     }
                 }]
+            }
         };
     },
     created() {
         this.fetchData();
     },
     methods: {
+        getClickRow(data){
+            console.log(data);
+        },
         changeSingel(data){
 
         },
         getSelectedData: function (selection) {
             console.log(selection);
+            this.selection = selection;
         },
         objectSpanMethod: function (row, column, rowIndex, columnIndex) {
             if (columnIndex === 0) {
@@ -227,7 +304,8 @@ export default {
         fetchData: function () {
             var that = this;
             var resultList = [];
-            for (var i = 0; i < 50; i++) {
+
+            for (var i = 0; i < 5; i++) {
                 resultList.push({
                     "LessonClassName": "",
                     "SecondLessonClassName": "",
@@ -307,7 +385,7 @@ export default {
                     "Profession": null,
                     "CompanyName": null,
                     "HighestEducation": "",
-                    "Id": 584027,
+                    "Id": this.defaultId++,
                     "OrgId": 1,
                     "StuName": "开会完啦啦啦啦啦啦啦啦啦啦了绿绿绿绿绿绿绿绿绿绿绿绿绿绿绿绿阿拉啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦",
                     "Sex": "男",
@@ -431,9 +509,7 @@ export default {
                     id: bizModel.ThirdLessonClassId
                 });
             }
-            model.InterestClassListUi = _.map(model.InterestClassList, function (item) {
-                return item.name
-            }).join("/");
+            model.InterestClassListUi = "udhfuih";
             model.LastCommuContent = bizModel.LastCommuContent;
             model.StuinfoTags = bizModel.StuinfoTags;
             model.StuinfoTagsName = _.map(model.StuinfoTags, function (item) {
@@ -472,6 +548,10 @@ export default {
             model.hasEditFollowAuthority = that.hasEditAllFollowAuthority || (that.hasEditMyFollowAuthority && isMyConsult); //是否有编辑该条跟进信息的权限
             _.sortBy(model.SalesManList, "FollowUpPeopleId");
             return model;
+        },
+        fetchnextData: function (){
+            this.defaultId = this.defaultId-2;
+            this.fetchData();
         },
         //跟进状态通用方法
         filterFollowStatus: function (followUpStatus) {
@@ -534,8 +614,16 @@ export default {
             }
             return interest;
         },
-        //*电话号码
-        formatTel: function (tel, isHide) {
+        deletethis: function(item) {//外部删除某一项 用唯一数据
+            this.$refs.table.changeByitem(item);
+        },
+        deletethisbykey: function(item) {//外部删除某一项 用唯一ID
+            this.$refs.table.changeBypKey(item);
+        },
+        deleteall: function() { //清空选项
+            this.$refs.table.clearSelection();
+        },
+        formatTel: function (tel, isHide) { //*电话号码
             if (!tel) {
                 return "";
             }

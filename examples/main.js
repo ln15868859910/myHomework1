@@ -226,6 +226,10 @@ const router = new VueRouter({
         {
             path: '/xbForm',
             component: require('./routers/xb-form.vue')
+        },
+        {
+            path: '/xbScroll',
+            component: require('./routers/xb-scroll.vue')
         }
     ]
 });

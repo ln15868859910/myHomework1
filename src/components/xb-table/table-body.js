@@ -19,19 +19,7 @@
              type: [Boolean, String],
              default: false
          },
-         control:{
-             type:Array,
-             default(){
-                 return [];
-             }
-         },
-         outhidecol:Array,
-         hidecol:{
-             type:Array,
-             default(){
-                 return [];
-             }
-         }
+         control:Object
      },
      data() {
          return {
@@ -51,9 +39,9 @@
              h('colgroup', [
                  that.columns.map(function (column, columnIndex) {
                      return h('col', {
-                         style: !that.checkifhide(column)?'display:none':'display:table-column',
+                         style: !column.show?'display:none':'display:table-column',
                          domProps: {
-                             width: that.setCellWidth(column, columnIndex, false)
+                             width: that.setCellWidth(column)
                          }
                      });
                  })
@@ -67,11 +55,14 @@
                          style: that.trStyles(rowIndex),
                          key: row._rowkey,
                          on: {
-                             mouseenter: () => {
-                                 that.handleMouseIn(rowIndex)
+                             mouseenter: ($event) => {
+                                 that.handleMouseIn(rowIndex,$event)
                              },
-                             mouseleave: () => {
-                                 that.handleMouseOut(rowIndex)
+                             mouseleave: ($event) => {
+                                 that.handleMouseOut(rowIndex,$event)
+                             },
+                             click:($event)=>{
+                                 that.clickCurrentRow(rowIndex,row)
                              }
                          }
                      }, [
@@ -82,8 +73,8 @@
                              } = that.getSpan(row, column, rowIndex, columnIndex);
                              if (rowspan || colspan) {
                                  return h('td', {
-                                     class: that.alignCls(column, row,rowspan),
-                                     style: !that.checkifhide(column)?'display:none':'display:table-cell',
+                                     class: that.alignCls(column, false,row),
+                                     style: !column.show?'display:none':'display:table-cell',
                                      domProps: {
                                          rowSpan: rowspan,
                                          colSpan: colspan
@@ -99,14 +90,14 @@
                                              index: row._index,
                                              checked: that.rowChecked(rowIndex),
                                              disabled: that.rowDisabled(rowIndex),
-                                             expanded: that.rowExpanded(rowIndex),
+                                             expanded: that.rowExpanded(row._index),
                                          }
                                      })
                                  ])
                              }
                          })
                      ]),
-                     that.rowExpanded(rowIndex)?
+                     that.rowExpanded(row._index)?
                          h('tr', {
                              class: {
                                  [that.prefixCls + '-expanded-hidden']: that.fixed
@@ -190,23 +181,24 @@
              return this.$parent.rowClassName(this.data[_index], _index);
          },
          rowChecked(_index) {
-             return this.data[_index]._checked;
+            //  return this.data[_index]._checked;
+             return this.$parent.selectionPkeys.indexOf(this.data[_index]._pkey)>-1 ;
          },
          rowDisabled(_index) {
              return this.data[_index]._disabled;
          },
          rowExpanded(_index) {
-             return this.data[_index] && this.data[_index]._expanded;
+             return this.$parent.expandArr[_index] && this.$parent.expandArr[_index].expanded;
          },
-         checkifhide(column){
-             return this.outhidecol.indexOf(column.key)==-1&&this.hidecol.indexOf(column.key)==-1;
+         handleMouseIn(_index,event) {
+             this.$parent.handleMouseIn(_index,event);
          },
-         handleMouseIn(_index) {
-             this.$parent.handleMouseIn(_index);
+         handleMouseOut(_index,event) {
+             this.$parent.handleMouseOut(_index,event);
          },
-         handleMouseOut(_index) {
-             this.$parent.handleMouseOut(_index);
-         }
+         clickCurrentRow (_index,row) {
+             this.$parent.setCurrentRow(_index,row);
+        }
      },
      watch:{
            "$parent.currentHoverRow"(newVal, oldVal) {
@@ -221,6 +213,23 @@
             }
             if (newRow) {
                 addClass(newRow, `${this.prefixCls}-row-hover`);
+            }
+        },
+        "$parent.currentClickRow"(newVal, oldVal) {
+            if(!this.$parent.isRadio){
+                return;
+            }
+            const el = this.$el;
+            if (!el) return;
+            const tr = el.querySelector('tbody').children;
+            const rows = [].filter.call(tr, row => hasClass(row, `${this.prefixCls}-row`));
+            const oldRow = rows[oldVal];
+            const newRow = rows[newVal];
+            if (oldRow) {
+                removeClass(oldRow, `${this.prefixCls}-row-checked`);
+            }
+            if (newRow) {
+                addClass(newRow, `${this.prefixCls}-row-checked`);
             }
         }
      }

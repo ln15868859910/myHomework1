@@ -39,6 +39,7 @@ export default {
     },
     methods:{
         handleinput(){
+            this.editvalue = this.geteidtvalue();
             this.edittag = true;
             //input元素所在Dom被edittag控制显示/隐藏。如果直接调用focus，该Dom并未立即显示导致聚焦失败。此处延迟调用。
             this.$nextTick(()=>{
@@ -48,10 +49,13 @@ export default {
         handleblur(){
             //是否允许批量编辑 允许则跳过  
             this.$refs.input.blur();
-            if(this.column.validate){
-                this.column.validate(this.row,this.editvalue);
-            }
             this.edittag = false;
+            if(this.column.validate){
+                if(!this.column.validate(this.row,this.editvalue)){
+                    // this.handleinput();
+                    return;
+                }
+            }
             //离焦后是否立刻保存？ 
             if(this.column.callback){
                 this.column.callback(this.row,this.editvalue);

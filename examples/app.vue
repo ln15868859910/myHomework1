@@ -192,6 +192,10 @@ li+li {
                  <li>
                     <router-link to="/xbForm">xbForm</router-link>
                 </li>
+                <li>
+                    <router-link to="/xbScroll">xbScroll</router-link>
+                </li>
+                
             </ul>
         </nav>
         <router-view></router-view>

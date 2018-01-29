@@ -7,15 +7,12 @@
             </li>
     
             <li :class="flortRight">
-                <!-- 搜索内容区域 -->
-                <div :class="search" v-if="searchData && status.isInitCompleted">
-                    <Select v-show="!searchData.opts.isHideOptsList" :value="searchSelectInitVal" @on-change="setSearchItem" label-in-value style="width:100px">
-                        <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
-                    </Select>
-                    <Input type="text" icon="search" v-model="searchArea.searchInput" :placeholder="`请输入${searchArea.selected.text}`" @on-click="doSearch" @on-enter="doSearch"></Input>
-                </div>
-    
+                <!-- 搜索内容区域  -->
+
+                <xb-fuzzy-select ref="fuzzySearch" v-if="searchData && status.isInitCompleted" :search-data="searchData" :callback="{'dosearch':doSearch}" @updateSearchRes="updateSearchRes"></xb-fuzzy-select>
+                
                 <!-- 筛选组件按钮区域 -->
+                
                 <div :class="filterBtn" v-clickoutside="hidefilterContainer">
                     <Badge :count="filterResultAmount">
                         <div class="ivu-select-selection" @click="toggleContainer">
@@ -60,6 +57,7 @@ const prefixCls = "spui-b-consultFilter";
 import emitter from "./emit";
 import iSelect from '../../components/select';
 import iInput from '../../components/input';
+import XbFuzzySelect from '../../components/xb-fuzzy-select';
 import Tag from '../../components/tag';
 import Badge from '../../components/badge';
 import Tooltip from '../../components/tooltip';
@@ -72,7 +70,7 @@ import clickoutside from '../../directives/clickoutside';
 export default {
     name: 'consultFilter',
     mixins: [ emitter ],
-    components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti },
+    components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect},
     directives: { clickoutside },
     props: {
         filterData: {
@@ -100,7 +98,6 @@ export default {
 
             filterResult: [],
             searchArea: {
-                initValue: "",
                 selected: {
                     "text": "",
                     "value": ""
@@ -147,35 +144,6 @@ export default {
         },
         flortRight() {
             return `${prefixCls}-flortRight`
-        },
-        searchSelectInitVal() {
-
-            if (this.searchData.data.length) {
-
-                var defaultSearchKey = this.searchData.opts.defaultSearchKey,
-                    defaultSearchText;
-
-                if (defaultSearchKey) {
-                    //找到searchKey对应的文案
-                    this.searchData.data.map(function (item, index) {
-                        if (item.value == defaultSearchKey) {
-                            defaultSearchText = item.text;
-                        }
-                    })
-                    this.searchArea.selected = {
-                        "text": defaultSearchText,
-                        "value": defaultSearchKey
-                    }
-                    return defaultSearchKey;
-
-                } else {
-                    this.searchArea.selected = {
-                        "text": this.searchData.data[0].text,
-                        "value": this.searchData.data[0].value
-                    }
-                    return this.searchData.data[0].value;
-                }
-            }
         },
 
         singleModel() {
@@ -259,18 +227,18 @@ export default {
 
             }
         },
-        "searchData": {
-            deep: true,
-            handler: function (oldv, newv) {
+        // "searchData": {
+        //     deep: true,
+        //     handler: function (oldv, newv) {
 
-                if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
-                    console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
-                }
-                this.searchArea.selected.value = newv.opts.defaultSearchKey;
-                this.searchArea.searchInput = newv.opts.defaultSearchValue;
+        //         if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
+        //             console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
+        //         }
+        //         this.searchArea.selected.value = newv.opts.defaultSearchKey;
+        //         this.searchArea.searchInput = newv.opts.defaultSearchValue;
 
-            }
-        }
+        //     }
+        // }
 
     },
     methods: {
@@ -278,20 +246,7 @@ export default {
 
         /****************************搜索项相关*********************************/
 
-        setSearchItem(obj) {
-
-            //已经有初始化赋值时
-            if (!obj.label && obj.value) {
-                return;
-            }
-
-            this.searchArea.selected = {
-                "text": obj.label,
-                "value": obj.value,
-            }
-        },
-
-        doSearch() {
+        doSearch(searchRes) {
 
             //搜索结果互斥时，清空筛选项
             if (this.searchData.opts.isResetFilter) {
@@ -306,17 +261,21 @@ export default {
                 }, 500, "doSearch")
             }
         },
+        updateSearchRes(obj){
+            this.searchArea.selected.value = obj.value
+            this.searchArea.selected.text = obj.text
+            this.searchArea.searchInput = obj.input
+        },
 
         /****************************筛选项相关*********************************/
 
         uiModeltoBizModel(initFilterData) {
-
-
             var filterRes = {};
             var searchRes = {
                 key: this.searchArea.selected.value,
                 value: this.searchArea.searchInput
             };
+            
             var outPutFn = this.callback["selected"];
 
             if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
@@ -403,6 +362,7 @@ export default {
             //清空已选择的数据
             this.filterResult = [];
             this.status.isInitCompleted = false;
+            this.$refs.fuzzySearch.clear();
         },
         // 清空所有标签
         emptyTag() {

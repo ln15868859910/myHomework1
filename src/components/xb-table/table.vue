@@ -8,14 +8,12 @@
                 <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" v-show="showVerticalBar" :view-style="{'float':'left'}">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
-                <div style="position:relative">
-                    <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header">
+                <div style="position:relative" :class="[prefixCls + '-tableHead']">
+                    <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" :style="centerHeaderStyle">
                         <table-head 
                         :styleObject="tableStyle" 
                         :columns="cloneColumns" 
                         :columns-width="columnsWidth" 
-                        :hidecol="hidecolumn"
-                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
@@ -25,66 +23,57 @@
                         :styleObject="fixedTableStyle" 
                         :columns="leftFixedColumns" 
                         :columns-width="columnsWidth" 
-                        :hidecol="hidecolumn"
-                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed && showHeader">
+                    <div :class="[prefixCls + '-fixed-right']" :style="fixedRightWrapStyle" v-if="isRightFixed && showHeader">
                         <table-head 
                         fixed="right" 
                         :styleObject="fixedRightTableStyle" 
                         :columns="rightFixedColumns" 
                         :columns-width="columnsWidth"
-                        :hidecol="hidecolumn"
-                        :outhidecol="outhidecolumn"
                         :data="rebuildData">
                         </table-head>
                     </div>
-                    <div :class="[prefixCls + '-showmore']" v-if="custumcols.length">
+                    <div :class="[prefixCls + '-showmore']" v-show="custumcols.length">
                         <Icon type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
+                    <div :class="[prefixCls + '-gutter']" :style="{width:scrollBarWidth+'px'}" v-if="hasScrollBar"></div>
                 </div>
             </div>
         </div>
         <div :class="[prefixCls + '-bodywrap']" :style="bodyWrapStyle">
-            <div style="position:relative" ref="mainTable">
+            <div style="position:relative" ref="mainTable" :style="bodyStyle">
                 <div :class="[prefixCls + '-tip']" v-show="(!rebuildData || rebuildData.length === 0)">
                     <!--无数据样式slot-->
                     <slot name="emptyData"></slot>
                 </div>
-                <div :class="[prefixCls + '-body']" :style="bodyStyle" ref="centerBody" @scroll="handleBodyScroll" v-show="(rebuildData && rebuildData.length >0)">
+                <div :class="[prefixCls + '-body']" ref="centerBody" @scroll="handleBodyScroll" v-show="(rebuildData && rebuildData.length >0)">
                     <table-body 
                     ref="tbody" 
                     :styleObject="tableStyle" 
                     :columns="cloneColumns" 
-                    :hidecol="hidecolumn"
-                    :outhidecol="outhidecolumn"
                     :data="rebuildData"
                     :columns-width="columnsWidth">
                     </table-body>
                 </div>
                 <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedBody">
+                    <div :class="[prefixCls + '-fixed-body-inner']" @scroll="handleBodyScroll" ref="fixedBody">
                     <table-body 
                     fixed="left" 
                     :styleObject="fixedTableStyle" 
                     :columns="leftFixedColumns"
-                    :hidecol="hidecolumn"
-                    :outhidecol="outhidecolumn"
                     :data="rebuildData" 
                     :columns-width="columnsWidth">
                     </table-body>
                     </div>
                 </div>
-                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
-                    <div :class="[prefixCls + '-fixed-body-inner']" :style="bodyStyle" @scroll="handleBodyScroll" ref="fixedRightBody">
+                <div :class="[prefixCls + '-fixed-right']" :style="fixedRightWrapStyle" v-if="isRightFixed" style="top:0" v-show="(rebuildData && rebuildData.length >0)">
+                    <div :class="[prefixCls + '-fixed-body-inner']" @scroll="handleBodyScroll" ref="fixedRightBody">
                     <table-body 
                     fixed="right" 
                     :styleObject="fixedRightTableStyle" 
                     :columns="rightFixedColumns" 
-                    :hidecol="hidecolumn"
-                    :outhidecol="outhidecolumn"
                     :data="rebuildData"
                     :control="control"
                     :columns-width="columnsWidth">
@@ -115,9 +104,9 @@ let rowKey = 1;
 let columnKey = 1;
 
 export default {
-    name: 'Table',
+    name: 'XbTable',
     mixins: [Locale],
-    components: { tableHead, tableBody, customPop,XbScrollbar },
+    components: { tableHead, tableBody, customPop, XbScrollbar },
     props: {
         data: {
             type: Array,
@@ -125,13 +114,18 @@ export default {
                 return [];
             }
         },
-        columns: {
-            type: Array,
+        pkey:{
+            type:String|Array,
+            default:'Id'
+        },
+        selectedPkeys:{
+            type:Array,
             default() {
                 return [];
             }
         },
-        outhidecol:{//外部独立自定义控制显示列
+        name:String,
+        columns: {
             type: Array,
             default() {
                 return [];
@@ -176,10 +170,14 @@ export default {
                 return '';
             }
         },
-        control:{//操作列
-            type: Array,
+        control: {//操作列
+            type: Object,
             default() {
-                return [];
+                return {
+                    isDrop: true,
+                    width: 60,
+                    options: []
+                }
             }
         },
         //默认排序参数
@@ -191,7 +189,12 @@ export default {
                     order: ''
                 };
             }
-        }
+        },
+        //是否在弹窗中使用
+        modal: {
+            type: Boolean,
+            default: false
+        },
     },
     data() {
         return {
@@ -203,22 +206,35 @@ export default {
             columnsWidth: {},
             prefixCls: prefixCls,
             rebuildData: [],
-            cloneColumns: this.makeColumns(),
+            custumcols:[],
+            cloneColumns: [],
+            leftFixedColumns:[],
+            rightFixedColumns:[],
             bodyHeight: 0,
             bodyRealHeight: 0,
             scrollBarWidth: getScrollBarSize(),
             fixedColumnsBodyRowsHeight: [],
             selections: [],
+            selectionPkeys: [],
+            propselectedPkeys:[],
             showmoretag:false,
-            custumcols: this.makeCustomColumns(),
-            hidecolumn:[],  //隐藏的列
             sortKey: this.defaultSort.key,//排序参数
             sortOrder: this.defaultSort.order || 'desc',
             lastScrollTop:0,
-            currentHoverRow:-1
+            currentHoverRow:-1,
+            currentClickRow:-1,
+            selectTriggerByRow:false,
+            isRadio:false,
+            expandArr:[]
         };
     },
     computed: {
+        isControlDrop(){
+            if("isDrop" in this.control){
+                return this.control.isDrop;
+            }
+            return true;
+        },
         hasScrollBar() {
             return this.bodyHeight > 0 && this.bodyHeight < this.bodyRealHeight;
         },
@@ -232,7 +248,10 @@ export default {
                     [`${prefixCls}-border`]: this.border,
                     [`${prefixCls}-stripe`]: this.stripe,
                     [`${prefixCls}-hide`]: !this.ready,
-                    [`${prefixCls}-with-fixed-top`]: !!this.height
+                    [`${prefixCls}-with-fixed-top`]: !!this.height,
+                    [`${prefixCls}-with-gutter`]: this.hasScrollBar,
+                    [`${prefixCls}-in-modal`]: this.modal,
+                    [`${prefixCls}-not-modal`]: !this.modal
                 }
             ];
         },
@@ -243,52 +262,51 @@ export default {
                 if (this.bodyHeight === 0) {
                     width = this.tableWidth;
                 } else {
-                    if (this.hasScrollBar && this.tableWidth > this.centerWidth) {
-                        width = this.tableWidth;
-                    } else {
+                    if (this.hasScrollBar) {
                         width = this.tableWidth - this.scrollBarWidth;
+                    } else {
+                        width = this.tableWidth;
                     }
                 }
                 style.width = `${width}px`;
             }
             return style;
         },
-        leftFixedColumns() {
-            let left = [];
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'left') {
-                    left.push(col);
-                }
-            });
-            return left;
-        },
-        rightFixedColumns() {
-            let right = [];
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right') {
-                    right.push(col);
-                }
-            });
-            return right;
-        },
         fixedTableStyle() {
             let style = {};
             let width = 0;
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'left') width += col._width;
+            this.leftFixedColumns.forEach((col) => {
+                if(col.show) width += col._width;
             });
+            style.width = `${width}px`;
+            return style;
+        },
+        centerHeaderStyle() {
+            let style = {};
+            if (this.hasScrollBar) {
+                let width = this.centerWidth - this.scrollBarWidth;
+                style.width = `${width}px`;
+            }
+            return style;
+        },
+        fixedRightWrapStyle() {
+            let style = {};
+            let width = 0;
+            this.rightFixedColumns.forEach((col) => {
+                if (col.show) width += col._width;
+            });
+            if (this.hasScrollBar) {
+                width += this.scrollBarWidth;
+            }
             style.width = `${width}px`;
             return style;
         },
         fixedRightTableStyle() {
             let style = {};
             let width = 0;
-            this.cloneColumns.forEach((col) => {
-                if (col.fixed && col.fixed === 'right') width += col._width;
+            this.rightFixedColumns.forEach((col) => {
+                if (col.show) width += col._width;
             });
-            if (this.hasScrollBar) {
-                width += this.scrollBarWidth;
-            }
             style.width = `${width}px`;
             return style;
         },
@@ -301,10 +319,10 @@ export default {
             return style;
         },
         isLeftFixed() {
-            return this.leftFixedColumns.length;
+            return this.leftFixedColumns.filter(col=>col.show).length;
         },
         isRightFixed() {
-            return this.rightFixedColumns.length;
+            return this.rightFixedColumns.filter(col=>col.show).length;
         },
         centerTableStyle() {
             var style = {};
@@ -319,19 +337,13 @@ export default {
             }
             return style;
         },
-        outhidecolumn(){
-            var arr = [];
-            this.outhidecol.forEach((col)=>{
-                if(!col.show){
-                    arr.push(col.key);
-                }
-            });
-            return arr;
-        },
         bodyWrapStyle(){
             var style = {};
             if (this.addFixedStyle) {
                 style.marginTop = this.$refs.fixedHeaderEle.getBoundingClientRect().height + 'px';
+            }
+            if (!this.rebuildData.length) {
+                style.paddingBottom = 0;
             }
             return style;
         }
@@ -342,6 +354,9 @@ export default {
         },
         //计算表格内容单元格高度，处理fixed列单元格高度和表格内容单元格高度一致
         syncFixedTableRowHeight() {
+            if(!this.isLeftFixed && !this.isRightFixed){
+                return;
+            }
             this.$nextTick(() => {
                 var bodyRows = this.$refs.centerBody.querySelectorAll('tbody tr') || [];
                 var fixedColumnsBodyRowsHeight = [].map.call(bodyRows, function (row) {
@@ -353,13 +368,35 @@ export default {
         showmore(){
             this.showmoretag = true;
         },
-        confirmshowcol(data){
-            this.hidecolumn = data;
+        confirmshowcol(data,colobj){
+            this.resetCustomShow(data);
+            this.setLocalData(data,colobj);
             this.handleResize();
+            this.changeCustomdata(data);
+            this.$emit('on-custom-change', data);
+        },
+        changeCustomdata(data){
+            this.custumcols.forEach((item)=>{
+                if(data.indexOf(item.key)>-1){
+                    item.show = false;
+                }else{
+                    item.show = true;
+                }
+            });
+        },
+        resetCustomShow(data){
+            this.cloneColumns.forEach((column, index) => {
+                if(column.custom){
+                    column.show = true;
+                    if(data.indexOf(column.key)>-1){
+                        column.show = false;
+                    }
+                }
+            });
         },
         doLayout() {
             var allColumWidth = this.cloneColumns.map(cell => {
-                if (this.hidecolumn.indexOf(cell.key) == -1) {
+                if (cell.show) {
                     return cell.width;
                 } else {
                     return 0;
@@ -370,18 +407,22 @@ export default {
             if (!this.$refs.tbody) return;
             this.$nextTick(() => {
                 let columnsWidth = {};
+                let $td = [];
                 if (this.data.length) {
-                    const $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
-                    for (let i = 0; i < $td.length; i++) {
-                        const column = this.cloneColumns[i];
-                        let width = parseInt(getStyle($td[i], 'width'));
-                        this.cloneColumns[i]._width = width;
-                        columnsWidth[column._index] = {
-                            width: column.width ? column.width : width
-                        };
-                    }
-                    this.columnsWidth = columnsWidth;
+                    $td = this.$refs.tbody.$el.querySelectorAll('tbody tr')[0].children;
                 }
+                else {
+                    $td = this.$refs.header.querySelectorAll('thead tr')[0].children;
+                }
+                for (let i = 0; i < $td.length; i++) {
+                    const column = this.cloneColumns[i];
+                    let width = parseInt(getStyle($td[i], 'width'));
+                    this.cloneColumns[i]._width = width || 0;
+                    columnsWidth[column._index] = {
+                        width: column.width ? column.width : width
+                    };
+                }
+                this.columnsWidth = columnsWidth;
             });
             // 高度小于表格真实高度时显示纵向滚动条
             this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
@@ -394,33 +435,74 @@ export default {
                 this.throttleLayout();
             });
         },
-        handleMouseIn(_index) {
-            this.currentHoverRow=_index;
+        handleMouseIn(_index, event) {
+            this.currentHoverRow = _index;
+            this.$emit('row-mouse-enter', this.rebuildData[_index], event);
         },
-        handleMouseOut(_index) {
-            this.currentHoverRow=-1;
+        handleMouseOut(_index, event) {
+            this.currentHoverRow = -1;
+            this.$emit('row-mouse-out', this.rebuildData[_index], event);
+        },
+        setCurrentRow(_index,data){
+            this.currentClickRow = _index;
+            this.clickCurrentRow(data);
+        },
+        clickCurrentRow(data){
+            if(this.selectTriggerByRow){
+                this.toggleSelect(data);
+            }
+            this.$emit('on-row-click', data);
+        },
+        changeByitem(data){
+            this.selectTriggerByRow = true;
+            this.clickCurrentRow(data);
+            this.selectTriggerByRow = false;
+        },
+        changeBypKey(pkey){
+            this.selectTriggerByRow = true;
+            this.clickCurrentRow({_pkey:pkey});
+            this.selectTriggerByRow = false;
+        },
+        clearSelection(){
+            this.selectionPkeys = [];
+            this.selections = [];
+            this.$emit('on-selection-change', this.selections);
         },
         getSelections(){
             return this.selections;
         },
-        toggleSelect(row) {
-            row._checked = !row._checked;
-            var index = this.selections.indexOf(row);
-            if (row._checked) {
-                if (index === -1) {
-                    this.selections.push(row);
-                }
+        getpropSelectedData(){
+            return this.selectedPkeys.slice(0);
+        },
+        getPkey(row){
+            if(Array.isArray(this.pkey)){
+                let keyarr = [];
+                this.pkey.split(',').forEach((k)=>{
+                    keyarr.push(row[k]);
+                });
+                return keyarr.join('_')||rowKey++;
+            }else{
+                return row[this.pkey]||rowKey++;
             }
-            else {
+        },
+        toggleSelect(row) {
+            var pky = row._pkey;
+            var index = this.selectionPkeys.indexOf(pky);
+            if (index === -1) {
+                this.selections.push(row);
+                this.selectionPkeys.push(pky);
+            }else {
                 this.selections.splice(index, 1);
+                this.selectionPkeys.splice(index, 1);
             }
             this.$emit('on-select', this.selections, row);
             this.$emit('on-selection-change', this.selections);
         },
-        toggleExpand(_index) {
-            let data = this.rebuildData[_index];
-            const status = !data._expanded;
-            data._expanded = status;
+        toggleExpand(index) {
+            let data = this.data[index];
+            let expandData = this.expandArr[index];
+            const status = !expandData.expanded;
+            expandData.expanded = status;
             this.$emit('on-expand', JSON.parse(JSON.stringify(data)), status);
         },
         selectAll(status) {
@@ -429,10 +511,21 @@ export default {
                 if (data._disabled) {
                     continue;
                 } else {
-                    data._checked = status;
+                    let pk = data._pkey;
+                    let index = this.selectionPkeys.indexOf(pk);
+                    if(status){
+                        if(index===-1){
+                            this.selectionPkeys.push(pk);
+                            this.selections.push(data);
+                        }
+                    }else{
+                        if(index!==-1){
+                            this.selectionPkeys.splice(index,1);
+                            this.selections.splice(index,1);
+                        }
+                    }
                 }
             }
-            this.selections = status ? deepCopy(this.rebuildData).filter(row=>row._checked) : [];
             if (status) {
                 this.$emit('on-select-all', this.selections);
             }
@@ -468,7 +561,7 @@ export default {
             }
             this.lastScrollTop = event.target.scrollTop;
             this.$emit('on-scroll', event);
-        },20),
+        },10),
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
             this.$refs.centerBody[scrollObj.scroll] = scrollObj.distance;
@@ -505,18 +598,23 @@ export default {
             });
         },
         makeData() {
-            let data = deepCopy(this.data);
+            let data = this.data.slice(0);
+            this.expandArr=[];
             data.forEach((row, index) => {
                 row._index = index;
                 row._rowKey = rowKey++;
-                row._hover = false;
-                row._checked = row._checked || false;
+                row._pkey = this.getPkey(row);   //数据唯一k
                 row._disabled = row._disabled || false;
                 row._expanded = row._expanded || false;
-                if(row._checked){
+                if(this.propselectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1){//默认值处理
                     this.selections.push(row);
+                    this.selectionPkeys.push(row._pkey);
                 }
+                this.expandArr.push({
+                    expanded: row._expanded
+                });
             });
+            this.propselectedPkeys = [];
             return data;
         },
         makeDataWithSort() {
@@ -535,27 +633,51 @@ export default {
             if (!isCustom) {
                 data = this.sortData(data, this.sortOrder, sortIndex);
             }
+            if(this.selectedPkeys.length){
+                this.$emit('on-selection-change', this.selections);
+            }
             return data;
         },
         makeColumns() {
             let columns = deepCopy(this.columns);
+            let custumcols=[];
             let left = [];
             let right = [];
             let center = [];
-            if(this.control.length){
+            if(this.control.options.length){
                 columns.push({
                     title:'操作',
                     type:'control',
-                    width:this.control.length>1?140:80,
+                    width:this.control.width || 60,
                     fixed:'right',
-                    handleArr:this.control
+                    align:'left',
+                    handleArr:this.control.options
                 });
             }
+            //取持久化自定义隐藏数据 并重置现有数据
+            let storgedata = this.getLocalData();
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
-                column.width= column.width || 80;
+                column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
+                column.show = ("show" in column) ? column.show : true;
+                if (column.type === "selection") {
+                    this.selectTriggerByRow = column.triggerType === "row";
+                }
+                if (column.type === "radio") {
+                    this.isRadio = true;
+                }
+                if(column.custom){
+                    if(column.key in storgedata){
+                        column.show = storgedata[column.key];
+                    }
+                    custumcols.push({
+                        key:column.key,
+                        title:column.title,
+                        show:column.show
+                    });
+                }
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
                 } else if (column.fixed && column.fixed === 'right') {
@@ -564,37 +686,35 @@ export default {
                     center.push(column);
                 }
             });
-            return left.concat(center).concat(right);
+            this.custumcols = custumcols;
+            this.leftFixedColumns = left;
+            this.rightFixedColumns = right;
+            this.cloneColumns = left.concat(center).concat(right);
         },
-        makeCustomColumns(){
-            let columns = deepCopy(this.columns);
-            let custumcols = [];
-            let hidecolumn = [];
-            columns.forEach((column)=>{
-                if(column.custom){
-                    custumcols.push({
-                        title:column.title,
-                        key:column.key,
-                        show:column.show
-                    });
-                }
-                if(column.show===false){
-                    hidecolumn.push(column.key);
-                }
-            });
-            this.hidecolumn = hidecolumn;
-            return custumcols;
+        setLocalData(data,colobj){
+            if(this.name){
+                localStorage.setItem('table'+this.name,JSON.stringify(colobj));
+            }
+        },
+        getLocalData(){
+            let data;
+            if(this.name){
+                data = JSON.parse(localStorage.getItem('table'+this.name));
+            }
+            return data||{};
         }
     },
     created() {
+        this.propselectedPkeys = this.getpropSelectedData();
+        this.makeColumns();
         this.rebuildData = this.makeDataWithSort();
-        this.throttleLayout=this.doLayout;
+        this.throttleLayout= throttle(this.doLayout,200);
     },
     mounted() {
-        this.handleResize();
         this.fixedHeader();
         this.$nextTick(() => {
             this.ready = true;
+            this.handleResize();
         });
         if (this.fixHeader) {
             on(window, 'scroll', this.addScrollEffect);
@@ -621,13 +741,16 @@ export default {
         },
         columns: {
             handler() {
-                this.cloneColumns = this.makeColumns();
+                this.makeColumns();
                 this.handleResize();
             },
             deep: true
         },
         height() {
             this.fixedHeader();
+        },
+        addFixedStyle(val) {
+            this.$emit('on-fixed-change', val);
         }
     }
 };

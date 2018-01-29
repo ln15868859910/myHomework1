@@ -30,32 +30,32 @@
     }
 
     &-success {
-        border: 1px solid tint(@success-color, 50%);
-        background-color: tint(@success-color, 80%);
+        border: 1px solid @success-color;
+        background-color: @success-b-color;
         .@{alert-prefix-cls}-icon {
             color: @success-color;
         }
     }
 
     &-info {
-        border: 1px solid tint(@primary-color, 80%);
-        background-color: tint(@primary-color, 90%);
+        border: 1px solid @info-color;
+        background-color: @info-b-color;
         .@{alert-prefix-cls}-icon {
-            color: @primary-color;
+            color: @info-color;
         }
     }
 
     &-warning {
-        border: 1px solid tint(@warning-color, 0%);
-        background-color: tint(@warning-color, 80%);
+        border: 1px solid @warning-color;
+        background-color: @warning-b-color;
         .@{alert-prefix-cls}-icon {
             color: @warning-color;
         }
     }
 
     &-error {
-        border: 1px solid tint(@error-color, 50%);
-        background-color: tint(@error-color, 80%);
+        border: 1px solid @error-color;
+        background-color: @error-b-color;
         .@{alert-prefix-cls}-icon {
             color: @error-color;
         }
@@ -87,6 +87,9 @@
         color: @title-color;
         display: block;
     }
+    &-message{
+        color: @text-color;
+    }
 
     &-with-desc &-icon {
         top: 50%;
@@ -109,9 +112,9 @@
         width: 12px;
         height: 12px;
         border-radius: 100%;
-        color: #34bf49;
+        color: @success-color;
         vertical-align: 1px;
-        background: #34bf49;
+        background: @success-color;
     }
     .ivu-icon-information-circled:before{
         content: "";
@@ -119,13 +122,19 @@
 }
 .@{alert-prefix-cls}-fromalert-tip{
     .@{icon-prefix-cls}{
-        color: #fecc33;
-        background: #fecc33;
+        color: @warning-color;
+        background: @warning-color;
     }
 }
 .@{alert-prefix-cls}-fromalert-error{
     .@{icon-prefix-cls}{
-        color: #fb6363;
-        background: #fb6363;
+        color: @error-color ;
+        background: @error-color ;
+    }
+}
+.@{alert-prefix-cls}-fromalert-info{
+    .@{icon-prefix-cls}{
+        color: @primary-color;
+        background: @primary-color;
     }
 }

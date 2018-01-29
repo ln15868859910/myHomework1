@@ -4,6 +4,9 @@
         <template v-if="renderType === 'selection'">
             <Checkbox :value="checked" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
         </template>
+        <template v-if="renderType === 'radio'">
+            <span :class="[prefixCls+'-radio-box']"><Icon type="checkmark" size="22"></Icon></span>
+        </template>
         <template v-if="renderType === 'html'"><span v-html="row[column.key]"></span></template>
         <template v-if="renderType === 'normal'">{{row[column.key]}}
         </template>
@@ -89,7 +92,7 @@
                     style.display = "-webkit-box";
                     style.webkitBoxOrient = "vertical";
                     style.webkitLineClamp = this.column.lineClamp;
-                    style.maxHeight = 22 * this.column.lineClamp + "px";
+                    style.maxHeight = 24 * this.column.lineClamp + "px";
                 }
                 return style;
             }
@@ -99,7 +102,7 @@
                 this.$parent.$parent.toggleSelect(this.row);
             },
             toggleExpand() {
-                this.$parent.$parent.toggleExpand(this.naturalIndex);
+                this.$parent.$parent.toggleExpand(this.index);
             },
             //判断是否溢出
             setToolTipVisible() {
@@ -116,6 +119,8 @@
                 this.renderType = 'index';
             } else if (this.column.type === 'selection') {
                 this.renderType = 'selection';
+            } else if (this.column.type === 'radio') {
+                this.renderType = 'radio';
             } else if (this.column.type === 'html') {
                 this.renderType = 'html';
             } else if (this.column.type === 'expand') {

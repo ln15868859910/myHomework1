@@ -1,11 +1,11 @@
 <template>
     <table cellspacing="0" cellpadding="0" border="0" :style="styleObject">
         <colgroup>
-            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, true)" v-show="checkifhide(column)" :key="index">
+            <col v-for="(column, index) in columns" :width="setCellWidth(column)" v-show="column.show" :key="index">
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(column, index) in columns" :class="alignCls(column)" :style="thStyle(column)" v-show="checkifhide(column)" :key="index">
+                <th v-for="(column, index) in columns" :class="alignCls(column,true)" :style="thStyle(column)" v-show="column.show" :key="index">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
@@ -15,7 +15,7 @@
                             <Checkbox :value="isSelectAll" @on-change="selectAll"></Checkbox>
                         </template>
                         <template v-else>
-                            <span v-if="!column.renderHeader">{{ column.title || '#' }}</span>
+                            <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
                             <span :class="[prefixCls+'-head-tip']" v-if="column.tipContent">
                                 <Tooltip placement="top" :content="column.tipContent">
@@ -52,9 +52,7 @@ export default {
         fixed: {
             type: [Boolean, String],
             default: false
-        },
-        outhidecol:Array,
-        hidecol:Array
+        }
     },
     data() {
         return {
@@ -72,7 +70,7 @@ export default {
             let isSelectAll = true;
             if (!this.data.length) isSelectAll = false;
             for (let i = 0; i < this.data.length; i++) {
-                if (!this.data[i]._checked && !this.data[i]._disabled) {
+                if (this.$parent.selectionPkeys.indexOf(this.data[i]._pkey)==-1 && !this.data[i]._disabled) {
                     isSelectAll = false;
                     break;
                 }
@@ -95,9 +93,6 @@ export default {
                 style.textAlign = "left";
             }
             return style;
-        },
-        checkifhide(column){
-            return this.outhidecol.indexOf(column.key)==-1&&this.hidecol.indexOf(column.key)==-1;
         },
         selectAll() {
             const status = !this.isSelectAll;
