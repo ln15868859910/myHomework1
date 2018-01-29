@@ -46,13 +46,16 @@
             ok () {
                 // this.modal1 = false;
                 //把不显示的扔出去？？
-                let hidecol = [];
+                let hidecol = [], colobj = {};
                 this.data.forEach(col=>{
                     if(this.showculumns.indexOf(col.key)==-1){
                         hidecol.push(col.key);
+                        colobj[col.key] = false;
+                    }else{
+                        colobj[col.key] = true;
                     }
                 });
-                this.$emit('showcol',hidecol);
+                this.$emit('showcol',hidecol,colobj);
                 this.$emit('input',false);
             },
             selectAll(){

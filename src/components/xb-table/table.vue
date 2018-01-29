@@ -368,9 +368,9 @@ export default {
         showmore(){
             this.showmoretag = true;
         },
-        confirmshowcol(data){
+        confirmshowcol(data,colobj){
             this.resetCustomShow(data);
-            this.setLocalData(data);
+            this.setLocalData(data,colobj);
             this.handleResize();
             this.changeCustomdata(data);
             this.$emit('on-custom-change', data);
@@ -651,7 +651,7 @@ export default {
                 });
             }
             //取持久化自定义隐藏数据 并重置现有数据
-            let storgedata = this.getLocalData().split(',');
+            let storgedata = this.getLocalData();
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
@@ -665,9 +665,7 @@ export default {
                     this.isRadio = true;
                 }
                 if(column.custom){
-                    if (storgedata.length) {
-                        column.show = storgedata.indexOf(column.key) === -1;
-                    }
+                    column.show = storgedata[column.key];
                     custumcols.push({
                         key:column.key,
                         title:column.title,
@@ -687,17 +685,23 @@ export default {
             this.rightFixedColumns = right;
             this.cloneColumns = left.concat(center).concat(right);
         },
-        setLocalData(data){
+        setLocalData(data,colobj){
             if(this.name){
-                localStorage.setItem('table'+this.name,data);
+                localStorage.setItem('table'+this.name,JSON.stringify(colobj));
             }
         },
         getLocalData(){
             let data;
             if(this.name){
-                data = localStorage.getItem('table'+this.name);
+                let tempdata = localStorage.getItem('table'+this.name);
+                if(typeof tempdata=='string'){
+                    data = {};
+                    localStorage.setItem('table'+this.name,JSON.stringify({}));
+                }else{
+                    data = JSON.parse(tempdata);
+                }
             }
-            return data||'';
+            return data||{};
         }
     },
     created() {
