@@ -233,10 +233,10 @@ export default {
                     key:'edit',
                     title:'编辑',
                     ifshow:function(cell,index){//是否显示
-                        return index%2;
+                        return cell._pkey%2;
                     },
                     ifdisabled:function(cell,index){//是否禁用
-                        return index%3;
+                        return cell._pkey%3;
                     },
                     func:function(cell){//具体处理方法
                         console.log(cell);
@@ -250,7 +250,7 @@ export default {
                     key:'edit',
                     title:'复制',
                     ifshow:function(cell,index){
-                        return 1==index%2;
+                        return 1==cell._pkey%2;
                     },
                     func:function(cell){
                         console.log(cell);
@@ -262,7 +262,7 @@ export default {
                     key:'edit',
                     title:'删除',
                     ifshow:function(cell,index){
-                        return index%3;
+                        return cell._pkey%3;
                     },
                     func:function(cell){
                         console.log(cell);

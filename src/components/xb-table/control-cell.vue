@@ -48,10 +48,15 @@ export default {
             default: null
         }
     },
+    computed:{
+        controldata(){
+            return this.initcontrol(this.column, this.row, this.index);
+        }
+    },
     data() {
         return {
             prefixCls: 'spui-table',
-            controldata: this.initcontrol(this.column, this.row, this.index),
+            // controldata: ,
             showdrop: false,
             table: findComponentUpward(this, 'XbTable')
         };

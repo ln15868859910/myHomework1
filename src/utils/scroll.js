@@ -1,6 +1,15 @@
+/**
+ * 当前滚动高度
+ */
 export function getscrollTop() {
     return window.pageYOffset || document.documentElement.scrollTop;
 }
+/**
+ * 滚动方法
+ * 
+ * @export
+ * @param {number} total 滚动的总高度
+ */
 export function jump(total) {
     var distance = getscrollTop();
     let step = total / 10;
@@ -31,6 +40,13 @@ export function jump(total) {
         }
     }
 }
+/**
+ * 判断滚动位置对应的是否是当前节点
+ * 
+ * @export
+ * @param {HTMLElement} el 判断的节点
+ * @returns 
+ */
 export function countHeight(el) {
     var height = getscrollTop();
     var totalHeigth = getContentHeight(document.body);
@@ -45,10 +61,23 @@ export function countHeight(el) {
     }
     return false;
 }
+/**
+ * 滚动方法
+ * 
+ * @export
+ * @param {number} offsetTop 滚动的高度
+ */
 export function scrollTop(offsetTop) {
     document.documentElement.scrollTop = offsetTop;
     document.body.scrollTop = offsetTop;
 }
+/**
+ * 获取Dom总高度
+ * 
+ * @export
+ * @param {HTMLElement} element Dom
+ * @returns 
+ */
 export function getViewportHeight(element) {
     if (element === document.body) {
         return window.innerHeight || document.documentElement.clientHeight;
@@ -56,7 +85,10 @@ export function getViewportHeight(element) {
         return element.clientHeight;
     }
 }
-
+/**
+ * 获取Dom总滚动高度
+ * @param {HTMLElement} element Dom
+ */
 export function getContentHeight(element) {
     if (element === document.body) {
         return Math.max(
@@ -70,7 +102,12 @@ export function getContentHeight(element) {
         return element.scrollHeight;
     }
 }
-
+/**
+ * 滚到对应高度
+ * 
+ * @export
+ * @param {number} reactheight 
+ */
 export function scrollto(reactheight) {
     var totalHeigth = getContentHeight(document.body);
     var screenHeight = getViewportHeight(document.body);
