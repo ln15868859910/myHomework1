@@ -92,7 +92,7 @@
                     style.display = "-webkit-box";
                     style.webkitBoxOrient = "vertical";
                     style.webkitLineClamp = this.column.lineClamp;
-                    style.maxHeight = 22 * this.column.lineClamp + "px";
+                    style.maxHeight = 24 * this.column.lineClamp + "px";
                 }
                 return style;
             }
