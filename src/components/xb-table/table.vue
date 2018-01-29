@@ -665,8 +665,8 @@ export default {
                     this.isRadio = true;
                 }
                 if(column.custom){
-                    if(storgedata.indexOf(column.key)>-1){
-                        column.show = false;
+                    if (storgedata.length) {
+                        column.show = storgedata.indexOf(column.key) === -1;
                     }
                     custumcols.push({
                         key:column.key,
