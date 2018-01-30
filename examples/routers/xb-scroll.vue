@@ -73,7 +73,7 @@ export default {
     }
 };
 </script>
-<style>
+<style scoped>
 body{
     background:#dfe3ed;
 }
