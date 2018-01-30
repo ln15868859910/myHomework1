@@ -150,6 +150,20 @@
         tr th:last-child .@{table-prefix-cls2}-cell {
             padding-right: 0;
         }
+        .spui-table-expanded-cell tr td .@{table-prefix-cls2}-cell,
+        .spui-table-expanded-cell tr th .@{table-prefix-cls2}-cell {
+            padding: 0 10px;
+        }
+        .spui-table-expanded-cell tr th:first-child .@{table-prefix-cls2}-cell {
+            .ivu-checkbox-wrapper {
+                margin: 0;
+            }
+            padding-left:0;
+        }
+        .spui-table-expanded-cell tr td:last-child .@{table-prefix-cls2}-cell,
+        .spui-table-expanded-cell tr th:last-child .@{table-prefix-cls2}-cell {
+            padding-right: 0;
+        }
     }
     &-border-right {
         border-right: 1px solid @border-color-split;
@@ -216,6 +230,12 @@
                 transform: rotate(90deg);
             }
         }
+    }
+    &-expanded-cell th{
+        background-color: #F7F8FA;
+    }
+    &-expanded-cell .spui-table-not-modal .spui-table-tableWrap,&-expanded-cell .spui-table-not-modal .spui-table-bodywrap{
+        padding: 0;
     }
     &-radio-box {
         .ivu-icon-checkmark {

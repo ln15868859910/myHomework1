@@ -74,7 +74,10 @@
                              if (rowspan || colspan) {
                                  return h('td', {
                                      class: that.alignCls(column, false,row),
-                                     style: !column.show?'display:none':'display:table-cell',
+                                     style: {
+                                         'display':!column.show?'none':'table-cell',
+                                         'border-bottom-color':that.rowExpanded(row._index)?'#5295e7':'#d4dfe5'
+                                     },
                                      domProps: {
                                          rowSpan: rowspan,
                                          colSpan: colspan
