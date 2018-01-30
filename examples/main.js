@@ -230,6 +230,10 @@ const router = new VueRouter({
         {
             path: '/xbScroll',
             component: require('./routers/xb-scroll.vue')
+        },
+        {
+            path: '/xbMessage',
+            component: require('./routers/xb-message.vue')
         }
     ]
 });
