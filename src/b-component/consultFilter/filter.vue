@@ -227,18 +227,16 @@ export default {
 
             }
         },
-        // "searchData": {
-        //     deep: true,
-        //     handler: function (oldv, newv) {
-
-        //         if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
-        //             console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
-        //         }
-        //         this.searchArea.selected.value = newv.opts.defaultSearchKey;
-        //         this.searchArea.searchInput = newv.opts.defaultSearchValue;
-
-        //     }
-        // }
+        "searchData": {
+            deep: true,
+            handler: function (oldv, newv) {
+                if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
+                    console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
+                }
+                this.searchArea.selected.value = newv.opts.defaultSearchKey;
+                this.searchArea.searchInput = newv.opts.defaultSearchValue;
+            }
+        }
 
     },
     methods: {

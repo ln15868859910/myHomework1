@@ -165,10 +165,12 @@ export default {
         clear(){
             this.searchArea.searchInput = '';
             this.init();
+            this.getSearchObj()
         },
         init(){
             if (this.searchData.data.length) {
                 var defaultSearchKey = this.searchData.opts.defaultSearchKey;
+                var defaultSearchValue = this.searchData.opts.defaultSearchValue;
                 var defaultSearchText;
                 if (defaultSearchKey) {
                     //找到searchKey对应的文案
@@ -187,12 +189,15 @@ export default {
                         "value": this.searchData.data[0].value
                     }
                 }
-                this.searchArea.selectModel = this.searchData.data[0].value;
+                this.searchArea.selectModel = this.searchArea.selected.value;
+                if(defaultSearchValue){
+                    this.searchArea.searchInput = this.searchData.opts.defaultSearchValue;
+                }
             }
         }
     },
     mounted(){
-        this.init();
+       this.init(); 
     }
 };
 </script>
