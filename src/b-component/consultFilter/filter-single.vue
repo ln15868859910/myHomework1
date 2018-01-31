@@ -79,7 +79,7 @@ var maker = {
             this.type = "fromOutSide"
         }
 
-        if (this.model.componentConfig.componentType == "select") {
+        if (this.model.componentType == "select") {
 
             //给每一项下拉添加默认disabled属性
             if (this.model.componentConfig.optionList.length) {
