@@ -251,7 +251,8 @@ export default {
                     [`${prefixCls}-with-fixed-top`]: !!this.height,
                     [`${prefixCls}-with-gutter`]: this.hasScrollBar,
                     [`${prefixCls}-in-modal`]: this.modal,
-                    [`${prefixCls}-not-modal`]: !this.modal
+                    [`${prefixCls}-not-modal`]: !this.modal,
+                    [`${prefixCls}-with-vertical-bar`]: this.showVerticalBar
                 }
             ];
         },
