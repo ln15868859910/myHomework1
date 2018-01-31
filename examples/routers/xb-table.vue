@@ -23,6 +23,12 @@
           <div style="padding:20px 0;">
             <Xb-Table :columns="columns10" :data="data9"></Xb-Table>
         </div>
+        <div style="padding:20px 0;">
+            <Xb-Table :columns="columns99" :data="data99"></Xb-Table>
+        </div>
+        <div class="test222">
+            <Xb-Table :columns="columns4" :data="data1" :span-method="objectSpanMethod"></Xb-Table>
+        </div>
         <Modal v-model="table1"  width="860" :closable="false" :mask-closable="false" class-name="vertical-center-modal">
             <p slot="header" style="text-align:center">
                 <span style="color: #fff;">弹出表格</span>
@@ -272,6 +278,112 @@ export default {
                     }
                 }]
             },
+            columns99: [
+                {
+                    type:"selection"
+                },
+                {
+                    title: '姓名',
+                    key: 'name',
+                    className:'border-right'
+                },
+                {
+                    title: '课程',
+                    key: 'lesson',
+                    render: function (h, params) {
+                        return h('div', {
+                            class:"sp-row-merge"
+                        },[
+                            params.row.lessonList.map(function (row, index) {
+                                return h('div',{
+                                    domProps:{
+                                        innerText:row
+                                    }
+                                });
+                            })
+                        ]);
+                    }
+                },
+                {
+                    title: '学费',
+                    key: 'fee',
+                    render: function (h, params) {
+                        return h('div', {
+                            class:"sp-row-merge"
+                        },[
+                            params.row.feeList.map(function (row, index) {
+                                return h('div',{
+                                    domProps:{
+                                        innerText:row
+                                    }
+                                });
+                            })
+                        ]);
+                    }
+                }
+            ],
+            data99:[{
+                name:"周周",
+                lessonList:["数学","英语"],
+                feeList:["100.00","200.00"]
+            },{
+                name:"周一",
+                lessonList:["数学1","英语1","化学1"],
+                feeList:["100.00","200.00","500.00"]
+            },{
+                name:"周二",
+                lessonList:["数学2"],
+                feeList:["100.00"]
+            },{
+                name:"周三",
+                lessonList:["数学3","英语3"],
+                feeList:["100.00","200.00"]
+            }],
+            columns4: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    title: 'Name',
+                    key: 'name'
+                },
+                {
+                    title: 'Age',
+                    key: 'age'
+                },
+                {
+                    title: 'Address',
+                    key: 'address'
+                }
+            ],
+            data1: [
+                {
+                    name: 'John Brown',
+                    age: 18,
+                    address: 'New York No. 1 Lake Park',
+                    date: '2016-10-03'
+                },
+                {
+                    name: 'Jim Green',
+                    age: 24,
+                    address: 'London No. 1 Lake Park',
+                    date: '2016-10-01'
+                },
+                {
+                    name: 'Joe Black',
+                    age: 30,
+                    address: 'Sydney No. 1 Lake Park',
+                    date: '2016-10-02'
+                },
+                {
+                    name: 'Jon Snow',
+                    age: 26,
+                    address: 'Ottawa No. 2 Lake Park',
+                    date: '2016-10-04'
+                }
+            ],
             columns16:[
                 {
                     title: '',
@@ -649,6 +761,21 @@ export default {
             this.defaultId = this.defaultId-2;
             this.fetchData();
         },
+        objectSpanMethod:function(row, column, rowIndex, columnIndex) {
+            if (columnIndex === 0) {
+                if (rowIndex % 2 === 0) {
+                    return {
+                        rowspan: 2,
+                        colspan: 1
+                    };
+                } else {
+                    return {
+                        rowspan: 0,
+                        colspan: 0
+                    };
+                }
+            }
+        },
         //跟进状态通用方法
         filterFollowStatus: function (followUpStatus) {
             var followUp = {
@@ -736,3 +863,21 @@ export default {
     }
 }
 </script>
+<style>
+.sp-row-merge{
+    margin: -4px -10px;
+}
+.sp-row-merge>div{
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    border-bottom: 1px solid #e9eaec;
+}
+.border-left-right, .border-right{
+    border-right: 1px solid #e9eaec;
+}
+
+.sp-row-merge div:hover{
+    background: #f6f9fe;
+}
+</style>

@@ -1,17 +1,18 @@
 <template>
   <div :class="['hoverpoper-wraper',customClass]">
-      <div class="poper-wraper" v-if="visible" :style="customStyle">
-          <div class="poper">
-              <slot name="poper"></slot>
-          </div>
-      </div>
+      
       <div  ref="hover" 
             @mouseenter="handleMouseenter"
             @mouseleave="handleMouseleave"
             @click="handleClick" 
             @mousedown="handleFocus(false)"
             @mouseup="handleBlur(false)">
-          <slot name="hover"></slot>
+            <slot name="hover"></slot>
+            <div class="poper-wraper" v-if="visible" :style="customStyle">
+                <div class="poper">
+                    <slot name="poper"></slot>
+                </div>
+            </div>
       </div>
       
   </div>
@@ -45,12 +46,13 @@ export default {
         customStyle(){
             if(this.placement=='top'){
                 return {
-                    bottom:this.top + this.hoverHeight + 'px',
+                    bottom:this.hoverHeight  + 'px',
+                    'padding-bottom':this.top  + 'px',
                     'min-width':this.minWidth + 'px',
                 };
             }else{
                 return {
-                    top:this.top + this.hoverHeight - 10 + 'px',
+                    'padding-top':this.top  + 'px',
                     'min-width':this.minWidth + 'px',
                 };
             }
@@ -114,6 +116,8 @@ export default {
     min-height: 30px;
     padding: 10px;
     width: auto;
+    max-height:200px;
+    overflow-y: scroll;
 }
 .poper-wraper{
     position: absolute;

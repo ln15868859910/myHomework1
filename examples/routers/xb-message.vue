@@ -12,7 +12,7 @@
     <h2> 悬浮触发组件</h2>
         <i-button @click="addlist">添加选项</i-button>
         <div>
-            <Xb-hoverlist trigger="click">
+            <Xb-hoverlist :top="110">
                 <div slot="poper">
                     <div v-for="i in list">{{i}}</div>
                 </div>
@@ -20,7 +20,7 @@
                     <i-button>HHHH</i-button>
                 </div>
             </Xb-hoverlist>
-              <Xb-hoverlist placement="bottom" :top="50">
+              <Xb-hoverlist placement="bottom" :top="10">
                 <div slot="poper">
                     <div v-for="i in list">{{i}}</div>
                 </div>
