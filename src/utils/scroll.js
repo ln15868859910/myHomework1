@@ -12,13 +12,13 @@ export function getscrollTop() {
  */
 export function jump(total) {
     var distance = getscrollTop();
-    let step = total / 10;
+    let step = total / 20;
 
     if (total > distance) {
         smoothDown();
     } else {
         let newTotal = distance - total;
-        step = newTotal / 10;
+        step = newTotal / 20;
         smoothUp();
     }
     function smoothDown() {
@@ -113,6 +113,6 @@ export function scrollto(reactheight) {
     var screenHeight = getViewportHeight(document.body);
 
     var scrollH = totalHeigth - screenHeight;
-    var offsetTop = scrollH * reactheight / totalHeigth;
+    var offsetTop = scrollH * reactheight / totalHeigth;   
     jump(offsetTop+2);
 }
