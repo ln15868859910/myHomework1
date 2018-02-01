@@ -88,7 +88,7 @@ var maker = {
                     item.disabled = false;
                 })
                 //数据超过50条，添加自定义文案
-                if (this.model.componentConfig.itemCount >= 50) {
+                if (this.model.componentConfig.itemCount > 50) {
                     this.model.componentConfig.optionList.push({
                         value: "abadon",
                         label: "【更多选项请搜索】",
@@ -247,7 +247,7 @@ var maker = {
                         })
 
                         //数据超过50条，添加自定义文案
-                        if (data.Data.ComponentConfig.ItemCount >= 50) {
+                        if (data.Data.ComponentConfig.ItemCount > 50) {
                             tempList.push({
                                 value: "abadon",
                                 label: "【更多选项请输入更多关键词】",
