@@ -22,6 +22,14 @@
 import { oneOf } from '../../utils/assist';
 export default {
     props:{
+        show:{
+            type: Boolean,
+            default: false,
+        },
+        duration:{
+            type:Number,
+            default:0
+        },
         placement:{ //偏移方向
             type: String,
             default: 'top',
@@ -42,26 +50,11 @@ export default {
         },
         customClass:String  //自定义样式
     },
-    computed:{
-        customStyle(){
-            if(this.placement=='top'){
-                return {
-                    bottom:this.hoverHeight  + 'px',
-                    'padding-bottom':this.top  + 'px',
-                    'min-width':this.minWidth + 'px',
-                };
-            }else{
-                return {
-                    'padding-top':this.top  + 'px',
-                    'min-width':this.minWidth + 'px',
-                };
-            }
-        }
-    },
     data(){
         return{
             hoverHeight: 0,
-            visible: false
+            visible: true,
+            customStyle:{}
         };
     },
     methods:{
@@ -100,6 +93,24 @@ export default {
     mounted(){
         this.hoverHeight = this.$refs.hover.offsetHeight;
         this.minWidth = this.$refs.hover.offsetWidth;
+        if(this.placement=='top'){
+            this.customStyle = {
+                bottom:this.hoverHeight  + 'px',
+                'padding-bottom':this.top  + 'px',
+                'min-width':this.minWidth + 'px',
+            };
+        }else{
+            this.customStyle = {
+                'padding-top':this.top  + 'px',
+                'min-width':this.minWidth + 'px',
+            };
+        }
+        this.visible = this.show;
+        if(this.show&&this.duration){
+            setTimeout(()=>{
+                this.visible = !this.show;
+            },this.duration*1000);
+        }
     }
 };
 </script>

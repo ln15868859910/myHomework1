@@ -12,7 +12,7 @@
     <h2> 悬浮触发组件</h2>
         <i-button @click="addlist">添加选项</i-button>
         <div>
-            <Xb-hoverlist :top="110">
+            <Xb-hoverlist :top="110" show :duration="3">
                 <div slot="poper">
                     <div v-for="i in list">{{i}}</div>
                 </div>
@@ -29,7 +29,7 @@
                 </div>
             </Xb-hoverlist>
             </Xb-hoverlist>
-              <Xb-hoverlist trigger="focus">
+              <Xb-hoverlist trigger="focus" >
                 <div slot="poper">
                     <div v-for="i in list">{{i}}</div>
                 </div>
@@ -57,43 +57,37 @@ export default {
     },
     methods: {
         addlist(){
-            this.list.push(new Date().getTime());
+            this.list.push(new Date().getTime()+"!12312312312312312");
         },
         open() {
-            this.$Message2('这是一条消息提示');
+            this.$XbConfirm('这是一条消息提示');
         },
         open1() {
-            this.$Message2({
+            this.$Message2.warning({
                 message: '恭喜你，这是一条警告消息',
                 type: 'warning'
             });
         },
         open2() {
-            this.$Message2({
-                message: '恭喜你，这是一条成功消息',
-                top:500,
-                type: 'success'
-            });
+            this.$Message2.success("123");
+            // this.$Message2({
+            //     message: '恭喜你，这是一条成功消息',
+            //     top:500,
+            //     type: 'success'
+            // });
         },
         open3() {
-            this.$Message2({
-                message: '恭喜你，这是一条错误消息',
-                type: 'error'
-            });
+            this.$Message2.error('恭喜你，这是一条错误消息');
         },
         open4() {
-            this.$Message2({
-                message: '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
-                type: 'success'
-            });
+            this.$Message2.success('恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息');
         },
         open5() {
-            this.$Message2({
+            this.$Message2.success({
                 message: '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
                 title:'标题',
                 showClose: true,
-                duration: 0,
-                type: 'success'
+                duration: 0
             });
         },
         open6() {

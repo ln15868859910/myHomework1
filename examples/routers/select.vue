@@ -117,8 +117,8 @@
 <template>
     <div>
         <div>基本状态：</div>
-        <Select v-model="model1" :filterable="false" class="xjw">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Select v-model="model1.data" :filterable="false" class="xjw">
+            <Option v-for="item in cityList3" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <div>分组选择</div>
         <Select v-model="model2">
@@ -138,7 +138,7 @@
         <Select v-model="mode44" filterable multiple remote :remote-method="getSubjectData" >
             <Option v-for="item in cityList7" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-    
+        <i-button @click="setData()">setData</i-button>
     </div>
 </template>
 
@@ -201,7 +201,10 @@ export default {
                 }
             ],
             cityList7:[],
-            model1: 'shanghai',
+            cityList3:[],
+            model1: {
+                data:'shanghai'
+            },
             model2: "shanghai",
             model3: [],
             model4: "",
@@ -210,6 +213,11 @@ export default {
             model6: "",
             model7: ""
         }
+    },
+    created(){
+        setTimeout(()=>{
+            this.cityList3 = this.cityList.concat();
+        },500);
     },
     methods: {
         handleSet() {
@@ -220,6 +228,9 @@ export default {
             setTimeout(()=>{
                 this.cityList7 = this.cityList2.concat();
             });
+        },
+        setData(){
+            this.model1.data = "shanghai";
         }
     }
 }
