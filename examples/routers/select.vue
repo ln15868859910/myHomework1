@@ -153,23 +153,23 @@ export default {
                 },
                 {
                     value: 'shanghai',
-                    label: '上海市'
+                    label: '上海市上海市'
                 },
                 {
                     value: 'shenzhen',
-                    label: '深圳市'
+                    label: '深圳市圳市'
                 },
                 {
                     value: 'hangzhou',
-                    label: '杭州市'
+                    label: '杭州市市'
                 },
                 {
                     value: 'nanjing',
-                    label: '南京市'
+                    label: '南上海市上海市'
                 },
                 {
                     value: 'chongqing',
-                    label: '重庆市'
+                    label: '重庆上海市上海市'
                 }
             ],
             cityList1: [
