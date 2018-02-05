@@ -20,6 +20,16 @@
         left: 16px;
         position: absolute;
     }
+    &-dot{
+        margin-right: 5px;
+        .ivu-icon.ivu-icon-information-filled{
+            width: 5px;
+            height: 5px;
+        }
+        .ivu-icon::before{
+            content: '';
+        }
+    }
 
     &-desc {
         font-size: @font-size-base;

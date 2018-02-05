@@ -6,6 +6,9 @@
                     <Icon :type="iconType"></Icon>
                 </slot>
             </span>
+            <span v-if="dot" :class="dotClass">
+                <Icon :type="iconType"></Icon>
+            </span>
             <span :class="messageClasses"><slot></slot></span>
             <span :class="descClasses"><slot name="desc"></slot></span>
             <a :class="closeClasses" v-if="closable" @click="close">
@@ -43,6 +46,10 @@
             banner: {
                 type: Boolean,
                 default: false
+            },
+            dot:{
+                type: Boolean,
+                default: false
             }
         },
         data () {
@@ -74,6 +81,9 @@
             },
             iconClasses () {
                 return `${prefixCls}-icon`;
+            },
+            dotClass(){
+                return `${prefixCls}-dot`;
             },
             iconType () {
                 let type = '';
