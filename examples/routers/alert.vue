@@ -43,9 +43,9 @@
     </div>
 </template>
 <script>
-import { Alert, Icon } from 'spui';
+// import { Alert, Icon } from 'spui';
 export default {
-    components: { Alert, Icon }
+    // components: { Alert, Icon }
 }
 </script>
 
