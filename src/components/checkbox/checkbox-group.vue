@@ -17,6 +17,10 @@
                 default () {
                     return [];
                 }
+            },
+            single:{    //是否单选
+                type:Boolean,
+                default:false
             }
         },
         data () {
@@ -40,7 +44,11 @@
 
                 if (this.childrens) {
                     this.childrens.forEach(child => {
-                        child.model = value;
+                        if(this.single){
+                            child.model = value.indexOf(child.label)>=0?[child.label]:[];
+                        }else{
+                            child.model = value;
+                        }
 
                         if (update) {
                             child.currentValue = value.indexOf(child.label) >= 0;
