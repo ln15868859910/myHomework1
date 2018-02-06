@@ -39,7 +39,9 @@ module.exports = merge(webpackBaseConfig, {
         new HtmlWebpackPlugin({
             inject: true,
             filename: path.join(__dirname, '../examples/dist/index.html'),
-            template: path.join(__dirname, '../examples/index.html')
+            template: path.join(__dirname, '../examples/index.html'),
+            chunks: ['vendors','main'],
+            chunksSortMode: 'dependency'
         }),
         new FriendlyErrorsPlugin()
     ]
