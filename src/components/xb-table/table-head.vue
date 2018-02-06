@@ -18,7 +18,7 @@
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
                             <span :class="[prefixCls+'-head-tip']" v-if="column.tipContent">
-                                <Tooltip :placement="column.tipPlacement?column.tipPlacement:'top'" :content="column.tipContent">
+                                <Tooltip :placement="column.tipPlacement?column.tipPlacement:'top'" :content="column.tipContent" transfer>
                                     <Icon class="question-icon1" type="help-circled" size="22"></Icon>
                                     <Icon class="question-icon2" type="help-filled" size="22"></Icon>
                                 </Tooltip>
