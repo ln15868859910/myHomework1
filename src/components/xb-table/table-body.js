@@ -177,6 +177,7 @@ const column_map={
                                  return h('td', {
                                      class: that.alignCls(column, false,row),
                                      style: !column.show?'display:none':'display:table-cell',
+                                     key: column._columnKey,
                                      domProps: {
                                          rowSpan: rowspan,
                                          colSpan: colspan
