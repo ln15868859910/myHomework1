@@ -41,8 +41,6 @@ export default {
             if(el.classList.contains("current")){
                 return;
             }
-            removeAllCurrent();
-            el.classList.add("current");
             var targetNode = document.querySelectorAll("[xb-target='"+binding.value+"']")[0];
             if(!targetNode){
                 console.warn("target与Anchor不匹配");
