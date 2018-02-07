@@ -1,6 +1,6 @@
 <template>
     <div :class="classes">
-        <div :class="[prefixCls + '-headWrap']" :style="[fixedHeaderStyle,centerTableStyle]" ref="fixedHeaderEle">
+        <div :class="[prefixCls + '-headWrap']" :style="[fixedHeaderStyle]" ref="fixedHeaderEle">
             <div :class="[prefixCls + '-title']" ref="title">
                 <slot name="header"></slot>
             </div>
@@ -325,16 +325,12 @@ export default {
         isRightFixed() {
             return this.rightFixedColumns.filter(col=>col.show).length;
         },
-        centerTableStyle() {
-            var style = {};
-            style.width = this.containerWidth + 'px';
-            return style;
-        },
         fixedHeaderStyle() {
             var style = {};
             if (this.addFixedStyle) {
                 style.position = 'fixed';
                 style.top = this.fixedTop + 'px';
+                style.width = this.containerWidth + "px";
             }
             return style;
         },
@@ -361,7 +357,7 @@ export default {
             this.$nextTick(() => {
                 var bodyRows = this.$refs.centerBody.querySelectorAll('tbody tr') || [];
                 var fixedColumnsBodyRowsHeight = [].map.call(bodyRows, function (row) {
-                    return row.getBoundingClientRect().height || 'auto';
+                    return row.offsetHeight && row.offsetHeight<2000? row.offsetHeight:'auto';
                 });
                 this.fixedColumnsBodyRowsHeight = fixedColumnsBodyRowsHeight;
             });
@@ -424,10 +420,10 @@ export default {
                     };
                 }
                 this.columnsWidth = columnsWidth;
+                this.syncFixedTableRowHeight();
             });
             // 高度小于表格真实高度时显示纵向滚动条
-            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
-            this.syncFixedTableRowHeight();
+            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));   
         },
         handleResize() {
             this.$nextTick(() => {
@@ -663,6 +659,13 @@ export default {
                 column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
                 column.show = ("show" in column) ? column.show : true;
+                column.renderType="normal";
+                if(column.type && column.type!=="link"){
+                    column.renderType=column.type;
+                }
+                else if(column.render){
+                    column.renderType="selfRender";
+                }
                 if (column.type === "selection") {
                     this.selectTriggerByRow = column.triggerType === "row";
                 }
@@ -713,9 +716,9 @@ export default {
     },
     mounted() {
         this.fixedHeader();
+        this.handleResize();
         this.$nextTick(() => {
             this.ready = true;
-            this.handleResize();
         });
         if (this.fixHeader) {
             on(window, 'scroll', this.addScrollEffect);
@@ -752,6 +755,9 @@ export default {
         },
         addFixedStyle(val) {
             this.$emit('on-fixed-change', val);
+            if(val){
+                this.containerWidth = parseInt(getStyle(this.$el, 'width'));
+            }
         }
     }
 };

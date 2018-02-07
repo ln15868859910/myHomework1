@@ -1,14 +1,116 @@
- import Cell from './cell.vue';
  import Expand from './expand.js';
  import Mixin from './mixin';
  import { hasClass, addClass, removeClass } from '../../utils/dom';
+
+ import ControlCell from './control-cell';
+ import InputCell from './input-cell';
+ import Icon from '../icon/icon.vue';
+ import Checkbox from '../checkbox/checkbox.vue';
+
+const column_map={
+    index:{
+        render (h,rowIndex,row,column) {
+            return h('span',rowIndex + 1)
+        }
+    },
+    selection:{
+        render (h,rowIndex,row,column){
+            var that=this;
+            return h('Checkbox',{
+                props:{
+                    disabled:that.rowDisabled(rowIndex),
+                    value:that.rowChecked(rowIndex)
+                },
+                on:{
+                    'on-change':function (status) {
+                        that.$parent.toggleSelect(row)
+                    }
+                }
+            })
+        }
+    },
+    normal:{
+        render(h, rowIndex, row, column) {
+            return h('span', row[column.key])
+        }
+    },
+    selfRender:{
+        render(h, rowIndex, row, column) {
+            return h('Expand', {
+                props: {
+                    row: row,
+                    column: column,
+                    index: row._index,
+                    render: column.render
+                }
+            })
+        }
+    },
+    radio:{
+        render (h,rowIndex,row,column){
+            return h('span',{
+                class:this.prefixCls+'-radio-box'
+            },[
+                h('Icon',{
+                    props:{
+                        type:"checkmark",
+                        size:22
+                    }
+                })
+            ])
+        }
+    },
+    expand:{
+        render (h,rowIndex,row,column){
+            var that=this;
+            if(row._disableExpand){
+                return "";
+            }
+            return h('div',{
+                class:[this.prefixCls+'-cell-expand',this.rowExpanded(row._index)?this.prefixCls+'-cell-expand-expanded':''],
+                on:{
+                    click:function(){that.$parent.toggleExpand(row._index)}
+                }
+            },[h('Icon',{
+                props:{
+                    type:"ios-arrow-right"
+                }
+            })])
+        }
+    },
+    input:{
+        render(h, rowIndex, row, column) {
+            return h('Input-cell', {
+                props: {
+                    row: row,
+                    column: column,
+                    index: row._index,
+                    render: column.render
+                }
+            })
+        }
+    },
+    control:{
+        render(h, rowIndex, row, column) {
+            return h('Control-cell', {
+                props: {
+                    row: row,
+                    column: column,
+                    index: row._index,
+                    render: column.render
+                }
+            })
+        }
+    }
+}
 
  export default {
      name: 'TableBody',
      mixins: [Mixin],
      components: {
-         Cell,
-         Expand
+         Expand,
+         Icon,
+         Checkbox, ControlCell, InputCell
      },
      props: {
          styleObject: Object,
@@ -80,20 +182,28 @@
                                          colSpan: colspan
                                      }
                                  }, [
-                                     h(Cell, {
-                                         props: {
-                                             fixed: that.fixed,
-                                             row: row,
-                                             column: column,
-                                             key: column._columnKey,
-                                             naturalIndex: rowIndex,
-                                             index: row._index,
-                                             checked: that.rowChecked(rowIndex),
-                                             disabled: that.rowDisabled(rowIndex),
-                                             expanded: that.rowExpanded(row._index),
-                                         }
-                                     })
-                                 ])
+                                     h('div',{
+                                         class:[that.prefixCls+'-cell',column.breakWord?that.prefixCls+'-cell-noEllipsis':'',column.type==='expand'?that.prefixCls+'-cell-with-expand':''],
+                                         style:that.ellipsisStyle(column),
+                                         on: {
+                                             mouseenter: ($event) => {
+                                                 if (column.showOverflowTip) {
+                                                     var target = $event.target;
+                                                     if (target.offsetWidth < target.scrollWidth || target.offsetHeight < target.scrollHeight) {
+                                                         target.title = row[column.key];
+                                                     }
+                                                 }
+                                             },
+                                             mouseleave: ($event) => {
+                                                 var target = $event.target;
+                                                 target.title = "";
+                                             }
+                                         },
+                                     },[
+                                     column_map[column.renderType].render.call(that,h,rowIndex,row,column)
+                                     ])
+                                 ]
+                                 )
                              }
                          })
                      ]),
@@ -168,6 +278,16 @@
              if (this.fixed && this.$parent.fixedColumnsBodyRowsHeight.length) {
                  const trHeight = this.$parent.fixedColumnsBodyRowsHeight[_index];
                  style.height = `${trHeight}px`;
+             }
+             return style;
+         },
+         ellipsisStyle(column) {
+             let style = {};
+             if (column.breakWord && column.lineClamp) {
+                 style.display = "-webkit-box";
+                 style.webkitBoxOrient = "vertical";
+                 style.webkitLineClamp = column.lineClamp;
+                 style.maxHeight = 24 * column.lineClamp + "px";
              }
              return style;
          },
