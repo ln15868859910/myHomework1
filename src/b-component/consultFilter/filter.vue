@@ -55,7 +55,7 @@
 
 const prefixCls = "spui-b-consultFilter";
 import emitter from "./emit";
-import iSelect from '../../components/select';
+// import iSelect from '../../components/select';
 import iInput from '../../components/input';
 import XbFuzzySelect from '../../components/xb-fuzzy-select';
 import Tag from '../../components/tag';
@@ -70,7 +70,7 @@ import clickoutside from '../../directives/clickoutside';
 export default {
     name: 'consultFilter',
     mixins: [ emitter ],
-    components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect},
+    components: { iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect},
     directives: { clickoutside },
     props: {
         filterData: {

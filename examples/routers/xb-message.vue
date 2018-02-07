@@ -37,6 +37,7 @@
                     <i-input v-model="inputvalue"></i-input>
                 </div>
             </Xb-hoverlist>
+            <i-input v-model="inputvalue" v-countworld :maxlength="10"></i-input>
         </div>
     </div>
 </template>
@@ -44,11 +45,13 @@
 <script>
 import Message from './../../src/components/xb-message/message';
 import XbHoverlist from './../../src/components/xb-hoverlist/index';
+import countworld from './../../src/directives/countworld';
 
 import Vue from 'vue';
 Vue.prototype.$Message2 = Message;
 export default {
     components:{XbHoverlist},
+    directives:{countworld},
     data(){
         return{
             list:['1'],

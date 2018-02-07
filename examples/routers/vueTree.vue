@@ -52,13 +52,13 @@ h1{
 
 <script>
 
-import  { checkboxTree, vueTree, radioTree }  from 'spui';
+// import  { checkboxTree, vueTree, radioTree }  from 'spui';
 
 export default {
   components: {
-    vueTree,
-    checkboxTree,
-    radioTree
+    // vueTree,
+    // checkboxTree,
+    // radioTree
   },
   data() {
     return {
