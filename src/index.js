@@ -205,6 +205,6 @@ if (typeof window !== 'undefined' && window.Vue) {
     install(window.Vue);
 }
 
-export default Object.assign(spui, {
+module.exports = Object.assign(spui, {
     install
 }); // eslint-disable-line no-undef
