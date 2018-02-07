@@ -38,6 +38,7 @@
                 </div>
             </Xb-hoverlist>
             <i-input v-model="inputvalue" v-countworld :maxlength="10"></i-input>
+            <i-input v-model="inputvalue2" v-countworld :maxlength="10" type="textarea"></i-input>
         </div>
     </div>
 </template>
@@ -55,7 +56,8 @@ export default {
     data(){
         return{
             list:['1'],
-            inputvalue:''
+            inputvalue:'',
+            inputvalue2:'',
         };
     },
     methods: {
