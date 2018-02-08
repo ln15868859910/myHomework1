@@ -39,6 +39,24 @@
             </Xb-hoverlist>
             <i-input v-model="inputvalue" v-countworld :maxlength="10"></i-input>
             <i-input v-model="inputvalue2" v-countworld :maxlength="10" type="textarea"></i-input>
+
+            <xb-icon type="tag-oneToOne"></xb-icon>
+            <xb-icon type="tag-balance"></xb-icon>
+            <xb-icon type="tag-class"></xb-icon>
+            <xb-icon type="tag-currency"></xb-icon>
+            <xb-icon type="tag-diamond"></xb-icon>
+            <xb-icon type="tag-full"></xb-icon>
+            <xb-icon type="tag-hook"></xb-icon>
+            <xb-icon type="tag-jiaocai"></xb-icon>
+            <xb-icon type="tag-kemu"></xb-icon>
+            <xb-icon type="tag-lesson"></xb-icon>
+            <xb-icon type="tag-new"></xb-icon>
+            <xb-icon type="tag-notoption"></xb-icon>
+            <xb-icon type="tag-renew"></xb-icon>
+            <xb-icon type="tag-school"></xb-icon>
+            <xb-icon type="tag-sit"></xb-icon>
+            <xb-icon type="tag-waitpos"></xb-icon>
+            <xb-icon type="tag-zafei"></xb-icon>
         </div>
     </div>
 </template>
