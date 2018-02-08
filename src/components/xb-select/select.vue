@@ -2,7 +2,7 @@
     <div :class="classes" v-clickoutside="hideMenu" style="position: relative;">
         <div @click="toggleMenu" :class="[prefixCls2 + '-selection',prefixCls + '-selection']">
             <span :class="[prefixCls + '-placeholder']" v-show="!query&&!remote">{{placeholder}}</span>
-            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;cursor: auto;" v-show="remote" @input="onchange" @on-enter="search" @blur="handleBlur" @focus="focusSearch" :placeholder="placeholder" :disabled="disabled">
+            <input :class="[prefixCls + '-input']" type="text" v-model="query" style="width:100%;cursor: auto;" v-show="remote" @input="onchange" @on-enter="search" @focus="focusSearch" :placeholder="placeholder" :disabled="disabled">
             <input :class="[prefixCls + '-input']" type="text" v-model="query" readonly style="width:100%;" v-show="!remote" :disabled="disabled">
             <Icon type="close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon&&!disabled" @click.native.stop="deleteSelect"></Icon>
             <Icon type="arrow-down" :class="[prefixCls + '-arrow']" v-if="!remote"></Icon>
