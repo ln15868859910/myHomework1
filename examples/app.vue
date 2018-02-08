@@ -189,8 +189,14 @@ li+li {
                 <li>
                     <router-link to="/xbTable">xbTable</router-link>
                 </li>
+                 <li>
+                    <router-link to="/xbForm">xbForm</router-link>
+                </li>
                 <li>
                     <router-link to="/xbScroll">xbScroll</router-link>
+                </li>
+                   <li>
+                    <router-link to="/xbMessage">xbMessage</router-link>
                 </li>
                 
             </ul>

@@ -6,7 +6,7 @@
         <div  style="flex:1;-webkit-box-flex: 1;htight:100;">
             <div class="scroll">
                 <ul>
-                    <li v-for="(item,index) in menus2" :class="current==item?'current':''" v-scrollanchor="item" class="scrolltab" >
+                    <li v-for="(item,index) in menus2" :class="current==item?'current':''" v-xbscroll.anchor="item" class="scrolltab" >
                         {{item}}
                         <Icon type="arrow-right" class="scrollicon"></Icon>
                     </li>
@@ -15,22 +15,22 @@
         </div>
         
         <section class="cate-list" slot="content">
-            <div  class="cate-item" v-scrolltarget="menus2[0]">
+            <div  class="cate-item" v-xbscroll.target="menus2[0]">
                 <div  :style="getClass()"> AAAAA</div>
             </div>
-            <div  class="cate-item" v-scrolltarget="menus2[1]">
+            <div  class="cate-item" v-xbscroll.target="menus2[1]">
                 <div  :style="getClass()"> AAAAA</div>
             </div>
-            <div  class="cate-item" v-scrolltarget="menus2[2]">
+            <div  class="cate-item" v-xbscroll.target="menus2[2]">
                 <div  :style="getClass()"> AAAAA</div>
             </div>
-            <div  class="cate-item" v-scrolltarget="menus2[3]">
+            <div  class="cate-item" v-xbscroll.target="menus2[3]">
                 <div  :style="getClass()"> AAAAA</div>
             </div>
-            <div  class="cate-item" v-scrolltarget="menus2[4]">
+            <div  class="cate-item" v-xbscroll.target="menus2[4]">
                 <div  :style="getClass()"> AAAAA</div>
             </div>
-            <div class="cate-item" v-scrolltarget="menus2[5]">
+            <div class="cate-item" v-xbscroll.target="menus2[5]">
                 <div  :style="getClass()"> AAAAA</div>
             </div>
         </section>
@@ -38,13 +38,13 @@
 </template>
 <script>
 // import anchorscroll from './../../src/b-component/anchorscroll/anchorscroll';
-import scrollanchor from './../../src/directives/scrollanchor';
-import scrolltarget from './../../src/directives/scrolltarget';
+import xbscroll from './../../src/directives/xbscroll';
+
 export default {
     components:{
         // anchorscroll
     },
-    directives:{scrollanchor,scrolltarget},
+    directives:{xbscroll},
     data() {
         return {
             menus2: ['name1', 'name2', 'name3', 'name4', 'name5', 'name6'],
@@ -61,7 +61,7 @@ export default {
             this.current = name;
         },
         getClass() {
-            var h = Math.random(10) * 400;
+            var h = 300+Math.random(10) * 400;
             return {
                 height: h + 'px',
                 background: `rgb(${Math.ceil(Math.random(1) * 255)}, ${Math.ceil(
@@ -73,7 +73,7 @@ export default {
     }
 };
 </script>
-<style>
+<style scoped>
 body{
     background:#dfe3ed;
 }

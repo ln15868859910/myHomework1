@@ -70,7 +70,7 @@ import clickoutside from '../../directives/clickoutside';
 export default {
     name: 'consultFilter',
     mixins: [ emitter ],
-    components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect},
+    components: { iSelect,iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect},
     directives: { clickoutside },
     props: {
         filterData: {

@@ -1,0 +1,53 @@
+@xbmessage-prefix-cls: ~"@{css-prefix}xbmessage";
+
+.@{xbmessage-prefix-cls} {
+    &-info{
+        border: 1px solid @primary-color;
+        background-color: @info-b-color;
+    }
+    &-success{
+        border: 1px solid @success-color;
+        background-color: @success-b-color;
+    }
+    &-warning{
+        border: 1px solid @warning-color;
+        background-color: @warning-b-color;
+    }
+    &-error{
+        border: 1px solid @error-color;
+        background-color: @error-b-color;
+    }
+    &-message{
+        position: fixed;
+        padding: 5px 20px;
+        border-radius: 6px;
+        color: @title-color;
+        font-size: 12px;
+        line-height: 20px;
+        transform: translateX(-50%);
+        transition: opacity 0.3s, transform .4s;
+        width: 300px;
+        left:50%;
+    }
+    &-title{
+        font-size: 14px;
+        font-weight: bold;
+        display: block;
+    }
+    &-desc{
+        font-size: 12px;
+    }
+    &-close{
+        font-size: 12px;
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+}
+.xb-message-fade-enter,
+.xb-message-fade-leave-active {
+  opacity: 0;
+  transform: translate(-50%, -100%);
+}

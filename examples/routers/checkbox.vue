@@ -26,6 +26,16 @@
         <Checkbox label="苹果" disabled></Checkbox>
         <Checkbox label="西瓜" disabled></Checkbox>
     </Checkbox-group>
+    <Checkbox-group v-model="checkAllGroup2" >
+        <Checkbox label="1" @click.prevent.native="handleCheckThis(1)">香蕉</Checkbox>
+        <Checkbox label="2" @click.prevent.native="handleCheckThis(2)">苹果</Checkbox>
+        <Checkbox label="3" @click.prevent.native="handleCheckThis(3)">西瓜</Checkbox>
+    </Checkbox-group>
+    <Checkbox-group v-model="checkAllGroup2"  single>
+        <Checkbox label="香蕉" ></Checkbox>
+        <Checkbox label="苹果" ></Checkbox>
+        <Checkbox label="西瓜" ></Checkbox>
+    </Checkbox-group>
     </div>
     </div>
 </template>
@@ -35,6 +45,8 @@
             return {
                 indeterminate: true,
                 checkAll: false,
+                list:["1","2","3"],
+                checkAllGroup2:[],
                 checkAllGroup: ['香蕉', '西瓜']
             }
         },
@@ -63,6 +75,13 @@
                 } else {
                     this.indeterminate = false;
                     this.checkAll = false;
+                }
+            },
+            handleCheckThis(data){
+                if(''+data==this.checkAllGroup2[0]){
+                    this.checkAllGroup2 = [];    
+                }else{
+                    this.checkAllGroup2 = [''+data];
                 }
             }
         }

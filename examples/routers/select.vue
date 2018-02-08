@@ -117,8 +117,8 @@
 <template>
     <div>
         <div>基本状态：</div>
-        <Select v-model="model1" :filterable="false" class="xjw">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Select v-model="model1.data" :filterable="false" class="xjw">
+            <Option v-for="item in cityList3" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <div>分组选择</div>
         <Select v-model="model2">
@@ -131,14 +131,14 @@
         </Select>
     
         <div>多选</div>
-        <Select v-model="model3" filterable multiple>
+        <Select v-model="model3" filterable multiple style="width:180px;">
             <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <div>搜索选择</div>
-        <Select v-model="model4" filterable>
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Select v-model="mode44" filterable multiple remote :remote-method="getSubjectData" >
+            <Option v-for="item in cityList7" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-    
+        <i-button @click="setData()">setData</i-button>
     </div>
 </template>
 
@@ -153,23 +153,23 @@ export default {
                 },
                 {
                     value: 'shanghai',
-                    label: '上海市'
+                    label: '上海市上海市'
                 },
                 {
                     value: 'shenzhen',
-                    label: '深圳市'
+                    label: '深圳市圳市'
                 },
                 {
                     value: 'hangzhou',
-                    label: '杭州市'
+                    label: '杭州市市'
                 },
                 {
                     value: 'nanjing',
-                    label: '南京市'
+                    label: '南上海市上海市'
                 },
                 {
                     value: 'chongqing',
-                    label: '重庆市'
+                    label: '重庆上海市上海市'
                 }
             ],
             cityList1: [
@@ -200,19 +200,37 @@ export default {
                     label: '重庆市'
                 }
             ],
-            model1: 'shanghai',
+            cityList7:[],
+            cityList3:[],
+            model1: {
+                data:'shanghai'
+            },
             model2: "shanghai",
             model3: [],
             model4: "",
+            mode44: [],
             model5: "",
             model6: "",
             model7: ""
         }
     },
+    created(){
+        setTimeout(()=>{
+            this.cityList3 = this.cityList.concat();
+        },500);
+    },
     methods: {
         handleSet() {
             this.model11 = 'shanghai';
             //                this.model12 = ['beijing'];
+        },
+        getSubjectData(){
+            setTimeout(()=>{
+                this.cityList7 = this.cityList2.concat();
+            });
+        },
+        setData(){
+            this.model1.data = "shanghai";
         }
     }
 }

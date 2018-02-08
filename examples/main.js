@@ -224,8 +224,16 @@ const router = new VueRouter({
             component: require('./routers/xb-table.vue')
         },
         {
+            path: '/xbForm',
+            component: require('./routers/xb-form.vue')
+        },
+        {
             path: '/xbScroll',
             component: require('./routers/xb-scroll.vue')
+        },
+        {
+            path: '/xbMessage',
+            component: require('./routers/xb-message.vue')
         }
     ]
 });

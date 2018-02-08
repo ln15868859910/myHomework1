@@ -69,7 +69,7 @@ import {
 } from './components/xb-droplist';
 import XbTable from './components/xb-table';
 import XbScrollbar from './components/xb-scrollbar';
-
+import XbHoverlist from './components/xb-hoverlist';
 //业务组件
 import consultFilter from './b-component/consultFilter';
 import infoBox from './b-component/infoBox';
@@ -78,6 +78,8 @@ import {
     checkboxTree,
     radioTree 
 } from './b-component/vueTree';
+
+import XbMessage from './components/xb-message/message';
 
 const spui = {
     Affix,
@@ -178,6 +180,7 @@ const spui = {
     XbOption,
     XbSelect,
     XbTable,
+    XbHoverlist,    //悬浮组件
     XbScrollbar
 };
 
@@ -194,6 +197,7 @@ const install = function (Vue, opts = {}) {
     Vue.prototype.$Modal = Modal;
     Vue.prototype.$XbConfirm = XbConfirm;
     Vue.prototype.$Notice = Notice;
+    Vue.prototype.$XbMessage = XbMessage;
 };
 
 // auto install

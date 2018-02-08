@@ -253,8 +253,8 @@
                 return this.visible && status;
             },
             notFoundShow () {
-                const options = this.$slots.default || [];
-                return (this.notFound && !this.remote) || (this.remote && !this.loading && !options.length);
+                // const options = this.$slots.default || [];
+                return (this.notFound && !this.remote) || (this.remote && !this.loading && !this.options.length);
             }
         },
         methods: {
