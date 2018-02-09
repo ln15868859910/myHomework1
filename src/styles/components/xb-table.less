@@ -15,7 +15,7 @@
     &-scrollBar {
         overflow: auto;
         background: @table-scrollBar-bg ;
-        height: 9px;
+        height: 8px;
     }
     .@{css-prefix-spui}scrollbar-thumb {
         background: @primary-color;
@@ -27,13 +27,31 @@
         height: 8px;
     }
     &-headWrap {
-        position: relative;
+        // position: relative;
         background: @table-thead-bg;
         z-index: 10;
     }
     &-head-tip {
         vertical-align: middle;
         display: inline-block
+    }
+    &-head-tip {
+        vertical-align: middle;
+        display: inline-block;
+        .question-icon1,.question-icon2{
+            color:@primary-color;
+        }
+        .question-icon2{
+            display:none;
+        }
+    }
+    &-head-tip:hover{
+        .question-icon1{
+            display:none;
+        }
+        .question-icon2{
+            display:inline-block;
+        }
     }
     &-footer {
         border-bottom: none;
@@ -153,7 +171,7 @@
         .spui-table-expanded-cell tr td .@{table-prefix-cls2}-cell,
         .spui-table-expanded-cell tr th .@{table-prefix-cls2}-cell {
             padding: 0 10px;
-        }
+    }
         .spui-table-expanded-cell tr th:first-child .@{table-prefix-cls2}-cell {
             .ivu-checkbox-wrapper {
                 margin: 0;
@@ -333,6 +351,10 @@
         font-size: 25px;
         transform: rotate(90deg);
         color: @darker-primary-color;
+    }
+    &-showmore-icon:hover{
+        cursor: pointer;
+        color: @dark-primary-color;
     }
     &-custom-pop {
         .ivu-modal-header p {

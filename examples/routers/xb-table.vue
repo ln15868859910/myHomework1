@@ -48,7 +48,7 @@ export default {
             table1:false,
             tableColumns1:[
                 {
-                    type: 'selection',
+                    type: 'radio',
                     width: 50,
                     align:"left"
                 }, {
@@ -125,6 +125,7 @@ export default {
                     title: '联系电话',
                     key: 'TelPhoneUi',
                     width: 120,
+                    fixed:"left",
                     tipContent:'联系电话可通过学员应用下的权限点进行全显/隐藏控制',
                     canedit:true,
                     type:'input',
@@ -673,11 +674,7 @@ export default {
                 StuinfoTags: [], // 标签
                 StuinfoTagsName: "", //标签名字
                 Marker: "", //关键字
-                FollowUpState: {
-                    followUpStatus: 1,
-                    followUpDeacription: "待跟进",
-                    followUpClass: ""
-                },
+                FollowUpState: "待跟进",
                 followUpPopShow: false, //控制跟进状态下拉项显示
                 Age: "",
                 ChannelId: "",
@@ -725,7 +722,7 @@ export default {
             }).join("/");
             model.Marker = bizModel.Marker;
             model.followUpPopShow = false;
-            model.FollowUpState = that.filterFollowStatus(bizModel.FollowUpState);
+            model.FollowUpState = bizModel.FollowUpState;
             model.Age = bizModel.BirthDate === "\/Date(-62135596800000)\/" ? "未知" : moment().diff(moment(bizModel.BirthDate), "years") + "岁";
             model.ChannelId = bizModel.ChannelId;
             model.ChannelName = bizModel.ChannelName;

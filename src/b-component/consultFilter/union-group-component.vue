@@ -186,7 +186,7 @@ const UnionComponentSlot = {
 
         }
         //数据超过50条，添加自定义文案
-        if (this.model.componentConfig.optionList.length >= 50) {
+        if (this.model.componentConfig.optionList.length > 50) {
             this.model.componentConfig.optionList.push({
                 value: "abadon",
                 label: "【更多选项请搜索】",
@@ -330,7 +330,7 @@ const UnionComponentSlot = {
                                 })
 
                                 //数据超过50条，添加自定义文案
-                                if (data.Data.ComponentConfig.OptionList.length >= 50) {
+                                if (data.Data.ComponentConfig.OptionList.length > 50) {
                                     tempList.push({
                                         value: "abadon",
                                         label: "【更多选项请输入更多关键词】",
@@ -501,7 +501,7 @@ const UnionComponentSlot = {
                             })
 
                             //数据超过50条，添加自定义文案
-                            if (data.Data.ComponentConfig.OptionList.length >= 50) {
+                            if (data.Data.ComponentConfig.OptionList.length > 50) {
                                 tempList.push({
                                     value: "abadon",
                                     label: "【更多选项请输入更多关键词】",
