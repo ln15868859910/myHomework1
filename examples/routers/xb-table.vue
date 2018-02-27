@@ -34,7 +34,7 @@
                 <span style="color: #fff;">弹出表格</span>
             </p>
             <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
-                <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow"></Xb-Table>
+                <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow" :selected-pkeys="selectedArr2"></Xb-Table>
             </div>
         </Modal>
     </div>
@@ -43,6 +43,7 @@
 export default {
     data() {
         return {
+            selectedArr2:[584027],
             testcol:[],
             selection:[],
             table1:false,
@@ -50,7 +51,10 @@ export default {
                 {
                     type: 'radio',
                     width: 50,
-                    align:"left"
+                    align:"left",
+                    preselect:function(row){
+                        return row._pkey%2;
+                    }
                 }, {
                     title: '星标',
                     key: 'UserCollectionId',
@@ -91,7 +95,10 @@ export default {
                     type: 'selection',
                     width: 50,
                     fixed: "left",
-                    align:"left"
+                    align:"left",
+                    preselect:function(row,status){
+                        return !status&&row._pkey%2;
+                    }
                 }, {
                     title: '星标',
                     key: 'UserCollectionId',
@@ -485,6 +492,7 @@ export default {
     },
     methods: {
         getClickRow(data){
+            this.selectedArr2 = [data._pkey];
             console.log(data);
         },
         changeSingel(data){
@@ -733,6 +741,7 @@ export default {
             model.AddDate = bizModel.AddDate;
             model.AddUser = bizModel.User;
             model.isSelected = false;
+            // model._disabled = true;
             _.each(that.extendAttribute, function (item) {
                 model[item.Column] = bizModel[item.Column];
             })

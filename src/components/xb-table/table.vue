@@ -442,6 +442,10 @@ export default {
         },
         setCurrentRow(_index,data){
             this.currentClickRow = _index;
+            if(this.isRadio){
+                this.selections = [data];
+                this.selectionPkeys = [data._pkey];
+            }
             this.clickCurrentRow(data);
         },
         clickCurrentRow(data){

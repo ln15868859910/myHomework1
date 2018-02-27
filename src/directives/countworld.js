@@ -69,9 +69,14 @@ export default {
     }
     target.__vueChangeHandler__ = changeHandler;
     target.addEventListener("keyup", changeHandler);
-    // console.log(target);
   },
-  update() {},
+  update(el,dirname) {
+    if(dirname.value!=dirname.oldValue){
+      var target = getTarget(el);
+      target.value = dirname.value;
+      target.__vueChangeHandler__();
+    }
+  },
   unbind(el, binding) {
     var target = getTarget(el);
     target.removeEventListener("keyup", target.__vueChangeHandler__);

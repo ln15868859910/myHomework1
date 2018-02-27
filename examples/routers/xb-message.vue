@@ -37,8 +37,8 @@
                     <i-input v-model="inputvalue"></i-input>
                 </div>
             </Xb-hoverlist>
-            <i-input v-model="inputvalue" v-countworld :maxlength="10"></i-input>
-            <i-input v-model="inputvalue2" v-countworld :maxlength="10" type="textarea"></i-input>
+            <i-input v-model="inputvalue" v-countworld="inputvalue" :maxlength="10"></i-input>
+            <i-input v-model="inputvalue2" v-countworld="inputvalue2" :maxlength="10" type="textarea"></i-input>
 
             <xb-icon type="tag-oneToOne"></xb-icon>
             <xb-icon type="tag-balance"></xb-icon>
@@ -77,6 +77,11 @@ export default {
             inputvalue:'',
             inputvalue2:'',
         };
+    },
+    created(){
+        setTimeout(()=>{
+            this.inputvalue = '1q23ASd';
+        },1000);
     },
     methods: {
         addlist(){
