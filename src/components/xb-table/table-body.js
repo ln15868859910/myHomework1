@@ -16,24 +16,32 @@ const column_map={
     selection:{
         render (h,rowIndex,row,column){
             var that=this;
-            return h('Checkbox',{
-                props:{
-                    disabled:that.rowDisabled(rowIndex),
-                    value:that.rowChecked(rowIndex)
-                },
+            return h('label',{
+                class:[
+                    'ivu-checkbox-wrapper',
+                    that.rowChecked(rowIndex)?'ivu-checkbox-wrapper-checked':''
+                ],
                 on:{
-                    'on-change':function (status) {
-                        that.$parent.toggleSelect(row)
+                    'click':function(){
+                        let status = !that.rowChecked(rowIndex);//变化的目标
                         if(typeof column.preselect == 'function'){
-                            if(!column.preselect(row,status)){
-                                setTimeout(function(){
-                                    that.$parent.toggleSelect(row);
-                                },100);
+                            if(column.preselect(row,status)){
+                                that.$parent.toggleSelect(row);
                             }
+                        }else{
+                            that.$parent.toggleSelect(row);
                         }
                     }
                 }
-            });
+            },[h('span',{
+                class:[
+                    'ivu-checkbox',
+                    that.rowChecked(rowIndex)?'ivu-checkbox-checked':''
+                ]
+            },[
+                h('span',{class:'ivu-checkbox-inner'}),
+                h('input',{type:'checkbox',class:'ivu-checkbox-input'})
+            ])]);
         }
     },
     normal:{

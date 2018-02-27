@@ -1,6 +1,7 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-        <i-button type="primary" size="large" @click="table1 = true">弹窗</i-button>
+        <i-button type="primary" size="large" @click="popupData(584028)">弹窗1</i-button>
+        <i-button type="primary" size="large" @click="popupData(584029)">弹窗2</i-button>
         <i-button type="primary" size="large" @click="fetchnextData()">请求数据</i-button>
         <i-button type="primary" size="large" @click="deleteall()">清空已选</i-button>
         <div>
@@ -43,7 +44,7 @@
 export default {
     data() {
         return {
-            selectedArr2:[584027],
+            selectedArr2:[],
             testcol:[],
             selection:[],
             table1:false,
@@ -96,9 +97,9 @@ export default {
                     width: 50,
                     fixed: "left",
                     align:"left",
-                    preselect:function(row,status){
-                        return !status&&row._pkey%2;
-                    }
+                    // preselect:function(row,status){
+                    //     return !status&&row._pkey%2;
+                    // }
                 }, {
                     title: '星标',
                     key: 'UserCollectionId',
@@ -498,6 +499,10 @@ export default {
         changeSingel(data){
 
         },
+        popupData(key){
+            this.selectedArr2 = [key];
+            this.table1 = true;
+        },
         getSelectedData: function (selection) {
             console.log(selection);
             this.selection = selection;
@@ -660,7 +665,12 @@ export default {
                     var model = that.getUiModel(item);
                     list.push(model);
                 });
-            that.listData = list;
+                
+   
+            setTimeout(()=>{
+                that.listData = list;
+                
+            },1000);
         },
         getUiModel: function (bizModel) {
             var that = this;

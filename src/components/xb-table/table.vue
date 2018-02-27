@@ -465,9 +465,7 @@ export default {
             this.selectTriggerByRow = false;
         },
         clearSelection(){
-            this.selectionPkeys = [];
-            this.selections = [];
-            this.$emit('on-selection-change', this.selections);
+            this.selectAll(false);
         },
         getSelections(){
             return this.selections;
@@ -507,6 +505,8 @@ export default {
             this.$emit('on-expand', JSON.parse(JSON.stringify(data)), status);
         },
         selectAll(status) {
+            let columns = this.cloneColumns[0];
+            let preselectfn = typeof columns.preselect =='function'?columns.preselect:undefined;
             for (let i = 0; i < this.rebuildData.length; i++) {
                 let data = this.rebuildData[i];
                 if (data._disabled) {
@@ -514,13 +514,15 @@ export default {
                 } else {
                     let pk = data._pkey;
                     let index = this.selectionPkeys.indexOf(pk);
+                    
                     if(status){
-                        if(index===-1){
+                        
+                        if(index===-1&&(preselectfn&&preselectfn(data)||!preselectfn)){
                             this.selectionPkeys.push(pk);
                             this.selections.push(data);
                         }
                     }else{
-                        if(index!==-1){
+                        if(index!==-1&&(preselectfn&&preselectfn(data)||!preselectfn)){
                             this.selectionPkeys.splice(index,1);
                             this.selections.splice(index,1);
                         }
