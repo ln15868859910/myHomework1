@@ -307,7 +307,8 @@ export default {
         rowClasses(_index) {
             return [
                 `${this.prefixCls}-row`,
-                this.rowClsName(_index)
+                this.rowClsName(_index),
+                this.rowChecked(_index)?`${this.prefixCls}-row-checked`:''
             ];
         },
         rowClsName(_index) {
