@@ -25,7 +25,7 @@ const column_map={
                     'click':function(){
                         let status = !that.rowChecked(rowIndex);//变化的目标
                         if(typeof column.preselect == 'function'){
-                            if(column.preselect(row,status)){
+                            if(column.preselect(row,status,'one')){
                                 that.$parent.toggleSelect(row);
                             }
                         }else{

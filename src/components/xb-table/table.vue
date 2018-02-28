@@ -517,12 +517,12 @@ export default {
                     
                     if(status){
                         
-                        if(index===-1&&(preselectfn&&preselectfn(data,true)||!preselectfn)){
+                        if(index===-1&&(preselectfn&&preselectfn(data,true,'all')||!preselectfn)){
                             this.selectionPkeys.push(pk);
                             this.selections.push(data);
                         }
                     }else{
-                        if(index!==-1&&(preselectfn&&preselectfn(data,false)||!preselectfn)){
+                        if(index!==-1&&(preselectfn&&preselectfn(data,false,'all')||!preselectfn)){
                             this.selectionPkeys.splice(index,1);
                             this.selections.splice(index,1);
                         }
