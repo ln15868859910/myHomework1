@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:900px;padding:20px;background:#DFE3ED">
-        <i-button type="primary" size="large" @click="popupData(584028)">弹窗1</i-button>
+        <i-button type="primary" size="large" @click="popupData()">弹窗1</i-button>
         <i-button type="primary" size="large" @click="popupData(584029)">弹窗2</i-button>
         <i-button type="primary" size="large" @click="fetchnextData()">请求数据</i-button>
         <i-button type="primary" size="large" @click="deleteall()">清空已选</i-button>
@@ -36,6 +36,10 @@
             </p>
             <div class="modal-con" style="padding-top:0;width:800px" v-if="table1">
                 <Xb-Table :data="listData" :columns="tableColumns1" :height="500" modal @on-row-click="getClickRow" :selected-pkeys="selectedArr2"></Xb-Table>
+            </div>
+             <div slot="footer">
+                <Button type="ghost" @click="cancel">取消</Button>
+                <Button type="primary" @click="ok">确定</Button>
             </div>
         </Modal>
     </div>
@@ -97,9 +101,9 @@ export default {
                     width: 50,
                     fixed: "left",
                     align:"left",
-                    // preselect:function(row,status){
-                    //     return !status&&row._pkey%2;
-                    // }
+                    preselect:function(row,status){
+                        return row._pkey%2;
+                    }
                 }, {
                     title: '星标',
                     key: 'UserCollectionId',
@@ -243,7 +247,7 @@ export default {
                 }],
             listData: [],
             defaultId:584027,
-            selectedArr:[584027,584028,584029,584030,584031],
+            selectedArr:[],
             control:{
                 isDrop:true,
                 width:100,
@@ -500,7 +504,9 @@ export default {
 
         },
         popupData(key){
-            this.selectedArr2 = [key];
+            if(key){
+                this.selectedArr2 = [key];
+            }
             this.table1 = true;
         },
         getSelectedData: function (selection) {
@@ -673,8 +679,9 @@ export default {
                 
    
             setTimeout(()=>{
-                that.listData = list;
                 
+                that.selectedArr = [584027,584028,584029,584030,584031];
+                that.listData = list;
             },1000);
         },
         getUiModel: function (bizModel) {
@@ -880,6 +887,13 @@ export default {
                 }
             }
             return tel;
+        },
+        cancel(){
+            this.table1 = false;
+        },
+        ok(data){
+            console.log(data);
+            this.table1 = false;
         }
     }
 }

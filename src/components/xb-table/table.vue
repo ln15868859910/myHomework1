@@ -454,18 +454,30 @@ export default {
             }
             this.$emit('on-row-click', data);
         },
-        changeByitem(data){
+        changeByitem(data){//未添加 preselect 
             this.selectTriggerByRow = true;
             this.clickCurrentRow(data);
             this.selectTriggerByRow = false;
         },
-        changeBypKey(pkey){
+        changeBypKey(pkey){//未添加 preselect 
             this.selectTriggerByRow = true;
             this.clickCurrentRow({_pkey:pkey});
             this.selectTriggerByRow = false;
         },
         clearSelection(){
-            this.selectAll(false);
+            let columns = this.cloneColumns[0];
+            let preselectfn = typeof columns.preselect =='function'?columns.preselect:undefined;
+            let unpasspkeys = [],unpassselections = [];
+            for (let i = 0; i < this.selections.length; i++) {
+                let data = this.selections[i];
+                if(preselectfn&&!preselectfn(data,false,'all')){
+                    unpasspkeys.push(data._pkey);
+                    unpassselections.push(data);
+                }
+            }
+            this.selectionPkeys = unpasspkeys;
+            this.selections = unpassselections;
+            this.$emit('on-selection-change', this.selections);
         },
         getSelections(){
             return this.selections;
@@ -620,6 +632,7 @@ export default {
             return data;
         },
         makeDataWithSort() {
+            this.propselectedPkeys = this.getpropSelectedData();
             let data = this.makeData();
             let isCustom = false;
             let sortIndex = -1;
@@ -714,7 +727,7 @@ export default {
         }
     },
     created() {
-        this.propselectedPkeys = this.getpropSelectedData();
+        
         this.makeColumns();
         this.rebuildData = this.makeDataWithSort();
         this.throttleLayout= throttle(this.doLayout,200);
