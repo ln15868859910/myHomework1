@@ -529,9 +529,8 @@ export default {
                     }
                 }
             }
-            if (status) {
-                this.$emit('on-select-all', this.selections);
-            }
+            
+            this.$emit('on-select-all', this.selections);
             this.$emit('on-selection-change', this.selections);
         },
         fixedHeader() {
