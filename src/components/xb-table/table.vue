@@ -530,7 +530,7 @@ export default {
                 }
             }
             
-            this.$emit('on-select-all', this.selections);
+            this.$emit('on-select-all', this.selections,status);
             this.$emit('on-selection-change', this.selections);
         },
         fixedHeader() {
