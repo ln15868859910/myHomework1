@@ -20,19 +20,7 @@ const column_map={
                 class:[
                     'ivu-checkbox-wrapper',
                     that.rowChecked(rowIndex)?'ivu-checkbox-wrapper-checked':''
-                ],
-                on:{
-                    'click':function(){
-                        let status = !that.rowChecked(rowIndex);//变化的目标
-                        if(typeof column.preselect == 'function'){
-                            if(column.preselect(row,status,'one')){
-                                that.$parent.toggleSelect(row);
-                            }
-                        }else{
-                            that.$parent.toggleSelect(row);
-                        }
-                    }
-                }
+                ]
             },[h('span',{
                 class:[
                     'ivu-checkbox',
@@ -40,7 +28,22 @@ const column_map={
                 ]
             },[
                 h('span',{class:'ivu-checkbox-inner'}),
-                h('input',{type:'checkbox',class:'ivu-checkbox-input'})
+                h('input',{
+                    type:'checkbox',
+                    class:'ivu-checkbox-input',
+                    on:{
+                        'click':function(){
+                            let status = !that.rowChecked(rowIndex);//变化的目标
+                            if(typeof column.preselect == 'function'){
+                                if(column.preselect(row,status,'one')){
+                                    that.$parent.toggleSelect(row);
+                                }
+                            }else{
+                                that.$parent.toggleSelect(row);
+                            }
+                        }
+                    }
+                })
             ])]);
         }
     },

@@ -12,10 +12,10 @@
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
                         </template>
                         <template v-else-if="column.type === 'selection'">
-                            <label class="ivu-checkbox-wrapper" :class="isSelectAll?'ivu-checkbox-wrapper-checked':''" @click="selectAll">
+                            <label class="ivu-checkbox-wrapper" :class="isSelectAll?'ivu-checkbox-wrapper-checked':''">
                                 <span class="ivu-checkbox" :class="isSelectAll?'ivu-checkbox-checked':''">
                                     <span class="ivu-checkbox-inner"></span>
-                                    <input type="checkbox" class="ivu-checkbox-input">
+                                    <input type="checkbox" class="ivu-checkbox-input" @click="selectAll">
                                 </span>
                             </label>
                             <!-- <Checkbox :value="isSelectAll" @on-change="selectAll"></Checkbox> -->
