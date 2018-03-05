@@ -8,7 +8,6 @@
     
             <li :class="flortRight">
                 <!-- 搜索内容区域  -->
-
                 <xb-fuzzy-select ref="fuzzySearch" v-if="searchData && status.isInitCompleted" :search-data="searchData" :callback="{'dosearch':doSearch}" @updateSearchRes="updateSearchRes"></xb-fuzzy-select>
                 
                 <!-- 筛选组件按钮区域 -->
