@@ -81,14 +81,23 @@ export default {
     },
     computed: {
         searchStatus(){
-            return this.searchArea.selected.text == '学员姓名'
+            var bool = false;
+            if(this.searchData.data && this.searchData.data.length>0){
+                bool = this.searchData.data.some(ele =>{
+                    return (ele.text === this.searchArea.selected.text) && ele.fuzzy
+                });
+            }
+            return bool
         },
         vplaceholder(){
-            var t = "请输入" + this.searchArea.selected.text;
-            // if(this.searchArea.selected.text == '学员姓名'){
-            //     t = "请输入姓名，支持拼音缩写"
-            // }
-            return t
+            var op;
+            if(this.searchData.data && this.searchData.data.length>0){
+                op = this.searchData.data.find(ele =>{
+                    return (ele.text === this.searchArea.selected.text)
+                });
+            }
+            var def = "请输入" + this.searchArea.selected.text;
+            return (op == undefined) ? def : op.placeholder || def
         }
     },
     created: function() {
@@ -124,14 +133,14 @@ export default {
         },
         clickItem(item){
             this.searchArea.searchInput = item
-            this.getSearchObj();
+            // this.getSearchObj();
             this.callback['dosearch']();
         },
-        onChange(){
-            this.getSearchObj()
-            // this.debounce(()=>{
-            //     this.fetchData()
-            // },300,'changeVal')
+        onChange(f){
+            // this.getSearchObj()
+            this.debounce(()=>{
+                this.fetchData()
+            },500,'changeVal')
         },
         fetchData(){
             var query = this.searchArea.searchInput;
@@ -143,7 +152,7 @@ export default {
             }
             this.loading = true;
             this.dropdown = true;          
-            Axios.get('/api/Reception/GetStuInfoPinyinList',{
+            Axios.get(this.searchData.url || '/api/Reception/GetStuInfoPinyinList',{
                 params:{
                     q:query,
                     takeCount:10,
@@ -160,13 +169,15 @@ export default {
             }) 
         },
         getSearchObj(){
-            this.$emit('updateSearchRes',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
+            this.$emit('update-search-res',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
         },
+        // 清空，返回默认值。冒泡到父组件
         clear(){
             this.searchArea.searchInput = '';
             this.init();
-            this.getSearchObj()
+            // this.getSearchObj()
         },
+        // 下拉项的默认值        
         init(){
             if (this.searchData.data.length) {
                 var defaultSearchKey = this.searchData.opts.defaultSearchKey;
@@ -198,6 +209,11 @@ export default {
     },
     mounted(){
        this.init(); 
+    },
+    watch:{
+        "searchArea.searchInput":function(val,oldVal){
+            this.getSearchObj();
+        }
     }
 };
 </script>
