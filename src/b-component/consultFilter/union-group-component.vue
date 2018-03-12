@@ -15,20 +15,47 @@ import emitter from "./emit";
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
 
+function getLabledata(optionlist,valuelist){
+    let arr = [];
+    optionlist.map((item)=>{
+        if(valuelist.indexOf(item.value)>-1){
+            arr.push(item.label);
+        }
+    });
+    return arr;
+
+}
 
 function getComponentConfig(model, remoteMethod, isRemote) {
     var data;
     switch (model.componentType) {
         case "select":
+            var label = [];
+            // 由于 Select内部 对于lable和value的长度对比做了特殊处理：如果不相同就取value。导致此处必须手动同步label部分数据。
+            // 但是考虑到外部赋值的非列表默认数据它的label和value的删除 内部捕捉后不可识别对应的lv 导致后续更新数据错误
+            // 单选情况下  如果在修改vaule的同时修改label会多次进入render方法，导致会label与value不一致。 此处若修改过 则下拉列表内不再保存原默认数据，直接替换。后续也不再使用该默认数据
+            if(Array.isArray(model.componentConfig.label)){
+                label = model.componentConfig.label;
+                if(model.componentConfig.value.length!=model.componentConfig.label.length){
+                    let findlabel = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
+                    label = model.componentConfig.multiple?label.concat(findlabel):findlabel.length?findlabel:label;
+                }
+            }else{
+                label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
+                if(model.componentConfig.value.length!=label.length){
+                    throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
+                }
+            }
             data = {
                 value: model.componentConfig.multiple ? model.componentConfig.value : model.componentConfig.value[0],
+                label:label,
                 multiple: model.componentConfig.multiple,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
                 placeholder: model.sortName,
                 clearable: model.componentConfig.clearable,
                 "label-in-value": true,
-            }
+            };
             if (isRemote) {
                 var optionList = model.componentConfig.optionList;
                 data.remote = true;
@@ -93,6 +120,7 @@ const UnionComponentSlot = {
             optionList: "",
             isInit: true,
             isFirst: true,
+            currentparentvalue:[],
             parentSelectValue: "",
             debounceObj: {
 
@@ -207,6 +235,8 @@ const UnionComponentSlot = {
         if (this.model.sonSortValue) {
             //移除联动模块父组件值初始化是否为空事件
             this.$parent.$parent.$off(this.model.sortValue + "-union-empty-init", this.onDisableSon);
+            //移除 子级变化 联动父级事件 
+            this.$parent.$parent.$off(this.model.sortValue + "-parent-change", this.onCurrentParentChange);  
         }
         if (!!this.model.parentSortValue) {
             //移除联动模块父组件change事件
@@ -234,28 +264,47 @@ const UnionComponentSlot = {
                 var model = this.model.componentConfig,
                     data = [];
                 if (model.multiple && model.value.length > 0) {
-                    var i = 0;
-                    model.optionList.map(function (item) {
-                        if (item.value == model.value[i]) {
-                            data.push(item);
-                            i++;
-                        }
-                    })
+                    if(model.label&&model.label.length&&model.label.length==model.value.length){
+                        for(var ii=0,len=model.label.length;ii<len;ii++){
+                            data.push({
+                                value:model.value[ii],
+                                label:model.label[ii]
+                            });
+                        }                        
+                    }else{
+                        var i = 0;
+                        model.optionList.map(function (item) {
+                            if (item.value == model.value[i]) {
+                                data.push(item);
+                                i++;
+                            }
+                        });
+                    }
                 }
                 else if (!model.multiple && model.value) {
-                    model.optionList.map(function (item) {
-                        if (item.value == model.value) {
-                            data = item;
-                        }
-                    })
+                    
+                    if(model.label&&model.label.length&&model.label.length==model.value.length){
+                        data = {
+                            value:model.value[0],
+                            label:model.label[0]
+                        };                       
+                    }else{
+                        model.optionList.map(function (item) {
+                            if (item.value == model.value) {
+                                data = item;
+                            }
+                        });
+                    }
                 }
                 this.selectValue = data;
             }
+            this.currentparentvalue = this.$parent.currentparentvalue;
         },
         observeEvent() {
             if (this.model.sonSortValue) {
                 //监听联动模块父组件值初始化是否为空事件
                 this.$parent.$parent.$once(this.model.sortValue + "-union-empty-init", this.onDisableSon);
+                this.$parent.$parent.$on(this.model.sortValue + "-parent-change", this.onCurrentParentChange);
             }
             if (!!this.model.parentSortValue) {
                 //监听联动模块父组件change事件
@@ -267,13 +316,19 @@ const UnionComponentSlot = {
             //监听父层筛选项修改事件
             this.$on(this.model.sortValue + "-change", this.onFilterChange);
         },
+        onCurrentParentChange(parms){
+            this.currentparentvalue = parms.parentValue;
+        },
         onParentChange(params) {
             var _this = this;
             this.parentSelectValue = [];
             params.selectModel.value.map(function (item) {
                 _this.parentSelectValue.push(item.value);
             });
-            this.onParentEmpty();
+            // 分情况 是否清除子级数据 如果此时父子级以获取对应数据  则不清除
+            if(_this.parentSelectValue.join() !== this.currentparentvalue.join()){
+                this.onParentEmpty();
+            }
             if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
                 this.model.componentConfig.disabled = true;
                 this.model.componentConfig.filterable = false;
@@ -433,10 +488,13 @@ const UnionComponentSlot = {
             }
             if (_this.model.componentConfig.multiple) {
                 data.value = value;
+                if(Array.isArray(_this.model.componentConfig.label)){
+                    _this.model.componentConfig.label = value.map((item)=>item.label);
+                }
             }
             else {
                 //保持当前model的value值与组件内部的value一致
-                _this.model.componentConfig.value = value.value
+                _this.model.componentConfig.value = value.value;
                 data.value = !value.value && !value.label ? [] : [value];
             }
             this.dispatch("consultFilterUnion","union-change-slot", data, this.type);
@@ -449,6 +507,12 @@ const UnionComponentSlot = {
                         sortValue: _this.model.sortValue,
                         value: data.value
                     }
+                });
+            }
+            if(_this.model.parentSortValue){
+                //如果有父级情况 通知父级此时的子级对应父级数据
+                this.$parent.$parent.$emit( _this.model.parentSortValue + "-parent-change", {
+                    parentValue:_this.parentSelectValue
                 });
             }
         },
@@ -549,6 +613,15 @@ export default {
         },
         unionItemWrap() {
             return this.model.class ? this.model.class : `${prefixCls}-unionItemWrap`;
+        },
+        currentparentvalue(){
+            let arr = [];
+            this.model.map((item)=>{
+                if(item.parentSortValue&&item.componentConfig.parentvalue){
+                    arr = item.componentConfig.parentvalue;
+                }
+            });
+            return arr;
         }
     },
     mounted() {

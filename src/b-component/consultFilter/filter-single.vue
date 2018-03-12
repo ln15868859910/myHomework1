@@ -12,13 +12,37 @@ import DatePicker from '../../components/date-picker';
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
 import emitter from "./emit";
+
+function getLabledata(optionlist,valuelist){
+    let arr = [];
+    optionlist.map((item)=>{
+        if(valuelist.indexOf(item.value)>-1){
+            arr.push(item.label);
+        }
+    });
+    return arr;
+
+}
 //拼装数据
 function getComponentConfig(model, remoteMethod) {
     var data;
     switch (model.componentType) {
         case "select":
+            let label = [];
+            if(Array.isArray(model.componentConfig.label)){
+                label = model.componentConfig.label;
+                if(!model.componentConfig.label&&model.componentConfig.value.length!=model.componentConfig.label.length){
+                    label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
+                }
+            }else{
+                label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
+                if(model.componentConfig.value.length!=label.length){
+                    throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
+                }
+            }
             data = {
                 value: model.componentConfig.value[0],
+                label: label,
                 multiple: model.componentConfig.multiple,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
@@ -32,7 +56,7 @@ function getComponentConfig(model, remoteMethod) {
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
                 data.loading = model.componentConfig.loading === true ? true : false
-                data.label = "";
+                // data.label = "";
                 for (var i = 0, l = optionList.length; i < l; i++) {
                     if (optionList[i].value == data.value) {
                         data.label = optionList[i].label;
@@ -281,12 +305,18 @@ var maker = {
                 if (!defaultValue) {
                     return;
                 }
-
-                var defaultObj = modelList.componentConfig.optionList.find(function (item) {
+                var defaultObj;
+                modelList.componentConfig.optionList.forEach(function (item) {
                     if (item.value == defaultValue) {
-                        return item;
+                        defaultObj =  item;
                     }
-                })
+                });
+                if(this.model.componentConfig.label&&this.model.componentConfig.label.length&&this.model.componentConfig.value.length===this.model.componentConfig.label.length){
+                    defaultObj = {
+                        value:this.model.componentConfig.value[0],
+                        label:this.model.componentConfig.label[0],
+                    };
+                }
 
                 this.dispatch("consultFilter","single-change", {
                     sortName: modelList.sortName,

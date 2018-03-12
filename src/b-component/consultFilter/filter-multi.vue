@@ -11,12 +11,38 @@ import emitter from "./emit";
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
 
+function getLabledata(optionlist,valuelist){
+    let arr = [];
+    optionlist.map((item)=>{
+        if(valuelist.indexOf(item.value)>-1){
+            arr.push(item.label);
+        }
+    });
+    return arr;
+
+}
+
 function getComponentConfig(model, remoteMethod, isRemote) {
     var data;
     switch (model.componentType) {
         case "select":
+            var label = [];
+            // 由于 Select内部 对于lable和value的长度对比做了特殊处理：如果不相同就取value。导致此处必须手动同步label部分数据。
+            // 但是考虑到外部赋值的非列表默认数据它的label和value的删除 内部捕捉后不可识别对应的lv 导致后续更新数据错误
+            if(Array.isArray(model.componentConfig.label)){
+                label = model.componentConfig.label;
+                if(model.componentConfig.value.length!=model.componentConfig.label.length){
+                    label = label.concat(getLabledata(model.componentConfig.optionList,model.componentConfig.value));
+                }
+            }else{
+                label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
+                if(model.componentConfig.value.length!=label.length){
+                    throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
+                }
+            }
             data = {
                 value: model.componentConfig.value,
+                label: label,
                 multiple: true,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
@@ -75,7 +101,6 @@ const MultiFilterSlotComponent = {
     },
     render(h) {
         var _this = this;
-
         //select组件
         if (this.model.componentType == "select") {
             return h(
@@ -158,6 +183,13 @@ const MultiFilterSlotComponent = {
     mounted() {
         this.init();
     },
+    watch:{
+        "selectValue":function(value,oldval){
+            if(Array.isArray(this.model.componentConfig.label)){
+                this.model.componentConfig.label = value.map((item)=>item.label);    
+            }
+        }
+    },
     beforeDestroy() {
         if (this.model.parentSortValue) {
             //移除父层筛选项修改事件
@@ -190,19 +222,28 @@ const MultiFilterSlotComponent = {
                 value: []
             }
             if (model.value.length > 0) {
-                var i = 0;
-                model.optionList.map(function (item) {
-                    if (item.value == model.value[i]) {
-                        data.value.push(item);
-                        i++;
-                    }
-                })
+                if(model.label&&model.label.length&&model.label.length==model.value.length){
+                    for(var ii=0,len=model.label.length;ii<len;ii++){
+                        data.value.push({
+                            value:model.value[ii],
+                            label:model.label[ii]
+                        });
+                    } 
+                }else{
+                    var i = 0;
+                    model.optionList.map(function (item) {
+                        if (item.value == model.value[i]) {
+                            data.value.push(item);
+                            i++;
+                        }
+                    });
+                }
                 hasInitValue = true;
             }
             if (!hasInitValue) {
                 return;
             }
-
+            this.selectValue = data.value;
             this.dispatch("consultFilterMulti","multi-change-slot", data, me.type);
             this.type = "fromBottom";
 
