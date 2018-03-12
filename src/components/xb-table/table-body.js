@@ -29,7 +29,9 @@ const column_map={
             },[
                 h('span',{class:'ivu-checkbox-inner'}),
                 h('input',{
-                    type:'checkbox',
+                    attrs:{
+                        type:'checkbox',
+                    },
                     class:'ivu-checkbox-input',
                     on:{
                         'click':function(){
