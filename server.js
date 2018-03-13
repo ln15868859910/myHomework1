@@ -7,7 +7,7 @@ app.all("*", function(req, res, next) {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
-app.use(express.static('dist'));
+app.use("/dist",express.static(__dirname +'/dist'));
 var port=8088;
 module.exports = app.listen(port, function(err) {
     

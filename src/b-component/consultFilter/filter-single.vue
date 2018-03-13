@@ -282,11 +282,12 @@ var maker = {
                     return;
                 }
 
-                var defaultObj = modelList.componentConfig.optionList.find(function (item) {
+                var defaultObj;
+                modelList.componentConfig.optionList.forEach(function (item) {
                     if (item.value == defaultValue) {
-                        return item;
+                        defaultObj =  item;
                     }
-                })
+                });
 
                 this.dispatch("consultFilter","single-change", {
                     sortName: modelList.sortName,

@@ -4,12 +4,12 @@
             <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
         </Select>
         <div style="display:inline-block;width:260px">
-            <Input type="text" icon="search" :maxlength="searchData.maxLen || 999" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
+            <i-Input type="text" icon="search" :maxlength="searchData.maxLen || 999" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
             @on-focus="focus" 
             @on-change="onChange" 
             @on-blur="blur" 
             @on-click="doSearch" 
-            @on-enter="doSearch"></Input>
+            @on-enter="doSearch"></i-Input>
             <transition name="slide-up">
                 <div class="ivu-select-dropdown" style="max-height: 400px;text-align:left" v-show="dropdown && searchStatus">
                     <ul class="ivu-select-dropdown-list">
@@ -48,7 +48,7 @@ import iOption from '../select/option.vue';
 export default {
     name: 'XbFuzzySelect',
     components: { iSelect, iOption },
-  //  directives: { clickoutside },
+    //  directives: { clickoutside },
     props: {
         searchData: {
             type: [Boolean, Object],
@@ -67,12 +67,12 @@ export default {
         return {
             searchArea: {
                 selected: {
-                    "text": "",
-                    "value": ""
+                    'text': '',
+                    'value': ''
                 },
                 selectModel:'',
                 arr:[],
-                searchInput: ""
+                searchInput: ''
             },
             dropdown:false,
             debounceObj:{},
@@ -84,20 +84,26 @@ export default {
             var bool = false;
             if(this.searchData.data && this.searchData.data.length>0){
                 bool = this.searchData.data.some(ele =>{
-                    return (ele.text === this.searchArea.selected.text) && ele.fuzzy
+                    return (ele.text === this.searchArea.selected.text) && ele.fuzzy;
                 });
             }
-            return bool
+            return bool;
         },
         vplaceholder(){
             var op;
             if(this.searchData.data && this.searchData.data.length>0){
-                op = this.searchData.data.find(ele =>{
-                    return (ele.text === this.searchArea.selected.text)
+                // op = this.searchData.data.find(ele =>{
+                //     return (ele.text === this.searchArea.selected.text);
+                // });
+                this.searchData.data.forEach(ele =>{
+                    if(ele.text === this.searchArea.selected.text){
+                        op = {};
+                        op.placeholder = ele.placeholder;
+                    }
                 });
             }
-            var def = "请输入" + this.searchArea.selected.text;
-            return (op == undefined) ? def : op.placeholder || def
+            var def = '请输入' + this.searchArea.selected.text;
+            return (op == undefined) ? def : op.placeholder || def;
         }
     },
     created: function() {
@@ -111,15 +117,15 @@ export default {
             }
 
             this.searchArea.selected = {
-                "text": obj.label,
-                "value": obj.value,
-            }
-            this.getSearchObj()
+                'text': obj.label,
+                'value': obj.value,
+            };
+            this.getSearchObj();
         },
         debounce(func, timeout, type) {
             this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
             this.debounceObj[type] = setTimeout(() => {
-                func()
+                func();
             }, timeout);
         },
         doSearch() {
@@ -129,26 +135,24 @@ export default {
             
         },
         blur(){
-            this.dropdown = false
+            this.dropdown = false;
         },
         clickItem(item){
-            this.searchArea.searchInput = item
-            // this.getSearchObj();
+            this.searchArea.searchInput = item;
             this.callback['dosearch']();
         },
-        onChange(f){
-            // this.getSearchObj()
+        onChange(){
             this.debounce(()=>{
-                this.fetchData()
-            },500,'changeVal')
+                this.fetchData();
+            },500,'changeVal');
         },
         fetchData(){
             var query = this.searchArea.searchInput;
             var _this = this;
-            if(query == "" ||  !this.searchStatus){
+            if(query == '' ||  !this.searchStatus){
                 _this.searchArea.arr = [];
                 _this.dropdown = false;
-                return
+                return;
             }
             this.loading = true;
             this.dropdown = true;          
@@ -159,14 +163,14 @@ export default {
                     time:+new Date()
                 }
             }).then((res)=>{
-                var res = res.data;
-                if(res.Status && res.Data.List && res.Data.List.length>0){
-                    _this.searchArea.arr = res.Data.List;
+                var result = res.data;
+                if(result.Status && result.Data.List && result.Data.List.length>0){
+                    _this.searchArea.arr = result.Data.List;
                 }else{
                     _this.searchArea.arr = [];
                 }
                 _this.loading = false;
-            }) 
+            }); 
         },
         getSearchObj(){
             this.$emit('update-search-res',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
@@ -175,7 +179,6 @@ export default {
         clear(){
             this.searchArea.searchInput = '';
             this.init();
-            // this.getSearchObj()
         },
         // 下拉项的默认值        
         init(){
@@ -185,20 +188,20 @@ export default {
                 var defaultSearchText;
                 if (defaultSearchKey) {
                     //找到searchKey对应的文案
-                    this.searchData.data.map(function (item, index) {
+                    this.searchData.data.map(function (item) {
                         if (item.value == defaultSearchKey) {
                             defaultSearchText = item.text;
                         }
-                    })
+                    });
                     this.searchArea.selected = {
-                        "text": defaultSearchText,
-                        "value": defaultSearchKey
-                    }
+                        'text': defaultSearchText,
+                        'value': defaultSearchKey
+                    };
                 } else {
                     this.searchArea.selected = {
-                        "text": this.searchData.data[0].text,
-                        "value": this.searchData.data[0].value
-                    }
+                        'text': this.searchData.data[0].text,
+                        'value': this.searchData.data[0].value
+                    };
                 }
                 this.searchArea.selectModel = this.searchArea.selected.value;
                 if(defaultSearchValue){
@@ -208,10 +211,10 @@ export default {
         }
     },
     mounted(){
-       this.init(); 
+        this.init(); 
     },
     watch:{
-        "searchArea.searchInput":function(val,oldVal){
+        'searchArea.searchInput':function(){
             this.getSearchObj();
         }
     }
