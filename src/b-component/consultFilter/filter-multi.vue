@@ -22,27 +22,17 @@ function getLabledata(optionlist,valuelist){
 
 }
 
-function getComponentConfig(model, remoteMethod, isRemote) {
+function getComponentConfig(model, remoteMethod, isRemote,selectvalue) {
     var data;
     switch (model.componentType) {
         case "select":
-            var label = [];
-            // 由于 Select内部 对于lable和value的长度对比做了特殊处理：如果不相同就取value。导致此处必须手动同步label部分数据。
-            // 但是考虑到外部赋值的非列表默认数据它的label和value的删除 内部捕捉后不可识别对应的lv 导致后续更新数据错误
-            if(Array.isArray(model.componentConfig.label)){
-                label = model.componentConfig.label;
-                if(model.componentConfig.value.length!=model.componentConfig.label.length){
-                    label = label.concat(getLabledata(model.componentConfig.optionList,model.componentConfig.value));
-                }
-            }else{
-                label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
-                if(model.componentConfig.value.length!=label.length){
-                    // throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
-                }
+            var label;
+            if(Array.isArray(selectvalue)){
+                label = selectvalue.map((item)=>{return item.label;});
             }
             data = {
                 value: model.componentConfig.value,
-                label: label,
+                // label: label,
                 multiple: true,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
@@ -67,6 +57,8 @@ function getComponentConfig(model, remoteMethod, isRemote) {
                         })
                     }
                     data.label = arr;
+                }else{
+                    data.label=label;
                 }
                
                 data.loading = model.componentConfig.loading;
@@ -106,7 +98,7 @@ const MultiFilterSlotComponent = {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model, this.remoteMethod, this.isRemote),
+                    props: getComponentConfig(this.model, this.remoteMethod, this.isRemote, this.selectValue),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     ref: this.model.sortValue,
                     on: {

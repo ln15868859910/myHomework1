@@ -14,6 +14,7 @@
 import emitter from "./emit";
 import Axios from 'axios';
 import { Select, Option, OptionGroup } from '../../components/select';
+import selectVue from '../../components/select/select.vue';
 
 function getLabledata(optionlist,valuelist){
     let arr = [];
@@ -26,29 +27,19 @@ function getLabledata(optionlist,valuelist){
 
 }
 
-function getComponentConfig(model, remoteMethod, isRemote) {
+function getComponentConfig(model, remoteMethod, isRemote,selectvalue) {
     var data;
     switch (model.componentType) {
         case "select":
-            var label = [];
-            // 由于 Select内部 对于lable和value的长度对比做了特殊处理：如果不相同就取value。导致此处必须手动同步label部分数据。
-            // 但是考虑到外部赋值的非列表默认数据它的label和value的删除 内部捕捉后不可识别对应的lv 导致后续更新数据错误
-            // 单选情况下  如果在修改vaule的同时修改label会多次进入render方法，导致会label与value不一致。 此处若修改过 则下拉列表内不再保存原默认数据，直接替换。后续也不再使用该默认数据
-            if(Array.isArray(model.componentConfig.label)){
-                label = model.componentConfig.label;
-                if(model.componentConfig.value.length!=model.componentConfig.label.length){
-                    let findlabel = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
-                    label = model.componentConfig.multiple?label.concat(findlabel):findlabel.length?findlabel:label;
-                }
-            }else{
-                label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
-                if(model.componentConfig.value.length!=label.length){
-                    // throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
-                }
+            var label;
+            if(Array.isArray(selectvalue)){
+                label = selectvalue.map((item)=>{return item.label;});
+            }else if(!model.componentConfig.multiple&&selectvalue.value){
+                label = [selectvalue.label];
             }
             data = {
                 value: model.componentConfig.multiple ? model.componentConfig.value : model.componentConfig.value[0],
-                label:label,
+                // label:label,
                 multiple: model.componentConfig.multiple,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
@@ -81,6 +72,8 @@ function getComponentConfig(model, remoteMethod, isRemote) {
                         }
                     }
                     data.label = arr;
+                }else{
+                    data.label = label;
                 }
                 
                 data.loading = model.componentConfig.loading;
@@ -141,7 +134,7 @@ const UnionComponentSlot = {
             return h(
                 'Select',
                 {
-                    props: getComponentConfig(this.model, this.remoteMethod, this.isRemote),
+                    props: getComponentConfig(this.model, this.remoteMethod, this.isRemote,this.selectValue),
                     attr: !this.model.componentConfig.attr ? {} : this.model.componentConfig.attr,
                     ref: this.model.sortValue,
                     on: {
@@ -488,9 +481,9 @@ const UnionComponentSlot = {
             }
             if (_this.model.componentConfig.multiple) {
                 data.value = value;
-                if(Array.isArray(_this.model.componentConfig.label)){
-                    _this.model.componentConfig.label = value.map((item)=>item.label);
-                }
+                // if(Array.isArray(_this.model.componentConfig.label)){
+                _this.model.componentConfig.alllabel = value.map((item)=>item.label);
+                // }
             }
             else {
                 //保持当前model的value值与组件内部的value一致

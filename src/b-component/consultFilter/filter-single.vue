@@ -24,25 +24,15 @@ function getLabledata(optionlist,valuelist){
 
 }
 //拼装数据
-function getComponentConfig(model, remoteMethod) {
+function getComponentConfig(model, remoteMethod,selectedValue) {
     var data;
     switch (model.componentType) {
         case "select":
-            let label = [];
-            if(Array.isArray(model.componentConfig.label)){
-                label = model.componentConfig.label;
-                if(!model.componentConfig.label&&model.componentConfig.value.length!=model.componentConfig.label.length){
-                    label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
-                }
-            }else{
-                label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
-                if(model.componentConfig.value.length!=label.length){
-                    // throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
-                }
-            }
+            let label = [selectedValue];
+
             data = {
                 value: model.componentConfig.value[0],
-                label: label,
+                // label: label,
                 multiple: model.componentConfig.multiple,
                 disabled: model.componentConfig.disabled,
                 filterable: model.componentConfig.filterable,
@@ -56,13 +46,13 @@ function getComponentConfig(model, remoteMethod) {
                 data.remote = true;
                 data["remote-method"] = remoteMethod;
                 data.loading = model.componentConfig.loading === true ? true : false
-                // data.label = "";
-                for (var i = 0, l = optionList.length; i < l; i++) {
-                    if (optionList[i].value == data.value) {
-                        data.label = optionList[i].label;
-                        break;
-                    }
-                }
+                data.label = label;
+                // for (var i = 0, l = optionList.length; i < l; i++) {
+                //     if (optionList[i].value == data.value) {
+                //         data.label = optionList[i].label;
+                //         break;
+                //     }
+                // }
             }
             break;
 
@@ -369,7 +359,7 @@ var maker = {
             return h(
                 Select,
                 {
-                    props: getComponentConfig(this.model, remoteMethod),
+                    props: getComponentConfig(this.model, remoteMethod,this.selectedValue),
                     ref: this.model.sortValue,
                     on: {
                         "on-change": function (obj) {
