@@ -30,6 +30,7 @@
 import Axios from 'axios';
 import iSelect from '../select/select.vue';
 import iOption from '../select/option.vue';
+import { debounce } from '../../utils/throttle';
 
 //↓ searchData 搜索区域，传入null该对象则整块区域隐藏
 // searchData: {
@@ -75,7 +76,6 @@ export default {
                 searchInput: ''
             },
             dropdown:false,
-            debounceObj:{},
             loading:false
         };
     },
@@ -122,12 +122,6 @@ export default {
             };
             this.getSearchObj();
         },
-        debounce(func, timeout, type) {
-            this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
-            this.debounceObj[type] = setTimeout(() => {
-                func();
-            }, timeout);
-        },
         doSearch() {
             this.callback['dosearch']();
         },
@@ -142,9 +136,7 @@ export default {
             this.callback['dosearch']();
         },
         onChange(){
-            this.debounce(()=>{
-                this.fetchData();
-            },500,'changeVal');
+            debounce(this.fetchData,500)();
         },
         fetchData(){
             var query = this.searchArea.searchInput;
