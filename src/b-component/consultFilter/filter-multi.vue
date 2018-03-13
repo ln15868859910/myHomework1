@@ -37,7 +37,7 @@ function getComponentConfig(model, remoteMethod, isRemote) {
             }else{
                 label = getLabledata(model.componentConfig.optionList,model.componentConfig.value);
                 if(model.componentConfig.value.length!=label.length){
-                    throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
+                    // throw Error("SPUI ERROR:lable value数量不一致，请重新检查参数！");
                 }
             }
             data = {
