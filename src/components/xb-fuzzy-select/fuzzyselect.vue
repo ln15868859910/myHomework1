@@ -4,12 +4,12 @@
             <Option v-for="(item,i) in searchData.data" :value="item.value" :key="i">{{ item.text }}</Option>
         </Select>
         <div style="display:inline-block;width:260px">
-            <Input type="text" icon="search" :maxlength="searchData.maxLen || 999" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
+            <i-Input type="text" icon="search" :maxlength="searchData.maxLen || 999" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
             @on-focus="focus" 
             @on-change="onChange" 
             @on-blur="blur" 
             @on-click="doSearch" 
-            @on-enter="doSearch"></Input>
+            @on-enter="doSearch"></i-Input>
             <transition name="slide-up">
                 <div class="ivu-select-dropdown" style="max-height: 400px;text-align:left" v-show="dropdown && searchStatus">
                     <ul class="ivu-select-dropdown-list">
@@ -30,6 +30,7 @@
 import Axios from 'axios';
 import iSelect from '../select/select.vue';
 import iOption from '../select/option.vue';
+import { debounce } from '../../utils/throttle';
 
 //↓ searchData 搜索区域，传入null该对象则整块区域隐藏
 // searchData: {
@@ -48,7 +49,7 @@ import iOption from '../select/option.vue';
 export default {
     name: 'XbFuzzySelect',
     components: { iSelect, iOption },
-  //  directives: { clickoutside },
+    //  directives: { clickoutside },
     props: {
         searchData: {
             type: [Boolean, Object],
@@ -67,28 +68,42 @@ export default {
         return {
             searchArea: {
                 selected: {
-                    "text": "",
-                    "value": ""
+                    'text': '',
+                    'value': ''
                 },
                 selectModel:'',
                 arr:[],
-                searchInput: ""
+                searchInput: ''
             },
             dropdown:false,
-            debounceObj:{},
             loading:false
         };
     },
     computed: {
         searchStatus(){
-            return this.searchArea.selected.text == '学员姓名'
+            var bool = false;
+            if(this.searchData.data && this.searchData.data.length>0){
+                bool = this.searchData.data.some(ele =>{
+                    return (ele.text === this.searchArea.selected.text) && ele.fuzzy;
+                });
+            }
+            return bool;
         },
         vplaceholder(){
-            var t = "请输入" + this.searchArea.selected.text;
-            // if(this.searchArea.selected.text == '学员姓名'){
-            //     t = "请输入姓名，支持拼音缩写"
-            // }
-            return t
+            var op;
+            if(this.searchData.data && this.searchData.data.length>0){
+                // op = this.searchData.data.find(ele =>{
+                //     return (ele.text === this.searchArea.selected.text);
+                // });
+                this.searchData.data.forEach(ele =>{
+                    if(ele.text === this.searchArea.selected.text){
+                        op = {};
+                        op.placeholder = ele.placeholder;
+                    }
+                });
+            }
+            var def = '请输入' + this.searchArea.selected.text;
+            return (op == undefined) ? def : op.placeholder || def;
         }
     },
     created: function() {
@@ -102,16 +117,10 @@ export default {
             }
 
             this.searchArea.selected = {
-                "text": obj.label,
-                "value": obj.value,
-            }
-            this.getSearchObj()
-        },
-        debounce(func, timeout, type) {
-            this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
-            this.debounceObj[type] = setTimeout(() => {
-                func()
-            }, timeout);
+                'text': obj.label,
+                'value': obj.value,
+            };
+            this.getSearchObj();
         },
         doSearch() {
             this.callback['dosearch']();
@@ -120,53 +129,50 @@ export default {
             
         },
         blur(){
-            this.dropdown = false
+            this.dropdown = false;
         },
         clickItem(item){
-            this.searchArea.searchInput = item
-            this.getSearchObj();
+            this.searchArea.searchInput = item;
             this.callback['dosearch']();
         },
         onChange(){
-            this.getSearchObj()
-            // this.debounce(()=>{
-            //     this.fetchData()
-            // },300,'changeVal')
+            debounce(this.fetchData,500)();
         },
         fetchData(){
             var query = this.searchArea.searchInput;
             var _this = this;
-            if(query == "" ||  !this.searchStatus){
+            if(query == '' ||  !this.searchStatus){
                 _this.searchArea.arr = [];
                 _this.dropdown = false;
-                return
+                return;
             }
             this.loading = true;
             this.dropdown = true;          
-            Axios.get('/api/Reception/GetStuInfoPinyinList',{
+            Axios.get(this.searchData.url || '/api/Reception/GetStuInfoPinyinList',{
                 params:{
                     q:query,
                     takeCount:10,
                     time:+new Date()
                 }
             }).then((res)=>{
-                var res = res.data;
-                if(res.Status && res.Data.List && res.Data.List.length>0){
-                    _this.searchArea.arr = res.Data.List;
+                var result = res.data;
+                if(result.Status && result.Data.List && result.Data.List.length>0){
+                    _this.searchArea.arr = result.Data.List;
                 }else{
                     _this.searchArea.arr = [];
                 }
                 _this.loading = false;
-            }) 
+            }); 
         },
         getSearchObj(){
-            this.$emit('updateSearchRes',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
+            this.$emit('update-search-res',{value:this.searchArea.selected.value,input:this.searchArea.searchInput,text:this.searchArea.selected.text});
         },
+        // 清空，返回默认值。冒泡到父组件
         clear(){
             this.searchArea.searchInput = '';
             this.init();
-            this.getSearchObj()
         },
+        // 下拉项的默认值        
         init(){
             if (this.searchData.data.length) {
                 var defaultSearchKey = this.searchData.opts.defaultSearchKey;
@@ -174,20 +180,20 @@ export default {
                 var defaultSearchText;
                 if (defaultSearchKey) {
                     //找到searchKey对应的文案
-                    this.searchData.data.map(function (item, index) {
+                    this.searchData.data.map(function (item) {
                         if (item.value == defaultSearchKey) {
                             defaultSearchText = item.text;
                         }
-                    })
+                    });
                     this.searchArea.selected = {
-                        "text": defaultSearchText,
-                        "value": defaultSearchKey
-                    }
+                        'text': defaultSearchText,
+                        'value': defaultSearchKey
+                    };
                 } else {
                     this.searchArea.selected = {
-                        "text": this.searchData.data[0].text,
-                        "value": this.searchData.data[0].value
-                    }
+                        'text': this.searchData.data[0].text,
+                        'value': this.searchData.data[0].value
+                    };
                 }
                 this.searchArea.selectModel = this.searchArea.selected.value;
                 if(defaultSearchValue){
@@ -197,7 +203,12 @@ export default {
         }
     },
     mounted(){
-       this.init(); 
+        this.init(); 
+    },
+    watch:{
+        'searchArea.searchInput':function(){
+            this.getSearchObj();
+        }
     }
 };
 </script>

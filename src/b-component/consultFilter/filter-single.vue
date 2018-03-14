@@ -301,12 +301,6 @@ var maker = {
                         defaultObj =  item;
                     }
                 });
-                if(this.model.componentConfig.label&&this.model.componentConfig.label.length&&this.model.componentConfig.value.length===this.model.componentConfig.label.length){
-                    defaultObj = {
-                        value:this.model.componentConfig.value[0],
-                        label:this.model.componentConfig.label[0],
-                    };
-                }
 
                 this.dispatch("consultFilter","single-change", {
                     sortName: modelList.sortName,
