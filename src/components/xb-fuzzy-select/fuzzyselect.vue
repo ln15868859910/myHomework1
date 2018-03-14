@@ -6,7 +6,7 @@
         <div style="display:inline-block;width:260px">
             <i-Input type="text" icon="search" :maxlength="searchData.maxLen || 999" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
             @on-focus="focus" 
-            @on-change="onChange" 
+            @on-change="debounce(this.fetchData,500)" 
             @on-blur="blur" 
             @on-click="doSearch" 
             @on-enter="doSearch"></i-Input>
@@ -30,7 +30,6 @@
 import Axios from 'axios';
 import iSelect from '../select/select.vue';
 import iOption from '../select/option.vue';
-import { debounce } from '../../utils/throttle';
 
 //↓ searchData 搜索区域，传入null该对象则整块区域隐藏
 // searchData: {
@@ -76,6 +75,7 @@ export default {
                 searchInput: ''
             },
             dropdown:false,
+            debounceObj:{},
             loading:false
         };
     },
@@ -122,6 +122,12 @@ export default {
             };
             this.getSearchObj();
         },
+        debounce(func, timeout, type) {
+            this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
+            this.debounceObj[type] = setTimeout(() => {
+                func();
+            }, timeout);
+        },
         doSearch() {
             this.callback['dosearch']();
         },
@@ -136,7 +142,9 @@ export default {
             this.callback['dosearch']();
         },
         onChange(){
-            debounce(this.fetchData,500)();
+            this.debounce(()=>{
+                this.fetchData();
+            },500,'changeVal');
         },
         fetchData(){
             var query = this.searchArea.searchInput;
