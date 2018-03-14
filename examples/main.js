@@ -234,6 +234,10 @@ const router = new VueRouter({
         {
             path: '/xbMessage',
             component: require('./routers/xb-message.vue')
+        },
+        {
+            path: '/xbFuzzy',
+            component: require('./routers/xb-fuzzy.vue')
         }
     ]
 });

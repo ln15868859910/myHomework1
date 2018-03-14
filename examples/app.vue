@@ -195,10 +195,12 @@ li+li {
                 <li>
                     <router-link to="/xbScroll">xbScroll</router-link>
                 </li>
-                   <li>
+                <li>
                     <router-link to="/xbMessage">xbMessage</router-link>
                 </li>
-                
+                <li>
+                    <router-link to="/xbFuzzy">xbFuzzy</router-link>
+                </li>
             </ul>
         </nav>
         <router-view></router-view>
