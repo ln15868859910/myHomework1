@@ -6,7 +6,7 @@
         <div style="display:inline-block;width:260px">
             <i-Input type="text" icon="search" :maxlength="searchData.maxLen || 999" v-model.trim="searchArea.searchInput" :placeholder="vplaceholder" 
             @on-focus="focus" 
-            @on-change="debounce(this.fetchData,500)" 
+            @on-change="onChange" 
             @on-blur="blur" 
             @on-click="doSearch" 
             @on-enter="doSearch"></i-Input>
