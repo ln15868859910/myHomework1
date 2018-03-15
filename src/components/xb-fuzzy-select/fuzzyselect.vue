@@ -139,7 +139,9 @@ export default {
         },
         clickItem(item){
             this.searchArea.searchInput = item;
-            this.callback['dosearch']();
+            this.$nextTick(() =>{
+                this.callback['dosearch']();
+            });
         },
         onChange(){
             this.debounce(()=>{
