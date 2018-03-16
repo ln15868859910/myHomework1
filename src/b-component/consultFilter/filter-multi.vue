@@ -159,7 +159,7 @@ const MultiFilterSlotComponent = {
 
         }
         //数据超过50条，添加自定义文案
-        else if (this.model.componentConfig.optionList.length > 50) {
+        else if (this.model.componentConfig.itemCount > 50) {
             this.model.componentConfig.optionList.push({
                 value: "abadon",
                 label: "【更多选项请搜索】",
