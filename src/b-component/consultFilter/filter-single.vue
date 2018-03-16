@@ -28,7 +28,7 @@ function getComponentConfig(model, remoteMethod,selectedValue) {
     var data;
     switch (model.componentType) {
         case "select":
-            let label = [selectedValue];
+            let label = selectedValue.label;
 
             data = {
                 value: model.componentConfig.value[0],
@@ -80,7 +80,7 @@ var maker = {
                 isInitComplete: false
             },
             debounceObj: {},
-            selectedValue: ""
+            selectedValue: {}
         }
     },
     created() {
@@ -230,7 +230,7 @@ var maker = {
             }
 
             //输入空格不做请求
-            if (/\s+/.test(query)) {
+            if (/\s+/.test(query)||query.trim() == "" && query.length > 0) {
                 return;
             }
             query = query.trim();
@@ -295,13 +295,13 @@ var maker = {
                 if (!defaultValue) {
                     return;
                 }
-                var defaultObj;
+                var defaultObj = {};
                 modelList.componentConfig.optionList.forEach(function (item) {
                     if (item.value == defaultValue) {
-                        defaultObj =  item;
+                        defaultObj = item;
                     }
                 });
-
+                this.selectedValue = defaultObj;
                 this.dispatch("consultFilter","single-change", {
                     sortName: modelList.sortName,
                     sortValue: modelList.sortValue,
@@ -359,10 +359,10 @@ var maker = {
                         "on-change": function (obj) {
 
                             var result = {};
-                            if (!me.selectedValue && !me.query) {
+                            if (!me.selectedValue.value && !me.query) {
                                 me.isValueChange = true;
                             }
-                            me.selectedValue = obj.value;
+                            me.selectedValue = obj;
                             //bugFix（临时）：解决iview单选组件选中后默认会去请求一次接口，现根据是否有选中值去调不同的方法
 
                             if (Object.prototype.toString.call(obj).toLowerCase() === "[object object]") {

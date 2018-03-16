@@ -99,31 +99,33 @@ export default {
                 sonSortValue: null,
                 componentType: "select",
                 componentConfig: {
-                  value: ["高"],
-                  filterable: false,
+                  value: "",
+                  filterable: true,
                   multiple: false,
                   clearable: true,
                   itemCount: 0,
                   optionList: [
                     {
                       label: "高",
-                      value: "高"
+                      value: "1"
                     },
                     {
                       label: "中",
-                      value: "中"
+                      value: "2"
                     },
                     {
                       label: "低",
-                      value: "低"
+                      value: "3"
                     },
                     {
                       label: "？",
-                      value: "？"
+                      value: "4"
                     }
                   ]
                 },
-                RemoteUrl: null
+                remoteUrl: {
+                  onSearch:"/api/GetData"
+                }
               }
             ] //异步返回
           },
