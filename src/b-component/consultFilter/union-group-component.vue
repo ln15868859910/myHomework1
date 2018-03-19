@@ -207,7 +207,7 @@ const UnionComponentSlot = {
 
         }
         //数据超过50条，添加自定义文案
-        if (this.model.componentConfig.ItemCount > 50) {
+        if (this.model.componentConfig.itemCount > 50) {
             this.model.componentConfig.optionList.push({
                 value: "abadon",
                 label: "【更多选项请搜索】",
@@ -314,12 +314,15 @@ const UnionComponentSlot = {
         },
         onParentChange(params) {
             var _this = this;
+            var len = this.parentSelectValue.length;
             this.parentSelectValue = [];
             params.selectModel.value.map(function (item) {
                 _this.parentSelectValue.push(item.value);
             });
             // 分情况 是否清除子级数据 如果此时父子级以获取对应数据  则不清除
             if(_this.parentSelectValue.join() !== this.currentparentvalue.join()){
+                this.onParentEmpty();
+            }else if(len!=this.parentSelectValue.length&&!this.currentparentvalue.length){
                 this.onParentEmpty();
             }
             if (Object.prototype.toString.call(params.selectModel.value) == "[object Array]" && params.selectModel.value.length == 0) {
