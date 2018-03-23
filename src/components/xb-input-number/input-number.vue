@@ -216,7 +216,7 @@ export default {
             this.setValue(val);
         },
         setValue(val) {
-            if (!isNaN(this.fixed)){
+            if (!isNaN(this.fixed)&&val){
                 val = this.fiexdNumber(val);
             }
 
@@ -230,13 +230,16 @@ export default {
         focus() {
             this.focused = true;
         },
-        blur() {
+        blur(event) {
             this.focused = false;
-            // this.$emit('on-blur');
-            this.checkRange();
+            this.$emit('on-blur');
+            this.checkRange(event);
         },
-        checkRange(){   //离焦之后的大小值校验
-            var val = this.currentValue;
+        checkRange(event){   //离焦之后的大小值校验
+            var val = event.target.value.trim();
+            if(val!==''){
+                val =Number(val);
+            }
             const max = this.max;
             const min = this.min;
             if (Number(val) > max) {

@@ -724,6 +724,9 @@
                 this.model = val;
                 if (val === '') this.query = '';
             },
+            disabled(){
+                this.visible = false;
+            },
             label (val) {
                 this.currentLabel = val;
                 this.updateLabel();

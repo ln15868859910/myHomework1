@@ -2,13 +2,13 @@
 </style>
 <template>
 <div>
-    <consult-filter :search-data="searchData" :filter-data="filterData" :callback="callback">
+    <!-- <consult-filter :search-data="searchData" :filter-data="filterData" :callback="callback">
         <div style="float:left" slot="customLeft">
             <i-button type="primary" @click="addConsult()" style="margin-right:10px">新建咨询</i-button>
             <i-button type="ghost" @click="showUploadPop()" style="margin-right:10px">导入</i-button>
             <i-button type="ghost" @click="exportExcel()">导出</i-button>
         </div>
-    </consult-filter>
+    </consult-filter> -->
 
     <consult-filter :search-data="filterConfig.searchData" :filter-data="filterConfig.filterData" :callback="filterConfig.callback" ref="classFilter"
             style="margin-bottom:0">
@@ -788,10 +788,10 @@ export default {
                   SonSortValue: "LessonId",
                   ComponentType: "select",
                   ComponentConfig: {
-                    // Value:[],
-                    // Label:[],
-                    Value: ["4691","469"],
-                    Label: ["dsaddsadasdd","模特f"],
+                    Value:[],
+                    Label:[],
+                    // Value: ["4691","469"],
+                    // Label: ["dsaddsadasdd","模特f"],
                     Filterable: true,
                     Multiple: true,
                     Clearable: true,
