@@ -5,7 +5,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(column, index) in columns" :class="alignCls(column,true)" :style="thStyle(column)" v-show="column.show" :key="index">
+                <th v-for="(column, index) in columns" :class="alignCls(column,true)" :style="thStyle(column)" v-show="column.show" :key="index" @mousemove="handleMouseMove($event,column)" @mousedown="handleMouseDown($event,column)" @mouseout="handleMouseOut">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
@@ -63,7 +63,11 @@ export default {
     },
     data() {
         return {
-            prefixCls: 'spui-table'
+            prefixCls: 'spui-table',
+            ondrag:false,
+            startX:0,
+            dragcolumn:null,
+            endX:0
         }
     },
     computed: {
@@ -86,6 +90,72 @@ export default {
         }
     },
     methods: {
+        handleMouseDown(event,column){
+            const table = this.$parent;
+            const tableEl = table.$el;
+            const tableLeft = tableEl.getBoundingClientRect().left;
+
+            this.ondrag = true;
+            this.startX = event.pageX;
+
+            document.onselectstart = function() { return false; };
+            document.ondragstart = function() { return false; };
+
+            var that = this;
+            function onMouseUp(){
+                if(that.ondrag){
+                    table.resizetag = false;
+                    that.ondrag = false;
+                    document.body.style.cursor = '';
+                    that.dragcolumn = null;
+                    that.$parent.doLayout();
+                }
+                document.removeEventListener('mousemove',onMouseMove);
+                document.removeEventListener('mouseup',onMouseUp);
+                document.onselectstart = null;
+                document.ondragstart = null;
+            }
+            function onMouseMove(event2){
+                if(that.dragcolumn){
+                    var currentwidth = column.defaultwidth==column._width?column.defaultwidth:column._width;
+                    var width = event2.pageX-that.startX+currentwidth;
+                    if(width>=column.defaultwidth){
+                        column.width=width;
+                    }
+                    
+                    table.resizetag = true;
+                    var left = event2.screenX-tableLeft-30+2+'px';
+                    that.$parent.$refs.resizeline.style.left = left;
+                    that.$parent.$refs.resizeline2.style.left = left;
+                }
+            }
+            document.addEventListener('mouseup',onMouseUp);
+            document.addEventListener('mousemove',onMouseMove);
+
+        },
+        handleMouseMove(event,column){
+            if(!this.ondrag){
+                let target = event.target;
+                while (target && target.tagName !== 'TH') {
+                    target = target.parentNode;
+                }
+                let rect = target.getBoundingClientRect();
+                let bodyStyle = document.body.style;
+                if(rect.width>=column.defaultwidth&&rect.right-event.pageX<5){
+                    bodyStyle.cursor = 'col-resize';
+                    // bodyStyle.cursor = 'url("./cursor.svg"),auto';
+                    this.dragcolumn = column;
+                }else if(!this.ondrag){
+                    bodyStyle.cursor = '';
+                    this.dragcolumn = null;
+                }
+            }
+        },
+        handleMouseOut(){
+            // const bodyStyle = document.body.style;
+            // this.dragcolumn = null;
+            // bodyStyle.cursor = '';
+        },
         cellClasses(column) {
             return [
                 `${this.prefixCls}-cell`,

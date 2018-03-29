@@ -1,5 +1,5 @@
 <style lang="less">
-@import "../src/styles/index.less";
+@import '../src/styles/index.less';
 </style>
 <style scoped>
 nav {
@@ -15,7 +15,7 @@ li {
     display: inline-block;
 }
 
-li+li {
+li + li {
     border-left: solid 1px #bbb;
     padding-left: 10px;
     margin-left: 10px;
@@ -35,6 +35,9 @@ li+li {
             <ul>
                 <li>
                     <router-link to="/affix">Affix</router-link>
+                </li>
+                <li>
+                    <router-link to="/color">color</router-link>
                 </li>
                 <li>
                     <router-link to="/grid">Grid</router-link>
@@ -208,19 +211,11 @@ li+li {
 </template>
 <script>
 module.exports = {
-    data: function () {
-        return {
-
-        }
+    data: function() {
+        return {};
     },
-    mounted: function () {
-
-    },
-    beforeDestroy: function () {
-
-    },
-    methods: {
-
-    }
-}
+    mounted: function() {},
+    beforeDestroy: function() {},
+    methods: {}
+};
 </script>

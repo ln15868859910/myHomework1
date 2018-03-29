@@ -4,7 +4,7 @@
             <div :class="[prefixCls + '-title']" ref="title">
                 <slot name="header"></slot>
             </div>
-            <div :class="[prefixCls + '-tableWrap']">
+            <div :class="[prefixCls + '-tableWrap',custumClass.tableWrap]">
                 <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" v-show="showVerticalBar" :view-style="{'float':'left'}">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
@@ -35,6 +35,7 @@
                         :data="rebuildData">
                         </table-head>
                     </div>
+                    <div v-show="resizetag" :class="[prefixCls+'-resize-line']" ref="resizeline"></div>
                     <div :class="[prefixCls + '-showmore']" v-show="custumcols.length">
                         <Icon type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
@@ -42,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div :class="[prefixCls + '-bodywrap']" :style="bodyWrapStyle">
+        <div :class="[prefixCls + '-bodywrap',custumClass.bodywrap]" :style="bodyWrapStyle">
             <div style="position:relative" ref="mainTable" :style="bodyStyle">
                 <div :class="[prefixCls + '-tip']" v-show="(!rebuildData || rebuildData.length === 0)">
                     <!--无数据样式slot-->
@@ -80,6 +81,7 @@
                     </table-body>
                     </div>
                 </div>
+                <div v-show="resizetag" :class="[prefixCls+'-resize-line']" ref="resizeline2"></div>
             </div>
         </div>
         <div :class="[prefixCls + '-footer']" ref="footer">
@@ -195,6 +197,13 @@ export default {
             type: Boolean,
             default: false
         },
+        //自定义样式
+        custumClass: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
     },
     data() {
         return {
@@ -224,13 +233,15 @@ export default {
             currentHoverRow:-1,
             currentClickRow:-1,
             selectTriggerByRow:false,
-            isRadio:false,
-            expandArr:[]
+            isRadio: false,
+            resizetag:false,
+            draglineleft:0,
+            expandArr: []
         };
     },
     computed: {
         isControlDrop(){
-            if("isDrop" in this.control){
+            if ("isDrop" in this.control) {
                 return this.control.isDrop;
             }
             return true;
@@ -393,12 +404,12 @@ export default {
         },
         doLayout() {
             var allColumWidth = this.cloneColumns.map(cell => {
-                if (cell.show) {
-                    return cell.width;
-                } else {
-                    return 0;
-                }
-            }).reduce((a, b) => a + b);
+                    if (cell.show) {
+                        return cell.width;
+                    } else {
+                        return 0;
+                    }
+                }).reduce((a, b) => a + b);
             this.tableWidth = allColumWidth > this.centerWidth ? allColumWidth : this.centerWidth;
             this.columnsWidth = {};
             if (!this.$refs.tbody) return;
@@ -423,7 +434,7 @@ export default {
                 this.syncFixedTableRowHeight();
             });
             // 高度小于表格真实高度时显示纵向滚动条
-            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));   
+            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
         },
         handleResize() {
             this.$nextTick(() => {
@@ -454,12 +465,12 @@ export default {
             }
             this.$emit('on-row-click', data);
         },
-        changeByitem(data){//未添加 preselect 
+        changeByitem(data){//未添加 preselect
             this.selectTriggerByRow = true;
             this.clickCurrentRow(data);
             this.selectTriggerByRow = false;
         },
-        changeBypKey(pkey){//未添加 preselect 
+        changeBypKey(pkey){//未添加 preselect
             this.selectTriggerByRow = true;
             this.clickCurrentRow({_pkey:pkey});
             this.selectTriggerByRow = false;
@@ -526,7 +537,7 @@ export default {
                 } else {
                     let pk = data._pkey;
                     let index = this.selectionPkeys.indexOf(pk);
-                    
+
                     if(status){
                         
                         if(index===-1&&(preselectfn&&preselectfn(data,true,'all')||!preselectfn)){
@@ -541,7 +552,7 @@ export default {
                     }
                 }
             }
-            
+
             this.$emit('on-select-all', this.selections,status);
             this.$emit('on-selection-change', this.selections);
         },
@@ -676,6 +687,7 @@ export default {
                 column._columnKey = columnKey++;
                 column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
+                column.defaultwidth = column._width||0;
                 column.show = ("show" in column) ? column.show : true;
                 column.renderType="normal";
                 if(column.type && column.type!=="link"){
@@ -727,7 +739,7 @@ export default {
         }
     },
     created() {
-        
+
         this.makeColumns();
         this.rebuildData = this.makeDataWithSort();
         this.throttleLayout= throttle(this.doLayout,200);

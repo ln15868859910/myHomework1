@@ -2,11 +2,11 @@
     <div :class="classes">
         <ul>
             <!-- 自定义内容区域 -->
-            <li :class="custom">
+            <li :class="[custom,custumClass.custom]">
                 <slot name="customLeft"></slot>
             </li>
     
-            <li :class="flortRight">
+            <li :class="[flortRight,custumClass.floatright]">
                 <!-- 搜索内容区域  -->
 
                 <xb-fuzzy-select ref="fuzzySearch" v-if="searchData && status.isInitCompleted" :search-data="searchData" :callback="{'dosearch':doSearch}" @update-search-res="updateSearchRes"></xb-fuzzy-select>
@@ -52,9 +52,8 @@
     </div>
 </template>
 <script>
-
-const prefixCls = "spui-b-consultFilter";
-import emitter from "./emit";
+const prefixCls = 'spui-b-consultFilter';
+import emitter from './emit';
 import iSelect from '../../components/select';
 import iInput from '../../components/input';
 import XbFuzzySelect from '../../components/xb-fuzzy-select';
@@ -69,8 +68,8 @@ import clickoutside from '../../directives/clickoutside';
 
 export default {
     name: 'consultFilter',
-    mixins: [ emitter ],
-    components: { iSelect,iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect},
+    mixins: [emitter],
+    components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect },
     directives: { clickoutside },
     props: {
         filterData: {
@@ -84,6 +83,12 @@ export default {
         callback: {
             type: Object,
             default: null
+        },
+        custumClass: {
+            type: Object,
+            default: function() {
+                return {};
+            }
         }
     },
     data() {
@@ -99,12 +104,12 @@ export default {
             filterResult: [],
             searchArea: {
                 selected: {
-                    "text": "",
-                    "value": ""
+                    text: '',
+                    value: ''
                 },
-                searchInput: "",
+                searchInput: ''
             },
-            debounceObj: {},
+            debounceObj: {}
         };
     },
     computed: {
@@ -112,30 +117,32 @@ export default {
             return `${prefixCls}`;
         },
         sortName() {
-            return `${prefixCls}-sortName`
+            return `${prefixCls}-sortName`;
         },
         sortLabel() {
-            return `${prefixCls}-label`
+            return `${prefixCls}-label`;
         },
         custom() {
-            return `${prefixCls}-custom`
+            return `${prefixCls}-custom`;
         },
         search() {
-            return `${prefixCls}-search`
+            return `${prefixCls}-search`;
         },
         filterBtn() {
-            return [`${prefixCls}-filterBtn`, {
-                [`${prefixCls}-isSelected`]: this.status.isContainerShow
-            }]
+            return [
+                `${prefixCls}-filterBtn`,
+                {
+                    [`${prefixCls}-isSelected`]: this.status.isContainerShow
+                }
+            ];
         },
         fitlerResult() {
-            return `${prefixCls}-fitlerResult`
+            return `${prefixCls}-fitlerResult`;
         },
         filterContainer() {
-            return `${prefixCls}-container`
+            return `${prefixCls}-container`;
         },
         filterResultAmount() {
-
             var count = 0;
             for (let i = 0, len = this.filterResult.length; i < len; i++) {
                 count += this.filterResult[i].label.length ? this.filterResult[i].label.length : 0;
@@ -143,53 +150,50 @@ export default {
             return count;
         },
         flortRight() {
-            return `${prefixCls}-flortRight`
+            return `${prefixCls}-flortRight`;
         },
 
         singleModel() {
-
             //清空操作传入空值
             if (this.filterData.isClear) {
                 return {
-                    class: "",
+                    class: '',
                     modelList: []
-                }
+                };
             }
 
             return {
-                class: this.filterData.data.singleModel ? this.filterData.data.singleModel.class:"",
+                class: this.filterData.data.singleModel ? this.filterData.data.singleModel.class : '',
                 modelList: this.filterData.data.singleModel ? this.filterData.data.singleModel.modelList : []
-            }
+            };
         },
         unionModel() {
-
             //清空操作传入空值
             if (this.filterData.isClear) {
                 return {
-                    class: "",
+                    class: '',
                     modelList: []
-                }
+                };
             }
 
             return {
-                class: this.filterData.data.unionModel ? this.filterData.data.unionModel.class:"",
+                class: this.filterData.data.unionModel ? this.filterData.data.unionModel.class : '',
                 modelList: this.filterData.data.unionModel ? this.filterData.data.unionModel.modelList : []
-            }
+            };
         },
         multiModel() {
-
             //清空操作传入空值
             if (this.filterData.isClear) {
                 return {
-                    class: "",
+                    class: '',
                     modelList: []
-                }
+                };
             }
 
             return {
-                class: this.filterData.data.multiModel ? this.filterData.data.multiModel.class:"",
+                class: this.filterData.data.multiModel ? this.filterData.data.multiModel.class : '',
                 modelList: this.filterData.data.multiModel ? this.filterData.data.multiModel.modelList : []
-            }
+            };
         }
     },
     created() {
@@ -203,17 +207,16 @@ export default {
     },
     beforeDestroy() {
         //移除二级联动模块change事件
-        this.$off("union-change", this.onUnionChange);
+        this.$off('union-change', this.onUnionChange);
         //移除二级单选模块change事件
-        this.$off("single-change", this.onSingleChange);
+        this.$off('single-change', this.onSingleChange);
         //移除二级多选模块change事件
-        this.$off("multi-change", this.onUnionChange);
+        this.$off('multi-change', this.onUnionChange);
     },
     watch: {
-
-        "filterData": {
+        filterData: {
             deep: true,
-            handler: function (oldv, newv) {
+            handler: function(oldv, newv) {
                 if (newv.isClear === true) {
                     this.clearAllData();
                     return;
@@ -224,45 +227,47 @@ export default {
                     this.uiModeltoBizModel(this.getInitData(newv.data));
                     this.status.isInitCompleted = true;
                 }
-
             }
         },
-        "searchData": {
+        searchData: {
             deep: true,
-            handler: function (oldv, newv) {
+            handler: function(oldv, newv) {
                 if (!this.searchData.opts.defaultSearchKey && this.searchData.opts.defaultSearchValue) {
-                    console.warn("注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！")
+                    console.warn('注意：请给传入默认搜索项传入一个指定类型，否则将默认使用第一个搜索类型去查找数据！');
                 }
                 this.searchArea.selected.value = newv.opts.defaultSearchKey;
                 this.searchArea.searchInput = newv.opts.defaultSearchValue;
             }
         }
-
     },
     methods: {
-
-
         /****************************搜索项相关*********************************/
 
         doSearch(searchRes) {
-
             //搜索结果互斥时，清空筛选项
             if (this.searchData.opts.isResetFilter) {
                 this.emptyTag();
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 500, "doSearch")
-
+                this.debounce(
+                    () => {
+                        this.uiModeltoBizModel();
+                    },
+                    500,
+                    'doSearch'
+                );
             } else {
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 500, "doSearch")
+                this.debounce(
+                    () => {
+                        this.uiModeltoBizModel();
+                    },
+                    500,
+                    'doSearch'
+                );
             }
         },
-        updateSearchRes(obj){
-            this.searchArea.selected.value = obj.value
-            this.searchArea.selected.text = obj.text
-            this.searchArea.searchInput = obj.input
+        updateSearchRes(obj) {
+            this.searchArea.selected.value = obj.value;
+            this.searchArea.selected.text = obj.text;
+            this.searchArea.searchInput = obj.input;
         },
 
         /****************************筛选项相关*********************************/
@@ -273,11 +278,11 @@ export default {
                 key: this.searchArea.selected.value,
                 value: this.searchArea.searchInput
             };
-            
-            var outPutFn = this.callback["selected"];
 
-            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === "[object function]")) {
-                throw new Error("请传入有效的函数类型回调")
+            var outPutFn = this.callback['selected'];
+
+            if (outPutFn && !(Object.prototype.toString.call(outPutFn).toLowerCase() === '[object function]')) {
+                throw new Error('请传入有效的函数类型回调');
             }
 
             if (initFilterData) {
@@ -285,17 +290,16 @@ export default {
                 return;
             }
 
-            this.filterResult.map(function (sortItem) {
-
+            this.filterResult.map(function(sortItem) {
                 filterRes[sortItem.sortValue] = [];
-                sortItem.label.map(function (labelItem) {
-                    if (Object.prototype.toString.call(labelItem.value).toLowerCase() === "[object array]") {
+                sortItem.label.map(function(labelItem) {
+                    if (Object.prototype.toString.call(labelItem.value).toLowerCase() === '[object array]') {
                         filterRes[sortItem.sortValue] = labelItem.value;
                     } else {
-                        filterRes[sortItem.sortValue].push(labelItem.value)
+                        filterRes[sortItem.sortValue].push(labelItem.value);
                     }
-                })
-            })
+                });
+            });
 
             outPutFn(filterRes, searchRes);
         },
@@ -310,41 +314,39 @@ export default {
 
         //计算溢出需要显示tooltip的文字
         setToolTipVisible() {
-
             if (this.filterResult.length == 0) {
                 return;
             }
 
             var labelInstances = this.$refs.sortLabel,
-                sameSortStartI = -1,//记录同一类型起始位置的索引
-                labelSortOld = "",
-                arr = [];//保存匹配到的筛选分类的分类名和索引
+                sameSortStartI = -1, //记录同一类型起始位置的索引
+                labelSortOld = '',
+                arr = []; //保存匹配到的筛选分类的分类名和索引
 
             //找到内容溢出的tag
             for (let i = 0, len = labelInstances.length; i < len; i++) {
-                var labelSortNew = /sortLabel-(.*)/.exec($(labelInstances[i].$el.querySelector(`.${prefixCls}-label`)).attr("data-id"))[1];
+                var labelSortNew = /sortLabel-(.*)/.exec(
+                    $(labelInstances[i].$el.querySelector(`.${prefixCls}-label`)).attr('data-id')
+                )[1];
                 var labelWidth = labelInstances[i].$el.querySelector('.ivu-tag-text').clientWidth;
 
                 //初始化时给labelSortOld赋新值,并记录当前的起始索引位置,切换分类后旧值和新值不同，重新记录起始位置
-                if (labelSortOld == "undefined" || labelSortOld != labelSortNew) {
+                if (labelSortOld == 'undefined' || labelSortOld != labelSortNew) {
                     sameSortStartI = i;
                 }
                 //给旧值赋值
-                labelSortOld = labelSortNew
+                labelSortOld = labelSortNew;
                 //内容溢出记录当前分类和相对位置（实际位置）索引
                 if (labelWidth >= 250) {
                     arr.push({ sortValue: `${labelSortNew}`, index: i - sameSortStartI });
                 }
             }
 
-
             //给内容溢出的tag设置状态
             var queryData = this.filterResult;
             for (let i = 0, len = queryData.length; i < len; i++) {
-
                 //开启指定ToolTip
                 for (let j = 0, len = arr.length; j < len; j++) {
-
                     var matchedSortValue = arr[j].sortValue;
                     var matchedIndex = arr[j].index;
 
@@ -352,7 +354,6 @@ export default {
                         queryData[i].label[matchedIndex].isAvoidToolTip = false;
                     }
                 }
-
             }
         },
         //销毁数据实例
@@ -369,29 +370,26 @@ export default {
                 me = this;
 
             if (filterResult.length) {
-                filterResult.map( (sortItem, itemIndex) => {
-                    this.broadcast("selectComponent",sortItem.sortValue + "-change", [], [], "emptyOnly");
-                })
+                filterResult.map((sortItem, itemIndex) => {
+                    this.broadcast('selectComponent', sortItem.sortValue + '-change', [], [], 'emptyOnly');
+                });
             }
-
         },
         // 删除筛选标签
         closeTag(sortItem, labelIndex) {
-
             sortItem.label.splice(labelIndex, 1);
             var value = [],
                 label = [];
 
-            sortItem.label.map(function (item) {
+            sortItem.label.map(function(item) {
                 value.push(item.value);
                 label.push(item.text);
             });
 
             //向基础组件发起数据变动通知
-            this.broadcast("selectComponent",sortItem.sortValue + "-change", value, label);
+            this.broadcast('selectComponent', sortItem.sortValue + '-change', value, label);
         },
         onUnionChange(data, type) {
-
             var _this = this,
                 isEmpty = false,
                 isFinish = false;
@@ -401,13 +399,17 @@ export default {
             }
 
             if (isEmpty) {
-                this.filterResult = this.filterResult.filter(function (item, index) {
+                this.filterResult = this.filterResult.filter(function(item, index) {
                     return item.sortValue != data.sortValue;
-                })
-                if (type == "fromBottom") {
-                    this.debounce(() => {
-                        this.uiModeltoBizModel();
-                    }, 800, "dataChange")
+                });
+                if (type == 'fromBottom') {
+                    this.debounce(
+                        () => {
+                            this.uiModeltoBizModel();
+                        },
+                        800,
+                        'dataChange'
+                    );
                 }
                 return;
             }
@@ -418,68 +420,78 @@ export default {
             //如果filterResult没有数据直接放入数据
             if (len === 0) {
                 //给多选和单选添加tooltip属性
-                data.label.map(function (item, index) {
+                data.label.map(function(item, index) {
                     item.isAvoidToolTip = true;
                 });
                 this.filterResult.push(data);
-                if (type == "fromBottom") {
-                    this.debounce(() => {
-                        this.uiModeltoBizModel();
-                    }, 800, "dataChange")
+                if (type == 'fromBottom') {
+                    this.debounce(
+                        () => {
+                            this.uiModeltoBizModel();
+                        },
+                        800,
+                        'dataChange'
+                    );
                 }
                 return;
             }
 
-            this.filterResult.map(function (item, index) {
+            this.filterResult.map(function(item, index) {
                 if (isFinish) {
                     return;
                 }
                 if (item.sortValue === data.sortValue) {
                     //给多选和单选添加tooltip属性
-                    data.label.map(function (item, index) {
+                    data.label.map(function(item, index) {
                         item.isAvoidToolTip = true;
                     });
 
                     item.label = data.label;
                     isFinish = true;
-                }
-                else if (index === len - 1) {
+                } else if (index === len - 1) {
                     //给多选和单选添加tooltip属性
-                    data.label.map(function (item, index) {
+                    data.label.map(function(item, index) {
                         item.isAvoidToolTip = true;
                     });
 
                     _this.filterResult.push(data);
                 }
-            })
+            });
 
             //修改和添加事件触发回调
-            if (type == "fromBottom") {
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 800, "dataChange")
+            if (type == 'fromBottom') {
+                this.debounce(
+                    () => {
+                        this.uiModeltoBizModel();
+                    },
+                    800,
+                    'dataChange'
+                );
             }
-
         },
         onSingleChange(data, type) {
-
             var _this = this,
                 len = this.filterResult.length,
                 isSortExist = false,
                 isEmpty = false;
 
-            if (!data.label[0].value) { isEmpty = true; }
+            if (!data.label[0].value) {
+                isEmpty = true;
+            }
 
             //删除事件,清空并触发回调
             if (isEmpty) {
-
-                this.filterResult = this.filterResult.filter(function (item, index) {
+                this.filterResult = this.filterResult.filter(function(item, index) {
                     return item.sortValue != data.sortValue;
-                })
-                if (type == "fromBottom") {
-                    this.debounce(() => {
-                        this.uiModeltoBizModel();
-                    }, 800, "dataChange")
+                });
+                if (type == 'fromBottom') {
+                    this.debounce(
+                        () => {
+                            this.uiModeltoBizModel();
+                        },
+                        800,
+                        'dataChange'
+                    );
                 }
                 return;
             }
@@ -489,72 +501,81 @@ export default {
 
             if (len === 0) {
                 this.filterResult.push(data);
-                if (type == "fromBottom") {
-                    this.debounce(() => {
-                        this.uiModeltoBizModel();
-                    }, 800, "dataChange")
+                if (type == 'fromBottom') {
+                    this.debounce(
+                        () => {
+                            this.uiModeltoBizModel();
+                        },
+                        800,
+                        'dataChange'
+                    );
                 }
                 return;
             }
 
             //修改
-            this.filterResult.map(function (item, index) {
+            this.filterResult.map(function(item, index) {
                 if (item.sortValue === data.sortValue) {
-
                     item.label = data.label;
                     isSortExist = true;
                 }
-            })
+            });
 
             //添加
             !isSortExist && data.label[0].value && _this.filterResult.push(data);
 
             //修改或添加事件触发回调
-            if (type == "fromBottom") {
-                this.debounce(() => {
-                    this.uiModeltoBizModel();
-                }, 800, "dataChange")
+            if (type == 'fromBottom') {
+                this.debounce(
+                    () => {
+                        this.uiModeltoBizModel();
+                    },
+                    800,
+                    'dataChange'
+                );
             }
         },
         observeEvent() {
             //监听二级联动模块change事件
-            this.$on("union-change", this.onUnionChange);
+            this.$on('union-change', this.onUnionChange);
             //监听二级单选模块change事件
-            this.$on("single-change", this.onSingleChange);
+            this.$on('single-change', this.onSingleChange);
             //监听二级多选模块change事件
-            this.$on("multi-change", this.onUnionChange);
+            this.$on('multi-change', this.onUnionChange);
         },
 
         debounce(func, timeout, type) {
-
             this.debounceObj[type] && clearTimeout(this.debounceObj[type]);
             this.debounceObj[type] = setTimeout(() => {
-                func()
+                func();
             }, timeout);
-
         },
         //获取初始化传入数据默认值
         getInitData(model) {
-
             var initfilterResult = {};
-            var setFn = function (sortItem) {
+            var setFn = function(sortItem) {
                 if (sortItem.componentConfig.value.length) {
                     initfilterResult[sortItem.sortValue] = sortItem.componentConfig.value;
                 }
             };
 
-            model.singleModel.modelList.map(function (sortItem) { setFn(sortItem) })
-            model.multiModel.modelList.map(function (sortItem) { setFn(sortItem) })
+            model.singleModel.modelList.map(function(sortItem) {
+                setFn(sortItem);
+            });
+            model.multiModel.modelList.map(function(sortItem) {
+                setFn(sortItem);
+            });
 
-            model.unionModel.modelList.map(function (sortItemList) {
-                sortItemList.map(function (sortItem) { setFn(sortItem) })
-            })
+            model.unionModel.modelList.map(function(sortItemList) {
+                sortItemList.map(function(sortItem) {
+                    setFn(sortItem);
+                });
+            });
 
             return initfilterResult;
         },
         //根据返回
-        init() { }
+        init() {}
     }
 };
-
 </script>

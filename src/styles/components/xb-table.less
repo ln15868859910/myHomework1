@@ -18,7 +18,7 @@
         height: 8px;
     }
     .@{css-prefix-spui}scrollbar-thumb {
-        background: @primary-color;
+        background: @table-scrollbar-color;
         &:hover {
             background: @dark-primary-color;
         }
@@ -248,6 +248,17 @@
                 transform: rotate(90deg);
             }
         }
+    }
+    &-link-hover:hover{
+        cursor: pointer;
+    }
+    &-resize-line{
+        width:1px;
+        height:100%;
+        background:tint(@primary-color,50%);
+        position:absolute;
+        z-index:100;
+        top: 0;
     }
     &-expanded-cell th{
         background-color: #F7F8FA;

@@ -197,7 +197,7 @@ export default {
                             } = that.getSpan(row, column, rowIndex, columnIndex);
                             if (rowspan || colspan) {
                                 return h('td', {
-                                    class: that.alignCls(column, false,row),
+                                    class: [that.alignCls(column, false,row),column.type==='link'?`${that.prefixCls}-link-hover`:''],
                                     style: {
                                         'display':!column.show?'none':'table-cell',
                                         'border-bottom-color':that.rowExpanded(row._index)?'#5295e7':'#d4dfe5'
@@ -206,6 +206,21 @@ export default {
                                     domProps: {
                                         rowSpan: rowspan,
                                         colSpan: colspan
+                                    },
+                                    on:{
+                                        click:($event)=>{
+                                            if(column.type==='link'){
+                                                if($event.target.nodeName==='TD'){
+                                                    var link = $event.target.querySelector('a');
+                                                    if(link){
+                                                        link.click();
+                                                        $event.stopPropagation();
+                                                        $event.preventDefault();    
+                                                    }
+                                                }
+                                            }
+                                            
+                                        }
                                     }
                                 }, [
                                     h('div',{
