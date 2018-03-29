@@ -8,7 +8,7 @@
         <div>
             <div v-for="(item) in selection">{{item._pkey}}  <i-button type="primary" size="large" @click="deletethis(item)">删除</i-button> </div>
         </div>
-        <Xb-Table name="testtable" :custumClass="custumclass" :columns="tableHeader" :height="600" :control="control" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData" @on-select-all="changeselectAll" ref="table" :selected-pkeys="selectedArr">
+        <Xb-Table name="testtable" :custumClass="custumclass" resizeable :columns="tableHeader" :height="600" :control="control" :data="listData" fixHeader :fixedTop="0" :fixedScrollTop="122" @on-selection-change="getSelectedData" @on-select-all="changeselectAll" ref="table" :selected-pkeys="selectedArr">
             <div slot="header">
                 <div style="height:60px;background:#fff;padding:15px 20px;">
                     <Button type="ghost" style="margin-right:10px;width:80px;">搜索</Button>

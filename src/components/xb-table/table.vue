@@ -203,6 +203,11 @@ export default {
             default() {
                 return {};
             }
+        },
+        //是否可拖拽修改宽度
+        resizeable: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -682,12 +687,14 @@ export default {
             }
             //取持久化自定义隐藏数据 并重置现有数据
             let storgedata = this.getLocalData();
+            //取持久化自定义列宽数据 并重置现有数据
+            let storgeWidth = this.getLocalData('width');
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
                 column.width = column.width || 80;
                 column._width = column.width ? column.width : '';
-                column.defaultwidth = column._width||0;
+                column.defaultwidth = column.width;
                 column.show = ("show" in column) ? column.show : true;
                 column.renderType="normal";
                 if(column.type && column.type!=="link"){
@@ -712,6 +719,9 @@ export default {
                         show:column.show
                     });
                 }
+                if (column.key in storgeWidth) {
+                    column.width = storgeWidth[column.key]
+                }
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
                 } else if (column.fixed && column.fixed === 'right') {
@@ -725,17 +735,24 @@ export default {
             this.rightFixedColumns = right;
             this.cloneColumns = left.concat(center).concat(right);
         },
-        setLocalData(data,colobj){
+        setLocalData(data,colobj,type=''){
             if(this.name){
-                localStorage.setItem('table'+this.name,JSON.stringify(colobj));
+                localStorage.setItem('table'+this.name+type,JSON.stringify(colobj));
             }
         },
-        getLocalData(){
+        getLocalData(type=''){
             let data;
             if(this.name){
-                data = JSON.parse(localStorage.getItem('table'+this.name));
+                data = JSON.parse(localStorage.getItem('table'+this.name+type));
             }
             return data||{};
+        },
+        saveColumnWidth(){
+            var widthData={};
+            this.cloneColumns.forEach((item,index)=>{
+                widthData[item.key]=item.width;
+            })
+            this.setLocalData(widthData,widthData,'width');
         }
     },
     created() {
