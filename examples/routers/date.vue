@@ -2,12 +2,61 @@
 <div>
     <Date-picker type="daterange" placeholder="选择日期" style="width: 200px"></Date-picker>
     <Date-picker type="date" placeholder="选择日期" style="width: 200px"></Date-picker>
+    <DatePicker type="date" multiple placeholder="Select date" style="width: 300px"></DatePicker>
+    <Row>
+        <Col span="12">
+            <DatePicker type="daterange" :start-date="new Date(1991, 4, 14)" placeholder="Select date" style="width: 200px"></DatePicker>
+        </Col>
+        <Col span="12">
+            <DatePicker :value="value1" format="yyyy年MM月dd日" type="date" placeholder="Select date" style="width: 200px"></DatePicker>
+        </Col>
+        <Col span="12">
+            <DatePicker :value="value2" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+        </Col>
+        <Col span="12">
+            <DatePicker
+            :open="open"
+            :value="value3"
+            confirm
+            type="date"
+            @on-change="handleChange"
+            @on-clear="handleClear"
+            @on-ok="handleOk">
+            <a href="javascript:void(0)" @click="handleClick">
+                <Icon type="ios-calendar-outline"></Icon>
+                <template v-if="value3 === ''">Select date</template>
+                <template v-else>{{ value3 }}</template>
+            </a>
+            </DatePicker>
+        </Col>
+    </Row>
  </div>
 </template>
 <script>
-    export default {
-
+export default {
+    data() {
+        return {
+            value1: '2016-01-01',
+            value2: [],
+            open: false,
+            value3: ''
+        };
+    },
+    methods: {
+        handleClick() {
+            this.open = !this.open;
+        },
+        handleChange(date) {
+            this.value3 = date;
+        },
+        handleClear() {
+            this.open = false;
+        },
+        handleOk() {
+            this.open = false;
+        }
     }
+};
 </script>
 
 
@@ -157,7 +206,3 @@
         <!--}-->
     <!--}-->
 <!--</script>-->
-
-
-
-
