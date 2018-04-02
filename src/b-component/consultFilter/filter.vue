@@ -22,13 +22,26 @@
                     </Badge>
                     <!-- 下拉组件区域 -->
                     <transition name="slide-up">
-                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}">
+                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="containerStyle.type!=='horizontal'">
                             <!-- 单选组件 -->
                             <consult-filter-single :model="singleModel"></consult-filter-single>
                             <!-- 联动组件 -->
                             <consult-filter-union :model="unionModel"></consult-filter-union>
                             <!-- 多选组件 -->
                             <consult-filter-multi :model="multiModel"></consult-filter-multi>
+                        </div>
+                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="containerStyle.type==='horizontal'">                       
+                           <Row>
+                              <Col :span="containerStyle.ratio?containerStyle.ratio.union:8" v-if="unionModel.modelList.length">
+                                  <consult-filter-union :model="unionModel"></consult-filter-union>
+                              </Col>
+                              <Col :span="containerStyle.ratio?containerStyle.ratio.multi:8" v-if="multiModel.modelList.length">
+                                  <consult-filter-multi :model="multiModel"></consult-filter-multi>
+                              </Col>
+                              <Col :span="containerStyle.ratio?containerStyle.ratio.single:8">
+                                  <consult-filter-single :model="singleModel" v-if="singleModel.modelList.length"></consult-filter-single>
+                              </Col>
+                           </Row>
                         </div>
                     </transition>
                 </div>
@@ -89,6 +102,19 @@ export default {
             default: function() {
                 return {};
             }
+        },
+        containerStyle: {
+            type: Object,
+            default: function () {
+                return {
+                    type: "vertical",
+                    ratio: {
+                        multi: 8,
+                        single: 8,
+                        union: 8
+                    }
+                }
+            }
         }
     },
     data() {
@@ -140,7 +166,7 @@ export default {
             return `${prefixCls}-fitlerResult`;
         },
         filterContainer() {
-            return `${prefixCls}-container`;
+            return this.containerStyle.type==="vertical"?`${prefixCls}-container`:`${prefixCls}-horizontal-container`;
         },
         filterResultAmount() {
             var count = 0;

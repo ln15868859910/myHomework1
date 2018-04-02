@@ -461,6 +461,8 @@ export default {
             if(this.isRadio){
                 this.selections = [data];
                 this.selectionPkeys = [data._pkey];
+                this.$emit('on-select', this.selections, data);
+                this.$emit('on-selection-change', this.selections);
             }
             this.clickCurrentRow(data);
         },
@@ -591,6 +593,12 @@ export default {
             }
             this.lastScrollTop = event.target.scrollTop;
             this.$emit('on-scroll', event);
+            var scrollTop = event.target.scrollTop;
+            var scrollHeight = event.target.scrollHeight;
+            var offsetHeight =  event.target.offsetHeight;
+            if (scrollTop > (scrollHeight - offsetHeight)-120) {
+                this.$emit('on-load-more', event);
+            }
         },10),
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;

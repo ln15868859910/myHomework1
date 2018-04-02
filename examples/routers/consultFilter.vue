@@ -16,7 +16,7 @@
         </div>
     </consult-filter>
 
-    <consult-filter :search-data="filterConfig.searchData" :filter-data="filterConfig.filterData" :callback="filterConfig.callback" ref="classFilter"
+    <consult-filter :search-data="filterConfig.searchData" :filter-data="filterConfig.filterData" :callback="filterConfig.callback" ref="classFilter" :containerStyle="containerStyle"
             style="margin-bottom:0">
             <div class="filter-button-box floatL" slot="customLeft">
                 <i-button type="primary" @click="addConsult()"  style="width:100px">新建班级</i-button>
@@ -57,7 +57,14 @@ export default {
                     isResetFilter: false //← 非必填：搜索时结果是否与筛选项互斥，默认：false
                 }
             },
-
+            containerStyle:{
+                type:"horizontal",
+                ratio:{
+                    multi:4,
+                    single:12,
+                    union:8
+                }
+            },
             //筛选项数据，必传
             filterData: {
                 //↓ filterData.isClear 是否清空数据，true：是，false：否
