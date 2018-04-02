@@ -37,14 +37,14 @@ import Slider from './components/slider';
 import Spin from './components/spin';
 import Steps from './components/steps';
 import Switch from './components/switch';
-import Table from './components/table';
+// import Table from './components/table';
 import Tabs from './components/tabs';
 import Tag from './components/tag';
 import Timeline from './components/timeline';
 import TimePicker from './components/time-picker';
 import Tooltip from './components/tooltip';
 // import Transfer from './components/transfer';
-import Tree from './components/tree';
+// import Tree from './components/tree';
 import Upload from './components/upload';
 import {
     Row,
@@ -160,8 +160,8 @@ const spui = {
     Steps,
     // Switch,
     iSwitch: Switch,
-    iTable: Table,
-    Table,
+    // iTable: Table,
+    // Table,
     Tabs: Tabs,
     TabPane: Tabs.Pane,
     Tag,
@@ -170,7 +170,7 @@ const spui = {
     TimePicker,
     Tooltip,
     // Transfer,
-    Tree,
+    // Tree,
     Upload,
     XbOverflowTip,
     XbTransfer,
