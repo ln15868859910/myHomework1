@@ -207,7 +207,7 @@ export default {
         //是否可拖拽修改宽度
         resizeable: {
             type: Boolean,
-            default: false
+            default: true
         }
     },
     data() {

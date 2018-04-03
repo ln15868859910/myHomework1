@@ -142,7 +142,7 @@ export default {
             }
         },
         handleMouseMove(event, column) {
-            if (!this.$parent.resizeable) return;
+            if (!this.$parent.resizeable || this.$parent.modal) return;
             if (!this.ondrag) {
                 let target = event.target;
                 while (target && target.tagName !== 'TH') {
