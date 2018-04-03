@@ -52,13 +52,14 @@
         <!-- 筛选内容展示区域 -->
         <transition name="slide-up">
             <div :class="fitlerResult" v-if="filterResult.length">
-                <ul>
+                <ul style="padding-right:50px">
                     <li v-for="(data,dataIndex) in filterResult" :key="dataIndex">
                         <span :class="sortName">{{data.sortName}}：</span>
                         <Tooltip v-for="(label, labelIndex) in data.label" :key="labelIndex" :content="label.text" :disabled="label.isAvoidToolTip" ref="sortLabel" placement="top">
                             <Tag :class="sortLabel" :data-id="'sortLabel-'+ data.sortValue" closable @on-close="closeTag(data,labelIndex)">{{label.text}}</Tag>
                         </Tooltip>
                     </li>
+                    <li style="position:absolute;top:0;right:-15px;margin-right:0"><i-button type="text" @click="clearFilterData">清空筛选</i-button></li>
                 </ul>
             </div>
         </transition>
@@ -69,6 +70,7 @@ const prefixCls = 'spui-b-consultFilter';
 import emitter from './emit';
 import iSelect from '../../components/select';
 import iInput from '../../components/input';
+import iButton from '../../components/button';
 import XbFuzzySelect from '../../components/xb-fuzzy-select';
 import Tag from '../../components/tag';
 import Badge from '../../components/badge';
@@ -388,6 +390,15 @@ export default {
             this.filterResult = [];
             this.status.isInitCompleted = false;
             this.$refs.fuzzySearch.clear();
+        },
+        clearFilterData() {
+            this.emptyTag();
+            this.debounce(
+                () => {
+                    this.uiModeltoBizModel();
+                },
+                500
+            );
         },
         // 清空所有标签
         emptyTag() {
