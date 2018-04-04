@@ -96,7 +96,7 @@ export default {
                 const tableLeft = tableEl.getBoundingClientRect().left;
                 const columnEl = event.target;
                 const columnRect = columnEl.getBoundingClientRect();
-                const minLeft = columnRect.left - tableLeft + column.defaultwidth;
+                const minLeft = columnRect.left - tableLeft + column.minWidth;
 
                 this.ondrag = true;
                 table.resizetag = true;
@@ -120,8 +120,8 @@ export default {
                         that.ondrag = false;
                         document.body.style.cursor = '';
                         that.dragcolumn = null;
-                        var width = event2.pageX - that.dragState.startMouseLeft + column._width;
-                        column.width = width < column.defaultwidth ? column.defaultwidth : width
+                        var width = event2.pageX - that.dragState.startMouseLeft + column.realWidth;
+                        column.realWidth = width < column.minWidth ? column.minWidth : width
                         table.doLayout();
                         table.saveColumnWidth();
                     }
@@ -150,7 +150,7 @@ export default {
                 }
                 let rect = target.getBoundingClientRect();
                 let bodyStyle = document.body.style;
-                if (rect.width >= column.defaultwidth && rect.right - event.pageX < 5) {
+                if (rect.width >= column.minWidth && rect.right - event.pageX < 5) {
                     bodyStyle.cursor = 'col-resize';
                     // bodyStyle.cursor = 'url("http://cdn.schoolpal.cn/schoolpal/resource/ci/schoolpal-protest/preview/common/crm-images/crm-consult-arrow2.png"),auto';
                     this.dragcolumn = column;

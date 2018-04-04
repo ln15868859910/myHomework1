@@ -293,7 +293,7 @@ export default {
             let style = {};
             let width = 0;
             this.leftFixedColumns.forEach((col) => {
-                if(col.show) width += col._width;
+                if(col.show) width += col.realWidth;
             });
             style.width = `${width}px`;
             return style;
@@ -310,7 +310,7 @@ export default {
             let style = {};
             let width = 0;
             this.rightFixedColumns.forEach((col) => {
-                if (col.show) width += col._width;
+                if (col.show) width += col.realWidth;
             });
             if (this.hasScrollBar) {
                 width += this.scrollBarWidth;
@@ -322,7 +322,7 @@ export default {
             let style = {};
             let width = 0;
             this.rightFixedColumns.forEach((col) => {
-                if (col.show) width += col._width;
+                if (col.show) width += col.realWidth;
             });
             style.width = `${width}px`;
             return style;
@@ -410,7 +410,7 @@ export default {
         doLayout() {
             var allColumWidth = this.cloneColumns.map(cell => {
                     if (cell.show) {
-                        return cell.width;
+                        return cell.realWidth?cell.realWidth:cell.width;
                     } else {
                         return 0;
                     }
@@ -430,7 +430,7 @@ export default {
                 for (let i = 0; i < $td.length; i++) {
                     const column = this.cloneColumns[i];
                     let width = parseInt(getStyle($td[i], 'width'));
-                    this.cloneColumns[i]._width = width || 0;
+                    this.cloneColumns[i].realWidth =  width || 0;
                     columnsWidth[column._index] = {
                         width: column.width ? column.width : width
                     };
@@ -701,8 +701,8 @@ export default {
                 column._index = index;
                 column._columnKey = columnKey++;
                 column.width = column.width || 80;
-                column._width = column.width ? column.width : '';
-                column.defaultwidth = column.width;
+                column.realWidth = column.width ? column.width : '';
+                column.minWidth = column.width;
                 column.show = ("show" in column) ? column.show : true;
                 column.renderType="normal";
                 if(column.type && column.type!=="link"){
@@ -728,7 +728,7 @@ export default {
                     });
                 }
                 if (column.key in storgeWidth) {
-                    column.width = storgeWidth[column.key]
+                    column.realWidth = storgeWidth[column.key];
                 }
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
@@ -758,7 +758,7 @@ export default {
         saveColumnWidth(){
             var widthData={};
             this.cloneColumns.forEach((item,index)=>{
-                widthData[item.key]=item.width;
+                widthData[item.key]=item.realWidth;
             })
             this.setLocalData(widthData,widthData,'width');
         }
