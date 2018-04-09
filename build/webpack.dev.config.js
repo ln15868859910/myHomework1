@@ -10,12 +10,14 @@ var merge = require('webpack-merge');
 var webpackBaseConfig = require('./webpack.base.config.js');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
+const HOST = process.env.HOST;
+const PORT = process.env.PORT && Number(process.env.PORT);
 
 module.exports = merge(webpackBaseConfig, {
     // 入口
     entry: {
         main: './examples/main',
-        vendors: ['vue', 'vue-router','axios']
+        vendors: ['vue', 'vue-router', 'axios']
     },
     // 输出
     output: {
@@ -32,7 +34,12 @@ module.exports = merge(webpackBaseConfig, {
     },
     devtool: '#source-map',
     devServer: {
-        disableHostCheck: true //开启局域网外部可访问
+        disableHostCheck: true, //开启局域网外部可访问
+        hot: true,
+        contentBase: '/test',
+        compress: true,
+        host: HOST,
+        port: PORT
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({ name: 'vendors', filename: 'vendor.bundle.js' }),
@@ -40,7 +47,7 @@ module.exports = merge(webpackBaseConfig, {
             inject: true,
             filename: path.join(__dirname, '../examples/dist/index.html'),
             template: path.join(__dirname, '../examples/index.html'),
-            chunks: ['vendors','main'],
+            chunks: ['vendors', 'main'],
             chunksSortMode: 'dependency'
         }),
         new FriendlyErrorsPlugin()
