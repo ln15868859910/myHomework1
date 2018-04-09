@@ -50,6 +50,7 @@ module.exports = merge(webpackBaseConfig, {
             chunks: ['vendors', 'main'],
             chunksSortMode: 'dependency'
         }),
-        new FriendlyErrorsPlugin()
+        new FriendlyErrorsPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ]
 });

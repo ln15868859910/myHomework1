@@ -93,10 +93,5 @@ gulp.task('copySprite', ['sprites'], function() {
     gulp.src('../src/styles/sprites/svgSprite.svg').pipe(gulp.dest('../dist/styles'));
 });
 
-gulp.task('clean:font', ['fonts', 'Iconfont'], function(cb) {
-    setTimeout(function() {
-        del(['../src/styles/common/iconfont/fonts/'], { force: true }, cb);
-    }, 1000);
-});
 
-gulp.task('default', ['css', 'css_theme_scp', 'fonts', 'sprites', 'Iconfont', 'copySprite', 'clean:font']);
+gulp.task('default', ['css', 'css_theme_scp', 'fonts', 'sprites', 'Iconfont', 'copySprite']);
