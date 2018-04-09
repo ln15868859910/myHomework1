@@ -70,6 +70,7 @@ export default {
       on(document, 'mousemove', this.mouseMoveDocumentHandler);
       on(document, 'mouseup', this.mouseUpDocumentHandler);
       document.onselectstart = () => false;
+      document.ondragstart = () => false;
     },
 
     mouseMoveDocumentHandler(e) {
@@ -90,6 +91,7 @@ export default {
       this[this.bar.axis] = 0;
       off(document, 'mousemove', this.mouseMoveDocumentHandler);
       document.onselectstart = null;
+      document.ondragstart = null;
     }
   },
 
