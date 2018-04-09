@@ -5,6 +5,9 @@
 .floatright {
     margin-right: 30px;
 }
+.filterResult{
+    padding: 20px 30px;
+}
 </style>
 <template>
 <div>
@@ -34,7 +37,8 @@ export default {
         return {
             custumclass: {
                 custom: 'custumclass',
-                floatright: 'floatright'
+                floatright: 'floatright',
+                filterResult:'filterResult'
             },
             //↓ searchData 搜索区域，传入null该对象则整块区域隐藏
             searchData: {
