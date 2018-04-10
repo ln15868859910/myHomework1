@@ -51,7 +51,7 @@
     
         <!-- 筛选内容展示区域 -->
         <transition name="slide-up">
-            <div :class="fitlerResult" v-if="filterResult.length">
+            <div :class="[fitlerResult,custumClass.filterResult]" v-if="filterResult.length">
                 <ul style="padding-right:50px">
                     <li v-for="(data,dataIndex) in filterResult" :key="dataIndex">
                         <span :class="sortName">{{data.sortName}}：</span>
