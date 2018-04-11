@@ -219,6 +219,7 @@ export default {
                 {
                     title: '意向课程',
                     key: 'InterestClassListUi',
+                    custom: true,
                     width: 120
                 },
                 {
@@ -263,6 +264,7 @@ export default {
                 {
                     title: '最新跟进时间',
                     key: 'EditDate',
+                    custom: true,
                     width: 120
                 },
                 {

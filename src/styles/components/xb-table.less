@@ -357,15 +357,17 @@
     }
     &-showmore {
         position: absolute;
-        right: 0;
-        top: 12px;
+        right: 10px;
+        width: 12px;
+        top: 18px;
         z-index: 10;
-        background: @table-td-bg;
+        background: transparent;
     }
     &-showmore-icon {
         font-size: 25px;
         transform: rotate(90deg);
         color: @darker-primary-color;
+        height: 12px;
     }
     &-showmore-icon:hover{
         cursor: pointer;
@@ -439,6 +441,16 @@
             width: 0;
             height: 15px;
             float: left;
+            transform: translate(0, 50%);
+            -webkit-transform: translate(0, 50%);
+        }
+        th:last-child:after{
+            content: "";
+            display: block;
+            border-left: 1px solid @border-color-split;
+            width: 0;
+            height: 15px;
+            float: right;
             transform: translate(0, 50%);
             -webkit-transform: translate(0, 50%);
         }
