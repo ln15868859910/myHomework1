@@ -186,20 +186,12 @@ function findComponentUpward (context, componentName, componentNames) {
 export {findComponentUpward};
 
 // Find component downward
-function findComponentDownward (context, componentName) {
+export function findComponentDownward (context, componentName) {
     const childrens = context.$children;
     let children = null;
 
     if (childrens.length) {
-        childrens.forEach(child => {
-            const name = child.$options.name;
-            if (name === componentName) {
-                children = child;
-            }
-        });
-
-        for (let i = 0; i < childrens.length; i++) {
-            const child = childrens[i];
+        for (const child of childrens) {
             const name = child.$options.name;
             if (name === componentName) {
                 children = child;
@@ -212,24 +204,74 @@ function findComponentDownward (context, componentName) {
     }
     return children;
 }
-export {findComponentDownward};
 
 // Find components downward
-function findComponentsDownward (context, componentName, components = []) {
-    const childrens = context.$children;
-
-    if (childrens.length) {
-        childrens.forEach(child => {
-            const name = child.$options.name;
-            const childs = child.$children;
-
-            if (name === componentName) components.push(child);
-            if (childs.length) {
-                const findChilds = findComponentsDownward(child, componentName, components);
-                if (findChilds) components.concat(findChilds);
-            }
-        });
-    }
-    return components;
+export function findComponentsDownward (context, componentName) {
+    return context.$children.reduce((components, child) => {
+        if (child.$options.name === componentName) components.push(child);
+        const foundChilds = findComponentsDownward(child, componentName);
+        return components.concat(foundChilds);
+    }, []);
 }
-export {findComponentsDownward};
+
+/* istanbul ignore next */
+const trim = function(string) {
+    return (string || '').replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '');
+};
+
+/* istanbul ignore next */
+export function hasClass(el, cls) {
+    if (!el || !cls) return false;
+    if (cls.indexOf(' ') !== -1) throw new Error('className should not contain space.');
+    if (el.classList) {
+        return el.classList.contains(cls);
+    } else {
+        return (' ' + el.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    }
+}
+
+/* istanbul ignore next */
+export function addClass(el, cls) {
+    if (!el) return;
+    let curClass = el.className;
+    const classes = (cls || '').split(' ');
+
+    for (let i = 0, j = classes.length; i < j; i++) {
+        const clsName = classes[i];
+        if (!clsName) continue;
+
+        if (el.classList) {
+            el.classList.add(clsName);
+        } else {
+            if (!hasClass(el, clsName)) {
+                curClass += ' ' + clsName;
+            }
+        }
+    }
+    if (!el.classList) {
+        el.className = curClass;
+    }
+}
+
+/* istanbul ignore next */
+export function removeClass(el, cls) {
+    if (!el || !cls) return;
+    const classes = cls.split(' ');
+    let curClass = ' ' + el.className + ' ';
+
+    for (let i = 0, j = classes.length; i < j; i++) {
+        const clsName = classes[i];
+        if (!clsName) continue;
+
+        if (el.classList) {
+            el.classList.remove(clsName);
+        } else {
+            if (hasClass(el, clsName)) {
+                curClass = curClass.replace(' ' + clsName + ' ', ' ');
+            }
+        }
+    }
+    if (!el.classList) {
+        el.className = trim(curClass);
+    }
+}

@@ -28,15 +28,15 @@
         props: {
             hours: {
                 type: [Number, String],
-                default: NaN
+                default: 0
             },
             minutes: {
                 type: [Number, String],
-                default: NaN
+                default: 0
             },
             seconds: {
                 type: [Number, String],
-                default: NaN
+                default: 0
             },
             showSeconds: {
                 type: Boolean,
@@ -194,6 +194,7 @@
             }
         },
         mounted () {
+            this.updateScroll();
             this.$nextTick(() => this.compiled = true);
         }
     };

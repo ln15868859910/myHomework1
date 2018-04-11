@@ -1,28 +1,27 @@
 <template>
-    <div :class="classes">
-        <span
-            :class="getCellCls(cell)"
-            v-for="cell in cells"
-            @click="handleClick(cell)"
-            @mouseenter="handleMouseMove(cell)"
-
-        >
-            <em>{{ cell.text }}</em>
-        </span>
+    <div :class="classes" @click="handleClick">
+        <span :class="getCellCls(cell)" v-for="(cell, index) in cells"><em :index="index">{{ tCell(cell.text) }}</em></span>
     </div>
 </template>
 <script>
-    import { clearHours } from '../util';
     import { deepCopy } from '../../../utils/assist';
     import Locale from '../../../mixins/locale';
-    import mixin from './mixin';
-    import prefixCls from './prefixCls';
+    const prefixCls = 'ivu-date-picker-cells';
 
     export default {
-        mixins: [ Locale, mixin ],
-        props: {/* in mixin */},
+        mixins: [ Locale ],
+        props: {
+            date: {},
+            month: {
+                type: Number
+            },
+            disabledDate: {},
+            selectionMode: {
+                default: 'month'
+            }
+        },
         computed: {
-            classes() {
+            classes () {
                 return [
                     `${prefixCls}`,
                     `${prefixCls}-month`
@@ -36,16 +35,15 @@
                     disabled: false
                 };
 
-                const tableYear = this.tableDate.getFullYear();
-                const selectedDays = this.dates.filter(Boolean).map(date => clearHours(new Date(date.getFullYear(), date.getMonth(), 1)));
-
                 for (let i = 0; i < 12; i++) {
                     const cell = deepCopy(cell_tmpl);
-                    cell.date = new Date(tableYear, i, 1);
-                    cell.text = this.tCell(i + 1);
-                    const time = clearHours(cell.date);
-                    cell.disabled = typeof this.disabledDate === 'function' && this.disabledDate(cell.date) && this.selectionMode === 'month';
-                    cell.selected = selectedDays.includes(time);
+                    cell.text = i + 1;
+
+                    const date = new Date(this.date);
+                    date.setMonth(i);
+                    cell.disabled = typeof this.disabledDate === 'function' && this.disabledDate(date)  && this.selectionMode === 'month';
+
+                    cell.selected = Number(this.month) === i;
                     cells.push(cell);
                 }
 
@@ -58,13 +56,23 @@
                     `${prefixCls}-cell`,
                     {
                         [`${prefixCls}-cell-selected`]: cell.selected,
-                        [`${prefixCls}-cell-disabled`]: cell.disabled,
-                        [`${prefixCls}-cell-range`]: cell.range && !cell.start && !cell.end
+                        [`${prefixCls}-cell-disabled`]: cell.disabled
                     }
                 ];
             },
-            tCell (nr) {
-                return this.t(`i.datepicker.months.m${nr}`);
+            handleClick (event) {
+                const target = event.target;
+                if (target.tagName === 'EM') {
+                    const index = parseInt(event.target.getAttribute('index'));
+                    const cell = this.cells[index];
+                    if (cell.disabled) return;
+
+                    this.$emit('on-pick', index);
+                }
+                this.$emit('on-pick-click');
+            },
+            tCell (cell) {
+                return this.t(`i.datepicker.months.m${cell}`);
             }
         }
     };
