@@ -230,6 +230,7 @@ export default {
             if (this.currentPage != page) {
                 this.currentPage = page;
                 this.$emit('on-change', page);
+                this.onPagerChange();
             }
         },
         prev() {
@@ -264,8 +265,12 @@ export default {
         },
         onSize(pageSize) {
             this.currentPageSize = pageSize;
+            this.currentPage = 1;
             this.$emit('on-page-size-change', pageSize);
-            this.changePage(1);
+            this.onPagerChange();
+        },
+        onPagerChange(){
+            this.$emit('on-pager-change',{index:this.currentPage,size:this.currentPageSize});
         },
         onPage(page) {
             this.changePage(page);
