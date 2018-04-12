@@ -110,16 +110,19 @@ export default {
     mixins: [Locale],
     components: { tableHead, tableBody, customPop, XbScrollbar },
     props: {
+        //data:列表数据
         data: {
             type: Array,
             default() {
                 return [];
             }
         },
+        //pkey:列表数据项唯一标识符
         pkey:{
             type:String|Array,
             default:'Id'
         },
+        //selectedPkeys:默认选中项
         selectedPkeys:{
             type:Array,
             default() {
@@ -127,21 +130,23 @@ export default {
             }
         },
         name:String,
+        //columns:表格列的配置描述
         columns: {
             type: Array,
             default() {
                 return [];
             }
         },
+        //fixHeader:是否固定表头
         fixHeader: {
             type: Boolean,
             default: false
         },
-        //固定表头时到顶部的距离
+        //fixedTop:固定表头时到顶部的距离
         fixedTop: {
             type: [Number, String]
         },
-        //body滚动条到顶部的距离
+        //fixedScrollTop:body滚动条到顶部的距离
         fixedScrollTop: {
             type: [Number, String]
         },
@@ -172,7 +177,8 @@ export default {
                 return '';
             }
         },
-        control: {//操作列
+        //control:操作列
+        control: {
             type: Object,
             default() {
                 return {
@@ -182,7 +188,7 @@ export default {
                 }
             }
         },
-        //默认排序参数
+        //defaultSort:默认排序参数
         defaultSort: {
             type: Object,
             default() {
@@ -192,19 +198,19 @@ export default {
                 };
             }
         },
-        //是否在弹窗中使用
+        //modal:是否在弹窗中使用
         modal: {
             type: Boolean,
             default: false
         },
-        //自定义样式
+        //custumClass:自定义样式
         custumClass: {
             type: Object,
             default() {
                 return {};
             }
         },
-        //是否可拖拽修改宽度
+        //resizeable:是否可拖拽修改宽度
         resizeable: {
             type: Boolean,
             default: true

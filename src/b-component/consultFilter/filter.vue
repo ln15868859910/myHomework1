@@ -87,24 +87,29 @@ export default {
     components: { iSelect, iInput, Tag, Badge, Tooltip, filterSingle, filterUnion, filterMulti, XbFuzzySelect },
     directives: { clickoutside },
     props: {
+        //filterData:筛选项数据
         filterData: {
             type: Object,
             default: null
         },
+        //searchData:搜索项配置
         searchData: {
             type: [Boolean, Object],
             default: false
         },
+        //callback:搜索及筛选回调方法
         callback: {
             type: Object,
             default: null
         },
+        //custumClass:自定义样式
         custumClass: {
             type: Object,
             default: function() {
                 return {};
             }
         },
+        //containerStyle:筛选项横，纵项排列样式配置
         containerStyle: {
             type: Object,
             default: function () {

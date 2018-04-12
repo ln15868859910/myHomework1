@@ -1,2 +1,2 @@
-import Table from './table.vue';
-export default Table;
+import XbTable from './table.vue';
+export default XbTable;
