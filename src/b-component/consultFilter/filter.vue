@@ -32,15 +32,15 @@
                         </div>
                         <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="containerStyle.type==='horizontal'">                       
                            <Row>
-                              <Col :span="containerStyle.ratio?containerStyle.ratio.union:8" v-if="unionModel.modelList.length">
-                                  <consult-filter-union :model="unionModel"></consult-filter-union>
-                              </Col>
-                              <Col :span="containerStyle.ratio?containerStyle.ratio.multi:8" v-if="multiModel.modelList.length">
-                                  <consult-filter-multi :model="multiModel"></consult-filter-multi>
-                              </Col>
-                              <Col :span="containerStyle.ratio?containerStyle.ratio.single:8">
+                                <Col :span="containerStyle.ratio?containerStyle.ratio.single:8">
                                   <consult-filter-single :model="singleModel" v-if="singleModel.modelList.length"></consult-filter-single>
-                              </Col>
+                                </Col>
+                                <Col :span="containerStyle.ratio?containerStyle.ratio.union:8" v-if="unionModel.modelList.length">
+                                    <consult-filter-union :model="unionModel"></consult-filter-union>
+                                </Col>
+                                <Col :span="containerStyle.ratio?containerStyle.ratio.multi:8" v-if="multiModel.modelList.length">
+                                    <consult-filter-multi :model="multiModel"></consult-filter-multi>
+                                </Col>
                            </Row>
                         </div>
                     </transition>
