@@ -150,7 +150,7 @@ var allPromise = Promise.all([gitPromise, gulpPromise, webpackPromise]).then(fun
         //记录dist的地址
         formData.paths.push(item.path.replace("./", ""))
     })
-    request.post({ url: 'http://192.168.5.119:3000/spui', formData: formData }, function optionalCallback(err, httpResponse, body) {
+    request.post({ url: 'http://192.168.50.203:3000/spui', formData: formData }, function optionalCallback(err, httpResponse, body) {
         console.log("已接收服务器到信息")
         if (!body) return console.error('服务器未返回结果');
         let data = JSON.parse(body);

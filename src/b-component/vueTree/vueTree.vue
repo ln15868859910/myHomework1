@@ -26,13 +26,16 @@ export default {
     vueTreeCore
   },
   props: {
+    //dataList:树形组件数据，数组
     dataList: {
       type: Array,
       default:[]
     },
+    //draggable:树形组件是否可拖拽
     draggable:{
       type:Boolean
     },
+    //loadData:点击展开时异步获取数据方法
     loadData:{
       type:Function
     }

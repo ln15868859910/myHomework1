@@ -5,7 +5,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(column, index) in columns" :class="alignCls(column,true)" :style="thStyle(column)" v-show="column.show" :key="index">
+                <th v-for="(column, index) in columns" :class="alignCls(column,true)" :style="thStyle(column)" v-show="column.show" :key="index" @mousemove="handleMouseMove($event,column)" @mousedown="handleMouseDown($event,column)" @mouseout="handleMouseOut">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
@@ -63,7 +63,10 @@ export default {
     },
     data() {
         return {
-            prefixCls: 'spui-table'
+            prefixCls: 'spui-table',
+            dragState: {},
+            ondrag:false,
+            dragcolumn:null,
         }
     },
     computed: {
@@ -86,6 +89,81 @@ export default {
         }
     },
     methods: {
+        handleMouseDown(event, column) {
+            if (this.dragcolumn) {
+                const table = this.$parent;
+                const tableEl = table.$refs.mainTable;
+                const tableLeft = tableEl.getBoundingClientRect().left;
+                const columnEl = event.target;
+                const columnRect = columnEl.getBoundingClientRect();
+                const minLeft = columnRect.left - tableLeft + column.minWidth;
+
+                this.ondrag = true;
+                table.resizetag = true;
+                this.dragState = {
+                    startMouseLeft: event.pageX,
+                    startLeft: columnRect.right - tableLeft,
+                    startColumnLeft: columnRect.left - tableLeft,
+                    tableLeft
+                };
+                document.onselectstart = function () { return false; };
+                document.ondragstart = function () { return false; };
+                const resizeProxy = table.$refs.resizeline;
+                const resizeProxy2 = table.$refs.resizeline2;
+                resizeProxy.style.left = this.dragState.startLeft + 'px';
+                resizeProxy2.style.left = this.dragState.startLeft + 'px';
+
+                var that = this;
+                function onMouseUp(event2) {
+                    if (that.ondrag) {
+                        table.resizetag = false;
+                        that.ondrag = false;
+                        document.body.style.cursor = '';
+                        that.dragcolumn = null;
+                        var width = event2.pageX - that.dragState.startMouseLeft + column.realWidth;
+                        column.realWidth = width < column.minWidth ? column.minWidth : width
+                        table.doLayout();
+                        table.saveColumnWidth();
+                    }
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    document.onselectstart = null;
+                    document.ondragstart = null;
+                }
+                function onMouseMove(event2) {
+                    if (that.dragcolumn) {
+                        var left = Math.max(minLeft, event2.pageX - that.dragState.startMouseLeft + that.dragState.startLeft) + 'px';
+                        resizeProxy.style.left = left;
+                        resizeProxy2.style.left = left;
+                    }
+                }
+                document.addEventListener('mouseup', onMouseUp);
+                document.addEventListener('mousemove', onMouseMove);
+            }
+        },
+        handleMouseMove(event, column) {
+            if (!this.$parent.resizeable || this.$parent.modal) return;
+            if (!this.ondrag) {
+                let target = event.target;
+                while (target && target.tagName !== 'TH') {
+                    target = target.parentNode;
+                }
+                let rect = target.getBoundingClientRect();
+                let bodyStyle = document.body.style;
+                if (rect.width >= column.minWidth && rect.right - event.pageX < 5) {
+                    bodyStyle.cursor = 'col-resize';
+                    // bodyStyle.cursor = 'url("http://cdn.schoolpal.cn/schoolpal/resource/ci/schoolpal-protest/preview/common/crm-images/crm-consult-arrow2.png"),auto';
+                    this.dragcolumn = column;
+                } else if (!this.ondrag) {
+                    bodyStyle.cursor = '';
+                    this.dragcolumn = null;
+                }
+            }
+        },
+        handleMouseOut(){
+            const bodyStyle = document.body.style;
+            bodyStyle.cursor = '';
+        },
         cellClasses(column) {
             return [
                 `${this.prefixCls}-cell`,

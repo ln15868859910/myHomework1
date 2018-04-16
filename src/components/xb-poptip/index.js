@@ -1,3 +1,3 @@
-import Poptip from './poptip.vue';
+import XbPoptip from './poptip.vue';
 
-export default Poptip;
+export default XbPoptip;

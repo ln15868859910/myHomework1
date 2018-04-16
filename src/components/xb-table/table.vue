@@ -4,7 +4,7 @@
             <div :class="[prefixCls + '-title']" ref="title">
                 <slot name="header"></slot>
             </div>
-            <div :class="[prefixCls + '-tableWrap']">
+            <div :class="[prefixCls + '-tableWrap',custumClass.tableWrap]">
                 <XbScrollbar @on-barScroll="handleBarScroll" ref="scrollBar" v-show="showVerticalBar" :view-style="{'float':'left'}">
                     <div :style="[tableStyle]" :class="[prefixCls+'-scrollBar']"></div>
                 </XbScrollbar>
@@ -35,6 +35,7 @@
                         :data="rebuildData">
                         </table-head>
                     </div>
+                    <div v-show="resizetag" :class="[prefixCls+'-resize-line']" ref="resizeline"></div>
                     <div :class="[prefixCls + '-showmore']" v-show="custumcols.length">
                         <Icon type="more" :class="[prefixCls + '-showmore-icon']" @click.native="showmore()"></Icon>
                     </div>
@@ -42,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div :class="[prefixCls + '-bodywrap']" :style="bodyWrapStyle">
+        <div :class="[prefixCls + '-bodywrap',custumClass.bodywrap]" :style="bodyWrapStyle">
             <div style="position:relative" ref="mainTable" :style="bodyStyle">
                 <div :class="[prefixCls + '-tip']" v-show="(!rebuildData || rebuildData.length === 0)">
                     <!--无数据样式slot-->
@@ -80,6 +81,7 @@
                     </table-body>
                     </div>
                 </div>
+                <div v-show="resizetag" :class="[prefixCls+'-resize-line']" ref="resizeline2"></div>
             </div>
         </div>
         <div :class="[prefixCls + '-footer']" ref="footer">
@@ -108,16 +110,19 @@ export default {
     mixins: [Locale],
     components: { tableHead, tableBody, customPop, XbScrollbar },
     props: {
+        //data:列表数据
         data: {
             type: Array,
             default() {
                 return [];
             }
         },
+        //pkey:列表数据项唯一标识符
         pkey:{
             type:String|Array,
             default:'Id'
         },
+        //selectedPkeys:默认选中项
         selectedPkeys:{
             type:Array,
             default() {
@@ -125,21 +130,23 @@ export default {
             }
         },
         name:String,
+        //columns:表格列的配置描述
         columns: {
             type: Array,
             default() {
                 return [];
             }
         },
+        //fixHeader:是否固定表头
         fixHeader: {
             type: Boolean,
             default: false
         },
-        //固定表头时到顶部的距离
+        //fixedTop:固定表头时到顶部的距离
         fixedTop: {
             type: [Number, String]
         },
-        //body滚动条到顶部的距离
+        //fixedScrollTop:body滚动条到顶部的距离
         fixedScrollTop: {
             type: [Number, String]
         },
@@ -170,7 +177,8 @@ export default {
                 return '';
             }
         },
-        control: {//操作列
+        //control:操作列
+        control: {
             type: Object,
             default() {
                 return {
@@ -180,7 +188,7 @@ export default {
                 }
             }
         },
-        //默认排序参数
+        //defaultSort:默认排序参数
         defaultSort: {
             type: Object,
             default() {
@@ -190,11 +198,23 @@ export default {
                 };
             }
         },
-        //是否在弹窗中使用
+        //modal:是否在弹窗中使用
         modal: {
             type: Boolean,
             default: false
         },
+        //custumClass:自定义样式
+        custumClass: {
+            type: Object,
+            default() {
+                return {};
+            }
+        },
+        //resizeable:是否可拖拽修改宽度
+        resizeable: {
+            type: Boolean,
+            default: true
+        }
     },
     data() {
         return {
@@ -224,13 +244,15 @@ export default {
             currentHoverRow:-1,
             currentClickRow:-1,
             selectTriggerByRow:false,
-            isRadio:false,
-            expandArr:[]
+            isRadio: false,
+            resizetag:false,
+            draglineleft:0,
+            expandArr: []
         };
     },
     computed: {
         isControlDrop(){
-            if("isDrop" in this.control){
+            if ("isDrop" in this.control) {
                 return this.control.isDrop;
             }
             return true;
@@ -277,7 +299,7 @@ export default {
             let style = {};
             let width = 0;
             this.leftFixedColumns.forEach((col) => {
-                if(col.show) width += col._width;
+                if(col.show) width += col.realWidth;
             });
             style.width = `${width}px`;
             return style;
@@ -294,7 +316,7 @@ export default {
             let style = {};
             let width = 0;
             this.rightFixedColumns.forEach((col) => {
-                if (col.show) width += col._width;
+                if (col.show) width += col.realWidth;
             });
             if (this.hasScrollBar) {
                 width += this.scrollBarWidth;
@@ -306,7 +328,7 @@ export default {
             let style = {};
             let width = 0;
             this.rightFixedColumns.forEach((col) => {
-                if (col.show) width += col._width;
+                if (col.show) width += col.realWidth;
             });
             style.width = `${width}px`;
             return style;
@@ -393,12 +415,12 @@ export default {
         },
         doLayout() {
             var allColumWidth = this.cloneColumns.map(cell => {
-                if (cell.show) {
-                    return cell.width;
-                } else {
-                    return 0;
-                }
-            }).reduce((a, b) => a + b);
+                    if (cell.show) {
+                        return cell.realWidth?cell.realWidth:cell.width;
+                    } else {
+                        return 0;
+                    }
+                }).reduce((a, b) => a + b);
             this.tableWidth = allColumWidth > this.centerWidth ? allColumWidth : this.centerWidth;
             this.columnsWidth = {};
             if (!this.$refs.tbody) return;
@@ -414,7 +436,9 @@ export default {
                 for (let i = 0; i < $td.length; i++) {
                     const column = this.cloneColumns[i];
                     let width = parseInt(getStyle($td[i], 'width'));
-                    this.cloneColumns[i]._width = width || 0;
+                    if(width){
+                        this.cloneColumns[i].realWidth =  width;
+                    }
                     columnsWidth[column._index] = {
                         width: column.width ? column.width : width
                     };
@@ -423,7 +447,7 @@ export default {
                 this.syncFixedTableRowHeight();
             });
             // 高度小于表格真实高度时显示纵向滚动条
-            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));   
+            this.bodyRealHeight = parseInt(getStyle(this.$refs.tbody.$el, 'height'));
         },
         handleResize() {
             this.$nextTick(() => {
@@ -445,6 +469,8 @@ export default {
             if(this.isRadio){
                 this.selections = [data];
                 this.selectionPkeys = [data._pkey];
+                this.$emit('on-select', this.selections, data);
+                this.$emit('on-selection-change', this.selections);
             }
             this.clickCurrentRow(data);
         },
@@ -454,12 +480,12 @@ export default {
             }
             this.$emit('on-row-click', data);
         },
-        changeByitem(data){//未添加 preselect 
+        changeByitem(data){//未添加 preselect
             this.selectTriggerByRow = true;
             this.clickCurrentRow(data);
             this.selectTriggerByRow = false;
         },
-        changeBypKey(pkey){//未添加 preselect 
+        changeBypKey(pkey){//未添加 preselect
             this.selectTriggerByRow = true;
             this.clickCurrentRow({_pkey:pkey});
             this.selectTriggerByRow = false;
@@ -526,7 +552,7 @@ export default {
                 } else {
                     let pk = data._pkey;
                     let index = this.selectionPkeys.indexOf(pk);
-                    
+
                     if(status){
                         
                         if(index===-1&&(preselectfn&&preselectfn(data,true,'all')||!preselectfn)){
@@ -541,7 +567,7 @@ export default {
                     }
                 }
             }
-            
+
             this.$emit('on-select-all', this.selections,status);
             this.$emit('on-selection-change', this.selections);
         },
@@ -575,6 +601,12 @@ export default {
             }
             this.lastScrollTop = event.target.scrollTop;
             this.$emit('on-scroll', event);
+            var scrollTop = event.target.scrollTop;
+            var scrollHeight = event.target.scrollHeight;
+            var offsetHeight =  event.target.offsetHeight;
+            if (scrollTop > (scrollHeight - offsetHeight)-120) {
+                this.$emit('on-load-more', event);
+            }
         },10),
         handleBarScroll(scrollObj){
             if (this.showHeader) this.$refs.header[scrollObj.scroll] = scrollObj.distance;
@@ -671,11 +703,14 @@ export default {
             }
             //取持久化自定义隐藏数据 并重置现有数据
             let storgedata = this.getLocalData();
+            //取持久化自定义列宽数据 并重置现有数据
+            let storgeWidth = this.getLocalData('width');
             columns.forEach((column, index) => {
                 column._index = index;
                 column._columnKey = columnKey++;
                 column.width = column.width || 80;
-                column._width = column.width ? column.width : '';
+                column.realWidth = column.width ? column.width : '';
+                column.minWidth = column.width;
                 column.show = ("show" in column) ? column.show : true;
                 column.renderType="normal";
                 if(column.type && column.type!=="link"){
@@ -700,6 +735,9 @@ export default {
                         show:column.show
                     });
                 }
+                if (column.key in storgeWidth) {
+                    column.realWidth = storgeWidth[column.key];
+                }
                 if (column.fixed && column.fixed === 'left') {
                     left.push(column);
                 } else if (column.fixed && column.fixed === 'right') {
@@ -713,21 +751,28 @@ export default {
             this.rightFixedColumns = right;
             this.cloneColumns = left.concat(center).concat(right);
         },
-        setLocalData(data,colobj){
+        setLocalData(data,colobj,type=''){
             if(this.name){
-                localStorage.setItem('table'+this.name,JSON.stringify(colobj));
+                localStorage.setItem('table'+this.name+type,JSON.stringify(colobj));
             }
         },
-        getLocalData(){
+        getLocalData(type=''){
             let data;
             if(this.name){
-                data = JSON.parse(localStorage.getItem('table'+this.name));
+                data = JSON.parse(localStorage.getItem('table'+this.name+type));
             }
             return data||{};
+        },
+        saveColumnWidth(){
+            var widthData={};
+            this.cloneColumns.forEach((item,index)=>{
+                widthData[item.key]=item.realWidth;
+            })
+            this.setLocalData(widthData,widthData,'width');
         }
     },
     created() {
-        
+
         this.makeColumns();
         this.rebuildData = this.makeDataWithSort();
         this.throttleLayout= throttle(this.doLayout,200);

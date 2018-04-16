@@ -5,6 +5,7 @@
                 <i-option v-for="item in pageSizeOpts" :key="item" :value="item" style="text-align:center;">{{ item }} {{ t('i.page.page') }}</i-option>
             </i-select>
         </div> -->
+        
         <div v-if="showElevator" :class="ElevatorClasses">
             {{ t('i.page.goto') }}
             <input type="text" :value="_current" @keyup.enter="changePage">

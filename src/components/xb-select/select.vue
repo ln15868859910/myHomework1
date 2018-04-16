@@ -45,24 +45,27 @@ export default {
     components: { Icon },
     directives: { clickoutside },
     props: {
+        //value:选中值
         value:{
             type:[String,Number]
         },
+        //listData:下拉列表
         listData: {
-            //下拉列表
             type: Array,
             default:function(){
                 return [];
             }
         },
+        //selectedData:选择的数据、默认数据
         selectedData: {
-            //选择的数据、默认数据
             type: Object
         },
+        //remote:是否远程搜索
         remote:{
             type:Boolean,
             default:false
         },
+        //remoteMethod:远程搜索方法
         remoteMethod: {
             type: Function
         },

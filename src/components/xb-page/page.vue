@@ -1,9 +1,12 @@
 <template>
 <div style="width:100%;">
     <div v-if="showSizer" :class="sizerClasses" style="float:left;">
-        <i-select v-model="currentPageSize" :size="size" :placement="placement" @on-change="onSize(currentPageSize)">
-            <i-option v-for="item in pageSizeOpts" :key="item" :value="item" style="text-align:center;">{{ item }} {{ t('i.page.page') }}</i-option>
-        </i-select>
+        <span v-if="sizetext" :class="sizeTextClasses">单页显示：</span>
+        <span :class="sizeTextClasses">
+            <i-select v-model="currentPageSize" :size="size" :placement="placement" @on-change="onSize(currentPageSize)">
+                <i-option v-for="item in pageSizeOpts" :key="item" :value="item" style="text-align:center;">{{ item }} {{ t('i.page.page') }}</i-option>
+            </i-select>
+        </span>
     </div>
     <ul :class="simpleWrapClasses" :style="styles" v-if="simple" style="float:right;">
         <li
@@ -71,227 +74,238 @@
     </div>
 </template>
 <script>
-    import { oneOf } from '../../utils/assist';
-    import XbOptions from './options.vue';
-    import Locale from '../../mixins/locale';
+import { oneOf } from '../../utils/assist';
+import XbOptions from './options.vue';
+import Locale from '../../mixins/locale';
+import transferDom from '../../directives/transfer-dom';
 
-    const prefixCls = 'ivu-page';
+const prefixCls = 'ivu-page';
 
-    export default {
-        name: 'XbPage',
-        mixins: [ Locale ],
-        components: { XbOptions },
-        props: {
-            current: {
-                type: Number,
-                default: 1
-            },
-            total: {
-                type: Number,
-                default: 0
-            },
-            pageSize: {
-                type: Number,
-                default: 50
-            },
-            pageSizeOpts: {
-                type: Array,
-                default () {
-                    return [50, 100, 200];
-                }
-            },
-            placement: {
-                validator (value) {
-                    return oneOf(value, ['top', 'bottom']);
-                },
-                default: 'bottom'
-            },
-            size: {
-                validator (value) {
-                    return oneOf(value, ['small']);
-                }
-            },
-            simple: {
-                type: Boolean,
-                default: false
-            },
-            showTotal: {
-                type: Boolean,
-                default: false
-            },
-            showElevator: {
-                type: Boolean,
-                default: false
-            },
-            showSizer: {
-                type: Boolean,
-                default: false
-            },
-            className: {
-                type: String
-            },
-            styles: {
-                type: Object
+export default {
+    name: 'XbPage',
+    mixins: [Locale],
+    components: { XbOptions },
+    props: {
+        current: {
+            type: Number,
+            default: 1
+        },
+        total: {
+            type: Number,
+            default: 0
+        },
+        pageSize: {
+            type: Number,
+            default: 50
+        },
+        pageSizeOpts: {
+            type: Array,
+            default() {
+                return [50, 100, 200];
             }
         },
-        data () {
-            return {
-                prefixCls: prefixCls,
-                currentPage: this.current,
-                currentPageSize: this.pageSize
-            };
-        },
-        watch: {
-            current (val) {
-                this.currentPage = val;
+        placement: {
+            validator(value) {
+                return oneOf(value, ['top', 'bottom']);
             },
-            pageSize (val) {
-                this.currentPageSize = val;
+            default: 'bottom'
+        },
+        size: {
+            validator(value) {
+                return oneOf(value, ['small']);
             }
         },
-        computed: {
-            isSmall () {
-                return !!this.size;
-            },
-            allPages () {
-                const allPage = Math.ceil(this.total / this.currentPageSize);
-                return (allPage === 0) ? 1 : allPage;
-            },
-            simpleWrapClasses () {
-                return [
-                    `${prefixCls}`,
-                    `${prefixCls}-simple`,
-                    {
-                        [`${this.className}`]: !!this.className
-                    }
-                ];
-            },
-            simplePagerClasses () {
-                return `${prefixCls}-simple-pager`;
-            },
-            wrapClasses () {
-                return [
-                    `${prefixCls}`,
-                    {
-                        [`${this.className}`]: !!this.className,
-                        'mini': !!this.size
-                    }
-                ];
-            },
-            prevClasses () {
-                return [
-                    `${prefixCls}-prev`,
-                    {
-                        [`${prefixCls}-disabled`]: this.currentPage === 1
-                    }
-                ];
-            },
-            nextClasses () {
-                return [
-                    `${prefixCls}-next`,
-                    {
-                        [`${prefixCls}-disabled`]: this.currentPage === this.allPages
-                    }
-                ];
-            },
-            firstPageClasses () {
-                return [
-                    `${prefixCls}-item`,
-                    {
-                        [`${prefixCls}-item-active`]: this.currentPage === 1
-                    }
-                ];
-            },
-            lastPageClasses () {
-                return [
-                    `${prefixCls}-item`,
-                    {
-                        [`${prefixCls}-item-active`]: this.currentPage === this.allPages
-                    }
-                ];
-            },
-            sizerClasses () {
-                return [
-                    `${prefixCls}-options-sizer`
-                ];
+        sizetext: {
+            type: Boolean,
+            default: true
+        },
+        simple: {
+            type: Boolean,
+            default: false
+        },
+        showTotal: {
+            type: Boolean,
+            default: false
+        },
+        showElevator: {
+            type: Boolean,
+            default: false
+        },
+        showSizer: {
+            type: Boolean,
+            default: false
+        },
+        className: {
+            type: String
+        },
+        styles: {
+            type: Object
+        }
+    },
+    data() {
+        return {
+            prefixCls: prefixCls,
+            currentPage: this.current,
+            currentPageSize: this.pageSize
+        };
+    },
+    watch: {
+        current(val) {
+            this.currentPage = val;
+        },
+        pageSize(val) {
+            this.currentPageSize = val;
+        }
+    },
+    computed: {
+        isSmall() {
+            return !!this.size;
+        },
+        allPages() {
+            const allPage = Math.ceil(this.total / this.currentPageSize);
+            return allPage === 0 ? 1 : allPage;
+        },
+        simpleWrapClasses() {
+            return [
+                `${prefixCls}`,
+                `${prefixCls}-simple`,
+                {
+                    [`${this.className}`]: !!this.className
+                }
+            ];
+        },
+        simplePagerClasses() {
+            return `${prefixCls}-simple-pager`;
+        },
+        sizeTextClasses() {
+            return `${prefixCls}-text`;
+        },
+        wrapClasses() {
+            return [
+                `${prefixCls}`,
+                {
+                    [`${this.className}`]: !!this.className,
+                    mini: !!this.size
+                }
+            ];
+        },
+        prevClasses() {
+            return [
+                `${prefixCls}-prev`,
+                {
+                    [`${prefixCls}-disabled`]: this.currentPage === 1
+                }
+            ];
+        },
+        nextClasses() {
+            return [
+                `${prefixCls}-next`,
+                {
+                    [`${prefixCls}-disabled`]: this.currentPage === this.allPages
+                }
+            ];
+        },
+        firstPageClasses() {
+            return [
+                `${prefixCls}-item`,
+                {
+                    [`${prefixCls}-item-active`]: this.currentPage === 1
+                }
+            ];
+        },
+        lastPageClasses() {
+            return [
+                `${prefixCls}-item`,
+                {
+                    [`${prefixCls}-item-active`]: this.currentPage === this.allPages
+                }
+            ];
+        },
+        sizerClasses() {
+            return [`${prefixCls}-options-sizer`];
+        }
+    },
+    methods: {
+        changePage(page) {
+            if (this.currentPage != page) {
+                this.currentPage = page;
+                this.$emit('on-change', page);
+                this.onPagerChange();
             }
         },
-        methods: {
-            changePage (page) {
-                if (this.currentPage != page) {
-                    this.currentPage = page;
-                    this.$emit('on-change', page);
-                }
-            },
-            prev () {
-                const current = this.currentPage;
-                if (current <= 1) {
-                    return false;
-                }
-                this.changePage(current - 1);
-            },
-            next () {
-                const current = this.currentPage;
-                if (current >= this.allPages) {
-                    return false;
-                }
-                this.changePage(current + 1);
-            },
-            fastPrev () {
-                const page = this.currentPage - 5;
-                if (page > 0) {
-                    this.changePage(page);
-                } else {
-                    this.changePage(1);
-                }
-            },
-            fastNext () {
-                const page = this.currentPage + 5;
-                if (page > this.allPages) {
-                    this.changePage(this.allPages);
-                } else {
-                    this.changePage(page);
-                }
-            },
-            onSize (pageSize) {
-                this.currentPageSize = pageSize;
-                this.$emit('on-page-size-change', pageSize);
-                this.changePage(1);
-            },
-            onPage (page) {
+        prev() {
+            const current = this.currentPage;
+            if (current <= 1) {
+                return false;
+            }
+            this.changePage(current - 1);
+        },
+        next() {
+            const current = this.currentPage;
+            if (current >= this.allPages) {
+                return false;
+            }
+            this.changePage(current + 1);
+        },
+        fastPrev() {
+            const page = this.currentPage - 5;
+            if (page > 0) {
                 this.changePage(page);
-            },
-            keyDown (e) {
-                const key = e.keyCode;
-                const condition = (key >= 48 && key <= 57) || key == 8 || key == 37 || key == 39;
+            } else {
+                this.changePage(1);
+            }
+        },
+        fastNext() {
+            const page = this.currentPage + 5;
+            if (page > this.allPages) {
+                this.changePage(this.allPages);
+            } else {
+                this.changePage(page);
+            }
+        },
+        onSize(pageSize) {
+            this.currentPageSize = pageSize;
+            this.currentPage = 1;
+            this.$emit('on-page-size-change', pageSize);
+            this.onPagerChange();
+        },
+        onPagerChange(){
+            this.$emit('on-pager-change',{index:this.currentPage,size:this.currentPageSize});
+        },
+        onPage(page) {
+            this.changePage(page);
+        },
+        keyDown(e) {
+            const key = e.keyCode;
+            const condition = (key >= 48 && key <= 57) || key == 8 || key == 37 || key == 39;
 
-                if (!condition) {
-                    e.preventDefault();
+            if (!condition) {
+                e.preventDefault();
+            }
+        },
+        keyUp(e) {
+            const key = e.keyCode;
+            const val = parseInt(e.target.value);
+
+            if (key === 38) {
+                this.prev();
+            } else if (key === 40) {
+                this.next();
+            } else if (key == 13) {
+                let page = 1;
+
+                if (val > this.allPages) {
+                    page = this.allPages;
+                } else if (val <= 0) {
+                    page = 1;
+                } else {
+                    page = val;
                 }
-            },
-            keyUp (e) {
-                const key = e.keyCode;
-                const val = parseInt(e.target.value);
 
-                if (key === 38) {
-                    this.prev();
-                } else if (key === 40) {
-                    this.next();
-                } else if (key == 13) {
-                    let page = 1;
-
-                    if (val > this.allPages) {
-                        page = this.allPages;
-                    } else if (val <= 0) {
-                        page = 1;
-                    } else {
-                        page = val;
-                    }
-
-                    e.target.value = page;
-                    this.changePage(page);
-                }
+                e.target.value = page;
+                this.changePage(page);
             }
         }
-    };
+    }
+};
 </script>

@@ -1,9 +1,7 @@
 <template>
     <div class="" :class="[commonGroupName,groupName]" style="position: relative;">
         <div class="union-link">
-            <div class="union-link-line top-line"></div>
-            <Icon type="link" size="16" style="color:#ccc;margin:2px 0;"></Icon>
-            <div class="union-link-line bottom-line"></div>
+            <Icon type="link" size="16" style="color:#ccc;"></Icon>
         </div>
         <component :class="unionItem" v-for="(item,index) in model" :key="index" :model="item" :is="currentView">
     

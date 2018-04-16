@@ -13,14 +13,15 @@ export default {
     name: 'XbOverflowTip',
     components: { Tooltip },
     props: {
+        //content:显示内容
         content: {
             type: String
         },
-        //限制宽度，也可在innerClass里控制
+        //width:限制宽度，也可在innerClass里控制
         width: {
             type: String
         },
-        //内部文本框的样式
+        //innnerClass:内部文本框的样式
         innnerClass:{
             type: String
         }

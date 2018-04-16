@@ -17,11 +17,13 @@ export default {
         },
         setCellWidth (column) {
             let width = '';
-            if (column.width) {
-                width = column.width;
-            } else if (this.columnsWidth[column._index]) {
-                width = this.columnsWidth[column._index].width;
+            if(column.realWidth){
+                width = column.realWidth;
             }
+            else if(column.width){
+                width=column.width;
+            }
+            
             if (width === '0') width = '';
             return width;
         }

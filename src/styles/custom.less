@@ -10,15 +10,15 @@
 @darker-primary-color   : #5BABE9;
 @light-primary-color    : #62a4f4;
 @dark-primary-color     : #3d7dcc;
-@info-b-color             : #E1EEFF;
-@info-color           : #5295E7;
-@success-b-color          : #D6F1DB;
-@success-color        : #06A690;
-@warning-b-color          : #FDF5D6;
-@warning-color        : #FFAA14;
-@error-b-color            : #FEE0E0;
-@error-color          : #FB6363;
-@disabled-color         : #ccc;
+@info-b-color           : tint(@info-color , 90%);
+@info-color             : #61BDFF;
+@success-b-color        : tint(@success-color , 90%);
+@success-color          : #6AC77B;
+@warning-b-color        : tint(@warning-color , 90%);
+@warning-color          : #FFB51F;
+@error-b-color          : tint(@error-color , 90%);
+@error-color            : #FC8F8F;
+@disabled-color         : #F6F6F6;
 @link-color             : #5295e7;
 @link-hover-color       : tint(@link-color, 20%);
 @link-active-color      : shade(@link-color, 5%);
@@ -28,6 +28,7 @@
 @rate-star-color        : #f5a623;
 @picker-disable-color   : #adb4bc;
 @table-font-color       : #67757C;
+@table-scrollbar-color  : #C6CCDA;
 // Base
 @body-background        : #fff;
 @font-family            : "San Francisco","Helvetica Neue", "PingFang SC","Hiragino Sans GB", "Microsoft YaHei", "微软雅黑",Arial,sans-serif;
@@ -164,6 +165,7 @@
 @zindex-consultfilter   : 1050;
 @zindex-notification    : 1010;
 @zindex-tooltip         : 1060;
+@zindex-transfer        : 1060;
 @zindex-loading-bar     : 2000;
 
 // Animation

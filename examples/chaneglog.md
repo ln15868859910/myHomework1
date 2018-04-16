@@ -15,3 +15,9 @@
 # *2017年12月7日17点03分*
 > 1.Cascader 升级至2.7
 > 2.Cascader 扩展 增加 remoteFuc
+
+# *12018年4月2日5点07分*
+> 1.DataPicker 升级至2.10   
+> 2.原生Table 和原生 Tree排除打包
+
+# DatePicker 有严重兼容性问题  回退至 2.7版本
