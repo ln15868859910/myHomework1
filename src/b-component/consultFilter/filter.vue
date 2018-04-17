@@ -22,7 +22,7 @@
                     </Badge>
                     <!-- 下拉组件区域 -->
                     <transition name="slide-up">
-                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="containerStyle.type!=='horizontal'">
+                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="!horizontalType">
                             <!-- 单选组件 -->
                             <consult-filter-single :model="singleModel"></consult-filter-single>
                             <!-- 联动组件 -->
@@ -30,7 +30,7 @@
                             <!-- 多选组件 -->
                             <consult-filter-multi :model="multiModel"></consult-filter-multi>
                         </div>
-                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="containerStyle.type==='horizontal'">                       
+                        <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="horizontalType">                       
                            <Row>
                                 <Col :span="containerStyle.ratio?containerStyle.ratio.single:8">
                                   <consult-filter-single :model="singleModel" v-if="singleModel.modelList.length"></consult-filter-single>
@@ -172,8 +172,12 @@ export default {
         fitlerResult() {
             return `${prefixCls}-fitlerResult`;
         },
+        horizontalType(){   //组件的横屏状态
+            let count = this.multiModel.modelList.length+Math.ceil(this.singleModel.modelList.length/2)+this.unionModel.modelList.reduce((a,item)=>{return a+=item.length;},0);
+            return this.containerStyle.type==="horizontal"||count>=10;
+        },
         filterContainer() {
-            return this.containerStyle.type==="vertical"?`${prefixCls}-container`:`${prefixCls}-horizontal-container`;
+            return this.horizontalType?`${prefixCls}-horizontal-container`:`${prefixCls}-container`;
         },
         filterResultAmount() {
             var count = 0;
