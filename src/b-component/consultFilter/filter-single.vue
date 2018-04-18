@@ -1,6 +1,6 @@
 <template>
     <div :class="singleItemWrap" :style="{display:model.modelList.length?'block':'none'}">
-        <div :class="singleItem" v-for="(model,index) in model.modelList" :key="index" :model="model" :is="currentView"></div>
+        <div :class="singleItem" v-for="(model,index) in model.modelList" :key="index" :model="model" :horizontal="horizontal" :is="currentView"></div>
     </div>
 </template>
 
@@ -69,6 +69,10 @@ var maker = {
     props: {
         model: {
             require: true
+        },
+        horizontal:{
+            type:Boolean,
+            default:false
         }
     },
     name: "selectComponent",
@@ -422,7 +426,7 @@ var maker = {
                         type: "daterange",
                         value: me.model.componentConfig.value,
                         placeholder: me.model.sortName ? me.model.sortName : "请选择日期",
-                        placement: "bottom-end",
+                        placement: me.horizontal?"bottom-start":"bottom-end",
                         options: { shortcuts: me.model.componentConfig.optionList.length ? this.setDateRangeShotcuts(me.model.componentConfig.optionList) : [] },
                         format: me.model.componentConfig.format ? me.model.componentConfig.format : "yyyy年MM月dd日"
                     },
@@ -484,6 +488,10 @@ export default {
     props: {
         model: {
             require: true
+        },
+        horizontal:{
+            type:Boolean,
+            default:false
         }
     },
     components: {

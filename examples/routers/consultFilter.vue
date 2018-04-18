@@ -246,22 +246,6 @@ export default {
                                     }
                                 },
                              
-                                {
-                                    sortName: '多选',
-                                    sortValue: 'group2_c',
-                                    parentSortValue: 'group2_b',
-                                    sonSortValue: 'group2_a',
-                                    componentType: 'select',
-                                    componentConfig: {
-                                        value: [],
-                                        multiple: true,
-                                        disabled: false,
-                                        filterable: true,
-                                        clearable: true,
-                                        optionList: []
-                                    },
-                                    RemoteUrl: null
-                                }
                             ],
                             [
                                 {

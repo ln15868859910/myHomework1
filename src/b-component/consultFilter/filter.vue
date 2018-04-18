@@ -33,7 +33,7 @@
                         <div :class="filterContainer" :style="{display:status.isContainerShow?'block':'none'}" v-if="horizontalType">                       
                            <Row>
                                 <Col :span="containerStyle.ratio?containerStyle.ratio.single:8">
-                                  <consult-filter-single :model="singleModel" v-if="singleModel.modelList.length"></consult-filter-single>
+                                  <consult-filter-single :model="singleModel" :horizontal="horizontalType" v-if="singleModel.modelList.length"></consult-filter-single>
                                 </Col>
                                 <Col :span="containerStyle.ratio?containerStyle.ratio.union:8" v-if="unionModel.modelList.length">
                                     <consult-filter-union :model="unionModel"></consult-filter-union>
