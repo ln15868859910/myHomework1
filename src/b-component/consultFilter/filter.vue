@@ -174,7 +174,7 @@ export default {
         },
         horizontalType(){   //组件的横屏状态
             let count = this.multiModel.modelList.length+Math.ceil(this.singleModel.modelList.length/2)+this.unionModel.modelList.reduce((a,item)=>{return a+=item.length;},0);
-            return this.containerStyle.type==="horizontal"||count>=10;
+            return this.containerStyle.type==="horizontal"||count>=100;
         },
         filterContainer() {
             return this.horizontalType?`${prefixCls}-horizontal-container`:`${prefixCls}-container`;
