@@ -5,7 +5,7 @@
 .floatright {
     margin-right: 30px;
 }
-.filterResult{
+.filterResult {
     padding: 20px 30px;
 }
 </style>
@@ -38,7 +38,7 @@ export default {
             custumclass: {
                 custom: 'custumclass',
                 floatright: 'floatright',
-                filterResult:'filterResult'
+                filterResult: 'filterResult'
             },
             //↓ searchData 搜索区域，传入null该对象则整块区域隐藏
             searchData: {
@@ -61,12 +61,12 @@ export default {
                     isResetFilter: false //← 非必填：搜索时结果是否与筛选项互斥，默认：false
                 }
             },
-            containerStyle:{
-                type:"horizontal",
-                ratio:{
-                    multi:4,
-                    single:12,
-                    union:8
+            containerStyle: {
+                type: 'horizontal',
+                ratio: {
+                    multi: 4,
+                    single: 12,
+                    union: 8
                 }
             },
             //筛选项数据，必传
@@ -112,6 +112,22 @@ export default {
                                             value: '2016-08-08,2017-08-07'
                                         }
                                     ]
+                                },
+                                remoteUrl: null
+                            },
+                            {
+                                sortName: '开始时间',
+                                sortValue: 'Startdate',
+                                parentSortValue: null,
+                                sonSortValue: null,
+                                componentType: 'date',
+                                componentConfig: {
+                                    value: ['2017-08-01'],
+                                    filterable: false,
+                                    multiple: false,
+                                    clearable: true,
+                                    itemCount: 0,
+                                    optionList: []
                                 },
                                 remoteUrl: null
                             },
@@ -244,8 +260,7 @@ export default {
                                             console.log(data);
                                         }
                                     }
-                                },
-                             
+                                }
                             ],
                             [
                                 {
@@ -595,7 +610,6 @@ export default {
                     },
                     MultiModel: {
                         ModelList: [
-                            
                             {
                                 SortName: '学年',
                                 SortValue: 'AcademicYear',
@@ -667,8 +681,8 @@ export default {
                                         MaxSpan: 0
                                     },
                                     RemoteUrl: {
-                                        OnChange: '/Teaching/GetLessonWithSearchSubassembly',
-                                        OnSearch: '/Api/Lesson/GetLessonClassWithSearch'
+                                        OnChange: '',
+                                        OnSearch: ''
                                     }
                                 },
                                 {
@@ -688,7 +702,7 @@ export default {
                                     },
                                     RemoteUrl: {
                                         OnChange: null,
-                                        OnSearch: '/Teaching/GetLessonWithSearchSubassembly'
+                                        OnSearch: null
                                     }
                                 }
                             ],
