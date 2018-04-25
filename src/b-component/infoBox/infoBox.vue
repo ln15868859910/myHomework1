@@ -266,7 +266,7 @@ export default {
             _this.search = true;
             this.debounce(function () {
                 let url = _this.infoData.dataList[index].url + "?search=";
-                Axios.get(url + query).then(function (res) {
+                Axios.get(encodeURI(url + query)).then(function (res) {
                     var data = res;
                     if (data && data.status) {
                         var tempList = [];
