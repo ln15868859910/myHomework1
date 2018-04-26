@@ -105,7 +105,10 @@ export default {
             // });
         },
         open3() {
-            this.$Message2.error('恭喜你，这是一条错误消息');
+            this.$Message2.error({
+                showIcon:true,
+                message:'恭喜你，这是一条错误消息'
+            });
         },
         open4() {
             this.$Message2.success('恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息');
@@ -114,8 +117,10 @@ export default {
             this.$Message2.success({
                 message: '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
                 title:'标题',
+                showIcon:true,
                 showClose: true,
-                duration: 0
+                duration: 0,
+                width:620
             });
         },
         open6() {
