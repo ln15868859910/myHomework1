@@ -235,6 +235,7 @@ export default {
             scrollBarWidth: getScrollBarSize(),
             fixedColumnsBodyRowsHeight: [],
             deletePkeys:[],//删除的数组
+            clearAllFlag:false,
             selections: [],
             selectionPkeys: [],
             propselectedPkeys:[],
@@ -496,9 +497,7 @@ export default {
             let columns = this.cloneColumns[0];
             let preselectfn = typeof columns.preselect =='function'?columns.preselect:undefined;
             let unpasspkeys = [],unpassselections = [];
-            that.data.forEach(function(item){
-                that.deletePkeys.push(item._pkey);
-            })
+            this.clearAllFlag = true;
             for (let i = 0; i < this.selections.length; i++) {
                 let data = this.selections[i];
                 if(preselectfn&&!preselectfn(data,false,'all')){
@@ -674,7 +673,7 @@ export default {
                 row._pkey = this.getPkey(row);   //数据唯一k
                 row._disabled = row._disabled || false;
                 row._expanded = row._expanded || false;
-                if(this.propselectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1&&deleteFlag){//默认值处理
+                if(!this.clearAllFlag&&this.propselectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1&&deleteFlag){//默认值处理
                     this.selections.push(row);
                     this.selectionPkeys.push(row._pkey);
                 }
