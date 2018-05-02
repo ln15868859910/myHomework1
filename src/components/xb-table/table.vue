@@ -558,15 +558,18 @@ export default {
                 } else {
                     let pk = data._pkey;
                     let index = this.selectionPkeys.indexOf(pk);
-
                     if(status){
-                        
                         if(index===-1&&(preselectfn&&preselectfn(data,true,'all')||!preselectfn)){
                             this.selectionPkeys.push(pk);
                             this.selections.push(data);
+                            var addIndex = this.deletePkeys.indexOf(pk);
+                            if(addIndex >-1){
+                                this.deletePkeys.splice(index,1);
+                            }
                         }
                     }else{
                         if(index!==-1&&(preselectfn&&preselectfn(data,false,'all')||!preselectfn)){
+                            this.deletePkeys.push(pk);
                             this.selectionPkeys.splice(index,1);
                             this.selections.splice(index,1);
                         }
