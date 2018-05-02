@@ -492,9 +492,13 @@ export default {
             this.selectTriggerByRow = false;
         },
         clearSelection(){
+            let that = this;
             let columns = this.cloneColumns[0];
             let preselectfn = typeof columns.preselect =='function'?columns.preselect:undefined;
             let unpasspkeys = [],unpassselections = [];
+            that.data.forEach(function(item){
+                that.deletePkeys.push(item._pkey);
+            })
             for (let i = 0; i < this.selections.length; i++) {
                 let data = this.selections[i];
                 if(preselectfn&&!preselectfn(data,false,'all')){
