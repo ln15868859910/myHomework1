@@ -7,11 +7,6 @@ const path = require('path');
 const request = require("request");
 let compiler = webpack(webpackConfig);
 
-
-
-
-
-
 //gulp
 var gulp = require('gulp');
 var cleanCSS = require('gulp-clean-css');
