@@ -246,7 +246,9 @@
             },
             icon(val){
                 if(val){
-                    this.setCurrentValue(this.value);
+                    if (val !== 'ios-close' && val !== 'ios-calendar-outline') {
+                        this.setCurrentValue(this.value);
+                    }
                 }
             }
         },

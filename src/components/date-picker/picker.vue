@@ -217,7 +217,8 @@
                 internalValue: '',
                 disableClickOutSide: false,    // fixed when click a date,trigger clickoutside to close picker
                 disableCloseUnderTransfer: false,  // transfer 模式下，点击Drop也会触发关闭
-                currentValue: this.value
+                currentValue: this.value,
+                isChange: false
             };
         },
         computed: {
@@ -306,7 +307,7 @@
                 let correctDate = '';
                 const type = this.type;
                 const format = this.format || DEFAULT_FORMATS[type];
-
+                this.isChange = true;
                 if (type === 'daterange' || type === 'timerange' || type === 'datetimerange') {
                     const parser = (
                         TYPE_VALUE_RESOLVER_MAP[type] ||
@@ -386,10 +387,22 @@
                 if (this.readonly || this.disabled) return;
                 if (this.visualValue && this.clearable) {
                     this.showClose = true;
+                    this.mouseActionReuse();
                 }
             },
             handleInputMouseleave () {
                 this.showClose = false;
+                this.mouseActionReuse();
+            },
+            mouseActionReuse() {
+                if (this.isChange) {
+                    let date = this.visualValue;
+                    this.currentValue = ''
+                    setTimeout(() => {
+                        this.currentValue = date;
+                    }, 0);
+                    this.isChange = false;
+                }
             },
             handleIconClick () {
                 if (this.showClose) {
