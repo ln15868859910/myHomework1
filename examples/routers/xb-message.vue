@@ -40,6 +40,8 @@
             <i-input v-model="inputvalue" v-countworld="inputvalue" :maxlength="10"></i-input>
             <i-input v-model="inputvalue2" v-countworld="inputvalue2" :maxlength="10" type="textarea"></i-input>
 
+        <Icon type="compose-outline"></Icon>
+        <Icon type="maximize"></Icon>
             <xb-icon type="tag-oneToOne"></xb-icon>
             <xb-icon type="tag-balance"></xb-icon>
             <xb-icon type="tag-class"></xb-icon>
