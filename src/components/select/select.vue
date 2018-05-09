@@ -765,7 +765,7 @@
                             // remote下，设置了默认值，第一次打开时，搜索一次
                             const options = this.$slots.default || [];
                             if (this.query !== '' && !options.length) {
-                                this.remoteMethod(this.query);
+                                this.remoteMethod(this.query,this);
                             }
                         }
                     }
@@ -785,7 +785,7 @@
                 if (this.remote && this.remoteMethod) {
                     if (!this.selectToChangeQuery) {
                         this.$emit('on-query-change', val);
-                        this.remoteMethod(val);
+                        this.remoteMethod(val,this);
                     }
                     this.focusIndex = 0;
                     this.findChild(child => {

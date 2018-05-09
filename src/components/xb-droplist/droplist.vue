@@ -106,7 +106,9 @@ export default {
         handleBlur(){
             this.visible = false;
             this.onquery = false;
-            this.updatequery();
+            if (this.remote){
+                this.updatequery();
+            }
         },  
         isObject(value){
             return Object.prototype.toString.call(value).toLowerCase() === '[object object]';
