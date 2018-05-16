@@ -71,23 +71,23 @@ import countworld from './../../src/directives/countworld';
 import Vue from 'vue';
 Vue.prototype.$Message2 = Message;
 export default {
-    components:{XbHoverlist},
-    directives:{countworld},
-    data(){
-        return{
-            list:['1'],
-            inputvalue:'',
-            inputvalue2:'',
+    components: { XbHoverlist },
+    directives: { countworld },
+    data() {
+        return {
+            list: ['1'],
+            inputvalue: '',
+            inputvalue2: ''
         };
     },
-    created(){
-        setTimeout(()=>{
+    created() {
+        setTimeout(() => {
             this.inputvalue = '1q23ASd';
-        },1000);
+        }, 1000);
     },
     methods: {
-        addlist(){
-            this.list.push(new Date().getTime()+"!12312312312312312");
+        addlist() {
+            this.list.push(new Date().getTime() + '!12312312312312312');
         },
         open() {
             this.$XbConfirm('这是一条消息提示');
@@ -99,7 +99,7 @@ export default {
             });
         },
         open2() {
-            this.$Message2.success("123");
+            this.$Message2.success('123');
             // this.$Message2({
             //     message: '恭喜你，这是一条成功消息',
             //     top:500,
@@ -113,12 +113,15 @@ export default {
             });
         },
         open4() {
-            this.$Message2.success('恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息');
+            this.$Message2.success(
+                '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息'
+            );
         },
         open5() {
             this.$Message2.success({
-                message: '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
-                title:'标题',
+                message:
+                    '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
+                title: '标题',
                 showIcon:true,
                 showClose: true,
                 duration: 0,
@@ -131,20 +134,19 @@ export default {
                 message: '恭喜你，这是一条显示关闭的消息',
                 showClose: true,
                 duration: 0,
-                customClass:'warning',
+                customClass: 'warning',
                 type: 'success',
-                onClose:function(){
-                    that.$Message2({message: '你点击了删除'});
+                onClose: function() {
+                    that.$Message2({ message: '你点击了删除' });
                 }
             });
-            
         }
     }
 };
 </script>
 
 <style>
-.warning{
-    color:red;
+.warning {
+    color: red;
 }
 </style>
