@@ -19,11 +19,13 @@ const column_map={
             return h('label',{
                 class:[
                     'ivu-checkbox-wrapper',
+                    that.rowDisabled(rowIndex)?'ivu-checkbox-wrapper-disabled':'',
                     that.rowChecked(rowIndex)?'ivu-checkbox-wrapper-checked':''
                 ]
             },[h('span',{
                 class:[
                     'ivu-checkbox',
+                    that.rowDisabled(rowIndex)?'ivu-checkbox-disabled':'',
                     that.rowChecked(rowIndex)?'ivu-checkbox-checked':''
                 ]
             },[

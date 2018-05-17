@@ -527,6 +527,9 @@ export default {
             }
         },
         toggleSelect(row) {
+            if(row._disabled){
+                return;
+            }
             var pky = row._pkey;
             var index = this.selectionPkeys.indexOf(pky);
             if (index === -1) {
