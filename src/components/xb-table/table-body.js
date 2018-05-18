@@ -36,7 +36,8 @@ const column_map={
                     },
                     class:'ivu-checkbox-input',
                     on:{
-                        'click':function(){
+                        'click':function(e){
+                            e.stopPropagation();
                             let status = !that.rowChecked(rowIndex);//变化的目标
                             if(typeof column.preselect == 'function'){
                                 if(column.preselect(row,status,'one')){
