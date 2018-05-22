@@ -440,6 +440,10 @@ export default {
                 isEmpty = false,
                 isFinish = false;
 
+            if (this.callback && this.callback['pvLog']) {
+                this.callback['pvLog'](data, type);
+            }    
+
             if (data.label.length == 0) {
                 isEmpty = true;
             }
@@ -520,6 +524,10 @@ export default {
                 len = this.filterResult.length,
                 isSortExist = false,
                 isEmpty = false;
+
+            if (this.callback && this.callback['pvLog']) {
+                this.callback['pvLog'](data, type);
+            }
 
             if (!data.label[0].value) {
                 isEmpty = true;
