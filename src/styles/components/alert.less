@@ -3,22 +3,28 @@
 
 .@{alert-prefix-cls}{
     position: relative;
-    padding: 11px 20px;
+    padding: 6px 15px;
     border-radius: @border-radius-base;
     color: @text-color;
     font-size: @font-size-base;
-    line-height: 16px;
+    line-height: 18px;
     margin-bottom: 10px;
 
     &&-with-icon{
-        padding: 8px 48px 8px 38px;
+        padding: 12px 30px 12px 65px;
     }
 
     &-icon {
-        font-size: 12px;
-        top: 8px;
-        left: 16px;
+        width:24px;
+        height:24px;
+        font-size: 24px;
+        top: 50%;
+        margin-top:-12px;
+        left: 20px;
         position: absolute;
+        .ivu-icon{
+            vertical-align: top;
+        }
     }
     &-dot{
         margin-right: 5px;
@@ -32,8 +38,8 @@
     }
 
     &-desc {
-        font-size: @font-size-base;
-        color: @text-color;
+        font-size: @font-size-small;
+        color:tint(@text-color , 25%);
         line-height: 21px;
         display: none;
         text-align: justify;
@@ -72,11 +78,11 @@
     }
 
     &-close {
-        .content-close(-3px);
+        .content-close(-1px);
     }
 
     &-with-desc {
-        padding: 16px;
+        padding: 18px;
         position: relative;
         border-radius: @border-radius-base;
         margin-bottom: 10px;
@@ -93,19 +99,11 @@
     }
 
     &-with-desc &-message {
-        font-size: 16px;
-        color: @title-color;
         display: block;
+        margin-bottom: 2px;
     }
     &-message{
         color: @text-color;
-    }
-
-    &-with-desc &-icon {
-        top: 50%;
-        left: 24px;
-        margin-top: -21px;
-        font-size: 28px;
     }
 
     &-with-banner{
@@ -121,10 +119,15 @@
         display: inline-block;
         width: 12px;
         height: 12px;
+        font-size:12px;
         border-radius: 100%;
         color: @success-color;
         vertical-align: 1px;
         background: @success-color;
+    }
+    .ivu-alert-icon{
+        width: 12px;
+        height: 12px;
     }
     .ivu-icon-information-circled:before{
         content: "";

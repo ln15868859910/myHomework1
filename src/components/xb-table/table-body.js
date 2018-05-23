@@ -19,11 +19,13 @@ const column_map={
             return h('label',{
                 class:[
                     'ivu-checkbox-wrapper',
+                    that.rowDisabled(rowIndex)?'ivu-checkbox-wrapper-disabled':'',
                     that.rowChecked(rowIndex)?'ivu-checkbox-wrapper-checked':''
                 ]
             },[h('span',{
                 class:[
                     'ivu-checkbox',
+                    that.rowDisabled(rowIndex)?'ivu-checkbox-disabled':'',
                     that.rowChecked(rowIndex)?'ivu-checkbox-checked':''
                 ]
             },[
@@ -34,7 +36,8 @@ const column_map={
                     },
                     class:'ivu-checkbox-input',
                     on:{
-                        'click':function(){
+                        'click':function(e){
+                            e.stopPropagation();
                             let status = !that.rowChecked(rowIndex);//变化的目标
                             if(typeof column.preselect == 'function'){
                                 if(column.preselect(row,status,'one')){

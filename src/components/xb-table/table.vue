@@ -234,6 +234,8 @@ export default {
             bodyRealHeight: 0,
             scrollBarWidth: getScrollBarSize(),
             fixedColumnsBodyRowsHeight: [],
+            deletePkeys:[],//删除的数组
+            clearAllFlag:false,
             selections: [],
             selectionPkeys: [],
             propselectedPkeys:[],
@@ -491,9 +493,11 @@ export default {
             this.selectTriggerByRow = false;
         },
         clearSelection(){
+            let that = this;
             let columns = this.cloneColumns[0];
             let preselectfn = typeof columns.preselect =='function'?columns.preselect:undefined;
             let unpasspkeys = [],unpassselections = [];
+            this.clearAllFlag = true;
             for (let i = 0; i < this.selections.length; i++) {
                 let data = this.selections[i];
                 if(preselectfn&&!preselectfn(data,false,'all')){
@@ -523,14 +527,22 @@ export default {
             }
         },
         toggleSelect(row) {
+            if(row._disabled){
+                return;
+            }
             var pky = row._pkey;
             var index = this.selectionPkeys.indexOf(pky);
             if (index === -1) {
                 this.selections.push(row);
                 this.selectionPkeys.push(pky);
+                var addIndex = this.deletePkeys.indexOf(pky);
+                if(addIndex >-1){
+                    this.deletePkeys.splice(index,1);
+                }
             }else {
                 this.selections.splice(index, 1);
                 this.selectionPkeys.splice(index, 1);
+                this.deletePkeys.push(pky);
             }
             this.$emit('on-select', this.selections, row);
             this.$emit('on-selection-change', this.selections);
@@ -552,15 +564,18 @@ export default {
                 } else {
                     let pk = data._pkey;
                     let index = this.selectionPkeys.indexOf(pk);
-
                     if(status){
-                        
                         if(index===-1&&(preselectfn&&preselectfn(data,true,'all')||!preselectfn)){
                             this.selectionPkeys.push(pk);
                             this.selections.push(data);
+                            var addIndex = this.deletePkeys.indexOf(pk);
+                            if(addIndex >-1){
+                                this.deletePkeys.splice(index,1);
+                            }
                         }
                     }else{
                         if(index!==-1&&(preselectfn&&preselectfn(data,false,'all')||!preselectfn)){
+                            this.deletePkeys.push(pk);
                             this.selectionPkeys.splice(index,1);
                             this.selections.splice(index,1);
                         }
@@ -645,14 +660,23 @@ export default {
         },
         makeData() {
             let data = this.data.slice(0);
+            let that = this;
             this.expandArr=[];
+            let deleteFlag = true;
+            for(var i = 0;i<that.propselectedPkeys.length;i++){
+                for(var k=0;k<that.deletePkeys.length;k++){
+                    if(that.propselectedPkeys[i] === that.deletePkeys[k]){
+                        deleteFlag = false
+                    }
+                }
+            }
             data.forEach((row, index) => {
                 row._index = index;
                 row._rowKey = rowKey++;
                 row._pkey = this.getPkey(row);   //数据唯一k
                 row._disabled = row._disabled || false;
                 row._expanded = row._expanded || false;
-                if(this.propselectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1){//默认值处理
+                if(!this.clearAllFlag&&this.propselectedPkeys.indexOf(row._pkey)>-1&&this.selectionPkeys.indexOf(row._pkey)==-1&&deleteFlag){//默认值处理
                     this.selections.push(row);
                     this.selectionPkeys.push(row._pkey);
                 }

@@ -1,17 +1,14 @@
 <template>
-  <transition name="xb-message-fade">
-    <div
-      :class="[messageClass,typeClass,customClass]"
-      v-show="visible"
-      @mouseenter="clearTimer"
-      @mouseleave="startTimer"
-      :style="topstyles"
-    >
-        <span v-if="title" :class="[titleClass]">{{title}}</span>
-      {{message}}
-      <Icon type="close" v-if="showClose" :class="[closeIconClass]" @click.native="close()"></Icon>
-    </div>
-  </transition>
+    <transition name="xb-message-fade">
+        <div :class="[messageClass,typeClass,customClass]" v-show="visible" @mouseenter="clearTimer" @mouseleave="startTimer" :style="topstyles">
+            <span :class="iconClasses" v-if="showIcon">
+                <Icon :type="iconTypeUi"></Icon>
+            </span>
+            <span v-if="title" :class="[titleClass]">{{title}}</span>
+            <span :class="descClasses">{{message}}</span>
+            <Icon type="close" v-if="showClose" :class="[closeIconClass]" @click.native="close()"></Icon>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -28,6 +25,9 @@ export default {
             type: 'info',
             customClass: '',
             onClose: null,
+            width:450,
+            showIcon: false,//是否显示左侧图标
+            iconType:"",//图标类名
             showClose: false,
             closed: false,
             timer: null,
@@ -39,19 +39,55 @@ export default {
         typeClass() {
             return prefixCls+'-'+this.type;
         },
-        messageClass(){
-            return prefixCls+'-message';
+        messageClass() {
+            return [
+                prefixCls + '-message',
+                {
+                    [`${prefixCls}-with-icon`]: this.showIcon,
+                    [`${prefixCls}-with-title`]: this.title,
+                }
+            ];
+        },
+        descClasses(){
+            return prefixCls+'-desc';
         },
         closeIconClass(){
             return prefixCls+'-close';
+        },
+        iconClasses(){
+            return prefixCls+'-icon';
         },
         titleClass(){
             return prefixCls+'-title';
         },
         topstyles(){
             return {
-                top: `${this.top}px`
+                top: `${this.top}px`,
+                width:`${this.width}px`,
             };
+        },
+        iconTypeUi() {
+            let type = '';
+            if (this.iconType) {
+                type = this.iconType;
+            }
+            else {
+                switch (this.type) {
+                    case 'success':
+                        type = 'checkmark-filled';
+                        break;
+                    case 'info':
+                        type = 'information-filled';
+                        break;
+                    case 'warning':
+                        type = 'alert-filled';
+                        break;
+                    case 'error':
+                        type = 'close-filled';
+                        break;
+                }
+            }
+            return type;
         }
     },
 
