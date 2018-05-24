@@ -6,6 +6,11 @@
         <Alert type="success">成功提示文案</Alert>
         <Alert type="warning">警告提示文案</Alert>
         <Alert type="error">错误提示文案</Alert>
+        <div>含图标基本状态</div>
+        <Alert show-icon>成功提示文案</Alert>
+        <Alert type="success" show-icon>成功提示文案</Alert>
+        <Alert type="warning" show-icon>警告提示文案</Alert>
+        <Alert type="error" show-icon>错误提示文案</Alert>
         <div>含描述信息</div>
         <Alert type="success">
             成功提示文案

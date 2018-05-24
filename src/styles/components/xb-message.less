@@ -2,48 +2,73 @@
 
 .@{xbmessage-prefix-cls} {
     &-info{
-        border: 1px solid @primary-color;
+        border: 1px solid @info-color;
         background-color: @info-b-color;
+        .@{xbmessage-prefix-cls}-icon {
+            color: @info-color;
+        }
     }
     &-success{
         border: 1px solid @success-color;
         background-color: @success-b-color;
+        .@{xbmessage-prefix-cls}-icon {
+            color: @success-color;
+        }
     }
     &-warning{
         border: 1px solid @warning-color;
         background-color: @warning-b-color;
+        .@{xbmessage-prefix-cls}-icon {
+            color: @warning-color;
+        }
     }
     &-error{
         border: 1px solid @error-color;
         background-color: @error-b-color;
+        .@{xbmessage-prefix-cls}-icon {
+            color: @error-color;
+        }
     }
     &-message{
         position: fixed;
-        padding: 5px 20px;
+        padding: 6px 15px;
         border-radius: 6px;
-        color: @title-color;
-        font-size: 12px;
-        line-height: 20px;
+        color: @text-color;
+        font-size: 14px;
+        line-height: 18px;
         transform: translateX(-50%);
         transition: opacity 0.3s, transform .4s;
-        width: 300px;
+        width: 450px;
         left:50%;
+        text-align:left;
+    }
+    &-with-icon{
+        padding: 12px 30px 12px 65px;
+    }
+    &-with-title &-desc {
+        display: block;
+        font-size: @font-size-small;
+        color:tint(@text-color , 25%);
+    }
+    &-icon {
+        width:24px;
+        height:24px;
+        font-size: 24px;
+        top: 50%;
+        margin-top:-12px;
+        left: 20px;
+        position: absolute;
+        .ivu-icon{
+            vertical-align: top;
+        }
     }
     &-title{
         font-size: 14px;
-        font-weight: bold;
         display: block;
-    }
-    &-desc{
-        font-size: 12px;
+        margin-bottom:2px;
     }
     &-close{
-        font-size: 12px;
-        position: absolute;
-        right: 10px;
-        top: 8px;
-        overflow: hidden;
-        cursor: pointer;
+        .content-close(-1px);
     }
 }
 .xb-message-fade-enter,

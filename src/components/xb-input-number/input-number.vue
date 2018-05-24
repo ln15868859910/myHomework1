@@ -229,6 +229,7 @@ export default {
         },
         focus() {
             this.focused = true;
+            this.$emit('on-focus');
         },
         blur(event) {
             this.focused = false;

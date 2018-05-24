@@ -40,6 +40,8 @@
             <i-input v-model="inputvalue" v-countworld="inputvalue" :maxlength="10"></i-input>
             <i-input v-model="inputvalue2" v-countworld="inputvalue2" :maxlength="10" type="textarea"></i-input>
 
+        <Icon type="compose-outline"></Icon>
+        <Icon type="maximize"></Icon>
             <xb-icon type="tag-oneToOne"></xb-icon>
             <xb-icon type="tag-balance"></xb-icon>
             <xb-icon type="tag-class"></xb-icon>
@@ -69,23 +71,23 @@ import countworld from './../../src/directives/countworld';
 import Vue from 'vue';
 Vue.prototype.$Message2 = Message;
 export default {
-    components:{XbHoverlist},
-    directives:{countworld},
-    data(){
-        return{
-            list:['1'],
-            inputvalue:'',
-            inputvalue2:'',
+    components: { XbHoverlist },
+    directives: { countworld },
+    data() {
+        return {
+            list: ['1'],
+            inputvalue: '',
+            inputvalue2: ''
         };
     },
-    created(){
-        setTimeout(()=>{
+    created() {
+        setTimeout(() => {
             this.inputvalue = '1q23ASd';
-        },1000);
+        }, 1000);
     },
     methods: {
-        addlist(){
-            this.list.push(new Date().getTime()+"!12312312312312312");
+        addlist() {
+            this.list.push(new Date().getTime() + '!12312312312312312');
         },
         open() {
             this.$XbConfirm('这是一条消息提示');
@@ -97,7 +99,7 @@ export default {
             });
         },
         open2() {
-            this.$Message2.success("123");
+            this.$Message2.success('123');
             // this.$Message2({
             //     message: '恭喜你，这是一条成功消息',
             //     top:500,
@@ -105,17 +107,25 @@ export default {
             // });
         },
         open3() {
-            this.$Message2.error('恭喜你，这是一条错误消息');
+            this.$Message2.error({
+                showIcon:true,
+                message:'恭喜你，这是一条错误消息'
+            });
         },
         open4() {
-            this.$Message2.success('恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息');
+            this.$Message2.success(
+                '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息'
+            );
         },
         open5() {
             this.$Message2.success({
-                message: '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
-                title:'标题',
+                message:
+                    '恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息恭喜你，这是一条多行消息',
+                title: '标题',
+                showIcon:true,
                 showClose: true,
-                duration: 0
+                duration: 0,
+                width:620
             });
         },
         open6() {
@@ -124,20 +134,19 @@ export default {
                 message: '恭喜你，这是一条显示关闭的消息',
                 showClose: true,
                 duration: 0,
-                customClass:'warning',
+                customClass: 'warning',
                 type: 'success',
-                onClose:function(){
-                    that.$Message2({message: '你点击了删除'});
+                onClose: function() {
+                    that.$Message2({ message: '你点击了删除' });
                 }
             });
-            
         }
     }
 };
 </script>
 
 <style>
-.warning{
-    color:red;
+.warning {
+    color: red;
 }
 </style>
