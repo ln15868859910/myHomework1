@@ -396,7 +396,7 @@
             },
             mouseActionReuse() {
                 if (this.isChange) {
-                    let date = this.visualValue;
+                    let date = this.currentValue;
                     this.currentValue = ''
                     setTimeout(() => {
                         this.currentValue = date;
