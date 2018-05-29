@@ -437,7 +437,7 @@ export default {
                 }
                 for (let i = 0; i < $td.length; i++) {
                     const column = this.cloneColumns[i];
-                    let width = parseInt(getStyle($td[i], 'width'));
+                    let width = parseInt($td[i].offsetWidth);
                     if(width){
                         this.cloneColumns[i].realWidth =  width;
                     }
