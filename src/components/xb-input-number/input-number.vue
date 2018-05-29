@@ -326,8 +326,8 @@ export default {
                 } else if (Number(val) < min) {
                     //处理一个特殊的分支  当最小为0.01 但 现在输入的值为0\0.\0.0时 应当允许继续输入
                     //添加 .0 时的处理 同时min 最小为 0或无小数点的
-
-                    if(val.split('.').length==1||(''+min).split('.').length==1||val.split('.')[1].length<(''+min).split('.')[1].length){
+                    // if(val.split('.').length==1||(''+min).split('.').length==1||val.split('.')[1].length<(''+min).split('.')[1].length){
+                    if(val.split(".").length==1||val.split(".")[1].length<(''+this.min).split(".")[1].length){
                         this.setValue(val);
                     }else{
                         this.setValue(min);
