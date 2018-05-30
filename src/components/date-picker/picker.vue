@@ -387,8 +387,8 @@
                 if (this.readonly || this.disabled) return;
                 if (this.visualValue && this.clearable) {
                     this.showClose = true;
-                    this.mouseActionReuse();
                 }
+                this.mouseActionReuse();
             },
             handleInputMouseleave () {
                 this.showClose = false;
