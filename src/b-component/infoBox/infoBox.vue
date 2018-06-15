@@ -37,6 +37,17 @@
                         <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{data.value}}</span>
                         <Input v-model="data.value" v-if="!showdetail" :placeholder="catplace(data)" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
                     </div>
+                     <div v-else-if="data.type==6">
+                        <label :class="label">{{data.title}}</label>
+                        <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{data.value}}</span>
+                        <AutoComplete
+                            v-model="data.value"
+                            :data="data.list"
+                            :filter-method="filterMethod"
+                            :disabled="data.isDisabled"
+                            :placeholder="catplace(data)"
+                            :style="data.style || 'width:160px'"></AutoComplete>
+                    </div>
                     <!--todo 多级联动选择未完成-->
                     <div v-else :index="dataIndex">
                         <label :class="label">{{data.title}}</label>
@@ -167,6 +178,9 @@ export default {
                     this.placementArr.push("bottom")
                 }
             }
+        },
+        filterMethod (value,option) {
+            return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
         },
         setDataItem(data) {
             let _this = this;
