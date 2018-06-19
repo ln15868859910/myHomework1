@@ -26,6 +26,7 @@
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{data.default}}</span>
                         <Date-picker type="date" v-if="!showdetail" v-model="data.default" :placeholder="catplace(data)" :editable="false" :clearable="false" :disabled="data.isDisabled" style="width: 140px;display:inline-block;" @on-change="setDataItem(data,'date')"></Date-picker>
+                        <Alert v-if="data.authority" dot class="ivu-alert-fromalert ivu-alert-fromalert-error spui-b-infobox-authority">{{data.authoritytext}}</Alert>
                     </div>
                     <div v-else-if="data.type==3">
                         <label :class="label">{{data.title}}</label>
