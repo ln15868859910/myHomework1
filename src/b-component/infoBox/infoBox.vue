@@ -41,7 +41,7 @@
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{data.value}}</span>
                         <AutoComplete
-                            v-model="data.value"
+                            v-model="data.default"
                             :data="data.list"
                             :filter-method="filterMethod"
                             :disabled="data.isDisabled"
