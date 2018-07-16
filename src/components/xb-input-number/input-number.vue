@@ -230,6 +230,9 @@ export default {
         focus() {
             this.focused = true;
             this.$emit('on-focus');
+            if(this.currentValue!==''&&Number(this.currentValue)===0){
+                this.currentValue = '';
+            }
         },
         blur(event) {
             this.focused = false;
@@ -240,6 +243,8 @@ export default {
             var val = event.target.value.trim();
             if(val!==''){
                 val =Number(val);
+            }else{
+                val = this.required?this.defaultnumber:val;
             }
             const max = this.max;
             const min = this.min;
