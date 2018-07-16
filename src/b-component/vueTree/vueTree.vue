@@ -31,6 +31,12 @@ export default {
       type: Array,
       default:[]
     },
+    headers:{
+      type:Array,
+      default:function(){
+        return []
+      }
+    },
     //draggable:树形组件是否可拖拽
     draggable:{
       type:Boolean
@@ -84,6 +90,7 @@ export default {
         singleSelect: false, //是否支持单选，默认false
         // modification: true, //是否支持节点的增删改查，默认false
         draggable:this.draggable,//是否支持拖拽
+        headers:this.headers,
         styles: {
           //节点样式
           treeWrap: "", //父层包裹层

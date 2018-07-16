@@ -147,6 +147,7 @@ export default {
     return {
       config: {
         title: "",
+        headers:[],
         singleSelect: false, //是否支持单选，默认false
         styles: {
           //节点样式

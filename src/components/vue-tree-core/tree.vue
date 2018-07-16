@@ -13,10 +13,10 @@
 }
 
 .vue-tree-root ol  {
-  padding-left:43px;
+  padding-left:40px;
 }
 .vue-tree-root>ol>li>ol>li>ol>li ol  {
-  padding-left:23px;
+  padding-left:20px;
 }
 
 .vue-tree-root{
@@ -30,7 +30,7 @@
 
 .vue-tree-root .vue-tree-handle {
   position: relative;
-  padding:0 24px 0 20px;
+  padding:0 20px 0 20px;
   font-size: 14px;
   font-family: "MicrosoftYaHeiUI";
   font-size: 14px;
@@ -39,6 +39,12 @@
   height:40px;
   /* box-shadow: inset 0 -1px 0 0 #D4DFE5; */
 }
+
+.vue-tree-root .vue-tree-handle:first-child{
+  /* height: 0; */
+}
+
+
 .vue-tree-root .vue-tree-handle:after{
     content: "";
     position: absolute;
@@ -54,6 +60,9 @@
 <template>
   <div :class="wrapClass">    
       <h1 v-if="config.title" :class="mainTitle">{{config.title}}</h1>
+      <div v-if="config.headers.length">
+        <span v-for="(item,index) in config.headers" :key="index">{{item}}</span>
+      </div>
       <ol>
         <vue-tree-node v-for="(node,index) in dataList" 
           :key="index" 
@@ -118,8 +127,9 @@ export default {
   created() {
     //在整个组件传递参数
     this.rootData.globalConfig = this.config;
-
     //销毁整个删除树型组件
+  console.log(this.config);
+  
     this.$on("destory",this.destory);
 
   },

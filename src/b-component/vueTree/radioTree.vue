@@ -134,6 +134,7 @@ export default {
     return {
       config: {
         singleSelect: true, //是否支持单选，默认false
+        headers:[],
         styles: {
           //节点样式
           treeWrap: "radioTree-wrap", //父层包裹层
