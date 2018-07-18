@@ -3,6 +3,11 @@
 .vue-tree-root ol {
   list-style: none;
 }
+.vue-tree-root{
+  margin: 0 20px;
+  border:none !important;
+  text-align: left !important;
+}
 
 .vue-tree-root>ol>li>ol,
 .vue-tree-root>ol {

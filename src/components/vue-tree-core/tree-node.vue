@@ -54,6 +54,7 @@
     letter-spacing: -3px;
     display:inline-block;
     height:40px;
+    vertical-align: top;
 }
 .vue-tree-icon,
 .vue-tree-title{
@@ -63,7 +64,7 @@
 }
 .vue-tree-title{
     display: inline-block;
-    width:230px;
+    /* width:230px; */
     height: 30px;
     line-height: 26px;
     border-radius:2px;
@@ -155,6 +156,7 @@
 /*拖拽样式 结束*/
 .vue-tree-invisible{
   visibility: hidden;
+  display: none;
 }
 .vue-tree-rootHandle{
   display: none;
@@ -167,13 +169,25 @@
 }
 /*多列数据树形组件*/
 .cols-80{
-    display:inline-block;width:80px;border-left:1px solid #d4dfe5;
+    display:inline-block;
+    width:80px;
+    overflow: hidden;
+    white-space: nowrap;
+    /* border-left:1px solid #d4dfe5; */
 }
 .cols-120{
-    display:inline-block;width:120px;border-left:1px solid #d4dfe5;
+    display:inline-block;
+    width:120px;
+    overflow: hidden;
+    white-space: nowrap;
+    /* border-left:1px solid #d4dfe5; */
 }
 .cols-240{
-    display:inline-block;width:240px;border-left:1px solid #d4dfe5;
+    display:inline-block;
+    width:240px;
+    overflow: hidden;
+    white-space: nowrap;
+    /* border-left:1px solid #d4dfe5; */
 }
 
 </style>
@@ -198,19 +212,23 @@
                     <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
                 </span>
             </span>
-            <span class="cols-80" v-show="nodeData.isSchool">
-                {{nodeData.isSchool==undefined?"":nodeData.isSchool}}
-                </span><span class="cols-80" v-show="nodeData.schoolOrder">
-                {{nodeData.schoolOrder==undefined?"":nodeData.schoolOrder}}
-                </span><span class="cols-80" v-show="nodeData.schoolType">
-                {{nodeData.schoolType==undefined?"":nodeData.schoolType}}
-                </span><span class="cols-120" v-show="nodeData.telephone1">
-                {{nodeData.telephone1==undefined?"":nodeData.telephone1}}
-                </span><span class="cols-120" v-show="nodeData.telephone2">
-                {{nodeData.telephone2==undefined?"":nodeData.telephone2}}
-                </span><span class="cols-240" v-show="nodeData.schoolAdress">
-                {{nodeData.schoolAdress==undefined?"":nodeData.schoolAdress}}
+                <span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">
+                    {{nodeData.isSchool===true?"是":" "}}
                 </span>
+                <span class="cols-80" v-show="nodeData.orderId ||　nodeData.orderId =='0'">
+                    {{nodeData.orderId==undefined?" ":nodeData.orderId}}
+                </span>
+                <span class="cols-80" v-show="nodeData.schoolType ||　nodeData.schoolType ===null">
+                {{nodeData.schoolType==undefined?" ":nodeData.schoolType}}
+                </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ===null">
+                {{nodeData.tel1==undefined?" ":nodeData.tel1}}
+                </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 ===null">
+                {{nodeData.tel2==undefined?" ":nodeData.tel2}}
+                </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ===null">
+                {{nodeData.schoolAdd==undefined?" ":nodeData.schoolAdd}}
+                </span>
+                <input type="hidden" value="nodeData.isSchool">
+                
                 <span class="vue-tree-fr">
                     <span class="vue-tree-btn-wrap" v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
                     <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
@@ -282,7 +300,7 @@ export default {
     },
     computed: {
         styleObject(){
-            var nodeWidth=320-this.nodeData.extend*20
+            var nodeWidth=320-this.nodeData.hierarchy*20
             return {
                 width: nodeWidth+'px'
             }

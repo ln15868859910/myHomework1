@@ -81,79 +81,80 @@ export default {
                             id: 3,
                             title: '西湖校区1',
                             isSchool: '是', //是否是校区
-                            schoolOrder: '1', //校区排序
-                            schoolType: '合作', //校区类型
-                            telephone1: '0571-656656', //电话1
-                            telephone2: '0571-656656', //电话2
-                            schoolAdress: '杭州市西湖区', //地址
-                            extend: 1,
-                            handleList: [
-                                {
-                                    key: 'edit',
-                                    isShow: true,
-                                    text: '重命名',
-                                    iconType: '',
-                                    isUseIcon: false,
-                                    style: 'width:200px'
-                                },
+                            OrderId: '1', //校区排序
+                            schooltype: '合作', //校区类型
+                            Tel1: '0571-656656', //电话1
+                            Tel2: '0571-656656', //电话2
+                            SchoolAdd: '杭州市西湖区', //地址
+                            hierarchy: 1,
+                            // handleList: [
+                            //     {
+                            //         key: 'edit',
+                            //         isShow: true,
+                            //         text: '重命名',
+                            //         iconType: '',
+                            //         isUseIcon: false,
+                            //         style: 'width:200px'
+                            //     },
 
-                                {
-                                    key: 'common',
-                                    isShow: true,
-                                    toolTipDisable: false,
-                                    toolTipText: '点击合并',
-                                    text: '合并',
-                                    iconType: 'merge',
-                                    isUseIcon: true,
-                                    callback: function() {
-                                        console.log('合并回调');
-                                    }
-                                },
+                            //     {
+                            //         key: 'common',
+                            //         isShow: true,
+                            //         toolTipDisable: false,
+                            //         toolTipText: '点击合并',
+                            //         text: '合并',
+                            //         iconType: 'merge',
+                            //         isUseIcon: true,
+                            //         callback: function() {
+                            //             console.log('合并回调');
+                            //         }
+                            //     },
 
-                                {
-                                    key: 'add',
-                                    isShow: true,
-                                    toolTipDisable: false,
-                                    toolTipText: '点击添加',
-                                    text: '添加子节点',
-                                    iconType: 'plus-circled',
-                                    isUseIcon: true
-                                },
+                            //     {
+                            //         key: 'add',
+                            //         isShow: true,
+                            //         toolTipDisable: false,
+                            //         toolTipText: '点击添加',
+                            //         text: '添加子节点',
+                            //         iconType: 'plus-circled',
+                            //         isUseIcon: true
+                            //     },
 
-                                {
-                                    key: 'edit',
-                                    isShow: true,
-                                    toolTipDisable: false,
-                                    toolTipText: '点击编辑',
-                                    text: '编辑',
-                                    iconType: 'edit',
-                                    isUseIcon: true
-                                },
+                            //     {
+                            //         key: 'edit',
+                            //         isShow: true,
+                            //         toolTipDisable: false,
+                            //         toolTipText: '点击编辑',
+                            //         text: '编辑',
+                            //         iconType: 'edit',
+                            //         isUseIcon: true
+                            //     },
 
-                                {
-                                    key: 'delete',
-                                    isShow: true,
-                                    toolTipDisable: false,
-                                    toolTipText: '点击删除',
-                                    text: '删除',
-                                    iconType: 'minus-circled',
-                                    isUseIcon: true
-                                }
-                            ],
+                            //     {
+                            //         key: 'delete',
+                            //         isShow: true,
+                            //         toolTipDisable: false,
+                            //         toolTipText: '点击删除',
+                            //         text: '删除',
+                            //         iconType: 'minus-circled',
+                            //         isUseIcon: true
+                            //     }
+                            // ],
 
                             nodes: [
                                 {
-                                    id: 5,
-                                    title: '西zi校区',
+                                   id: 3,
+                                    title: '西湖校区1',
                                     isSchool: '是', //是否是校区
-                                    schoolOrder: '1', //校区排序
-                                    schoolType: '合作', //校区类型
-                                    telephone1: '0571-656656', //电话1
-                                    telephone2: '0571-656656', //电话2
-                                    schoolAdress: '杭州市西湖区', //地址
+                                    OrderId: '1', //校区排序
+                                    schooltype: '合作', //校区类型
+                                    Tel1: '0571-656656', //电话1
+                                    Tel2: '0571-656656', //电话2
+                                    SchoolAdd: '杭州市西湖区', //地址
+                                    hierarchy: 1,
                                     isUseIcon: true,
                                     iconType: 'document',
-                                    extend: 2,
+                                    hierarchy: 2,
                                     prop: {
                                         noDrag: true
                                     },
@@ -182,17 +183,18 @@ export default {
                                 },
 
                                 {
-                                    id: 5,
-                                    title: '西zi校区',
+                                    id: 3,
+                                    title: '西湖校区1',
                                     isSchool: '是', //是否是校区
-                                    schoolOrder: '1', //校区排序
-                                    schoolType: '合作', //校区类型
-                                    telephone1: '0571-656656', //电话1
-                                    telephone2: '0571-656656', //电话2
-                                    schoolAdress: '杭州市西湖区', //地址
+                                    OrderId: '1', //校区排序
+                                    schooltype: '合作', //校区类型
+                                    Tel1: '0571-656656', //电话1
+                                    Tel2: '0571-656656', //电话2
+                                    SchoolAdd: '杭州市西湖区', //地址
+                                    hierarchy: 1,
                                     isUseIcon: true,
                                     iconType: 'document',
-                                    extend: 2,
+                                    hierarchy: 2,
                                     prop: {
                                         noDrag: true
                                     },
@@ -223,15 +225,15 @@ export default {
                         },
 
                         {
-                            id: 4,
-                            title: '下沙校区',
+                            id: 3,
+                            title: '西湖校区1',
                             isSchool: '是', //是否是校区
-                            schoolOrder: '1', //校区排序
-                            schoolType: '合作', //校区类型
-                            telephone1: '0571-656656', //电话1
-                            telephone2: '0571-656656', //电话2
-                            schoolAdress: '杭州市西湖区', //地址
-                            extend: 1,
+                            OrderId: '1', //校区排序
+                            schooltype: '合作', //校区类型
+                            Tel1: '0571-656656', //电话1
+                            Tel2: '0571-656656', //电话2
+                            SchoolAdd: '杭州市西湖区', //地址
+                            hierarchy: 1,
                             handleList: [
                                 {
                                     key: 'common',
@@ -255,15 +257,16 @@ export default {
                         },
 
                         {
-                            id: 5,
-                            title: '西湖校区2',
+                            id: 3,
+                            title: '西湖校区1',
                             isSchool: '是', //是否是校区
-                            schoolOrder: '1', //校区排序
-                            schoolType: '合作', //校区类型
-                            telephone1: '0571-656656', //电话1
-                            telephone2: '0571-656656', //
-                            schoolAdress: '杭州市西湖区', //地址
-                            extend: 1,
+                            OrderId: '1', //校区排序
+                            schooltype: '合作', //校区类型
+                            Tel1: '0571-656656', //电话1
+                            Tel2: '0571-656656', //电话2
+                            SchoolAdd: '杭州市西湖区', //地址
+                            hierarchy: 1,
+                            hierarchy: 1,
                             handleList: [
                                 {
                                     key: 'edit',
@@ -320,17 +323,18 @@ export default {
 
                             nodes: [
                                 {
-                                    id: 5,
-                                    title: '西zi校区222',
+                                    id: 3,
+                                    title: '西湖校区1',
                                     isSchool: '是', //是否是校区
-                                    schoolOrder: '1', //校区排序
-                                    schoolType: '合作', //校区类型
-                                    telephone1: '0571-656656', //电话1
-                                    telephone2: '0571-656656', //电话2
-                                    schoolAdress: '杭州市西湖区', //地址
+                                    OrderId: '1', //校区排序
+                                    schooltype: '合作', //校区类型
+                                    Tel1: '0571-656656', //电话1
+                                    Tel2: '0571-656656', //电话2
+                                    SchoolAdd: '杭州市西湖区', //地址
+                                    hierarchy: 1,
                                     isUseIcon: true,
                                     iconType: 'document',
-                                    extend: 2,
+                                    hierarchy: 2,
                                     prop: {
                                         noDrag: true
                                     },
@@ -357,17 +361,18 @@ export default {
                                     ],
                                     nodes: [
                                         {
-                                            id: 5,
-                                            title: '西zi校区44444',
+                                            id: 3,
+                                            title: '西湖校区1',
                                             isSchool: '是', //是否是校区
-                                            schoolOrder: '1', //校区排序
-                                            schoolType: '合作', //校区类型
-                                            telephone1: '0571-656656', //电话1
-                                            telephone2: '0571-656656', //电话2
-                                            schoolAdress: '杭州市西湖区', //地址
+                                            OrderId: '1', //校区排序
+                                            schooltype: '合作', //校区类型
+                                            Tel1: '0571-656656', //电话1
+                                            Tel2: '0571-656656', //电话2
+                                            SchoolAdd: '杭州市西湖区', //地址
+                                            hierarchy: 1,
                                             isUseIcon: true,
                                             // iconType: 'document',
-                                            extend: 3,
+                                            hierarchy: 3,
                                             prop: {
                                                 noDrag: true
                                             },
