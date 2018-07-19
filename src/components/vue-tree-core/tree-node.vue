@@ -215,17 +215,17 @@
                 <span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">
                     {{nodeData.isSchool===true?"是":" "}}
                 </span>
-                <span class="cols-80" v-show="nodeData.orderId ||　nodeData.orderId =='0'">
-                    {{nodeData.orderId==undefined?" ":nodeData.orderId}}
+                <span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">
+                    {{(nodeData.orderId==undefined || nodeData.orderId =='0')?" ":nodeData.orderId}}
                 </span>
-                <span class="cols-80" v-show="nodeData.schoolType ||　nodeData.schoolType ===null">
-                {{nodeData.schoolType==undefined?" ":nodeData.schoolType}}
-                </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ===null">
-                {{nodeData.tel1==undefined?" ":nodeData.tel1}}
-                </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 ===null">
-                {{nodeData.tel2==undefined?" ":nodeData.tel2}}
-                </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ===null">
-                {{nodeData.schoolAdd==undefined?" ":nodeData.schoolAdd}}
+                <span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">
+                {{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
+                </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''">
+                {{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
+                </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null">
+                {{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
+                </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''">
+                {{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
                 </span>
                 <input type="hidden" value="nodeData.isSchool">
                 
