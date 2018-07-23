@@ -1,6 +1,8 @@
 <style>
 .vue-tree-fr {
-  float: right;
+    position: absolute;
+    right: 20px;
+    top: 0;
 }
 .vue-tree-clearfix {
   *zoom: 1;
@@ -172,23 +174,29 @@
     display:inline-block;
     width:80px;
     overflow: hidden;
-    white-space: nowrap;
+    padding-left: 10px;
     /* border-left:1px solid #d4dfe5; */
 }
 .cols-120{
     display:inline-block;
     width:120px;
     overflow: hidden;
-    white-space: nowrap;
-    /* border-left:1px solid #d4dfe5; */
+    padding-left: 10px;
 }
 .cols-240{
     display:inline-block;
-    width:240px;
     overflow: hidden;
-    white-space: nowrap;
-    /* border-left:1px solid #d4dfe5; */
+    padding-left: 10px;
 }
+@media screen and (max-width:1650px){
+    .cols-240{
+        max-width:230px;
+        text-overflow:ellipsis;
+        white-space:nowrap
+    }
+}
+
+
 
 </style>
 
@@ -197,7 +205,7 @@
 
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
           <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle v-show="nodeData.title">  
-            <span :class="treeTitleWrap" ref="dropTarget"  :style="styleObject" >
+            <span :class="treeTitleWrap" ref="dropTarget" :style="styleObject" >
                 <!-- 折叠图标 -->
                 <span :class="collapseWrapClass">
                     <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
@@ -211,21 +219,12 @@
                     <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
                     <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
                 </span>
-            </span>
-                <span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">
-                    {{nodeData.isSchool===true?"是":" "}}
-                </span>
-                <span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">
-                    {{(nodeData.orderId==undefined || nodeData.orderId =='0')?" ":nodeData.orderId}}
-                </span>
-                <span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">
-                {{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
-                </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''">
-                {{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
-                </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null">
-                {{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
-                </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''">
-                {{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
+            </span><span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">{{nodeData.isSchool===true?"是":" "}}
+                </span><span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">{{(nodeData.orderId==undefined)?" ":nodeData.orderId}}
+                </span><span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">{{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
+                </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''">{{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
+                </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null">{{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
+                </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''" :title="nodeData.schoolAdd">{{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
                 </span>
                 <input type="hidden" value="nodeData.isSchool">
                 
@@ -297,13 +296,14 @@ export default {
             this.$refs.dropTarget.ondragend = this.onDragEnd;
         }
         this.calcTitleOverFlow();
+        this.showOverflowTip()
     },
     computed: {
         styleObject(){
-            var nodeWidth=320-this.nodeData.hierarchy*20
+            var nodeWidth=270-this.nodeData.hierarchy*20
             return {
                 width: nodeWidth+'px'
-            }
+            }   
         },
         collapseWrapClass() {
             return {
@@ -427,6 +427,8 @@ export default {
         };
     },
     methods: {
+        showOverflowTip() {
+        },
         calcTitleOverFlow() {
             if (this.$refs.nodeTitle.offsetWidth > this.$refs.draggAbleDom.offsetWidth) {
                 this.isTextOverFlow = true;
