@@ -189,29 +189,47 @@
     white-space: nowrap;
     /* border-left:1px solid #d4dfe5; */
 }
-
+.modal-check{
+    position: relative;
+}
+.modal-check .radioTree-title{
+    color: rgb(82, 149, 231);
+    position: relative;
+}
+.modal-check .vue-node-collapse:before, .modal-check .vue-node-expand:before{
+    border-top-color: rgb(82, 149, 231);
+}
+.modal-check .ivu-icon-checkmark{
+    color: rgb(82, 149, 231);
+    position: absolute;
+    right: 0;
+    top: 5px;
+    font-size: 17px;
+}
 </style>
 
 <template>
 <li ref="draggAbleEle" :class="draggingClass" data-wrap>
 
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-          <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle v-show="nodeData.title">  
-            <span :class="treeTitleWrap" ref="dropTarget"  :style="styleObject" >
-                <!-- 折叠图标 -->
-                <span :class="collapseWrapClass">
-                    <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
-                    <!-- 加载图标 -->
-                    <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
+          <div class="vue-tree-clearfix" :class="[nodeHandleClass,nodeData.prop.isChecked&&rootData.globalConfig.modal?'modal-check':'']" data-handle v-show="nodeData.title">  
+                <span :class="treeTitleWrap" ref="dropTarget"  :style="styleObject" >
+                    <!-- 折叠图标 -->
+                    <span :class="collapseWrapClass">
+                        <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                        <!-- 加载图标 -->
+                        <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
+                    </span>
+                    <!-- 模拟勾选框（单选或多选） -->
+                    <i :class="checkboxClass" v-show=" nodeData.prop.checkable&&!rootData.globalConfig.modal"   @click="toggleChecbox"></i>
+                    <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                    <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" @click="toggleChecboxByTitle">
+                        <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
+                        
+                        <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                    </span>
                 </span>
-                <!-- 模拟勾选框（单选或多选） -->
-                <i :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
-                <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" >
-                    <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
-                    <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                </span>
-            </span>
+                <Icon type="checkmark" v-if="nodeData.prop.isChecked&&rootData.globalConfig.modal"></Icon>
                 <span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">
                     {{nodeData.isSchool===true?"是":" "}}
                 </span>
@@ -518,7 +536,11 @@ export default {
             //保存当前节点的数据模型
             this.rootData._UITreeMap[this.nodeData._hash] = this.nodeData;
         },
-
+        toggleChecboxByTitle(){
+            if(this.rootData.globalConfig.modal&&this.rootData.globalConfig.singleSelect){
+                this.toggleChecbox();
+            }
+        },
         //切换勾选状态
         toggleChecbox() {
             if (this.nodeData.prop.isDisabled) {

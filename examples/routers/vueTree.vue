@@ -47,6 +47,7 @@ h1 {
 
     <h1>单选组件</h1>
     <radio-tree :data-list="treeData3" ref="radioTree"></radio-tree>
+    <radio-tree :data-list="treeData3" modal ref="radioTree"></radio-tree>
     <Button type="primary" @click="getSelectedData2">获取当前勾选数据</Button>
   </div>
 </template>
