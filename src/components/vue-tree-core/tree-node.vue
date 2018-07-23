@@ -195,6 +195,23 @@
         white-space:nowrap
     }
 }
+.modal-check{
+    position: relative;
+}
+.modal-check .radioTree-title{
+    color: rgb(82, 149, 231);
+    position: relative;
+}
+.modal-check .vue-node-collapse:before, .modal-check .vue-node-expand:before{
+    border-top-color: rgb(82, 149, 231);
+}
+.modal-check .ivu-icon-checkmark{
+    color: rgb(82, 149, 231);
+    position: absolute;
+    right: 0;
+    top: 5px;
+    font-size: 17px;
+}
 
 
 
@@ -204,21 +221,22 @@
 <li ref="draggAbleEle" :class="draggingClass" data-wrap>
 
           <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-          <div class="vue-tree-clearfix" :class="nodeHandleClass" data-handle v-show="nodeData.title">  
-            <span :class="treeTitleWrap" ref="dropTarget" :style="styleObject" >
-                <!-- 折叠图标 -->
-                <span :class="collapseWrapClass">
-                    <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
-                    <!-- 加载图标 -->
-                    <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
-                </span>
-                <!-- 模拟勾选框（单选或多选） -->
-                <i :class="checkboxClass" v-show=" nodeData.prop.checkable"   @click="toggleChecbox"></i>
-                <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" >
-                    <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
-                    <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                </span>
+            <div class="vue-tree-clearfix" :class="[nodeHandleClass,nodeData.prop.isChecked&&rootData.globalConfig.modal?'modal-check':'']" data-handle v-show="nodeData.title">  
+                <span :class="treeTitleWrap" ref="dropTarget" :style="styleObject" >
+                    <!-- 折叠图标 -->
+                    <span :class="collapseWrapClass">
+                        <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                        <!-- 加载图标 -->
+                        <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
+                    </span>
+                    <!-- 模拟勾选框（单选或多选） -->
+                    <i :class="checkboxClass" v-show=" nodeData.prop.checkable&&!rootData.globalConfig.modal"   @click="toggleChecbox"></i>
+                    <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                    <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" @click="toggleChecboxByTitle">
+                        <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>  
+                        <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                    </span>
+                <Icon type="checkmark" v-if="nodeData.prop.isChecked&&rootData.globalConfig.modal"></Icon>
             </span><span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">{{nodeData.isSchool===true?"是":" "}}
                 </span><span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">{{(nodeData.orderId==undefined)?" ":nodeData.orderId}}
                 </span><span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">{{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
@@ -227,7 +245,7 @@
                 </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''" :title="nodeData.schoolAdd">{{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
                 </span>
                 <input type="hidden" value="nodeData.isSchool">
-                
+
                 <span class="vue-tree-fr">
                     <span  v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :class="['vue-tree-btn-wrap',dataList.class]" :key="index">
                     <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
