@@ -520,7 +520,11 @@ export default {
             //保存当前节点的数据模型
             this.rootData._UITreeMap[this.nodeData._hash] = this.nodeData;
         },
-
+        toggleChecboxByTitle(){
+            if(this.rootData.globalConfig.modal&&this.rootData.globalConfig.singleSelect){
+                this.toggleChecbox();
+            }
+        },
         //切换勾选状态
         toggleChecbox() {
             if (this.nodeData.prop.isDisabled) {

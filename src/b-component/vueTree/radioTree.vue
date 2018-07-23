@@ -125,10 +125,15 @@ export default {
     dataList: {
       type: Array,
       default:[]
+    },
+    modal:{
+      type:Boolean,
+      default:false
     }
   },
   created(){
       this.config.title = this.title;
+      this.config.modal = this.modal;
   },
   data() {
     return {
