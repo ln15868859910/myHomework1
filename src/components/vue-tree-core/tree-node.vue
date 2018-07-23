@@ -248,7 +248,7 @@
                 <input type="hidden" value="nodeData.isSchool">
                 
                 <span class="vue-tree-fr">
-                    <span class="vue-tree-btn-wrap" v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :key="index">
+                    <span  v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :class="['vue-tree-btn-wrap',dataList.class]" :key="index">
                     <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
                     <Tooltip :content="dataList.toolTipText" :disabled="dataList.toolTipDisable" :delay="1000" placement="top" :transfer="true">
                         <span @click="key2FuncMap(dataList.key, dataList)">
