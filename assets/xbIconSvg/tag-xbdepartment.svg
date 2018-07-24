@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>ERP/标签icon/部</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="内部管理-组织架构" transform="translate(-198.000000, -293.000000)">
+            <g id="Group-2" transform="translate(180.000000, 283.000000)">
+                <g id="ERP/标签icon/部_export" transform="translate(18.000000, 10.000000)">
+                    <g id="ERP/标签icon/部">
+                        <g id="tag-balance">
+                            <rect id="Rectangle-path" fill="#FFECAE" fill-rule="nonzero" x="0" y="0" width="20" height="20" rx="4"></rect>
+                            <text id="部" font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="12" font-weight="normal" fill="#D68300" fill-opacity="0.75">
+                                <tspan x="4" y="14">部</tspan>
+                            </text>
+                            <path d="M4,1 C2.34314575,1 1,2.34314575 1,4 L1,16 C1,17.6568542 2.34314575,19 4,19 L16,19 C17.6568542,19 19,17.6568542 19,16 L19,4 C19,2.34314575 17.6568542,1 16,1 L4,1 Z M4,0 L16,0 C18.209139,-4.05812251e-16 20,1.790861 20,4 L20,16 C20,18.209139 18.209139,20 16,20 L4,20 C1.790861,20 2.705415e-16,18.209139 0,16 L0,4 C-2.705415e-16,1.790861 1.790861,4.05812251e-16 4,0 Z" id="Shape" fill="#F5BD10" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

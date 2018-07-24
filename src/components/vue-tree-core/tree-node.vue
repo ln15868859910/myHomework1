@@ -233,18 +233,18 @@
                     <i :class="checkboxClass" v-show=" nodeData.prop.checkable&&!rootData.globalConfig.modal"   @click="toggleChecbox"></i>
                     <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
                     <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" @click="toggleChecboxByTitle">
-                        <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>  
+                        <xb-icon type="tag-xbdepartment" v-if="nodeData.isSchool===true"></xb-icon>
+                        <xb-icon type="tag-xbschool" v-if="nodeData.isSchool===false"></xb-icon>
+                        <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
                         <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
                     </span>
                 <Icon type="checkmark" v-if="nodeData.prop.isChecked&&rootData.globalConfig.modal"></Icon>
-            </span><span class="cols-80" v-show="nodeData.isSchool ||　nodeData.isSchool ===false">{{nodeData.isSchool===true?"是":" "}}
                 </span><span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">{{(nodeData.orderId==undefined)?" ":nodeData.orderId}}
-                </span><span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">{{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
-                </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''">{{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
-                </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null">{{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
-                </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''" :title="nodeData.schoolAdd">{{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
-                </span>
-                <input type="hidden" value="nodeData.isSchool">
+                    </span><span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">{{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
+                    </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''">{{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
+                    </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null">{{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
+                    </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''" :title="nodeData.schoolAdd">{{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
+                    </span>
 
                 <span class="vue-tree-fr">
                     <span  v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :class="['vue-tree-btn-wrap',dataList.class]" :key="index">
@@ -300,6 +300,7 @@ export default {
     },
     created() {
         this.init();
+        console.log(222);
     },
     mounted() {
         //绑定拖拽事件

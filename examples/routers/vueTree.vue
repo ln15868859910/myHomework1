@@ -10,6 +10,7 @@
 h1 {
     margin: 50px 0 10px 0;
 }
+
 .noDataDiv {
     font-size: 14px;
     color: #adb4bc;
@@ -153,8 +154,8 @@ export default {
                                     Tel2: '0571-656656', //电话2
                                     SchoolAdd: '杭州市西湖区', //地址
                                     hierarchy: 1,
-                                    isUseIcon: true,
-                                    iconType: 'document',
+                                    // isUseIcon: true,
+                                    // iconType: 'merge',
                                     hierarchy: 2,
                                     prop: {
                                         noDrag: true
