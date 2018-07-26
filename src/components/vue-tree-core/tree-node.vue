@@ -179,9 +179,11 @@
 }
 .cols-120{
     display:inline-block;
-    width:120px;
     overflow: hidden;
     padding-left: 10px;
+    width:120px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 .cols-240{
     display:inline-block;
@@ -194,6 +196,9 @@
         text-overflow:ellipsis;
         white-space:nowrap
     }
+}
+.hasChild{
+    padding-left: 20px
 }
 .modal-check{
     position: relative;
@@ -218,56 +223,56 @@
 </style>
 
 <template>
-<li ref="draggAbleEle" :class="draggingClass" data-wrap>
-
-          <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-            <div class="vue-tree-clearfix" :class="[nodeHandleClass,nodeData.prop.isChecked&&rootData.globalConfig.modal?'modal-check':'']" data-handle v-show="nodeData.title">  
-                <span :class="treeTitleWrap" ref="dropTarget" :style="styleObject" >
-                    <!-- 折叠图标 -->
-                    <span :class="collapseWrapClass">
-                        <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
-                        <!-- 加载图标 -->
-                        <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
-                    </span>
-                    <!-- 模拟勾选框（单选或多选） -->
-                    <i :class="checkboxClass" v-show=" nodeData.prop.checkable&&!rootData.globalConfig.modal"   @click="toggleChecbox"></i>
-                    <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                    <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" @click="toggleChecboxByTitle">
-                        <xb-icon type="tag-xbdepartment" v-if="nodeData.isSchool===true"></xb-icon>
-                        <xb-icon type="tag-xbschool" v-if="nodeData.isSchool===false"></xb-icon>
-                        <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
-                        <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
-                    </span>
-                <Icon type="checkmark" v-if="nodeData.prop.isChecked&&rootData.globalConfig.modal"></Icon>
-                </span><span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">{{(nodeData.orderId==undefined)?" ":nodeData.orderId}}
-                    </span><span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">{{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
-                    </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''">{{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
-                    </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null">{{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
-                    </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''" :title="nodeData.schoolAdd">{{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
-                    </span>
-
-                <span class="vue-tree-fr">
-                    <span  v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :class="['vue-tree-btn-wrap',dataList.class]" :key="index">
-                    <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
-                    <Tooltip :content="dataList.toolTipText" :disabled="dataList.toolTipDisable" :delay="1000" placement="top" :transfer="true">
-                        <span @click="key2FuncMap(dataList.key, dataList)">
-                        <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
+<!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
+    <li ref="draggAbleEle" :class="draggingClass" data-wrap :style="hasChild"><div class="vue-tree-clearfix" :class="[nodeHandleClass,nodeData.prop.isChecked&&rootData.globalConfig.modal?'modal-check':'']" data-handle v-show="nodeData.title"
+    @click="toggleChecboxByTitle">  
+                    <span :class="treeTitleWrap" ref="dropTarget" :style="styleObject" >
+                        <!-- 折叠图标 -->
+                        <span :class="collapseWrapClass">
+                            <i v-show="showArrow" :class="collapseStatus" @click="toggleCollapseStatus"></i>
+                            <!-- 加载图标 -->
+                            <Icon v-show="showLoading" type="loading" class="ivu-load-loop vue-tree-loading"></Icon>  
                         </span>
-                    </Tooltip>
+                        <!-- 模拟勾选框（单选或多选） -->
+                        <i :class="checkboxClass" v-show=" nodeData.prop.checkable&&!rootData.globalConfig.modal"   @click="toggleChecbox"></i>
+                        <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                        <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" @click="toggleChecboxByTitle">
+                            <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" ></span>
+                            <xb-icon type="tag-xbdepartment" v-if="nodeData.isSchool===false"></xb-icon>
+                            <xb-icon type="tag-xbschool" v-if="nodeData.isSchool===true"></xb-icon>
+                            <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
+                            <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
+                        </span>
+                    <Icon type="checkmark" v-if="nodeData.prop.isChecked&&rootData.globalConfig.modal"></Icon>
+                    </span><span class="cols-80" v-show="nodeData.orderId || nodeData.orderId ===null || nodeData.orderId =='0'">{{(nodeData.orderId==undefined)?" ":nodeData.orderId}}
+                        </span><span class="cols-80" v-show="nodeData.schoolType ||　　nodeData.schoolType ==''">{{(nodeData.schoolType==undefined || nodeData.schoolType=='')?" ":nodeData.schoolType}}
+                        </span><span class="cols-120" v-show="nodeData.tel1 ||　nodeData.tel1 ==''" :title="nodeData.tel1">{{(nodeData.tel1==undefined)?" ":nodeData.tel1}}
+                        </span><span class="cols-120" v-show="nodeData.tel2 ||　nodeData.tel2 =='' || nodeData.tel2 ===null" :title="nodeData.tel2">{{(nodeData.tel2==undefined)?" ":nodeData.tel2}}
+                        </span><span class="cols-240" v-show="nodeData.schoolAdd ||　nodeData.schoolAdd ==''" :title="nodeData.schoolAdd">{{(nodeData.schoolAdd==undefined || nodeData.schoolAdd=='')?" ":nodeData.schoolAdd}}
+                        </span>
+
+                    <span class="vue-tree-fr">
+                        <span  v-if="nodeData.handleList && nodeData.handleList.length" v-for="(dataList,index) in nodeData.handleList" :class="['vue-tree-btn-wrap',dataList.class]" :key="index">
+                        <a v-if="!dataList.isUseIcon" v-show="dataList.isShow" href="javascript:;" @click="key2FuncMap(dataList.key, dataList)">{{dataList.text}}</a>
+                        <Tooltip :content="dataList.toolTipText" :disabled="dataList.toolTipDisable" :delay="1000" placement="top" :transfer="true">
+                            <span @click="key2FuncMap(dataList.key, dataList)">
+                            <Icon :type="dataList.iconType" v-if="dataList.isUseIcon" v-show="dataList.isShow" class="vue-tree-icon vue-tree-btn"></Icon>
+                            </span>
+                        </Tooltip>
+                        </span>
                     </span>
-                </span>
-            </div>
-           
-        <!-- 子节点 -->
-        <ol v-show="nodeData.nodes.length && nodeData.prop.isExpand">
-            <vue-tree-node v-for="(node,index) in nodeData.nodes" 
-              :key="index" 
-              :node-data="node" 
-              :parent-node-data="nodeData"
-              :root-data="rootData"
-            ></vue-tree-node>
-        </ol>
-</li>
+                </div>
+            
+            <!-- 子节点 -->
+            <ol v-show="nodeData.nodes.length && nodeData.prop.isExpand">
+                <vue-tree-node v-for="(node,index) in nodeData.nodes" 
+                :key="index" 
+                :node-data="node" 
+                :parent-node-data="nodeData"
+                :root-data="rootData"
+                ></vue-tree-node>
+            </ol>
+    </li>
 
 </template>
 
@@ -300,7 +305,6 @@ export default {
     },
     created() {
         this.init();
-        console.log(222);
     },
     mounted() {
         //绑定拖拽事件
@@ -319,9 +323,35 @@ export default {
     },
     computed: {
         styleObject(){
-            var nodeWidth=270-this.nodeData.hierarchy*20
+            var nodeWidth=320-this.nodeData.hierarchy*20
+            
+            if(this.nodeData.nodes.length==0){
+                if(this.nodeData.hierarchy>1){
+                    nodeWidth=nodeWidth-40
+                }else if(this.nodeData.hierarchy==1){
+                    nodeWidth=nodeWidth-20
+                }
+            }else{
+                if(this.nodeData.hierarchy>1){
+                    nodeWidth=nodeWidth-20
+                }
+            }
             return {
                 width: nodeWidth+'px'
+            }   
+        },
+        hasChild(){
+            var extend=20
+
+            if(this.nodeData.nodes.length==0){
+                // if(this.nodeData.hierarchy>1){
+                //     extend=20
+                // }
+            }else{
+                extend=0
+            }
+            return {
+                paddingLeft: extend+'px'
             }   
         },
         collapseWrapClass() {
@@ -359,6 +389,15 @@ export default {
             return this.rootData.globalConfig.styles.nodeHandle
                 ? this.rootData.globalConfig.styles.nodeHandle
                 : 'vue-tree-handle';
+        },
+        nodeHandleClass2() {
+            var nodeHandleClass2;
+            if(this.nodeData.hierarchy){
+                nodeHandleClass2='vue-tree-handle2'
+            }else{
+                nodeHandleClass2=''
+            }
+            return nodeHandleClass2
         },
         showArrow() {
             return (

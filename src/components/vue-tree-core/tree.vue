@@ -59,6 +59,12 @@
     box-shadow: inset 0 -1px 0 0 #D4DFE5;
     height: 1px;
 }
+/* .vue-tree-root .vue-tree-handle2:after{
+    height: 0 !important;
+}
+.vue-tree-root .vue-tree-handle2{
+  border-bottom: 1px solid #D4DFE5 !important;
+} */
 
 </style>
 
