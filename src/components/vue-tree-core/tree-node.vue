@@ -224,7 +224,8 @@
 
 <template>
 <!--这里onDragStart事件和接收目标上的事件不能绑在同一个元素上，否则真机IE10下 会无法触发接收事件-->
-    <li ref="draggAbleEle" :class="draggingClass" data-wrap :style="hasChild"><div class="vue-tree-clearfix" :class="[nodeHandleClass,nodeData.prop.isChecked&&rootData.globalConfig.modal?'modal-check':'']" data-handle v-show="nodeData.title">  
+    <li ref="draggAbleEle" :class="draggingClass" data-wrap :style="hasChild"><div class="vue-tree-clearfix" :class="[nodeHandleClass,nodeData.prop.isChecked&&rootData.globalConfig.modal?'modal-check':'']" data-handle v-show="nodeData.title"
+    @click="toggleChecboxByTitle">  
                     <span :class="treeTitleWrap" ref="dropTarget" :style="styleObject" >
                         <!-- 折叠图标 -->
                         <span :class="collapseWrapClass">
@@ -236,6 +237,7 @@
                         <i :class="checkboxClass" v-show=" nodeData.prop.checkable&&!rootData.globalConfig.modal"   @click="toggleChecbox"></i>
                         <Icon :type="nodeData.iconType" v-if="nodeData.isUseIcon && !nodeData.isIconAtRight" class="vue-tree-icon"></Icon>
                         <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" @click="toggleChecboxByTitle">
+                            <span :class="[treeTitleClass,dragClasses,dragOverClass]" ref="draggAbleDom" >
                             <xb-icon type="tag-xbdepartment" v-if="nodeData.isSchool===false"></xb-icon>
                             <xb-icon type="tag-xbschool" v-if="nodeData.isSchool===true"></xb-icon>
                             <span ref="nodeTitle" :title="isTextOverFlow && nodeData.title">{{nodeData.title}}</span>
