@@ -82,72 +82,18 @@ export default {
                         {
                             id: 3,
                             title: '西湖校区1',
-                            isSchool: '是', //是否是校区
+                            isSchool: false, //是否是校区
                             OrderId: '1', //校区排序
                             schooltype: '合作', //校区类型
                             Tel1: '0571-656656', //电话1
                             Tel2: '0571-656656', //电话2
                             SchoolAdd: '杭州市西湖区', //地址
                             hierarchy: 1,
-                            // handleList: [
-                            //     {
-                            //         key: 'edit',
-                            //         isShow: true,
-                            //         text: '重命名',
-                            //         iconType: '',
-                            //         isUseIcon: false,
-                            //         style: 'width:200px'
-                            //     },
-
-                            //     {
-                            //         key: 'common',
-                            //         isShow: true,
-                            //         toolTipDisable: false,
-                            //         toolTipText: '点击合并',
-                            //         text: '合并',
-                            //         iconType: 'merge',
-                            //         isUseIcon: true,
-                            //         callback: function() {
-                            //             console.log('合并回调');
-                            //         }
-                            //     },
-
-                            //     {
-                            //         key: 'add',
-                            //         isShow: true,
-                            //         toolTipDisable: false,
-                            //         toolTipText: '点击添加',
-                            //         text: '添加子节点',
-                            //         iconType: 'plus-circled',
-                            //         isUseIcon: true
-                            //     },
-
-                            //     {
-                            //         key: 'edit',
-                            //         isShow: true,
-                            //         toolTipDisable: false,
-                            //         toolTipText: '点击编辑',
-                            //         text: '编辑',
-                            //         iconType: 'edit',
-                            //         isUseIcon: true
-                            //     },
-
-                            //     {
-                            //         key: 'delete',
-                            //         isShow: true,
-                            //         toolTipDisable: false,
-                            //         toolTipText: '点击删除',
-                            //         text: '删除',
-                            //         iconType: 'minus-circled',
-                            //         isUseIcon: true
-                            //     }
-                            // ],
-
                             nodes: [
                                 {
                                    id: 3,
                                     title: '西湖校区1',
-                                    isSchool: '是', //是否是校区
+                                    isSchool: true, //是否是校区
                                     OrderId: '1', //校区排序
                                     schooltype: '合作', //校区类型
                                     Tel1: '0571-656656', //电话1
@@ -187,7 +133,7 @@ export default {
                                 {
                                     id: 3,
                                     title: '西湖校区1',
-                                    isSchool: '是', //是否是校区
+                                    isSchool: false, //是否是校区
                                     OrderId: '1', //校区排序
                                     schooltype: '合作', //校区类型
                                     Tel1: '0571-656656', //电话1
