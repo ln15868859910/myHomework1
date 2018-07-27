@@ -342,17 +342,16 @@ export default {
         },
         hasChild(){
             var extend=20
-
-            if(this.nodeData.nodes.length==0){
-                // if(this.nodeData.hierarchy>1){
-                //     extend=20
-                // }
-            }else{
-                extend=0
+            if(!this.rootData.globalConfig.modal){
+                 if(this.nodeData.nodes.length==0){
+                    extend=20
+                }else{
+                    extend=0
+                }
+                return {
+                    paddingLeft: extend+'px'
+                }   
             }
-            return {
-                paddingLeft: extend+'px'
-            }   
         },
         collapseWrapClass() {
             return {
