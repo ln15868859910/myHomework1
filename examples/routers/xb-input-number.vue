@@ -19,6 +19,8 @@
         默认值：
         <Xb-Input-number :max="10" name="he" :min="-1" v-model="v5" :defaultnumber="2" @input="change2"></Xb-Input-number>
         <xb-input-number v-model="v6" :max="10" name="he" :min="-2"  style="width: 200px" hidestep :required="false" :fixed="5"></xb-input-number>
+        <Xb-Input-number :max="9999999" name="he" :min="1" v-model="v6"  :required="false" style="width: 170px;margin-right: 6px;"
+                    hidestep :fixed=0></Xb-Input-number>
     </div>
 </template>
 <script>
