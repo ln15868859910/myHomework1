@@ -13,8 +13,8 @@
         },
         mounted () {
             this.$Notice.config({
-                top: 150,
-                duration: 30
+                top: 200,
+                duration: 10
             });
         }
     }

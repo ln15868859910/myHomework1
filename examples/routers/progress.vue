@@ -31,11 +31,12 @@
 export default {
     data() {
         return {
-            percent: 0
+            percent:50
         }
     },
     methods: {
         add() {
+            console.log(this)
             if (this.percent >= 100) {
                 return false;
             }

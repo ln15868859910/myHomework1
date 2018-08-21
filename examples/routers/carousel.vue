@@ -15,9 +15,12 @@
             <Carousel-item>
                 <div class="demo-carousel">4</div>
             </Carousel-item>
+            <Carousel-item>
+                <div class="demo-carousel">5</div>
+            </Carousel-item>
         </Carousel>
         {{ v1 }}
-        <div @click="v1 = 0">change v1</div>
+        <!-- <div @click="v1 = 0">change v1</div> -->
     </div>
 </template>
 <script>
@@ -28,12 +31,12 @@
             }
         },
         methods: {
-            push () {
-                this.pushItem.push('test');
-            },
-            slideChange (from, to) {
-                this.log.push(`From ${from} To ${to}`);
-            }
+            // push () {
+            //     this.pushItem.push('test');
+            // },
+            // slideChange (from, to) {
+            //     this.log.push(`From ${from} To ${to}`);
+            // }
         }
     }
 </script>

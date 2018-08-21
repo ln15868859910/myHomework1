@@ -25,6 +25,10 @@ const router = new VueRouter({
             component: resolve => require(['./routers/affix.vue'], resolve)
         },
         {
+            path: '/demo',
+            component: resolve => require(['./routers/demo.vue'], resolve)
+        },
+        {
             path: '/color',
             component: resolve => require(['./routers/color.vue'], resolve)
         },

@@ -10,8 +10,7 @@
             <Page :total="1001" show-sizer placement="top" simple></Page>
         </div>
         <div style="margin-top: 100px;">
-            <Xb-Page :total="total" :current="current" :page-size="size" show-sizer placement="top" @on-change="pageCallback"
-                    @on-page-size-change="pageSizeCallback" @on-pager-change="pagerChange"></Xb-Page>
+            <Xb-Page :total="total" :current="current" :page-size="size" show-sizer placement="top" @on-change="pageCallback" @on-page-size-change="pageSizeCallback" @on-pager-change="pagerChange"></Xb-Page>
         </div>
     </div>
 </template>

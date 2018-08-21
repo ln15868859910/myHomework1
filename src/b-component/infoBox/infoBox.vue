@@ -18,7 +18,7 @@
                             </Option>
                         </Select>
                         <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{findLable(data.list,data.default)}}</span>
-                        <Select v-if="!data.isShowPhone&&!showdetail" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="catplace(data)"  @on-change="setDataItem(data)" label-in-value placement="top">
+                        <Select v-if="!data.isShowPhone&&!showdetail" v-model="data.default" :class="select" :filterable="data.isSearch" :disabled="data.isDisabled" :placeholder="catplace(data)" @on-change="setDataItem(data)" label-in-value placement="top">
                             <Option v-for="item in data.list" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </div>
@@ -38,16 +38,10 @@
                         <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{data.value}}</span>
                         <Input v-model="data.value" v-if="!showdetail" :placeholder="catplace(data)" :disabled="data.isDisabled" :style="data.style || 'width:160px'" :maxlength="data.maxlength||100" @on-change="setDataItem(data)"></Input>
                     </div>
-                     <div v-else-if="data.type==6">
+                    <div v-else-if="data.type==6">
                         <label :class="label">{{data.title}}</label>
                         <span :class="selectMan" style="margin-left: 10px;" v-if="showdetail">{{data.value}}</span>
-                        <AutoComplete
-                            v-model="data.default"
-                            :data="data.list"
-                            :filter-method="filterMethod"
-                            :disabled="data.isDisabled"
-                            :placeholder="catplace(data)"
-                            :style="data.style || 'width:160px'"></AutoComplete>
+                        <AutoComplete v-model="data.default" :data="data.list" :filter-method="filterMethod" :disabled="data.isDisabled" :placeholder="catplace(data)" :style="data.style || 'width:160px'"></AutoComplete>
                     </div>
                     <!--todo 多级联动选择未完成-->
                     <div v-else :index="dataIndex">

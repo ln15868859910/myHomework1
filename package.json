@@ -4,9 +4,20 @@
     "title": "iView",
     "description": "A high quality  UI components Library with Vue.js",
     "homepage": "http://www.iviewui.com",
-    "keywords": ["iview", "vue", "vue.js", "component", "components", "ui", "framework"],
+    "keywords": [
+        "iview",
+        "vue",
+        "vue.js",
+        "component",
+        "components",
+        "ui",
+        "framework"
+    ],
     "main": "dist/spui.js",
-    "files": ["dist", "src"],
+    "files": [
+        "dist",
+        "src"
+    ],
     "scripts": {
         "dev": "webpack-dev-server  --open --inline  --config build/webpack.dev.config.js",
         "dist:style": "gulp --gulpfile build/build-style.js",

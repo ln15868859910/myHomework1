@@ -7,7 +7,7 @@
             :value="checkAll"
             @click.prevent.native="handleCheckAll">全选</Checkbox>
     </div>
-    <Checkbox-group v-model="checkAllGroup" @on-change="checkAllGroupChange">
+    <Checkbox-group  @on-change="checkAllGroupChange">
         <Checkbox label="香蕉"></Checkbox>
         <Checkbox label="苹果"></Checkbox>
         <Checkbox label="西瓜"></Checkbox>
@@ -66,6 +66,7 @@
                 }
             },
             checkAllGroupChange (data) {
+                console.log(data.length)
                 if (data.length === 3) {
                     this.indeterminate = false;
                     this.checkAll = true;

@@ -6,7 +6,7 @@
 <template>
     <div>
         <Row :gutter="16">
-            <i-col class-name="demo-col" span="4" v-for="i in n" key="i">
+            <i-col class-name="demo-col" span="8" v-for="i in n" key="i">
                 <div>col-8</div>
             </i-col>
         </Row>

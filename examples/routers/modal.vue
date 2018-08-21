@@ -2,7 +2,7 @@
     <div>
         <Button type="primary" @click="modal1 = true">基本状态</Button>
         <Button type="primary" @click="modal2 = true">表单对话框</Button>
-    
+
         <Modal v-model="modal1" :closable="false" class-name="vertical-center-modal" width="380">
             <p slot="header" style="text-align:center">
                 <span style="color: #fff;">提示</span>
@@ -15,7 +15,7 @@
                 <Button type="primary" @click="ok">确定</Button>
             </div>
         </Modal>
-    
+
         <Modal v-model="modal2" :closable="false" class-name="vertical-center-modal" width="380">
             <p slot="header" style="text-align:center">
                 <span style="color: #fff;">修改手机号</span>
@@ -43,7 +43,7 @@
         <Button @click="confirm">标准</Button>
         <Button @click="custom">自定义按钮文字</Button>
         <Button @click="async">异步关闭</Button>
-    
+
     </div>
 </template>
 <script>

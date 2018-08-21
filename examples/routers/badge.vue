@@ -30,7 +30,7 @@
             <a href="#">可以是一个链接</a>
         </Badge>
         <br>
-        <Badge count="100">
+        <Badge count="108">
             <a href="#" class="demo-badge"></a>
         </Badge>
         <Badge count="1000" overflow-count="999">

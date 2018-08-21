@@ -33,7 +33,9 @@
         },
         methods: {
             handleSubmit (name) {
+                console.log(this.$refs[name]);
                 this.$refs[name].validate((valid) => {
+                    //console.log(valid)
                     if (valid) {
                         this.$Message.success('提交成功!');
                     } else {

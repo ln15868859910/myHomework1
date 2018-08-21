@@ -1,28 +1,28 @@
 <template>
     <div style="width: 800px;">
-    <div>
-    <span>基本状态</span>
-    <Input v-model="value" placeholder="请输入..." style="width: 200px;"></Input>
-    <Input v-model="value" disabled placeholder="请输入..." style="width: 200px;"></Input>
-    </div>
-    <br>
-    <div>
-    <span>带Icon</span>
-    <Input v-model="value" icon="clock" placeholder="请输入..." style="width: 200px;"></Input>
-    <Input v-model="value" disabled icon="clock" placeholder="请输入..." style="width: 200px;"></Input>
-    </div>
-    <br>
-    <div>
-    <span>文本域</span>
-    <Input v-model="value" type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
-    <Input v-model="value" disabled type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
-    </div>
-    <br><br><br>
-        <i-input v-model="value11" icon="clock" :autofocus="autofocus">
-            <span slot="prepend">.com</span>
-        </i-input>
+        <div>
+            <span>基本状态</span>
+            <Input v-model="value" placeholder="请输入..." style="width: 200px;"></Input>
+            <Input v-model="value" disabled placeholder="请输入..." style="width: 200px;"></Input>
+        </div>
+        <br>
+        <div>
+            <span>带Icon</span>
+            <Input v-model="value" icon="clock" placeholder="请输入..." style="width: 200px;"></Input>
+            <Input v-model="value" disabled icon="clock" placeholder="请输入..." style="width: 200px;"></Input>
+        </div>
+        <br>
+        <div>
+            <span>文本域</span>
+            <Input v-model="value" type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
+            <Input v-model="value" disabled type="textarea" placeholder="请输入..." style="width: 200px;"></Input>
+        </div>
+        <br><br><br>
         <i-input v-model="value11" icon="clock">
-            <span slot="append">.com</span>
+            <!-- <span slot="prepend">.com</span> -->
+        </i-input>
+        <i-input v-model="value11" icon="clock" :autofocus="autofocus">
+            <!-- <span slot="append">.com</span> -->
         </i-input>
     </div>
 </template>

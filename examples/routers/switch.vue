@@ -3,12 +3,12 @@
         <h2>switch</h2>
         <br/>
         <h3>基本状态</h3>
-        <i-switch v-model="m1">
+        <i-switch v-model="m1" @on-change="change">
             <span slot="open"></span>
             <span slot="close"></span>
         </i-switch>
         <h4>不可用状态</h4>
-         <i-switch disabled="disabled">
+        <i-switch disabled="disabled">
             <span slot="open"></span>
             <span slot="close"></span>
         </i-switch>
@@ -19,19 +19,19 @@
             <span slot="close">关</span>
         </i-switch>
         <h4>不可用状态</h4>
-         <i-switch disabled="disabled">
+        <i-switch disabled="disabled">
             <span slot="open">开</span>
             <span slot="close">关</span>
         </i-switch>
         <br/><br/>
-         <h3>带图标状态</h3>
+        <h3>带图标状态</h3>
         <i-switch v-model="m3">
             <Icon type="checkmark" slot="open"></Icon>
             <Icon type="close" slot="close"></Icon>
         </i-switch>
         <h4>不可用状态</h4>
-         <i-switch disabled="disabled">
-             <Icon type="checkmark" slot="open"></Icon>
+        <i-switch disabled="disabled">
+            <Icon type="checkmark" slot="open"></Icon>
             <Icon type="close" slot="close"></Icon>
         </i-switch>
     </div>
